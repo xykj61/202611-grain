@@ -1,5 +1,10 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261114.172138` -- founding-commit deep debride: five renames into history.**
+- **Walk-back nib:** `e1b042b27d` -- `git show e1b042b27d` restores the tree before the deep debride. After the history rewrite, this nib resolves only in a pre-debride backup or local `refs/original/`.
+- **Swept:** All 10 commits rewritten via `git filter-repo` so the five working-tree renames (Tiles, Flare, Pulp, Blaze, module) appear already present in the founding commit. Content replacement via letter-boundary regex across every blob; filename replacement via Python callback. Rename-only commits pruned. All surviving commits re-signed and force-pushed to `xy`.
+- **What waits there, worth recalling:** The five working-tree rename commits each carried a full mechanism-sentence body naming what moved, how many files, and why. The session-log commits recorded the execution. All of it is preserved at `e1b042b27d` in any local backup taken before this rewrite.
+
 **Checkpoint `20261114.153101` -- Blaze -> Blaze rename (fifth of five).**
 - **Walk-back nib:** `7ec765d106` -- `git show 7ec765d106` restores the tree before the Blaze rename.
 - **Swept:** `blaze/` directory and all blaze-named files renamed to blaze equivalents. All text references -- `blaze`, `Blaze`, `BLAZE` -- replaced with `blaze`, `Blaze`, `BLAZE` across living and dated files alike. 349 files carry the word in filenames, 4,166 files carry references in content. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.
