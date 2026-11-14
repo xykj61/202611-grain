@@ -1,5 +1,10 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261114.151730` -- Tiles -> Tiles rename (first of five).**
+- **Walk-back nib:** `53122f135d` -- `git show 53122f135d` restores the tree before the Tiles rename.
+- **Swept:** `kumara/tile.rye` and all tile-named files renamed to tiles equivalents. All text references -- `tile`, `tiles`, `Tile`, `Tiles` -- replaced with `tile`, `tiles`, `Tile`, `Tiles` across living and dated files alike. 356 files carry the word, 16 files carry it in filenames. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.
+- **What waits there, worth recalling:** Tile served the mark system faithfully from its seating, carrying the Hindu forehead-mark metaphor for a type contract crossing wires. Tiles is the short form the tree already used, now made the only form -- clearer, warmer, and Comlink-tendency friendly.
+
 **Checkpoint `20261114.111811` -- Resonance -> Resonance deep debride.**
 - **Walk-back nib:** `a93e8a3cd6` -- `git show a93e8a3cd6` restores the tree before the deep debride. After the history rewrite, this nib resolves only in a pre-debride backup or local `refs/original/`.
 - **Swept:** `resonance/` directory renamed to `resonance/` across all 14,679 commits. All text references -- `resonance`, `Resonance`, `RESONANCE`, `resonance-audio` warm string -- replaced with `resonance`, `Resonance`, `RESONANCE`, `resonance-audio` in every tracked file and every commit message. 1,418 tracked files, 524 commit subjects, 255 `.rye` source files in the module directory. Full git history rewritten and re-signed. Force-pushed to origin.

@@ -105,7 +105,7 @@ pub const BeadError = error{
     StoreFull,
     StoreMissing,
     DigestMismatch,
-    UnknownTilak,
+    UnknownTile,
     WholeTooLarge,
 };
 
@@ -365,7 +365,7 @@ const IndexHeader = struct {
 /// stays within the bound, and the index length must match the count exactly. Both
 /// reassembly and verification lean on this one gate, so the checks live in one place.
 fn parse_index_header(index_tile: []const u8, index_bytes: []const u8) BeadError!IndexHeader {
-    if (!std.mem.eql(u8, index_tile, tile_bead_index)) return error.UnknownTilak;
+    if (!std.mem.eql(u8, index_tile, tile_bead_index)) return error.UnknownTile;
     if (index_bytes.len < index_header_len) return error.Truncated;
     var head: IndexHeader = undefined;
     tally_copy.copy_disjoint(u8, std.mem.asBytes(&head.whole_digest), index_bytes[0..32]);
@@ -508,9 +508,9 @@ fn selftest_refusals(store: *BeadStore, content: []const u8, idx: []const u8) !v
     {
         var scratch: [max_resin_bytes]u8 = undefined;
         if (reassemble(store, tile_plain_bytes, idx, &scratch)) |_| {
-            return error.UnknownTilak;
+            return error.UnknownTile;
         } else |err| {
-            assert(err == error.UnknownTilak);
+            assert(err == error.UnknownTile);
         }
     }
 

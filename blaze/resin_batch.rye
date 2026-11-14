@@ -35,7 +35,7 @@ pub const BatchError = error{
     BadKind,
     BadSignature,
     DigestMismatch,
-    UnknownTilak,
+    UnknownTile,
     DuplicateName,
     TooManyEntries,
     StoreMissing,
@@ -272,7 +272,7 @@ fn read_manifest(
         if (off.* + 1 > cap_u32(batch)) return error.Truncated;
         const has_payload = batch[off.*] == 1;
         off.* += 1;
-        if (!tile_known(tile)) return error.UnknownTilak;
+        if (!tile_known(tile)) return error.UnknownTile;
         var j: u32 = 0;
         while (j < i) : (j += 1) {
             if (std.mem.eql(u8, entries[j].path, path)) return error.DuplicateName;
@@ -442,9 +442,9 @@ fn run_resync_and_refusal_selftest(signer: kumara.KeyPair, src: *ns.BoltCatalog,
         const mbuilt = try build_batch(&src_mystery, "peerB", "m", 1, &[_][64]u8{}, signer, &mbuf);
         var dest_m: ns.BoltCatalog = .empty();
         if (apply_batch(&dest_m, mbuf[0..mbuilt.len], signer.public_key)) |_| {
-            return error.UnknownTilak;
+            return error.UnknownTile;
         } else |err| {
-            assert(err == error.UnknownTilak);
+            assert(err == error.UnknownTile);
         }
     }
 }

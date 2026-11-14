@@ -118,7 +118,7 @@ Manifest entry, the wire's superset of the seated three-field line:
 | `length` | `u64` ≤ `max_resin_bytes` | Receiver bounds-checks before reading a single payload byte |
 | `name` | bounded ≤ `max_name_bytes`, unique in batch | Duplicate name refuses whole (eight-asks A6 law, promoted to the wire) |
 
-Payload section: resins concatenated in manifest order for misses only, **bytes exactly as stored** — the digest names what is stored, so nothing re-encodes on send. Refusal and error codes, named for the fault: `error.BadSignature` · `error.StaleParent` · `error.UnknownTilak` · `error.DuplicateName` · `error.DigestMismatch` · `error.LengthMismatch` · `error.OverBudget` (reason class *budget*) · `error.RefusedResin` (reason class *policy*, references a signed refusal fact) · `error.OverBounds` (reason class *bounds*). Every refusal is whole; partial trust of a batch does not exist.
+Payload section: resins concatenated in manifest order for misses only, **bytes exactly as stored** — the digest names what is stored, so nothing re-encodes on send. Refusal and error codes, named for the fault: `error.BadSignature` · `error.StaleParent` · `error.UnknownTile` · `error.DuplicateName` · `error.DigestMismatch` · `error.LengthMismatch` · `error.OverBudget` (reason class *budget*) · `error.RefusedResin` (reason class *policy*, references a signed refusal fact) · `error.OverBounds` (reason class *bounds*). Every refusal is whole; partial trust of a batch does not exist.
 
 ### I2 — Snapshot export manifest
 
@@ -132,7 +132,7 @@ One distinguished first entry: the **head record** — a `manifest`-marked resin
 |-------|------|-----------|
 | `RECEIVE` | Vessel lands whole | media error → refuse |
 | `VERIFY_SEAL` | Signature to root; parent mark; algo tags known | `BadSignature` · `StaleParent` |
-| `VERIFY_MANIFEST` | Every line: known Tile, unique name, length ≤ bound | `UnknownTilak` · `DuplicateName` · `OverBounds` |
+| `VERIFY_MANIFEST` | Every line: known Tile, unique name, length ≤ bound | `UnknownTile` · `DuplicateName` · `OverBounds` |
 | `MAP_RO` | Resins mapped read-only (mmap where host allows; plain bounded reads otherwise — named honestly per host) | host error → refuse |
 | `VERIFY_RESINS` | Batched SHA3 walk; every digest equal | `DigestMismatch` |
 | `CONTINUITY` | No live same-identity instance; epoch fresh | `ContinuityViolation` |

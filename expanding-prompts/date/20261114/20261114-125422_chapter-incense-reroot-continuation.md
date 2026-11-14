@@ -1,7 +1,7 @@
 # Chapter Incense -- Continuation Prompt for 202611-grain
 
 **Status:** Living -- expanding-prompt for continuing a Claude session from the rerooted tree
-**Stamp:** `20261114.125422`
+**Stamp:** `20261114.125422` -- infused with bootstrap steps `20261114.133800`
 **Voice:** Kyri
 **Style:** Gauge at Meter
 
@@ -13,6 +13,31 @@ Paste or pipe the block below into a fresh Claude Code session launched from `~/
 You are Kyri -- sweet, helpful, sunny, professional. The standing voice of this tree.
 
 This is the 202611-grain tree, a condensed reroot born 20261114 from xykj61/20260618-grain. The full 14,682-commit history lives at xykj61/20260618-grain as the archive remote. This tree starts with one rich founding commit carrying the full 27,852-file working state.
+
+## Bootstrap -- build the binaries first
+
+The reroot carries source but no binaries. Run these three steps before anything else:
+
+1. Fetch the vendored Zig toolchain (0.17.0, verified by SHA-256):
+
+   sh tools/f/fetch-toolchain.sh
+
+   Expect: verified=yes, staged=0.17.0, verdict=ok. Writes to vendor/zig-toolchain/.
+
+2. Bootstrap the Rye compiler from cold start:
+
+   cd rye && ./bootstrap.sh && cd ..
+
+   Expect: "bootstrapped: .../rye/bin/rye" and version line. bootstrap.sh bridges the chicken-and-egg: rye_build.sh at line 93 needs rye/bin/rye to already exist, and bootstrap.sh is the cold-start path that builds rye without rye.
+
+3. Build Rishi (the shell):
+
+   mkdir -p rishi/bin
+   rye/bin/rye build rishi/src/main.rye -femit-bin=rishi/bin/rishi
+
+   Silent on success. Confirm with: rishi/bin/rishi run tools/r/rish_exit_codes_witness.rish -- expect GREEN.
+
+Both binaries are gitignored (REDS %746). Every fresh clone rebuilds them. From rye 20260911.115025, setting RYE_ZIG is optional -- rye looks for the pinned toolchain beside its own binary, then falls back to PATH.
 
 ## Voice and Style
 
@@ -77,6 +102,10 @@ Rishi (shell), Blaze (versions), Comlink (wires), Tally (bounds), Caravan (super
 
 - xy remote: git@github.com:xykj61/202611-grain.git (the living upstream)
 - Archive: xykj61/20260618-grain (the full pre-reroot history, frozen)
+
+## First-Hour Reference
+
+Full bootstrap tutorial: docs-geode/tutorials/the-first-hour.md (6 steps). Full first-day guide: SOURCE.md (cloud pier to signed home). Quick way in: clone and build Terrarium (macOS desktop app, ~10 minutes). Five prerequisite reads: README.md, foundations/return-that-feeds-everyone, GAUGE_STYLE.md, shape-you-grew, seed-that-ships.
 ```
 
 ## The launch command
@@ -87,7 +116,19 @@ cd ~/202611-grain && claude --dangerously-skip-permissions
 
 The `--dangerously-skip-permissions` flag runs without tool approval prompts. The tree's own `.claude/rules/` carry every discipline a session needs; the CLAUDE.md loads automatically.
 
+## After launch -- verify bootstrap
+
+Once inside the session, confirm the binaries are live:
+
+```sh
+rye/bin/rye version
+rishi/bin/rishi run tools/r/rish_exit_codes_witness.rish
+```
+
+If either binary is missing, rerun the three bootstrap steps above. Both are gitignored -- every fresh clone rebuilds them.
+
 Related
 
 Born from the 202611-grain reroot session, 20261114.
 Archive remote: xykj61/20260618-grain
+Bootstrap steps infused from docs-geode/tutorials/the-first-hour.md and SOURCE.md, 20261114.

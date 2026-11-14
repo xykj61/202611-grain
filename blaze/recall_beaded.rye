@@ -140,7 +140,7 @@ pub fn hydrate_bead_store_from_catalog(
     };
     const direct = catalog.recall(index_name, &index_buf) catch return error.StoreMissing;
     if (direct.outcome != .here) return error.StoreMissing;
-    if (!std.mem.eql(u8, direct.tile, beading.tile_bead_index)) return error.UnknownTilak;
+    if (!std.mem.eql(u8, direct.tile, beading.tile_bead_index)) return error.UnknownTile;
     const bead_count = std.mem.readInt(u16, index_buf[34..36], .little);
     var b: u32 = 0;
     while (b < bead_count) : (b += 1) {
