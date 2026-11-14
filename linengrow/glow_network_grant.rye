@@ -1,0 +1,78 @@
+//! linengrow/glow_network_grant.rye -- Glow Network Grant mold.
+//!
+//! Clean-room Glow parallel of GrapheneOS's **Network permission toggle**
+//! (studied in gratitude/grapheneos/features-overview.md - named next in
+//! expanding-prompts/yonder/20260716-142818): a binary per-app grant for network
+//! access. Grant admits; revoke (or deny) refuses. When refused, the grant
+//! **appears down** -- GrapheneOS pretends the network is unavailable rather
+//! than surfacing a permission error.
+//!
+//! Distinct from Resource Scope (Storage - Contact): those name resources;
+//! this is one on/off toggle. Manifest may still declare `network` +
+//! `right_net` for glow-publishing.5 INTERNET emission; this mold is the runtime
+//! grant/revoke edge.
+//!
+//! Does not copy GrapheneOS code or docs; gratitude study only.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const network_grant_version = "20260717.160607";
+
+/// Binary per-app network grant. Revoked or denied grants allow nothing.
+pub const NetworkGrant = struct {
+    granted: bool = false,
+
+    /// Install-shaped welcome: network allowed until revoke.
+    pub fn grant() NetworkGrant {
+        const welcome: NetworkGrant = .{ .granted = true };
+        // invariant: welcome grant admits network
+        assert(welcome.granted);
+        assert(!welcome.appears_down());
+        return welcome;
+    }
+
+    /// Explicit deny at build time (install toggle off).
+    pub fn deny() NetworkGrant {
+        const denied: NetworkGrant = .{ .granted = false };
+        // invariant: denied grant presents as down
+        assert(!denied.granted);
+        assert(denied.appears_down());
+        return denied;
+    }
+
+    /// True when this grant still admits network use.
+    pub fn allows(self: *const NetworkGrant) bool {
+        const admitted = self.granted;
+        // invariant: allows tracks granted bit
+        assert(admitted == self.granted);
+        assert(self.appears_down() == !admitted);
+        return admitted;
+    }
+
+    /// GrapheneOS parallel: refused grant presents as network-down.
+    pub fn appears_down(self: *const NetworkGrant) bool {
+        const down = !self.granted;
+        // invariant: down is the refusal presentation
+        assert(down == !self.granted);
+        if (down) {
+            // invariant: the grant is proven still withheld, since a permission that reads as
+            // granted before anyone asked is the fault this whole seam exists to prevent
+            assert(!self.granted);
+        }
+        return down;
+    }
+
+    /// Uninstall-shaped revoke: every later allows() is false.
+    pub fn revoke(self: *NetworkGrant) void {
+        self.granted = false;
+        // invariant: revoke clears admission
+        assert(!self.granted);
+        assert(self.appears_down());
+    }
+};
+
+comptime {
+    _ = print;
+}

@@ -1,0 +1,4 @@
+::  Cross-desk multi-field named-cast -- import shape-penta then ^- penta-shape
+::  (glow-language).
+/+  shape-penta
+^-  penta-shape

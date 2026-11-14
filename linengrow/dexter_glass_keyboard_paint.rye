@@ -1,0 +1,434 @@
+//! linengrow/dexter_glass_keyboard_paint.rye -- glass-keyboard letters paint + hit boxes.
+//!
+//! Formats a layout Page into Skate text rows and maps window taps onto keys.
+//! Device-free; NativeActivity stores the last HitMap for motion.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const layout = @import("dexter_glass_keyboard_layout.rye");
+const emoji = @import("dexter_glass_emoji.rye");
+const dexter = @import("window_input.rye");
+const tally_copy = @import("tally_copy.rye");
+
+pub const max_line_len: u32 = 48;
+pub const keyboard_rows: u32 = 4;
+
+/// What a glass key tap means for Dexter / mode (glass-keyboard / glass-keyboard).
+pub const TapResult = union(enum) {
+    action: dexter.Action,
+    set_mode: layout.Mode,
+    set_emoji_tab: emoji.Tab,
+    toggle_shift,
+    none,
+};
+
+fn utf8_action(id: u8) dexter.Action {
+    const u = emoji.utf8_for(id);
+    var ins: dexter.Utf8Insert = .{};
+    // invariant: the insert is copied into a fixed buffer of max_utf8_insert, so an empty one
+    // would paint nothing and a longer one would be written past its end
+    assert(u.len > 0);
+    assert(u.len <= dexter.max_utf8_insert);
+    ins.len = u.len;
+    tally_copy.copy_disjoint(u8, ins.data[0..u.len], u.slice());
+    return .{ .utf8 = ins };
+}
+
+/// Map a layout key + shift latch into an editor action or mode change.
+pub fn tap_result(key: layout.Key, shift_on: bool) TapResult {
+    return switch (key) {
+        .char_ => |ch| blk: {
+            // invariant: printable face
+            assert(ch >= 32);
+            assert(ch < 127);
+            var out = ch;
+            if (shift_on and ch >= 'a' and ch <= 'z') {
+                out = ch - ('a' - 'A');
+                // invariant: the shift maps a key to an uppercase letter, so anything outside A
+                // to Z means the mapping and the layout disagree about which key was pressed
+                assert(out >= 'A');
+                assert(out <= 'Z');
+            }
+            break :blk .{ .action = .{ .char_ = out } };
+        },
+        .space => .{ .action = .{ .char_ = ' ' } },
+        .delete => .{ .action = .backspace },
+        // glass-keyboard: ret inserts newline; ^ (send) submits.
+        .@"return" => .{ .action = .newline },
+        .send => .{ .action = .submit },
+        .shift => .toggle_shift,
+        .to_numbers => .{ .set_mode = .numbers },
+        .to_letters => .{ .set_mode = .letters },
+        .to_symbols => .{ .set_mode = .symbols },
+        .to_emoji => .{ .set_mode = .emoji },
+        .emoji_face => |id| .{ .action = utf8_action(id) },
+        .emoji_tab => |tab| .{ .set_emoji_tab = tab },
+    };
+}
+
+/// ASCII / tab label for one key (emoji faces use skate_cell in format_page_row).
+pub fn label_for(key: layout.Key) []const u8 {
+    return switch (key) {
+        .char_ => |ch| blk: {
+            _ = ch;
+            break :blk "";
+        },
+        .shift => "sh",
+        .delete => "del",
+        .space => "spc",
+        .@"return" => "ret",
+        .send => "^",
+        .to_numbers => "123",
+        .to_letters => "abc",
+        .to_symbols => "#+=",
+        .to_emoji => "em",
+        .emoji_face => "",
+        .emoji_tab => |tab| emoji.tab_label(tab),
+    };
+}
+
+/// Painted character width of one key (ZETA2b hit spans match this).
+pub fn label_char_len(key: layout.Key) u32 {
+    return switch (key) {
+        .char_, .emoji_face => 1,
+        else => blk: {
+            const lab = label_for(key);
+            // invariant: the label is what the key paints, so an empty one would draw a key a
+            // finger cannot read
+            assert(lab.len > 0);
+            break :blk @intCast(lab.len);
+        },
+    };
+}
+
+/// Write one page row as space-separated labels into out_line. Returns length.
+pub fn format_page_row(page: layout.Page, row_idx: u32, out_line: *[max_line_len]u8) u32 {
+    if (page.rows.len == 0) return 0;
+    // invariant: row index in page
+    assert(row_idx < page.rows.len);
+    if (row_idx >= page.rows.len) return 0;
+    const keys = page.rows[row_idx].keys;
+    // invariant: the row is painted key by key up to this count, and the ceiling is what the
+    // layout's own row array was sized for
+    assert(keys.len <= layout.max_keys_per_row);
+    var pos: u32 = 0;
+    var i: u32 = 0;
+    while (i < keys.len) : (i += 1) {
+        if (pos > 0) {
+            if (pos >= max_line_len) break;
+            out_line[pos] = ' ';
+            pos += 1;
+        }
+        switch (keys[i]) {
+            .char_ => |ch| {
+                if (pos >= max_line_len) break;
+                out_line[pos] = ch;
+                pos += 1;
+            },
+            .emoji_face => |id| {
+                if (pos >= max_line_len) break;
+                out_line[pos] = emoji.skate_cell(id);
+                pos += 1;
+            },
+            else => {
+                const lab = label_for(keys[i]);
+                if (pos + lab.len > max_line_len) break;
+                tally_copy.copy_disjoint(u8, out_line[pos..][0..lab.len], lab);
+                pos += @intCast(lab.len);
+            },
+        }
+    }
+    // invariant: the caret is placed at this column, so a position past the line's own bound
+    // would draw it outside the field it belongs to
+    assert(pos <= max_line_len);
+    return pos;
+}
+
+/// Format all four rows of a page. Returns false if any row is empty.
+pub fn format_page(page: layout.Page, out_lines: *[keyboard_rows][max_line_len]u8, out_lens: *[keyboard_rows]u32) bool {
+    // invariant: the page holds exactly keyboard_rows rows, and the paint below indexes it by
+    // row directly
+    assert(page.rows.len == keyboard_rows);
+    var r: u32 = 0;
+    while (r < keyboard_rows) : (r += 1) {
+        out_lens[r] = format_page_row(page, r, &out_lines[r]);
+        if (out_lens[r] == 0) return false;
+    }
+    return true;
+}
+
+/// Format letters page; requires top-left `q`.
+pub fn format_letters_page(out_lines: *[keyboard_rows][max_line_len]u8, out_lens: *[keyboard_rows]u32) bool {
+    if (!format_page(layout.letters_page, out_lines, out_lens)) return false;
+    // invariant: QWERTY top-left visible
+    assert(std.mem.indexOf(u8, out_lines[0][0..out_lens[0]], "q") != null);
+    return true;
+}
+
+/// Apply a sequence of layout keys to an editor (device-free glass-keyboard path).
+pub fn drain_layout_keys(editor: *dexter.LineEditor, keys: []const layout.Key) void {
+    // invariant: the editor line is copied into a fixed buffer of max_line_len, so a longer one
+    // would be written past its end
+    assert(editor.len <= dexter.max_line_len);
+    var shift_on = false;
+    for (keys) |key| {
+        switch (tap_result(key, shift_on)) {
+            .action => |action| {
+                editor.apply_action(action);
+                switch (key) {
+                    .char_, .space, .emoji_face => shift_on = false,
+                    else => {},
+                }
+            },
+            .toggle_shift => shift_on = !shift_on,
+            .set_mode, .set_emoji_tab, .none => {},
+        }
+    }
+    // invariant: the editor line is copied into a fixed buffer of max_line_len, so a longer one
+    // would be written past its end
+    assert(editor.len <= dexter.max_line_len);
+}
+
+/// Device-free glass-keyboard: tapping face 0 inserts its UTF-8 into the editor.
+pub fn emoji_face0_inserts_utf8() bool {
+    var editor: dexter.LineEditor = .{};
+    drain_layout_keys(&editor, &[_]layout.Key{.{ .emoji_face = 0 }});
+    const expect = emoji.utf8_for(0).slice();
+    return std.mem.eql(u8, editor.prompt_slice(), expect);
+}
+
+/// Device-free: emoji chrome `abc` hit returns to_letters (mode round-trip).
+pub fn emoji_abc_hit_is_to_letters() bool {
+    const grid_cols: u32 = 40;
+    const cell_pw: i32 = 10;
+    const cell_ph: i32 = 20;
+    const page = layout.page_for_tab(.emoji, .smileys);
+    const map = build_hit_map(0, 0, cell_pw, cell_ph, grid_cols, 0, page);
+    var line: [max_line_len]u8 = undefined;
+    const len = format_page_row(page, 3, &line);
+    // invariant: chrome row paints abc first
+    assert(len >= 3);
+    assert(line[0] == 'a');
+    assert(line[1] == 'b');
+    assert(line[2] == 'c');
+    const start = (grid_cols - len) / 2;
+    const abc_x = @as(i32, @intCast(start)) * cell_pw + cell_pw;
+    const abc_y = 3 * cell_ph + @divTrunc(cell_ph, 2);
+    const key = map.hit_test(abc_x, abc_y) orelse return false;
+    return key == .to_letters;
+}
+
+/// Device-free mode round-trip: letters -> emoji -> letters via tap_result.
+pub fn mode_round_trip_letters_emoji() bool {
+    switch (tap_result(.to_emoji, false)) {
+        .set_mode => |m| {
+            if (m != .emoji) return false;
+        },
+        else => return false,
+    }
+    return switch (tap_result(.to_letters, false)) {
+        .set_mode => |m| m == .letters,
+        else => false,
+    };
+}
+
+/// Device-free mode round-trip: letters -> numbers -> letters via tap_result.
+pub fn mode_round_trip_letters_numbers() bool {
+    switch (tap_result(.to_numbers, false)) {
+        .set_mode => |m| {
+            if (m != .numbers) return false;
+        },
+        else => return false,
+    }
+    return switch (tap_result(.to_letters, false)) {
+        .set_mode => |m| m == .letters,
+        else => false,
+    };
+}
+
+/// Device-free glass-keyboard: ret inserts newline; send submits; ret alone does not submit.
+pub fn zeta6_ret_newline_send_submits() bool {
+    switch (tap_result(.@"return", false)) {
+        .action => |a| {
+            if (a != .newline) return false;
+        },
+        else => return false,
+    }
+    switch (tap_result(.send, false)) {
+        .action => |a| {
+            if (a != .submit) return false;
+        },
+        else => return false,
+    }
+    var editor: dexter.LineEditor = .{};
+    drain_layout_keys(&editor, &[_]layout.Key{
+        .{ .char_ = 'a' },
+        .@"return",
+        .{ .char_ = 'b' },
+    });
+    if (!std.mem.eql(u8, editor.prompt_slice(), "a\nb")) return false;
+    if (editor.pending_submit) return false;
+    if (editor.newline_count() != 1) return false;
+    drain_layout_keys(&editor, &[_]layout.Key{.send});
+    return editor.pending_submit;
+}
+
+/// Device-free glass-keyboard: letters bottom row paints ret and ^ (send).
+pub fn letters_bottom_has_ret_and_send() bool {
+    var line: [max_line_len]u8 = undefined;
+    const len = format_page_row(layout.letters_page, 3, &line);
+    // invariant: an empty label would paint a key with nothing on it, so the format is proven
+    // to have produced something before it is drawn
+    assert(len > 0);
+    const shown = line[0..len];
+    if (std.mem.indexOf(u8, shown, "ret") == null) return false;
+    if (std.mem.indexOf(u8, shown, "^") == null) return false;
+    return true;
+}
+
+pub const max_hit_keys: u32 = layout.max_keys_per_row * keyboard_rows;
+
+/// One key's painted rectangle in window pixels (ZETA2b).
+pub const HitKey = struct {
+    x0: i32 = 0,
+    x1: i32 = 0,
+    y0: i32 = 0,
+    y1: i32 = 0,
+    key: layout.Key = .{ .char_ = ' ' },
+};
+
+pub const HitMap = struct {
+    origin_x: i32 = 0,
+    origin_y: i32 = 0,
+    width: i32 = 0,
+    height: i32 = 0,
+    ready: bool = false,
+    count: u32 = 0,
+    keys: [max_hit_keys]HitKey = @splat(.{}),
+
+    pub fn contains(self: HitMap, x: i32, y: i32) bool {
+        if (!self.ready or self.width <= 0 or self.height <= 0) return false;
+        return x >= self.origin_x and x < self.origin_x + self.width and
+            y >= self.origin_y and y < self.origin_y + self.height;
+    }
+
+    /// Hit-test a tap in window coordinates. Returns null when outside a key.
+    pub fn hit_test(self: HitMap, x: i32, y: i32) ?layout.Key {
+        if (!self.contains(x, y)) return null;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const hk = self.keys[i];
+            if (x >= hk.x0 and x < hk.x1 and y >= hk.y0 and y < hk.y1) {
+                return hk.key;
+            }
+        }
+        return null;
+    }
+};
+
+/// Build hit boxes matching centered, space-separated paint (ZETA2b).
+pub fn build_hit_map(
+    grid_origin_x: i32,
+    grid_origin_y: i32,
+    cell_pw: i32,
+    cell_ph: i32,
+    grid_cols: u32,
+    row0: u32,
+    page: layout.Page,
+) HitMap {
+    // invariant: positive cell metrics
+    assert(cell_pw > 0);
+    assert(cell_ph > 0);
+    assert(grid_cols > 0);
+    assert(page.rows.len == keyboard_rows);
+
+    var map: HitMap = .{
+        .origin_x = grid_origin_x,
+        .origin_y = grid_origin_y + @as(i32, @intCast(row0)) * cell_ph,
+        .width = @as(i32, @intCast(grid_cols)) * cell_pw,
+        .height = @as(i32, @intCast(keyboard_rows)) * cell_ph,
+        .ready = true,
+        .count = 0,
+    };
+
+    var line: [max_line_len]u8 = undefined;
+    var r: u32 = 0;
+    while (r < keyboard_rows) : (r += 1) {
+        const len = format_page_row(page, r, &line);
+        // invariant: the row was formatted into the grid, so an empty one would paint a blank
+        // row and a longer one would run past the grid's own width
+        assert(len > 0);
+        assert(len <= grid_cols);
+        const start_col: u32 = (grid_cols - len) / 2;
+        const keys = page.rows[r].keys;
+        var col: u32 = start_col;
+        var ki: u32 = 0;
+        while (ki < keys.len) : (ki += 1) {
+            // invariant: the hit map is a fixed array of max_hit_keys and the count indexes it,
+            // so a count at the ceiling has no slot left to record the next key
+            assert(map.count < max_hit_keys);
+            const lab_len = label_char_len(keys[ki]);
+            const span_end = if (ki + 1 < keys.len) col + lab_len + 1 else col + lab_len;
+            const y0 = map.origin_y + @as(i32, @intCast(r)) * cell_ph;
+            map.keys[map.count] = .{
+                .x0 = grid_origin_x + @as(i32, @intCast(col)) * cell_pw,
+                .x1 = grid_origin_x + @as(i32, @intCast(span_end)) * cell_pw,
+                .y0 = y0,
+                .y1 = y0 + cell_ph,
+                .key = keys[ki],
+            };
+            map.count += 1;
+            col = span_end;
+        }
+    }
+    // invariant: a keyboard that registered no hit regions would swallow every touch, so the
+    // map is proven non-empty before it is handed to the caller
+    assert(map.count > 0);
+    return map;
+}
+
+/// Device-free: center of painted top-left 'q' (centered row) returns 'q'.
+pub fn letters_top_left_hit_is_q() bool {
+    const grid_cols: u32 = 40;
+    const cell_pw: i32 = 10;
+    const cell_ph: i32 = 20;
+    const map = build_hit_map(0, 0, cell_pw, cell_ph, grid_cols, 0, layout.letters_page);
+    // First letters row is centered; pin the middle of the 'q' span.
+    var line: [max_line_len]u8 = undefined;
+    const len = format_page_row(layout.letters_page, 0, &line);
+    const start = (grid_cols - len) / 2;
+    const qx = @as(i32, @intCast(start)) * cell_pw + @divTrunc(cell_pw, 2);
+    const key = map.hit_test(qx, @divTrunc(cell_ph, 2)) orelse return false;
+    return switch (key) {
+        .char_ => |ch| ch == 'q',
+        else => false,
+    };
+}
+
+/// Device-free ZETA2b: `spc` hit width matches painted label (+ gap), not equal columns.
+pub fn letters_space_span_matches_paint() bool {
+    const grid_cols: u32 = 40;
+    const cell_pw: i32 = 10;
+    const cell_ph: i32 = 20;
+    const map = build_hit_map(0, 0, cell_pw, cell_ph, grid_cols, 0, layout.letters_page);
+    const keys = layout.letters_page.rows[3].keys;
+    var i: u32 = 0;
+    while (i < map.count) : (i += 1) {
+        if (map.keys[i].key == .space) {
+            const lab = label_char_len(.space);
+            // Space is not last on row 3 -- paint adds one gap cell after the label.
+            const expect_cells: i32 = @intCast(lab + 1);
+            const span = map.keys[i].x1 - map.keys[i].x0;
+            const equal = @divTrunc(map.width, @as(i32, @intCast(keys.len)));
+            // invariant: span follows paint, not equal-width slices
+            assert(span == expect_cells * cell_pw);
+            return span != equal;
+        }
+    }
+    return false;
+}
+
+comptime {
+    _ = print;
+}

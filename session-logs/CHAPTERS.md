@@ -1,0 +1,116 @@
+# Session-logs -- seasons roster
+
+**Language:** EN  
+**Status:** Living pin -- one line per closed season  
+**Bound:** under `living_pin_max_bytes`  
+**Seated:** `20260725.040520`  
+**Counts derived:** every `Count` below is held to its own shelf's rows by
+[`../tools/s/session_roster_agree_witness.rish`](../tools/s/session_roster_agree_witness.rish), which reads this roster and `README.md` against the same count.
+**Law:** [`../context/specs/append-only-growth-law.md`](../context/specs/append-only-growth-law.md)
+
+| Chapter | Range | Count | Index |
+|--------|-------|------:|-------|
+| 20261009 | `20261009` | open | [`date/README-index-20261009.md`](date/README-index-20261009.md) |
+| 20261008 | `20261008` | 20 | [`date/README-index-20261008.md`](date/README-index-20261008.md) |
+| 20261007 | `20261007` | 79 | [`date/README-index-20261007.md`](date/README-index-20261007.md) |
+| 20261006 | `20261006` | 38 | [`date/README-index-20261006.md`](date/README-index-20261006.md) |
+| 20261005 | `20261005` | 76 | [`date/README-index-20261005.md`](date/README-index-20261005.md) |
+| 20261004 | `20261004` | 2 | [`date/README-index-20261004.md`](date/README-index-20261004.md) |
+| 20261003 | `20261003` | 121 | [`date/README-index-20261003.md`](date/README-index-20261003.md) |
+| 20261002 | `20261002` | 425 | [`date/README-index-20261002.md`](date/README-index-20261002.md) |
+| 20261001 | `20261001` | 243 | [`date/README-index-20261001.md`](date/README-index-20261001.md) |
+| 20260930 | `20260930` | 23 | [`date/README-index-20260930.md`](date/README-index-20260930.md) |
+| 20260929 | `20260929` | 27 | [`date/README-index-20260929.md`](date/README-index-20260929.md) |
+| 20260928 | `20260928` | 24 | [`date/README-index-20260928.md`](date/README-index-20260928.md) |
+| 20260927 | `20260927` | 22 | [`date/README-index-20260927.md`](date/README-index-20260927.md) |
+| 20260926 | `20260926` | 36 | [`date/README-index-20260926.md`](date/README-index-20260926.md) |
+| 20260925 | `20260925` | 155 | [`date/README-index-20260925.md`](date/README-index-20260925.md) |
+| 20260924 | `20260924` | 109 | [`date/README-index-20260924.md`](date/README-index-20260924.md) |
+| 20260923 | `20260923` | 37 | [`date/README-index-20260923.md`](date/README-index-20260923.md) |
+| 20260922 | `20260922` | 20 | [`date/README-index-20260922.md`](date/README-index-20260922.md) |
+| through-20260721 | through `20260721` | 775 | [`date/README-index-through-20260721.md`](date/README-index-through-20260721.md) |
+| 20260722 | `20260722` | 161 | [`date/README-index-20260722.md`](date/README-index-20260722.md) |
+| 20260724 | `20260724` | 51 | [`date/README-index-20260724.md`](date/README-index-20260724.md) |
+| 20260725 | `20260725` | 181 | [`date/README-index-20260725.md`](date/README-index-20260725.md) |
+| 20260726 | `20260726` | 25 | [`date/README-index-20260726.md`](date/README-index-20260726.md) |
+| 20260727 | `20260727` | 38 | [`date/README-index-20260727.md`](date/README-index-20260727.md) |
+| 20260728 | `20260728` | 223 | [`date/README-index-20260728.md`](date/README-index-20260728.md) |
+| 20260729 | `20260729` | 32 | [`date/README-index-20260729.md`](date/README-index-20260729.md) |
+| 20260730 | `20260730` | 145 | [`date/README-index-20260730.md`](date/README-index-20260730.md) |
+| 20260731 | `20260731` | 51 | [`date/README-index-20260731.md`](date/README-index-20260731.md) |
+| 20260801 | `20260801` | 58 | [`date/README-index-20260801.md`](date/README-index-20260801.md) |
+| 20260802 | `20260802` | 77 | [`date/README-index-20260802.md`](date/README-index-20260802.md) |
+| 20260803 | `20260803` | 13 | [`date/README-index-20260803.md`](date/README-index-20260803.md) |
+| 20260804 | `20260804` | 21 | [`date/README-index-20260804.md`](date/README-index-20260804.md) |
+| 20260805 | `20260805` | 1 | [`date/README-index-20260805.md`](date/README-index-20260805.md) |
+| 20260807 | `20260807` | 1 | [`date/README-index-20260807.md`](date/README-index-20260807.md) |
+| 20260808 | `20260808` | 54 | [`date/README-index-20260808.md`](date/README-index-20260808.md) |
+| 20260809 | `20260809` | 28 | [`date/README-index-20260809.md`](date/README-index-20260809.md) |
+| 20260810 | `20260810` | 80 | [`date/README-index-20260810.md`](date/README-index-20260810.md) |
+| 20260811 | `20260811` | 64 | [`date/README-index-20260811.md`](date/README-index-20260811.md) |
+| 20260812 | `20260812` | 117 | [`date/README-index-20260812.md`](date/README-index-20260812.md) |
+| 20260813 | `20260813` | 187 | [`date/README-index-20260813.md`](date/README-index-20260813.md) |
+| 20260814 | `20260814` | 120 | [`date/README-index-20260814.md`](date/README-index-20260814.md) |
+| 20260815 | `20260815` | 183 | [`date/README-index-20260815.md`](date/README-index-20260815.md) |
+| 20260816 | `20260816` | 107 | [`date/README-index-20260816.md`](date/README-index-20260816.md) |
+| 20260817 | `20260817` | 149 | [`date/README-index-20260817.md`](date/README-index-20260817.md) |
+| 20260818 | `20260818` | 68 | [`date/README-index-20260818.md`](date/README-index-20260818.md) |
+| 20260819 | `20260819` | 106 | [`date/README-index-20260819.md`](date/README-index-20260819.md) |
+| 20260820 | `20260820` | 64 | [`date/README-index-20260820.md`](date/README-index-20260820.md) |
+| 20260821 | `20260821` | 80 | [`date/README-index-20260821.md`](date/README-index-20260821.md) |
+| 20260822 | `20260822` | 61 | [`date/README-index-20260822.md`](date/README-index-20260822.md) |
+| 20260823 | `20260823` | 28 | [`date/README-index-20260823.md`](date/README-index-20260823.md) |
+| 20260824 | `20260824` | 58 | [`date/README-index-20260824.md`](date/README-index-20260824.md) |
+| 20260825 | `20260825` | 37 | [`date/README-index-20260825.md`](date/README-index-20260825.md) |
+| 20260826 | `20260826` | 44 | [`date/README-index-20260826.md`](date/README-index-20260826.md) |
+
+*Erratum `20260909.000143` -- the second copy had drifted.* This roster and the living pin
+[`README.md`](README.md) each carried the same derived number, and only the pin was named by a
+close duty. Measured against the shelves themselves on the lap that closed `20260908` at its measured 160 rows: six closed
+days read wrong here and right in the pin -- `20260828` 66/67, `20260829` 84/86, `20260830` 92/73,
+`20260905` 58/61, `20260906` 133/134, `20260907` 129/131 -- and six more had no row at all,
+`20260821` through `20260826`, because one living row (*the days still flat in the room*, 180) went
+stale when a log became born-on-shelf at `20260827.171500` and later hands appended past it. Every
+count above is now derived by counting its own shelf's rows, and each of the twelve agrees with the
+pin and with the files on disk. The row a hand must type twice is the row that drifts
+(`stamp-and-name`: **count, never number**); a guard holding the two rosters to one reading is the
+next lap rather than this one.
+
+Prior overflow shelf (absorbed into 20260722 index): [`date/README-index-20260722-shelf.md`](date/README-index-20260722-shelf.md) -- kept for accrete-never-break.
+
+**Fold trigger, seated `20260824.052329`:** a day's rows fold the moment that day's logs have,
+so the index describes exactly the set the room holds flat. One tool does both --
+`rye run tools/rye/session_logs_archive.rye index-fold` -- and
+[`../tools/i/index_fold_witness.rish`](../tools/i/index_fold_witness.rish) gates this room at
+zero stale rows. The byte bound then follows for free: fold the room to today and the pin holds
+one day of rows. Growth law: [`../context/specs/append-only-growth-law.md`](../context/specs/append-only-growth-law.md).
+
+**Waypoint:** Equinox relay e223-e294 rests at `20260804.230650` / pier fuse `20260804.231208` -- grain **arc**, by Keaton's word ("fuse kg with arc") - arcs: equality closed - Nock crossed once - Pond census - walls charted - rune ladder glow-language-346 - guides 0-2 - maps woven - summary: [`../counsel/date/20260804/20260804-230650_the-equinox-season-summary.md`](../counsel/date/20260804/20260804-230650_the-equinox-season-summary.md)
+**Ratified:** grain **arc** spoken directly -- Keaton, `20260804.231107` / pier fuse `20260804.231449` ("fuse kg with arc"); the delegated lean and the owner's word agree - innermost open season **CLOSED**.
+**Waypoint:** Fascia Equinox (nest-12, f-rounds) rests at `20260804.232258` / pier fuse `20260804.232721` -- exit bar **fascia >= 90** was MET at entry 69 before the pause; handback consumed; closed heading home, first rung of the walk. Progress kept: f3 complete - exit bar MET - `return_voice_j4_d10` CONSUMED.
+**Waypoint:** Voice Chapter (nest-11, undeca) rests at `20260804.233134` -- Journey 4 doors 8-15 GREEN - Build queue CLOSED - tend three DONE - almanac 16/16 - handback `return_equinox_e7` CONSUMED; closed heading home, second rung. Progress pointers kept.
+**Waypoint:** Nona (nest-9, n-rounds) rests at `20260804.234508` / pier fuse `20260804.235036` -- n3 complete - n4 next stands as its bookmark - handback `return_surface_p41` consumed; closed heading home by Keaton's named word; cadence: **one rung per fuse**.
+**Waypoint (the homeward sweep):** at `20260804.233206` / pier fuse `20260804.234505`, by Keaton's order (*fuse kg Nona* - lose-no-pointer sweep), the remaining paused rungs rest deepest-outward -- Voice already RESTED (11 - J4 - almanac 16/16) - **Nona** (9 - n3/n4) - Oven (8 - o3/o4) - Surface (7 - p58/p59 - live-five) - Generator (6 - s8/s9) - MUR (3 - u91/u92) - Inner Scope (i6/i7) - Constellation (m8/m9) -- every row keeps its PAUSED facts verbatim beside RESTED; each reopens only by fresh charter. Geode prep untouched; 6a Wheel-frame parked; Keeh quint already CLOSED (k6/k7 bookmarks belong to Identity Remake, still PAUSED -- flagged, not swept blind). - **Note `20260804.235036`:** pier fused this sweep before counsel retired v88; rows stand (accrete); cadence law from here is one named rung per fuse.
+| 20260827 | `20260827` | 45 | [`date/README-index-20260827.md`](date/README-index-20260827.md) |
+| 20260828 | `20260828` | 67 | [`date/README-index-20260828.md`](date/README-index-20260828.md) |
+| 20260829 | `20260829` | 86 | [`date/README-index-20260829.md`](date/README-index-20260829.md) |
+| 20260830 | `20260830` | 73 | [`date/README-index-20260830.md`](date/README-index-20260830.md) |
+| 20260831 | `20260831` | 26 | [`date/README-index-20260831.md`](date/README-index-20260831.md) |
+| 20260903 | `20260903` | 65 | [`date/README-index-20260903.md`](date/README-index-20260903.md) |
+| 20260904 | `20260904` | 45 | [`date/README-index-20260904.md`](date/README-index-20260904.md) |
+| 20260905 | `20260905` | 62 | [`date/README-index-20260905.md`](date/README-index-20260905.md) |
+| 20260906 | `20260906` | 134 | [`date/README-index-20260906.md`](date/README-index-20260906.md) |
+| 20260907 | `20260907` | 133 | [`date/README-index-20260907.md`](date/README-index-20260907.md) |
+| 20260908 | `20260908` | 166 | [`date/README-index-20260908.md`](date/README-index-20260908.md) |
+| 20260909 | `20260909` | 108 | [`date/README-index-20260909.md`](date/README-index-20260909.md) |
+| 20260910 | `20260910` | 107 | [`date/README-index-20260910.md`](date/README-index-20260910.md) |
+| 20260911 | `20260911` | 69 | [`date/README-index-20260911.md`](date/README-index-20260911.md) |
+| 20260912 | `20260912` | 65 | [`date/README-index-20260912.md`](date/README-index-20260912.md) |
+| 20260913 | `20260913` | 49 | [`date/README-index-20260913.md`](date/README-index-20260913.md) |
+| 20260914 | `20260914` | 117 | [`date/README-index-20260914.md`](date/README-index-20260914.md) |
+| 20260915 | `20260915` | 68 | [`date/README-index-20260915.md`](date/README-index-20260915.md) |
+| 20260916 | `20260916` | 99 | [`date/README-index-20260916.md`](date/README-index-20260916.md) |
+| 20260917 | `20260917` | 243 | [`date/README-index-20260917.md`](date/README-index-20260917.md) |
+| 20260921 | `20260921` | 36 | [`date/README-index-20260921.md`](date/README-index-20260921.md) |
+| 20260920 | `20260920` | 29 | [`date/README-index-20260920.md`](date/README-index-20260920.md) |
+| 20260918 | `20260918` | 474 | [`date/README-index-20260918.md`](date/README-index-20260918.md) |

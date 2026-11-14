@@ -1,0 +1,84 @@
+# kyri-resins catalog -- every resin named, and every resin's bytes sealed SHA3-256.
+#
+# THE PROMISE THIS FILE KEEPS. `foundations/20260703-202312_the-marked-value.md` states the
+# cellar's own clause: *every resin records the marks of what it seals, so a reader in another
+# decade knows what the cellar held without opening it.* One `entry` line per resin says what the
+# cellar holds, and one `seal` line says its bytes are the bytes. The same page names all three
+# fields a manifest line carries -- *its type-mark, its digest at the tiers the resins law fixes,
+# and its name* -- and the vow beneath them: *the digest is checked twice*.
+#
+# REFRESHED `20260906.233111`, after a measurement. The habit was kept for the first three files
+# of the first morning and dropped: the room held 17 resins and this catalog named 3, and nothing
+# in the tree read it -- three scans name `kyri-resins/` only to skip it as testimony. A catalog
+# covering a fifth of its room reads exactly like a whole one. Fourteen entries were written from
+# each resin's OWN first header line rather than from a summary, and the catalog now has a reader:
+# `tools/k/kyri_resins_catalog_witness.rish` holds uncatalogued, orphaned, and duplicated lines at
+# zero on every lap, so this file can never quietly go stale again.
+#
+# SEALED `20260910.014500`, which is the field that refresh still lacked. Names and notes had grown
+# whole while the digest the law names stayed absent, so a resin edited in place would have passed
+# every reading above in silence. Each `seal` line records SHA3-256 computed by
+# `crypto/sha3_digest.rye` over authored Keccak, so checking one needs this tree and no external
+# binary. The catalog seals every resin and never itself -- a file cannot carry its own digest, and
+# the catalog's own bytes ride in the git history each seal travels in.
+#
+# WHAT THE SEVENTEEN DIGESTS ARE, measured rather than assumed. Every resin in this room has
+# exactly one commit in the tree's whole history, and its blob at that commit is byte-identical to
+# its blob at HEAD -- checked one file at a time, all seventeen equal. So each seal below is the
+# seal of the bytes that LANDED, rather than of bytes that merely stand here today.
+#
+# HELD `20260916.234020`, which that sentence lacked. A hand took the reading above once and
+# nothing read it again, so the figure was free in Gauge's sense -- true when written and held by
+# nothing. `tools/k/kyri_resins_landed_witness.rish` takes it on every lap, and it is a SECOND wall
+# rather than a louder one: the seal reading recomputes a digest and compares it to the line below
+# it, and both halves live in the working tree, so a resin edited together with its seal is
+# self-consistent and passes. Git's history is the copy an edit cannot reach. The catalog is
+# excluded there by name, because it gains a line whenever a resin lands and its own bytes move by
+# design -- three commits and moved bytes, against one and unmoved for all seventeen resins.
+format kyri-resins-v1
+stamp 20260712.115753
+refreshed 20260921.115355
+purpose chat-printout essay resins as Kyri values at the seam
+law Kyri carries immutable values; Brix composes wholes; this folder holds Kyri only
+witness tools/k/kyri_resins_catalog_witness.rish -- uncatalogued, orphan, duplicate, unsealed, and mismatched lines at zero
+witness tools/k/kyri_resins_landed_witness.rish -- a resin whose bytes differ from its adding commit's blob at zero
+entry 20260712-115753_morning-fold-thoughts.kyri fuller morning summary and Rio essay as chat-printout-v1
+entry 20260712-120007_claude-combined-morning.kyri Claude handoff combining essay plus session-log Kyri migration
+entry 20260712-121719_claude-nib-seated.kyri Claude handoff -- tip renamed to nib
+entry 20260712-123700_claude-guidance-onpath-kvm.kyri Claude guidance -- nib residues closed, on-path blocked in jail, host recipe
+entry 20260712-143946_claude-afternoon-onpath-parity.kyri Framework afternoon -- on-path GREEN, argv-direct pins, parity parked
+entry 20260712-200445_claude-evening-g1-toolchain.kyri evening -- parity GREEN, G1 open, toolchain fetch GREEN
+entry 20260712-204010_claude-g1-serial-green.kyri G1 serial GREEN
+entry 20260712-210000_claude-g1-close-pond-sixbar.kyri G1 closed, vendor/genode read, Pond sixbar
+entry 20260712-211700_claude-exit-n-second-walk.kyri exit card, N, and the second walk
+entry 20260712-212200_claude-scorecard-witness-walk.kyri scorecard witness on the second walk
+entry 20260712-212900_claude-freeze-worthy-affirm.kyri freeze-worthy affirmed; exit Kyri measured absent
+entry 20260712-213800_claude-freeze-affirmed-master-seal.kyri freeze affirmed, master-seal pinned
+entry 20260712-214500_claude-latch-monocypher.kyri latch rests, Monocypher seated
+entry 20260712-215100_claude-monocypher-pin.kyri Monocypher pin rests
+entry 20260712-220000_claude-signed-kumara-green.kyri signed-Kumara GREEN
+entry 20260712-220600_claude-day-close-resting.kyri day closed, signed-Kumara resting
+entry 20260725-224249_quin-handoff_fresh-session-bootstrap.md Quin fresh-session bootstrap -- Markdown in a Kyri room, kept as it landed
+
+seal 20260712-115753_morning-fold-thoughts.kyri 598f265fc7570259439ea34120cdba7bae1649a25f7ded61092777db8f79788e
+seal 20260712-120007_claude-combined-morning.kyri adc98566647676081aef4392322020ce9dbf3412b55a47397254ea8cd8ed0cc4
+seal 20260712-121719_claude-nib-seated.kyri 8ee8e5a256695abcb2c4d941741e5ba36d282ba345ab4285ab1cae48e14b83c0
+seal 20260712-123700_claude-guidance-onpath-kvm.kyri c3fc8f61786b9dde2cc509f057afd889d9ae66f4376a45b468016e223b1211c6
+seal 20260712-143946_claude-afternoon-onpath-parity.kyri eb134f71d594c439de8a2dec5e37c12f8e45021119a14694fc6003c501f73a7c
+seal 20260712-200445_claude-evening-g1-toolchain.kyri 6c18e42d11894c9451f9705bf445cdefe0d7d52ddfd082698dbb0ff750dcd944
+seal 20260712-204010_claude-g1-serial-green.kyri 72ebe84ea8d4b1321e16988ed94a65550f83380ebb07b77e2b2921ad9abecf84
+seal 20260712-210000_claude-g1-close-pond-sixbar.kyri 9052d1947be17b8553e83c3fa6e83427689d83a9867c10b131b041d9defe5263
+seal 20260712-211700_claude-exit-n-second-walk.kyri 491ecc3d256374fc27e2f13a2fec3cafc2dbcf26201590906b7bf72c6a2db6a4
+seal 20260712-212200_claude-scorecard-witness-walk.kyri 3aef13d383e429f05674c4e1d07cbc665b3957b1e59d260d10f36cfeff168f72
+seal 20260712-212900_claude-freeze-worthy-affirm.kyri 896e9220c275acf74458c8f68e56c46708f4c827b30e5b68da8cb0a3c8912e86
+seal 20260712-213800_claude-freeze-affirmed-master-seal.kyri b732b907c568292c810515c6f7ca4916ab67115ce1ac6dc0c4e7b9e5b767570e
+seal 20260712-214500_claude-latch-monocypher.kyri a9d26d61697847cca2beec44f6c53442b152bc7ec56950ff3bea9fd6cf08afce
+seal 20260712-215100_claude-monocypher-pin.kyri 86452540b31e6e47d51322cbaddc2510c6d4f9dfd71130b283f5f5b397268912
+seal 20260712-220000_claude-signed-kumara-green.kyri 0667b41d012e3f6a63eee02844cade0b7ce915491cf6ba77f54a4486b94cc213
+seal 20260712-220600_claude-day-close-resting.kyri 8ab69c65b143720c44b4345d9db2408abee235f275b1284f177a4228488ae704
+seal 20260725-224249_quin-handoff_fresh-session-bootstrap.md 12bb853f4240cab75b159f9bcdc883d0c34c32d7cba2af496c967d9d0657ef19
+
+note folder born on Kaeden word for raw chat printout in .kyri; commit with the resin
+note the one .md entry is named rather than swept -- the law line says Kyri only, the room has held that file since 20260725, and a catalog states its exception instead of hiding it
+note a seal is the bytes; an entry is the meaning -- two lines rather than one field, because a note carries spaces and a digest appended after free-form prose is a digest nothing can parse
+note resealed 20260921.115355 -- the Bron-to-Kyri breach renamed every .bron file and reworked Bron references to Kyri, so all seventeen resins' bytes moved and their seals were recomputed to match; the landed witness stays green because each resin's one commit is the breach itself

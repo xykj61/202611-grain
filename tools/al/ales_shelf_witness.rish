@@ -1,0 +1,47 @@
+# tools/al/ales_shelf_witness.rish -- a two-band tone shelf: bass and treble from the one-pole split (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260814/20260814-161231_fill-ales41-resonance-tone-shelf.md
+# Stands on: resonance/tone.rye (resonance-audio -- the low-pass/high-pass split) and resonance/timeline.rye (resonance-audio -- the Clip and saturate).
+#
+# resonance/shelf.rye scales resonance-audio's low band and high band independently and sums them -- the everyday bass/treble equalizer.
+# The selftest proves: silence stays silence; unity on both bands is the identity (the bands reconstruct the input); bass
+# scales direct current while treble leaves it untouched (the knobs are orthogonal at direct current); a boost SATURATES
+# rather than wraps (scale in the wide domain, clamp once -- resonance-audio's fader lesson); a zero/above-one coefficient refuses
+# BadCoeff, a zero band denominator BadGain, an out-of-range span BadRange leaving the clip untouched. Purely local -- no
+# network, no keys, no funds, no real device, no real sample rate.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_shelf_witness.rish
+
+say "ales-shelf: Language EN — resonance-audio turns resonance-audio's low/high split into two knobs: bass and treble, each boosting or cutting its band, the everyday equalizer."
+say "ales-shelf: Style Radiant — the law is stated positively: unity on both bands reconstructs the input exactly, bass moves direct current and treble does not (orthogonal knobs), and a boost saturates rather than wraps."
+say "ales-shelf: Lens TAME — bounded Clip, u32 span, i16 samples; the low band lives in a scratch copy so the high band's minuend stays intact; each band scaled in i64 and the sum clamped once (resonance-audio's fader lesson); an illegal coefficient refuses BadCoeff, a zero band denominator BadGain, an out-of-range span BadRange, each before a write; siloed to resonance/, no network, no keys, no funds, no device, no sample rate."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/shelf"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/shelf.rye -femit-bin=${bin}"]
+assert build.ok else "ales-shelf: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/shelf.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-shelf: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-shelf: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-shelf' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-shelf: selftest did not print the GREEN ales-shelf line"
+
+say "ales-shelf: GREEN — a two-band tone shelf gives a keeper bass and treble from resonance-audio's proven split, flat staying truly flat and a boost meeting the ceiling gracefully. The next Resonance rung can add a mid band, carry the filter state across a re-berthed span, or name the crossover in hertz through a real time base."
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

@@ -1,0 +1,481 @@
+//! linengrow/glow_native_surface.rye -- Skate grid presented on Android glass.
+//!
+//! Builds a small Brushstroke Skate text grid (title, Seva R2 panel lines,
+//! session-root hex, tap hint), rasterizes it with skate_grid.rye, and copies
+//! pixels into the locked ANativeWindow. No EGL, no Kotlin -- Skate stays
+//! OS-free; this file is only the Android present seam (same role Wayland seed
+//! plays on desktop).
+//!
+//! Skate writes B/G/R/A; Android WINDOW_FORMAT_RGBA_8888 wants R/G/B/A -- colors
+//! are swapped at the Color{} literals so the buffer lands correctly.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+// Symlinked beside this file (linengrow/skate_grid.rye -> brushstroke/) so Zig's
+// module root stays inside linengrow while Skate remains the one Brushstroke source.
+const skate = @import("skate_grid.rye");
+const seva_surf = @import("seva_surface.rye");
+const kb_paint = @import("dexter_glass_keyboard_paint.rye");
+const kb_layout = @import("dexter_glass_keyboard_layout.rye");
+const kb_emoji = @import("dexter_glass_emoji.rye");
+const jabs2_glass = @import("seva_jabs2_glass_audience.rye");
+const live_glass = @import("seva_live_root_glass.rye");
+const hearth = @import("hearth_lulu0.rye");
+const lulu1 = @import("hearth_lulu1.rye");
+const lulu2 = @import("hearth_lulu2.rye");
+const lulu3 = @import("hearth_lulu3.rye");
+const lulu4 = @import("hearth_lulu4.rye");
+const lulu5 = @import("hearth_lulu5.rye");
+const tally_copy = @import("tally_copy.rye");
+
+const WindowBuffer = extern struct {
+    width: i32,
+    height: i32,
+    stride: i32,
+    format: i32,
+    bits: ?*anyopaque,
+    reserved: [6]u32,
+};
+
+extern fn ANativeWindow_setBuffersGeometry(window: ?*anyopaque, w: i32, h: i32, format: i32) callconv(.c) i32;
+extern fn ANativeWindow_lock(window: ?*anyopaque, out: *WindowBuffer, dirty: ?*anyopaque) callconv(.c) i32;
+extern fn ANativeWindow_unlockAndPost(window: ?*anyopaque) callconv(.c) i32;
+
+const format_rgba8888: i32 = 1;
+
+/// Swapped for Skate's BGRA write order -> Android RGBA memory.
+fn rgba(r: u8, g: u8, b: u8) skate.Color {
+    return .{ .r = b, .g = g, .b = r };
+}
+
+fn put_line_centered(grid: *skate.Grid, row: u32, text: []const u8) void {
+    // invariant: row in grid
+    assert(row < grid.rows);
+    if (row >= grid.rows) return;
+    if (text.len >= grid.cols) {
+        grid.put_line(row, text);
+        return;
+    }
+    var line: [64]u8 = @splat(' ');
+    const cols: usize = @intCast(grid.cols);
+    // invariant: the text is centred inside the line by writing at an offset, so a line shorter
+    // than its column count or text wider than the columns would be written past the row
+    assert(cols <= line.len);
+    assert(text.len <= cols);
+    const start = (cols - text.len) / 2;
+    tally_copy.copy_disjoint(u8, line[start..][0..text.len], text);
+    grid.put_line(row, line[0..cols]);
+}
+
+/// Last keyboard hit map from paint (window coords). Soft-reset each paint.
+pub var last_keyboard_hit: kb_paint.HitMap = .{};
+/// Close-hint row only (Skate row 13). Outside-keyboard taps no longer finish the app.
+pub const CloseHit = struct {
+    ready: bool = false,
+    x0: i32 = 0,
+    y0: i32 = 0,
+    x1: i32 = 0,
+    y1: i32 = 0,
+
+    pub fn contains(self: CloseHit, x: i32, y: i32) bool {
+        if (!self.ready) return false;
+        // invariant: positive box when ready
+        assert(self.x1 > self.x0);
+        assert(self.y1 > self.y0);
+        return x >= self.x0 and x < self.x1 and y >= self.y0 and y < self.y1;
+    }
+};
+pub var last_close_hit: CloseHit = .{};
+/// Hearth status row (Skate row 1) -- tap cycles display_preset.
+pub var last_hearth_hit: CloseHit = .{};
+/// Current glass-keyboard page (letters / numbers / symbols / emoji). Activity may change this.
+pub var keyboard_mode: kb_layout.Mode = .letters;
+/// Active emoji category tab (glass-keyboard).
+pub var keyboard_emoji_tab: kb_emoji.Tab = .smileys;
+/// hearth-display: active display preset (default scaled_540 -- denser glyphs than panel_max).
+pub var active_preset: hearth.DisplayPreset = .scaled_540;
+/// hearth-display: short home from Hearth Kyri (default kd).
+pub var active_home_id: [hearth.home_id_len]u8 = .{ 'k', 'd' };
+/// hearth-display: Wired Glass sync-lane preference (default local).
+pub var active_wire: hearth.WireLane = .local;
+/// hearth-display: cellular preference (default off -- used-Pixel SLC).
+pub var active_cellular: hearth.Cellular = .off;
+/// hearth-display: thin Settings list open (rows 2-5).
+pub var settings_open: bool = false;
+/// hearth-display: hit boxes for the four preset lines (valid when settings_open).
+pub var last_preset_hits: [lulu2.preset_count]CloseHit = @splat(.{});
+/// hearth-display: editing short home_id (only while settings_open).
+pub var home_editing: bool = false;
+pub var home_draft: lulu3.Draft = .{};
+pub var last_home_hit: CloseHit = .{};
+pub var last_wire_hit: CloseHit = .{};
+pub var last_cell_hit: CloseHit = .{};
+
+fn fill_preset_list_rows(grid: *skate.Grid) void {
+    var i: u32 = 0;
+    while (i < lulu2.preset_count) : (i += 1) {
+        var buf: [lulu2.list_line_max]u8 = undefined;
+        const line = lulu2.format_list_line(i, active_preset, &buf) orelse continue;
+        put_line_centered(grid, lulu2.list_row0 + i, line);
+    }
+}
+
+fn fill_admitted_rows(
+    grid: *skate.Grid,
+    tube1_admitted: bool,
+    surf: ?*const seva_surf.Surface,
+    tip_line: ?[]const u8,
+    live_line: ?[]const u8,
+    pub_line: ?[]const u8,
+    fetch_line: ?[]const u8,
+    market_line: ?[]const u8,
+    carriage_line: ?[]const u8,
+    dexter_line: ?[]const u8,
+    jabs2_line0: ?[]const u8,
+    jabs2_line1: ?[]const u8,
+) void {
+    if (!tube1_admitted) return;
+    if (settings_open) {
+        // hearth-display: four-line preset list overlays the panel strip.
+        fill_preset_list_rows(grid);
+        // hearth-display: home row overlays the pub strip while Settings is open.
+        var home_buf: [lulu3.home_line_max]u8 = undefined;
+        const home_line = lulu3.format_home_line(
+            active_home_id[0..],
+            home_editing,
+            &home_draft,
+            &home_buf,
+        ) orelse "home · ??";
+        put_line_centered(grid, lulu3.home_row, home_line);
+        var wire_buf: [lulu4.wire_line_max]u8 = undefined;
+        const wire_line = lulu4.format_wire_line(active_wire, &wire_buf) orelse "wire · ??";
+        put_line_centered(grid, lulu4.wire_row, wire_line);
+        var cell_buf: [lulu5.cell_line_max]u8 = undefined;
+        const cell_line = lulu5.format_cell_line(active_cellular, &cell_buf) orelse "cell · ??";
+        put_line_centered(grid, lulu5.cell_row, cell_line);
+    } else {
+        var row: u32 = 2;
+        if (surf) |s| {
+            var p: u32 = 0;
+            while (p < s.count and row < 5) : (p += 1) {
+                const pan = s.panel(p);
+                var line_buf: [64]u8 = undefined;
+                const line = std.fmt.bufPrint(
+                    &line_buf,
+                    "[{s}] {s}",
+                    .{ pan.label_slice(), pan.frame.line(1) },
+                ) catch continue;
+                put_line_centered(grid, row, line);
+                row += 1;
+            }
+        }
+        // glow-language: live typed-append face wins tip strip when present.
+        if (live_line) |live| {
+            put_line_centered(grid, live_glass.skate_row, live);
+        } else if (tip_line) |tip| {
+            put_line_centered(grid, 5, tip);
+        }
+        if (pub_line) |published| put_line_centered(grid, 8, published);
+        if (fetch_line) |fetched| put_line_centered(grid, 9, fetched);
+        if (market_line) |market| put_line_centered(grid, 10, market);
+    }
+    if (carriage_line) |carriage| put_line_centered(grid, 11, carriage);
+    if (dexter_line) |dex| put_line_centered(grid, 12, dex);
+    // Layout word: seva-broadcast audience on 14-15; glass-keyboard keyboard on 16-19.
+    if (jabs2_line0) |a| put_line_centered(grid, jabs2_glass.skate_row0, a);
+    if (jabs2_line1) |b| put_line_centered(grid, jabs2_glass.skate_row0 + 1, b);
+    const page = kb_layout.page_for_tab(keyboard_mode, keyboard_emoji_tab);
+    var kb_lines: [kb_paint.keyboard_rows][kb_paint.max_line_len]u8 = undefined;
+    var kb_lens: [kb_paint.keyboard_rows]u32 = undefined;
+    if (kb_paint.format_page(page, &kb_lines, &kb_lens)) {
+        var kr: u32 = 0;
+        while (kr < kb_paint.keyboard_rows) : (kr += 1) {
+            put_line_centered(grid, jabs2_glass.keyboard_row0 + kr, kb_lines[kr][0..kb_lens[kr]]);
+        }
+    }
+}
+
+fn fill_window_bg(bits: [*]u8, w: i32, h: i32, stride_px: i32) void {
+    // invariant: positive window
+    assert(w > 0);
+    assert(h > 0);
+    assert(stride_px > 0);
+    var y: i32 = 0;
+    while (y < h) : (y += 1) {
+        var x: i32 = 0;
+        while (x < w) : (x += 1) {
+            const off: usize = @intCast((y * stride_px + x) * 4);
+            bits[off + 0] = 0x1a;
+            bits[off + 1] = 0x14;
+            bits[off + 2] = 0x10;
+            bits[off + 3] = 0xff;
+        }
+    }
+}
+
+fn blit_grid_centered(
+    bits: [*]u8,
+    w: i32,
+    h: i32,
+    stride_px: i32,
+    pixels: []const u8,
+    grid_w: i32,
+    grid_h: i32,
+    origin_x: i32,
+    origin_y: i32,
+) void {
+    // invariant: the grid's two dimensions divide into the blit offset below, so a zero in
+    // either would divide by zero rather than centre anything
+    assert(grid_w > 0);
+    assert(grid_h > 0);
+    var gy: i32 = 0;
+    while (gy < grid_h) : (gy += 1) {
+        const dy = origin_y + gy;
+        if (dy < 0 or dy >= h) continue;
+        var gx: i32 = 0;
+        while (gx < grid_w) : (gx += 1) {
+            const dx = origin_x + gx;
+            if (dx < 0 or dx >= w) continue;
+            const src: usize = @intCast((gy * grid_w + gx) * 4);
+            const dst: usize = @intCast((dy * stride_px + dx) * 4);
+            bits[dst + 0] = pixels[src + 0];
+            bits[dst + 1] = pixels[src + 1];
+            bits[dst + 2] = pixels[src + 2];
+            bits[dst + 3] = pixels[src + 3];
+        }
+    }
+}
+
+const PaintChrome = struct {
+    tip_line: ?[]const u8,
+    live_line: ?[]const u8,
+    pub_line: ?[]const u8,
+    fetch_line: ?[]const u8,
+    market_line: ?[]const u8,
+    carriage_line: ?[]const u8,
+    dexter_line: ?[]const u8,
+    jabs2_line0: ?[]const u8,
+    jabs2_line1: ?[]const u8,
+};
+
+fn fill_chrome_rows(
+    grid: *skate.Grid,
+    hex: *const [64]u8,
+    matched: bool,
+    tube1_admitted: bool,
+    surf: ?*const seva_surf.Surface,
+    chrome: PaintChrome,
+) void {
+    const jabs2_on = chrome.jabs2_line0 != null;
+    const title = if (matched and tube1_admitted and jabs2_on)
+        "SEVA seva-broadcast+seva-broadcast+seva-broadcast+DX+R2+T1 GREEN"
+    else if (matched and tube1_admitted)
+        "SEVA seva-broadcast+seva-broadcast+DX+R2+T1 GREEN"
+    else if (matched)
+        "SEVA B0  GREEN"
+    else
+        "SEVA B0";
+    put_line_centered(grid, 0, title);
+    var hearth_buf: [lulu1.status_line_max]u8 = undefined;
+    const hearth_line = if (tube1_admitted)
+        (lulu1.format_status(active_home_id[0..], active_preset, &hearth_buf) orelse "hearth")
+    else
+        "glow-publishing refused";
+    put_line_centered(grid, 1, hearth_line);
+    fill_admitted_rows(
+        grid,
+        tube1_admitted,
+        surf,
+        chrome.tip_line,
+        chrome.live_line,
+        chrome.pub_line,
+        chrome.fetch_line,
+        chrome.market_line,
+        chrome.carriage_line,
+        chrome.dexter_line,
+        chrome.jabs2_line0,
+        chrome.jabs2_line1,
+    );
+    put_line_centered(grid, 6, hex[0..32]);
+    put_line_centered(grid, 7, hex[32..64]);
+    put_line_centered(grid, 13, if (tube1_admitted) "TAP ABOVE KB TO CLOSE" else "TAP TO CLOSE");
+}
+
+/// Portrait: hand zone near bottom; desk: soft top bias.
+fn glass_origin_y(portrait: bool, h: i32, grid_h: i32) i32 {
+    // invariant: grid fits the locked window height
+    assert(grid_h > 0);
+    assert(h > 0);
+    if (portrait) return @max(0, h - grid_h - @divTrunc(h, 40));
+    return @divTrunc(h - grid_h, 5);
+}
+
+fn clear_touch_hits() void {
+    last_keyboard_hit = .{};
+    last_close_hit = .{};
+    last_hearth_hit = .{};
+    last_preset_hits = @splat(.{});
+    last_home_hit = .{};
+    last_wire_hit = .{};
+    last_cell_hit = .{};
+}
+
+fn row_hit(origin_x: i32, origin_y: i32, cell_ph: i32, grid_w: i32, row: i32) CloseHit {
+    return .{
+        .ready = true,
+        .x0 = origin_x,
+        .y0 = origin_y + row * cell_ph,
+        .x1 = origin_x + grid_w,
+        .y1 = origin_y + (row + 1) * cell_ph,
+    };
+}
+
+fn refresh_settings_hits(origin_x: i32, origin_y: i32, cell_ph: i32, grid_w: i32) void {
+    var i: u32 = 0;
+    while (i < lulu2.preset_count) : (i += 1) {
+        const row: i32 = @intCast(lulu2.list_row0 + i);
+        last_preset_hits[i] = row_hit(origin_x, origin_y, cell_ph, grid_w, row);
+    }
+    last_home_hit = row_hit(origin_x, origin_y, cell_ph, grid_w, @intCast(lulu3.home_row));
+    last_wire_hit = row_hit(origin_x, origin_y, cell_ph, grid_w, @intCast(lulu4.wire_row));
+    last_cell_hit = row_hit(origin_x, origin_y, cell_ph, grid_w, @intCast(lulu5.cell_row));
+}
+
+/// Keyboard + close-hint hit maps for the current paint (window coords).
+fn refresh_touch_hits(
+    tube1_admitted: bool,
+    origin_x: i32,
+    origin_y: i32,
+    cell_pw: i32,
+    cell_ph: i32,
+    cols: u32,
+    grid_w: i32,
+) void {
+    clear_touch_hits();
+    if (!tube1_admitted) return;
+    // invariant: positive cell metrics at the touch seam
+    assert(cell_pw > 0);
+    assert(cell_ph > 0);
+    last_keyboard_hit = kb_paint.build_hit_map(
+        origin_x,
+        origin_y,
+        cell_pw,
+        cell_ph,
+        cols,
+        jabs2_glass.keyboard_row0,
+        kb_layout.page_for_tab(keyboard_mode, keyboard_emoji_tab),
+    );
+    // Hearth status on Skate row 1 -- short tap cycles; long-press opens hearth-display.
+    last_hearth_hit = row_hit(origin_x, origin_y, cell_ph, grid_w, 1);
+    if (settings_open) {
+        refresh_settings_hits(origin_x, origin_y, cell_ph, grid_w);
+    } else {
+        home_editing = false;
+        home_draft.clear();
+    }
+    // Close only on the painted "TAP ABOVE KB TO CLOSE" row (Skate 13).
+    last_close_hit = row_hit(origin_x, origin_y, cell_ph, grid_w, 13);
+    // invariant: close strip sits above the keyboard
+    assert(last_close_hit.y1 <= last_keyboard_hit.origin_y);
+    // invariant: hearth status sits above the close strip
+    assert(last_hearth_hit.y1 < last_close_hit.y0);
+}
+
+/// Which hearth-display list row contains (x,y), if any.
+pub fn preset_hit_index(x: i32, y: i32) ?u32 {
+    if (!settings_open) return null;
+    var i: u32 = 0;
+    while (i < lulu2.preset_count) : (i += 1) {
+        if (last_preset_hits[i].contains(x, y)) return i;
+    }
+    return null;
+}
+
+fn paint_locked_session(
+    buf: *WindowBuffer,
+    hex: *const [64]u8,
+    matched: bool,
+    tube1_admitted: bool,
+    surf: ?*const seva_surf.Surface,
+    chrome: PaintChrome,
+) void {
+    if (buf.bits == null or buf.width <= 0 or buf.height <= 0 or buf.stride <= 0) return;
+    const w = buf.width;
+    const h = buf.height;
+    const stride_px = buf.stride;
+    // invariant: the session paints into a surface of these dimensions, so a zero in either
+    // would paint nothing at whatever scale the display asked for
+    assert(w > 0);
+    assert(h > 0);
+    const grid_rows: u32 = jabs2_glass.grid_rows;
+    const portrait = h > w;
+    // hearth-display: Hearth preset drives scale / cols (panel_max reads the window).
+    const applied = lulu1.apply_glass(w, h, active_preset, grid_rows);
+    const scale = applied.scale;
+    const cell_pw = applied.cell_pw;
+    const cell_ph = applied.cell_ph;
+    const cols = applied.cols;
+    const grid_w = applied.grid_w;
+    const grid_h = applied.grid_h;
+    // invariant: portrait fill aims under window height
+    assert(grid_h > 0);
+    const allocator = std.heap.page_allocator;
+    var grid = skate.Grid.init(allocator, cols, grid_rows) catch return;
+    defer allocator.free(grid.cells);
+    fill_chrome_rows(&grid, hex, matched, tube1_admitted, surf, chrome);
+    const bg = rgba(0x1a, 0x14, 0x10);
+    const fg = if (matched) rgba(0x7d, 0xc4, 0x8a) else rgba(0xe8, 0xc4, 0x7a);
+    const grid_stride: u32 = @intCast(grid_w * 4);
+    const pixels = allocator.alloc(u8, @intCast(grid_stride * @as(u32, @intCast(grid_h)))) catch return;
+    defer allocator.free(pixels);
+    // glass-keyboard: atlas cells 128+ paint via Skate extended glyphs.
+    skate.extended_glyphs = &kb_emoji.glyphs_ext;
+    grid.rasterize(pixels, grid_stride, grid_w, grid_h, bg, fg, scale);
+    const bits: [*]u8 = @ptrCast(buf.bits.?);
+    fill_window_bg(bits, w, h, stride_px);
+    const origin_x = @divTrunc(w - grid_w, 2);
+    const origin_y = glass_origin_y(portrait, h, grid_h);
+    refresh_touch_hits(tube1_admitted, origin_x, origin_y, cell_pw, cell_ph, cols, grid_w);
+    blit_grid_centered(bits, w, h, stride_px, pixels, grid_w, grid_h, origin_x, origin_y);
+}
+
+/// Paint via Skate: title, R2, tip/live, hex, rail, seva-broadcast, Dexter, seva-broadcast, glass-keyboard, tap.
+pub fn paint_session_root_hex(
+    window: ?*anyopaque,
+    hex: *const [64]u8,
+    matched: bool,
+    tube1_admitted: bool,
+    surf: ?*const seva_surf.Surface,
+    tip_line: ?[]const u8,
+    live_line: ?[]const u8,
+    pub_line: ?[]const u8,
+    fetch_line: ?[]const u8,
+    market_line: ?[]const u8,
+    carriage_line: ?[]const u8,
+    dexter_line: ?[]const u8,
+    jabs2_line0: ?[]const u8,
+    jabs2_line1: ?[]const u8,
+) void {
+    clear_touch_hits();
+    if (window == null) return;
+    _ = ANativeWindow_setBuffersGeometry(window, 0, 0, format_rgba8888);
+    var buf: WindowBuffer = undefined;
+    if (ANativeWindow_lock(window, &buf, null) != 0) return;
+    defer _ = ANativeWindow_unlockAndPost(window);
+    paint_locked_session(&buf, hex, matched, tube1_admitted, surf, .{
+        .tip_line = tip_line,
+        .live_line = live_line,
+        .pub_line = pub_line,
+        .fetch_line = fetch_line,
+        .market_line = market_line,
+        .carriage_line = carriage_line,
+        .dexter_line = dexter_line,
+        .jabs2_line0 = jabs2_line0,
+        .jabs2_line1 = jabs2_line1,
+    });
+}
+
+comptime {
+    _ = print;
+}

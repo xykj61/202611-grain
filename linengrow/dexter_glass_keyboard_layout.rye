@@ -1,0 +1,267 @@
+//! linengrow/dexter_glass_keyboard_layout.rye -- glass-keyboard/glass-keyboard English layout tables.
+//!
+//! Glow-owned QWERTY pages for the glass keyboard (waymark glass-keyboard). Device-free
+//! data only -- paint and tap hit-testing are glass-keyboard+. iOS-inspired mode family
+//! from public notes; clean-room (no Apple assets). glass-keyboard adds emoji pages.
+//! glass-keyboard: `ret` = newline; `send` (`^`) = submit.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const emoji = @import("dexter_glass_emoji.rye");
+
+/// Waymark for this ladder (SHA3-512 over glow-english-qwerty-glass-keyboard-3).
+pub const waymark: []const u8 = "glass-keyboard";
+
+pub const Mode = enum {
+    letters,
+    numbers,
+    symbols,
+    emoji,
+};
+
+/// One key face on a page. Specials are named; printables carry a UTF-8 byte.
+pub const Key = union(enum) {
+    char_: u8,
+    shift,
+    delete,
+    space,
+    @"return",
+    /// glass-keyboard upward send -- Dexter `.submit` (label `^`).
+    send,
+    to_numbers,
+    to_letters,
+    to_symbols,
+    to_emoji,
+    emoji_face: u8,
+    emoji_tab: emoji.Tab,
+};
+
+pub const max_keys_per_row: u32 = 12;
+pub const max_rows: u32 = 4;
+
+pub const Row = struct {
+    keys: []const Key,
+};
+
+pub const Page = struct {
+    mode: Mode,
+    rows: []const Row,
+};
+
+fn c(ch: u8) Key {
+    // invariant: printable ASCII for Skate faces
+    assert(ch >= 32);
+    assert(ch < 127);
+    return .{ .char_ = ch };
+}
+
+fn face(id: u8) Key {
+    // invariant: the face is read out of the emoji atlas by this id directly, so an id past the
+    // count would return whatever follows the table
+    assert(id < emoji.face_count);
+    return .{ .emoji_face = id };
+}
+
+// --- Letters (QWERTY) -------------------------------------------------------
+
+const letters_r0 = [_]Key{ c('q'), c('w'), c('e'), c('r'), c('t'), c('y'), c('u'), c('i'), c('o'), c('p') };
+const letters_r1 = [_]Key{ c('a'), c('s'), c('d'), c('f'), c('g'), c('h'), c('j'), c('k'), c('l') };
+const letters_r2 = [_]Key{ .shift, c('z'), c('x'), c('c'), c('v'), c('b'), c('n'), c('m'), .delete };
+const letters_r3 = [_]Key{ .to_numbers, .to_emoji, .space, .@"return", .send };
+
+const letters_rows = [_]Row{
+    .{ .keys = &letters_r0 },
+    .{ .keys = &letters_r1 },
+    .{ .keys = &letters_r2 },
+    .{ .keys = &letters_r3 },
+};
+
+pub const letters_page: Page = .{
+    .mode = .letters,
+    .rows = &letters_rows,
+};
+
+// --- Numbers ----------------------------------------------------------------
+
+const numbers_r0 = [_]Key{ c('1'), c('2'), c('3'), c('4'), c('5'), c('6'), c('7'), c('8'), c('9'), c('0') };
+const numbers_r1 = [_]Key{ c('-'), c('/'), c(':'), c(';'), c('('), c(')'), c('$'), c('&'), c('@'), c('"') };
+const numbers_r2 = [_]Key{ .to_symbols, c('.'), c(','), c('?'), c('!'), c('\''), .delete };
+const numbers_r3 = [_]Key{ .to_letters, .to_emoji, .space, .@"return", .send };
+
+const numbers_rows = [_]Row{
+    .{ .keys = &numbers_r0 },
+    .{ .keys = &numbers_r1 },
+    .{ .keys = &numbers_r2 },
+    .{ .keys = &numbers_r3 },
+};
+
+pub const numbers_page: Page = .{
+    .mode = .numbers,
+    .rows = &numbers_rows,
+};
+
+// --- Symbols ----------------------------------------------------------------
+
+const symbols_r0 = [_]Key{ c('['), c(']'), c('{'), c('}'), c('#'), c('%'), c('^'), c('*'), c('+'), c('=') };
+const symbols_r1 = [_]Key{ c('_'), c('\\'), c('|'), c('~'), c('<'), c('>'), c('`'), c('\''), c('"'), c('.') };
+const symbols_r2 = [_]Key{ .to_numbers, c(','), c('?'), c('!'), c('@'), c('&'), .delete };
+const symbols_r3 = [_]Key{ .to_letters, .to_emoji, .space, .@"return", .send };
+
+const symbols_rows = [_]Row{
+    .{ .keys = &symbols_r0 },
+    .{ .keys = &symbols_r1 },
+    .{ .keys = &symbols_r2 },
+    .{ .keys = &symbols_r3 },
+};
+
+pub const symbols_page: Page = .{
+    .mode = .symbols,
+    .rows = &symbols_rows,
+};
+
+// --- Emoji (glass-keyboard): frequent + tab grid + ABC/tabs/delete ---------------------
+
+const emoji_freq = [_]Key{ face(0), face(1), face(2), face(3), face(4), face(5), face(6), face(7) };
+
+const emoji_smileys_r1 = [_]Key{ face(0), face(1), face(2), face(3), face(4), face(5), face(6), face(7) };
+const emoji_smileys_r2 = [_]Key{ face(32), face(33), face(34), face(35), face(36), face(37), face(38), face(39) };
+
+const emoji_gestures_r1 = [_]Key{ face(8), face(9), face(10), face(11), face(12), face(13), face(14), face(15) };
+const emoji_gestures_r2 = [_]Key{ face(8), face(9), face(10), face(11), face(12), face(13), face(14), face(15) };
+
+const emoji_hearts_r1 = [_]Key{ face(16), face(17), face(18), face(19), face(20), face(21), face(22), face(23) };
+const emoji_hearts_r2 = [_]Key{ face(16), face(17), face(18), face(19), face(20), face(21), face(22), face(23) };
+
+const emoji_nature_r1 = [_]Key{ face(24), face(25), face(26), face(27), face(28), face(29), face(30), face(31) };
+const emoji_nature_r2 = [_]Key{ face(24), face(25), face(26), face(27), face(28), face(29), face(30), face(31) };
+
+const emoji_chrome = [_]Key{
+    .to_letters,
+    .{ .emoji_tab = .smileys },
+    .{ .emoji_tab = .gestures },
+    .{ .emoji_tab = .hearts },
+    .{ .emoji_tab = .nature },
+    .delete,
+};
+
+const emoji_smileys_rows = [_]Row{
+    .{ .keys = &emoji_freq },
+    .{ .keys = &emoji_smileys_r1 },
+    .{ .keys = &emoji_smileys_r2 },
+    .{ .keys = &emoji_chrome },
+};
+const emoji_gestures_rows = [_]Row{
+    .{ .keys = &emoji_freq },
+    .{ .keys = &emoji_gestures_r1 },
+    .{ .keys = &emoji_gestures_r2 },
+    .{ .keys = &emoji_chrome },
+};
+const emoji_hearts_rows = [_]Row{
+    .{ .keys = &emoji_freq },
+    .{ .keys = &emoji_hearts_r1 },
+    .{ .keys = &emoji_hearts_r2 },
+    .{ .keys = &emoji_chrome },
+};
+const emoji_nature_rows = [_]Row{
+    .{ .keys = &emoji_freq },
+    .{ .keys = &emoji_nature_r1 },
+    .{ .keys = &emoji_nature_r2 },
+    .{ .keys = &emoji_chrome },
+};
+
+pub const emoji_smileys_page: Page = .{ .mode = .emoji, .rows = &emoji_smileys_rows };
+pub const emoji_gestures_page: Page = .{ .mode = .emoji, .rows = &emoji_gestures_rows };
+pub const emoji_hearts_page: Page = .{ .mode = .emoji, .rows = &emoji_hearts_rows };
+pub const emoji_nature_page: Page = .{ .mode = .emoji, .rows = &emoji_nature_rows };
+
+pub fn page_for(mode: Mode) Page {
+    return page_for_tab(mode, .smileys);
+}
+
+pub fn page_for_tab(mode: Mode, tab: emoji.Tab) Page {
+    const page = switch (mode) {
+        .letters => letters_page,
+        .numbers => numbers_page,
+        .symbols => symbols_page,
+        .emoji => switch (tab) {
+            .smileys => emoji_smileys_page,
+            .gestures => emoji_gestures_page,
+            .hearts => emoji_hearts_page,
+            .nature => emoji_nature_page,
+        },
+    };
+    // invariant: every page carries exactly four rows
+    assert(page.rows.len == max_rows);
+    assert(page.mode == mode);
+    return page;
+}
+
+pub fn row_count(page: Page) u32 {
+    // invariant: the page holds at most max_rows rows and at least one, since a keyboard of no
+    // rows would swallow every touch
+    assert(page.rows.len <= max_rows);
+    const n: u32 = @intCast(page.rows.len);
+    // invariant: a page of no rows would draw a keyboard nothing can be typed on
+    assert(n > 0);
+    return n;
+}
+
+pub fn key_count(page: Page) u32 {
+    // invariant: the page holds at least one row of at most max_keys_per_row keys, and a key
+    // count of zero would draw a keyboard nothing can be typed on
+    assert(page.rows.len > 0);
+    var n: u32 = 0;
+    for (page.rows) |row| {
+        // invariant: each row holds at most max_keys_per_row keys, and the walk below reads the
+        // row array by index up to that bound
+        assert(row.keys.len <= max_keys_per_row);
+        n += @intCast(row.keys.len);
+    }
+    // invariant: a page of no keys would draw a keyboard nothing can be typed on
+    assert(n > 0);
+    return n;
+}
+
+/// First printable letter on the letters page must be 'q' (QWERTY top-left).
+pub fn letters_top_left_is_q() bool {
+    const page = letters_page;
+    // invariant: letters page is non-empty QWERTY
+    assert(page.rows.len > 0);
+    assert(page.rows[0].keys.len > 0);
+    return switch (page.rows[0].keys[0]) {
+        .char_ => |ch| ch == 'q',
+        else => false,
+    };
+}
+
+/// Numbers page top row is 1..0.
+pub fn numbers_top_row_is_digits() bool {
+    const row = numbers_page.rows[0].keys;
+    // invariant: digit row is ten keys
+    assert(row.len == 10);
+    var i: u32 = 0;
+    while (i < 10) : (i += 1) {
+        switch (row[i]) {
+            .char_ => |ch| {
+                const expect: u8 = if (i == 9) '0' else @intCast('1' + i);
+                if (ch != expect) return false;
+            },
+            else => return false,
+        }
+    }
+    return true;
+}
+
+/// glass-keyboard: emoji smileys page leads with frequent face 0.
+pub fn emoji_frequent_top_left_is_face0() bool {
+    return switch (emoji_smileys_page.rows[0].keys[0]) {
+        .emoji_face => |id| id == 0,
+        else => false,
+    };
+}
+
+comptime {
+    _ = print;
+    _ = std;
+}

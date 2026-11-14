@@ -1,0 +1,58 @@
+# tools/al/ales_deess_witness.rish -- the de-esser: the first sidechain composition (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260814/20260814-185604_fill-ales64-resonance-de-esser.md
+# Stands on: resonance/timeline.rye (resonance-audio -- the Clip, samples(), splice, the range law shape); resonance/band.rye (resonance-audio -- the Bandpass that
+# isolates the sibilant band, re-proven below); resonance/sidechain.rye (resonance-audio -- the keyed compressor this drives, re-proven below).
+#
+# resonance/deess.rye builds the first tool the sidechain's freedom unlocks: band-pass a copy of the target to isolate the sibilant band,
+# then key resonance-audio's attack/hold/release compressor on that copy over the target -- a de-esser, which tames a vocal's harsh "ess" by
+# ducking the whole voice only when the high band gets loud. The selftest proves: silence stays silence; the de-esser IS the
+# composition {band-pass a copy; sidechain-compress} byte-for-byte (the grounding law, run by hand -- no arithmetic added on the audio
+# path); the KEY's band-passed level sets the threshold crossing (a threshold just above the band-passed peak is the identity however
+# loud the broadband level, a threshold below it ducks -- proven by measuring the copy's peak, so the sibilant band, not the raw level,
+# drives the gain); a loud in-band signal ducks with the sign held and never expanding; and an illegal band cutoff refuses BadCoeff, a
+# zero threshold BadThreshold, a sub-unity ratio BadRatio, an illegal attack coefficient BadCoeff, a hold past max_clip BadHold, an
+# out-of-range span BadRange. Purely local -- no lookahead, no network, no keys, no funds, no real device, no sample rate.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_deess_witness.rish
+
+say "ales-deess: Language EN — resonance-audio proves the sidechain earns its keep: resonance-audio gave the detector its freedom (a compressor keyed by a separate signal) and named the first tool that freedom unlocks — the de-esser, whose key is a band-passed copy of the signal itself. A de-esser tames the harsh ess of a vocal without dulling the take: it listens only to the sibilant band (the high frequencies where the ess lives) and, when that band gets loud, ducks the whole voice for that instant, so the ess softens while the body stays bright. That is exactly a band-pass of a copy (resonance-audio) keyed into the sidechain compressor (resonance-audio)."
+say "ales-deess: Style Radiant — the law is stated positively: the de-esser IS the composition {band-pass a copy; sidechain-compress} byte-for-byte (the grounding law, run by hand — it adds no arithmetic on the audio path, it is two proven tools composed), the KEY's band-passed level sets the threshold crossing (a threshold just above the band-passed peak is the identity however loud the broadband level, below it ducks — proven by measuring the copy's peak), and a loud in-band signal ducks with the sign held and never expanding. So the de-esser reacts to the band, not the volume."
+say "ales-deess: Lens TAME — a mutable target beside a caller-owned empty scratch key (nothing allocates on the path); the band-pass runs first over the scratch copy so an illegal cutoff or span refuses before a single target sample changes, and the keyed compressor checks every threshold, ratio, coefficient, hold, and range edge before any write, so the target is atomic on any refusal; the fault set is tone.ToneError || sidechain.SidechainError, every name already the family's (BadKey cannot fire — the scratch key is a full copy of the target); siloed to resonance/, no lookahead, no network, no keys, no funds, no device, no sample rate."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/deess"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/deess.rye -femit-bin=${bin}"]
+assert build.ok else "ales-deess: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/deess.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-deess: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-deess: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-deess' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-deess: selftest did not print the GREEN ales-deess line"
+
+# This rung composes resonance-audio's band-pass and resonance-audio's keyed compressor over their public APIs -- re-prove both still stand green under it.
+let b = run ["sh" "-c" "env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/band.rye -femit-bin=resonance/bin/band && resonance/bin/band selftest 2>&1 | grep -q 'GREEN ales-band' && echo yes"]
+assert (trim b.out) == "yes" else "ales-deess: the resonance-audio band-pass regressed under the de-esser"
+
+let s = run ["sh" "-c" "env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/sidechain.rye -femit-bin=resonance/bin/sidechain && resonance/bin/sidechain selftest 2>&1 | grep -q 'GREEN ales-sidechain' && echo yes"]
+assert (trim s.out) == "yes" else "ales-deess: the resonance-audio sidechain compressor regressed under the de-esser"
+
+say "ales-deess: GREEN — the de-esser band-passes a copy of the target to isolate the sibilant band and keys resonance-audio's attack/hold/release compressor on that copy over the target; it IS the composition {band-pass a copy; sidechain-compress} byte-for-byte (no arithmetic added on the audio path), the key's band-passed level sets the threshold crossing (a threshold above the band-passed peak is the identity however loud the broadband level, below it ducks — proven by measuring the copy's peak), a loud in-band signal ducks with the sign held and never expanding; an illegal band cutoff refuses BadCoeff, a zero threshold BadThreshold, a sub-unity ratio BadRatio, an illegal attack coefficient BadCoeff, a hold past max_clip BadHold, an out-of-range span BadRange, each before the target is touched; the resonance-audio band-pass and resonance-audio sidechain compressor selftests stay GREEN. The first sidechain composition stands — the ducker (a voice key) and the keyed gate follow as compositions of proven parts; external key routing, a carried/spanning form, and the lookahead delay stay taken only on Keaton's word."
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

@@ -1,0 +1,17 @@
+# pulp_lap6.rish -- Pulp lap 5: fence-kinds count witness.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/s/pulp_lap6.rish
+
+let zig = "vendor/zig-toolchain/zig"
+let bin = "pulp/bin/pulp"
+
+let build = run ["sh" "-c" "mkdir -p pulp/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh pulp/pulp.rye -femit-bin=${bin}"]
+assert build.ok else "Pulp lap 5 build failed"
+
+let selftest = run ["sh" "-c" "${bin} selftest 2>&1"]
+assert selftest.ok else "Pulp selftest exited non-zero"
+assert selftest.out contains "GREEN" else "Pulp selftest not GREEN"
+assert selftest.out contains "fence kinds" else "Pulp missing fence kinds"
+
+say "GREEN: Pulp lap 5 — fence-kinds count from fence_kinds fixture."

@@ -1,0 +1,77 @@
+# Public Keys -- This Fork's Identity
+
+**Language:** EN
+**Style:** Gauge (see `context/GAUGE_STYLE.md`)
+**Voice:** Kyri
+**Since:** `20260713.201910` (this fork's first commit)
+**Last updated:** `20260904.002859` (Dallas holds `Host pier`)
+
+---
+
+This proposal to Urbit -- **Grain**, a downstream research repository -- carries its own identity forward from here. The record below is this identity's public face; the private halves stay home.
+
+**Identity Remake** `20260729.141658`: professional name **Keaton Dunsford** - email **xykj61@gmail.com** - handle **@xykj61**. Prior jail-local Dunsford keys archived off-tree. **Codeberg retired** as a living remote (Terms July 2026 -- LLM-heavy and cryptocurrency-related project bans). Living forge: **GitHub** -- beginner clone [`xykj61/grain`](https://github.com/xykj61/grain); the living push remote is `xy` per [`context/REMOTE_ROSTER.md`](context/REMOTE_ROSTER.md).
+
+---
+
+## The Identity
+
+- **Handle** -- `xykj61`
+- **Name** -- Keaton Dunsford
+- **Email** -- xykj61@gmail.com
+- **Urbit Azimuth star** -- `~bandun`
+- **Urbit Azimuth planet** -- `~pacpet-solreb`
+
+---
+
+## The Keys (living jail-local - Framework Linux)
+
+**GitHub - SSH**
+
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBG2SmxI44hO65h2jMmy8wpwplOhWCLyZSYUA5y7dFo xykj61@gmail.com xykj61 jail-only github (Linux ai-jail, Livermore)
+```
+
+Fingerprint:
+
+```
+SHA256:wmrMno9mLtukwkXUDd3KS/F9x2cI82InGB97+ueDI6w
+```
+
+**OpenPGP - jail-local signing**
+
+```
+C277 F8EC 76F5 CE8C 43B5 410E 4DEB 803D 2A05 75BA
+```
+
+Public armor export is generated from `.gnupg-rye/` (gitignored). Paste card (local): `keys/GITHUB_PASTE_*.md`.
+
+**Codeberg - SSH** -- **retired** `20260729.141658`. Do not register new Codeberg deploy keys for this pier.
+
+**Vultr pier - SSH** -- minted `20260802` on the Framework for jail-lane auth to the SEA instance; private half rests at `.ssh/id_ed25519_jail_vultr` (gitignored, line 170), never in the tree, never on counsel. SEA cancelled `20260903`. The same public line sits on Dallas (`keeper` `authorized_keys`).
+
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINxLRFDtsG7DOKgqwzTT5ruhKTiHN+cITAsArWlYHFmG xykj61@gmail.com xykj61 jail-only vultr SEA VPS (Linux Framework, Livermore)
+```
+
+Fingerprint:
+
+```
+SHA256:qWVRwxzvNpo1VkiI7cETJPeHJg0Naj/Avfcwdv2Z2mE
+```
+
+Do not paste this line toward a cancelled instance. Living SSH is `Host pier` (`45.32.204.176`, `User keeper`). The elder aliases `Host pier-2`, `Host vultr-sea`, and the SEA address `137.220.32.171` are retired; Dallas now holds the name `pier`. The jail-vultr private half still unlocks the Dallas copy of this public line.
+
+---
+
+## Key cards
+
+Root SVG QR codes: `keys_xykj61_ssh_github.svg` - `keys_xykj61_openpgp.svg` - `keys_xykj61_contact_email.svg` (email replaces former Codeberg deploy QR). PNG cards: `keys_menlo_xykj61_landscape.png` - `keys_menlo_xykj61_portrait.png` (Fira Code render `20260729.141658`).
+
+---
+
+## Historical note
+
+Prior public face under **Keaton Dunsford** / `keatondun@gmail.com` and Codeberg dual-forge remains in dated counsel and pre-remake commits until history rewrite (k3) lands. Master/host keys outside this jail are not this file's subject.
+
+---

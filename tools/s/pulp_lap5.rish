@@ -1,0 +1,18 @@
+# pulp_lap5.rish -- Pulp lap 4: paragraph extract witness.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/s/pulp_lap5.rish
+
+let zig = "vendor/zig-toolchain/zig"
+let bin = "pulp/bin/pulp"
+
+let build = run ["sh" "-c" "mkdir -p pulp/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh pulp/pulp.rye -femit-bin=${bin}"]
+assert build.ok else "Pulp lap 4 build failed"
+
+let selftest = run ["sh" "-c" "${bin} selftest 2>&1"]
+assert selftest.ok else "Pulp selftest exited non-zero"
+assert selftest.out contains "GREEN" else "Pulp selftest not GREEN"
+assert selftest.out contains "paragraphs extracted" else "Pulp missing paragraph extract"
+assert selftest.out contains "paragraph overflow refused" else "Pulp missing paragraph overflow"
+
+say "GREEN: Pulp lap 4 — paragraph extract from outline fixture."

@@ -1,0 +1,85 @@
+# tools/m/blaze_store_witness.rish -- the name spent on every read.
+#
+# WHAT THIS PROVES. `blaze/src/store.rye` names a blob by its SHA3-256 digest, and until
+# `20260908` that name was a proof computed once and never checked: `Sha3.hash` stood in
+# `write_blob` alone, so no read path recomputed the digest of the bytes it returned. Beside
+# that, `read_blob` called `Dir.readFile`, whose `readSliceShort` returns `buffer.len` the
+# moment the buffer fills, so a blob past the read ceiling came back as its own first megabyte
+# with no error raised.
+#
+# WHY THE TWO TOGETHER ARE WORSE THAN EITHER. A truncated `blaze-weave-v1` record is a VALID
+# PREFIX -- `from_v1` refuses only a falling position and a generation below one, and a prefix
+# breaks neither -- so it lifts as a shorter weave, and the next `blaze add` writes that
+# shorter weave back under its own honest digest. The history loses lines and the store still
+# reads consistent. The finding is written up whole at
+# external-research/date/20260908/20260908-170154_a-name-is-a-proof-computed-once.md.
+#
+# WHAT THE REPAIR IS. `read_blob` reads through `readFileAlloc` under a limit one past
+# `max_blob_bytes`, so a blob past the ceiling refuses `BlobTooLarge` rather than truncating;
+# then it recomputes the digest and refuses `BlobNameMismatch` when the bytes disagree with the
+# name they were asked for. `write_blob` reads the same ceiling at its own edge. One number,
+# named once, over one `.blaze/blobs/` directory: `blaze/src/main.rye` carried a second Store
+# at 4 MiB while this module stood at 1 MiB, so a blob one hand wrote was a prefix the other
+# hand read.
+#
+# WHAT THIS DOES NOT DO. It does not change the on-disk format, and it moves no byte: the CLI
+# built before and after this port drives the same commands to a byte-identical `.blaze/`
+# tree. It proves the ceiling in its REFUSING direction at the real 128 MiB, since the exact
+# boundary would cost two SHA3-256 passes over 128 MiB every lap; the witness and the control
+# each say so from their own side.
+#
+# The Rye witness lives beside the module it proves, at blaze/src/store_witness.rye, because
+# Zig refuses an import that escapes the root file's directory.
+#
+# Module: blaze/src/store.rye. Siblings: the weave guards beside it, and the model reading at
+# tools/m/blaze_weave_model_witness.rish.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/m/blaze_store_witness.rish
+
+let zig = "vendor/zig-toolchain/zig"
+let bin = "blaze/bin/store_witness"
+let pen = "blaze/bin/store_witness_pen"
+
+say "blaze-store: Language EN -- the name a blob carries, spent on every read."
+say "blaze-store: Style Gauge, Meter -- every claim is a run, and every refusal is named."
+say "blaze-store: Lens TAME -- one named ceiling read at both edges, and a digest recomputed."
+
+say "blaze-store: the module still declares the ceiling and the refusals it adds..."
+let seat = run ["sh" "-c" "grep -q 'pub const max_blob_bytes' blaze/src/store.rye && grep -q 'BlobTooLarge' blaze/src/store.rye && grep -q 'BlobNameMismatch' blaze/src/store.rye && grep -q 'readFileAlloc' blaze/src/store.rye"]
+assert seat.ok else "blaze-store: max_blob_bytes, BlobTooLarge, BlobNameMismatch or the bounded read left store.rye"
+
+say "blaze-store: the CLI reads one store rather than a second copy at another height..."
+let one = run ["sh" "-c" "grep -q 'const store_mod = @import(\"store.rye\")' blaze/src/main.rye && ! grep -q '^const Store = struct' blaze/src/main.rye"]
+assert one.ok else "blaze-store: blaze/src/main.rye carries its own Store again, so two ceilings stand over one .blaze/blobs/"
+
+say "blaze-store: building the witness against the real module..."
+let build = run ["sh" "-c" "mkdir -p blaze/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh blaze/src/store_witness.rye -femit-bin=${bin}"]
+assert build.ok else "blaze-store: store witness build failed"
+
+say "blaze-store: running it in a pen of its own..."
+let pen_make = run ["sh" "-c" "rm -rf ${pen} && mkdir -p ${pen}"]
+assert pen_make.ok else "blaze-store: the pen could not be made"
+
+let selftest = run ["sh" "-c" "${bin} ${pen} 2>&1"]
+assert selftest.ok else "blaze-store: store witness exited non-zero"
+assert selftest.out contains "GREEN" else "blaze-store: store witness not GREEN"
+assert selftest.out contains "comes back byte for byte" else "blaze-store: the round-trip claim is missing"
+assert selftest.out contains "written twice carry one name" else "blaze-store: the write-once claim is missing"
+assert selftest.out contains "altered on disk is refused BlobNameMismatch" else "blaze-store: the altered-blob refusal is missing"
+assert selftest.out contains "truncated on disk is refused BlobNameMismatch" else "blaze-store: the load-bearing claim -- a valid prefix refused rather than lifted -- is missing"
+assert selftest.out contains "refused BlobTooLarge at the write edge" else "blaze-store: the write-edge ceiling refusal is missing"
+assert selftest.out contains "refused BlobTooLarge at the read edge" else "blaze-store: the read-edge ceiling refusal is missing"
+assert selftest.out contains "HEAD round-trips" else "blaze-store: the HEAD claim is missing"
+assert selftest.out contains "128 bytes a row" else "blaze-store: the ceiling's own reason is missing"
+
+let pen_clean = run ["sh" "-c" "rm -rf ${pen}"]
+assert pen_clean.ok else "blaze-store: the pen could not be cleared"
+
+say "blaze-store: breaking the store in a pen, so the guard is proven able to red..."
+let control = run ["sh" "tools/fixtures/m/blaze_store_control.sh"]
+assert control.ok else "blaze-store: the control must complete -- a witness nobody has watched fail is a witness nobody has tested"
+assert control.out contains "control_verdict=ok" else "blaze-store: the control must reach its own verdict"
+assert control.out contains "clean_exit=0" else "blaze-store: the unmutated copy must reach GREEN, or every other phase fails for a reason the pen invented"
+
+say "GREEN: the store spends the proof it paid for -- eight claims, three refusals by name, six breaks caught."

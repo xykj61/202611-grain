@@ -1,0 +1,11 @@
+# cellar_manifest_tile.rish -- I6: cellar manifest hygiene (three-field Tile line).
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/ce/cellar_manifest_tile.rish
+
+let result = run ["sh" "tools/fixtures/c/cellar_manifest_tile_witness.sh"]
+say result.out
+assert result.ok else "cellar manifest tile witness failed"
+assert result.out contains "GREEN" else "cellar manifest tile witness not GREEN"
+
+say "GREEN: cellar manifest Tile witness passed (legacy + tile goldens)."

@@ -1,0 +1,13 @@
+# inference_pulp_blocks_view.rish -- Pulp block count -> Skate.
+let bin = "pond/bin/drawn-terminal"
+say "build: Pulp blocks view — drawn-terminal compile"
+let build = run ["sh" "tools/fixtures/p/pond_build_drawn_terminal.sh"]
+assert build.ok else "drawn_terminal build failed for pulp blocks view"
+assert build.out contains "GREEN:" else "drawn_terminal build did not reach GREEN"
+let view = run ["sh" "-c" "${bin} scribbleblocksviewtest 2>&1"]
+assert view.ok else "drawn terminal scribbleblocksviewtest exited non-zero"
+assert view.out contains "pulp blocks view" else "pulp blocks view missing expected output"
+assert view.out contains "GREEN" else "Pulp blocks view not GREEN"
+assert view.out contains "lines=5" else "pulp blocks view missing five-line frame"
+assert view.out contains "blocks=6" else "pulp blocks view missing blocks=6"
+say "GREEN: Pulp blocks view — six outline blocks on one Skate frame."

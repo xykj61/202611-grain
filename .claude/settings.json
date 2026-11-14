@@ -1,0 +1,17 @@
+{
+  "model": "claude-sonnet-4-6",
+  "effortLevel": "low",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh tools/fixtures/t/tame_style_scan.sh advise"
+          }
+        ]
+      }
+    ]
+  }
+}

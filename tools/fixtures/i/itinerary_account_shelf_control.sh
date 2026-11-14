@@ -1,0 +1,139 @@
+#!/bin/sh
+# itinerary_account_shelf_control.sh -- the account-shelf writer proven in a throwaway pen.
+#
+# The subject is a shelf written by a tool rather than by a hand. Every refusal is shown from both
+# sides -- planted and then lifted -- because a refusal proven only in the passing direction cannot
+# be told from a bypass.
+#
+#   sh tools/fixtures/i/itinerary_account_shelf_control.sh
+#
+# Prints `pass=N fail=N`. Bounded: one pen, the cases below.
+set -eu
+
+root=$(CDPATH= cd -- "$(dirname -- "$0")/../../.." && pwd)
+tool="$root/tools/i/itinerary_account_shelf.sh"
+reanchor="$root/tools/fixtures/r/reds_fold_reanchor.sh"
+pen=${TMPDIR:-/tmp}/itinerary-shelf-pen-$$
+trap 'rm -rf "$pen"' EXIT INT TERM
+
+pass=0; fail=0
+check() { if [ "$3" = "$2" ]; then pass=$((pass+1)); else fail=$((fail+1)); printf 'FAIL %s -- wanted %s, got %s\n' "$1" "$2" "$3" >&2; fi; }
+has() { case "$1" in *"$2"*) echo yes ;; *) echo no ;; esac; }
+
+mkdir -p "$pen/construction/archive" "$pen/tools/i" "$pen/tools/fixtures/r" "$pen/external-research" "$pen/.claude/rules"
+cp "$tool" "$pen/tools/i/"; cp "$reanchor" "$pen/tools/fixtures/r/"
+cd "$pen" || { echo "refused: pen absent -- $0 did not enter its pen; fixtures would land in the live tree" >&2; exit 1; }
+printf '# the card\n' > construction/ITINERARY.md
+printf '# the ledger\n' > construction/REDS.md
+printf '# an elder shelf\n' > construction/archive/20260908-230804_itinerary-landed-accounts.md
+printf '# a paper\n' > external-research/a-paper.md
+printf '# a rule\n' > .claude/rules/reds-first.md
+
+run() { ITINERARY_SHELF_ROOT="$pen" sh tools/i/itinerary_account_shelf.sh "$@" 2>&1; }
+
+block='**DIFFUSER -- AN ACCOUNT.**
+Elder [shelved](archive/20260908-230804_itinerary-landed-accounts.md);
+[new](../external-research/a-paper.md) A/91.
+Row [folded](../REDS.md), and see [rules](../.claude/rules/reds-first.md).'
+
+# --- the four link forms, on a dry run that must touch nothing -------------------------------
+out=$(printf '%s\n' "$block" | run --stamp 20260909.001122 --seat DIFFUSER --dry-run)
+check "an archive link loses its directory"      yes "$(has "$out" '](20260908-230804_itinerary-landed-accounts.md)')"
+check "a climbing link gains a level"            yes "$(has "$out" '](../../external-research/a-paper.md)')"
+check "a dotted rule path gains a level too"     yes "$(has "$out" '](../../.claude/rules/reds-first.md)')"
+check "the pin's own link is held as written"    yes "$(has "$out" '](../REDS.md)')"
+check "a dry run names the shelf it would write" yes "$(has "$out" 'shelf=construction/archive/20260909-001122_itinerary-landed-accounts.md')"
+check "a dry run hands over the card's link"     yes "$(has "$out" 'card_link=archive/20260909-001122_itinerary-landed-accounts.md')"
+check "and a dry run writes no file"             no  "$(has "$(ls construction/archive)" '20260909-001122')"
+
+# --- the header, generated rather than invented by a hand ------------------------------------
+check "the header names the seat"                yes "$(has "$out" 'The DIFFUSER account the live card carried')"
+check "the header names the stamp"              yes "$(has "$out" 'shelved `20260909.001122`')"
+check "the header declares its room"             yes "$(has "$out" '**Room:** Checkable')"
+
+# --- the asks leaving the card, said out loud -------------------------------------------------
+# A ship's question for Keaton rides inside its account block, and this writer moves the block
+# whole. The count is asserted over the whole block and the listing separately at its bound, so a
+# held-back line can never be mistaken for a smaller population.
+askblock='**GRASS -- AN ACCOUNT.**
+**YOURS:** whether the shelf should speak.
+**YOURS, KEATON -- A SECOND QUESTION.** and its tail.'
+out=$(printf '%s\n' "$askblock" | run --stamp 20260909.010000 --seat GRASS --dry-run)
+check "a dry run counts the asks it would shelve" yes "$(has "$out" 'asks_shelved=2')"
+check "and prints the first one whole"           yes "$(has "$out" 'ask: **YOURS:** whether the shelf should speak.')"
+check "and the second, sigil and all"            yes "$(has "$out" 'ask: **YOURS, KEATON -- A SECOND QUESTION.**')"
+out=$(printf '%s\n' "$askblock" | run --stamp 20260909.010000 --seat GRASS)
+check "a real write counts them too"             yes "$(has "$out" 'asks_shelved=2')"
+check "and the shelf still lands"                yes "$(has "$out" 'shelf=construction/archive/20260909-010000')"
+out=$(printf '%s\n' "$block" | run --stamp 20260909.011000 --seat DIFFUSER)
+check "a block asking nothing reads zero"        yes "$(has "$out" 'asks_shelved=0')"
+check "and prints no ask line at all"            no  "$(has "$out" 'ask: ')"
+
+sixteen=$(i=1; while [ $i -le 16 ]; do echo "**YOURS:** question $i."; i=$((i+1)); done)
+out=$(printf '%s\n' "$sixteen" | run --stamp 20260909.012000 --seat GRASS --dry-run)
+check "sixteen asks print whole"                 16  "$(printf '%s\n' "$out" | grep -c '^ask: ')"
+check "and name no remainder"                    no  "$(has "$out" 'asks_unprinted=')"
+out=$(printf '%s\n**YOURS:** question 17.\n' "$sixteen" | run --stamp 20260909.012000 --seat GRASS --dry-run)
+check "a seventeenth is counted whole"           yes "$(has "$out" 'asks_shelved=17')"
+check "the listing stops at its bound"           16  "$(printf '%s\n' "$out" | grep -c '^ask: ')"
+check "and the one held back is named"           yes "$(has "$out" 'asks_unprinted=1')"
+
+long=$(dd if=/dev/zero bs=1 count=400 2>/dev/null | tr '\0' 'q')
+out=$(printf '**YOURS:** %s\n' "$long" | run --stamp 20260909.012500 --seat GRASS --dry-run)
+askline=$(printf '%s\n' "$out" | grep '^ask: ' | head -1)
+check "a long ask prints at the byte bound"      165 "${#askline}"
+
+# --- the write ------------------------------------------------------------------------------
+out=$(printf '%s\n' "$block" | run --stamp 20260909.001122 --seat DIFFUSER)
+check "a write reports its shelf"                yes "$(has "$out" 'shelf=construction/archive/20260909-001122_itinerary-landed-accounts.md')"
+body=$(cat construction/archive/20260909-001122_itinerary-landed-accounts.md)
+check "the written file carries the repair"      yes "$(has "$body" '](../../external-research/a-paper.md)')"
+check "the written file holds the pin link"      yes "$(has "$body" '](../REDS.md)')"
+check "the written file carries no stale depth"  no  "$(has "$body" '](archive/')"
+
+# --- refusals, each planted and then lifted ---------------------------------------------------
+# THE SECOND RUN, ASSERTED ON THE TREE RATHER THAN ON THE MESSAGE. A refusal printed while a partial
+# write already landed reads exactly like a refusal that wrote nothing, so the bytes are what get
+# asked. This is the tool's convergence answer: it converges by declining its own output, which
+# `tools/c/convergence_tree_prove.sh` reads as `write_once`.
+before_second=$(cat construction/archive/20260909-001122_itinerary-landed-accounts.md)
+out=$(printf '%s\n' "$block" | run --stamp 20260909.001122 --seat DIFFUSER || true)
+check "a standing shelf is never overwritten"    yes "$(has "$out" 'refused: shelf_exists')"
+after_second=$(cat construction/archive/20260909-001122_itinerary-landed-accounts.md)
+check "and a second run leaves it byte-identical" yes "$( [ "$before_second" = "$after_second" ] && echo yes || echo no )"
+out=$(printf '%s\n' "$block" | run --stamp 20260909.002200 --seat DIFFUSER)
+check "and a free stamp writes freely"           yes "$(has "$out" 'shelf=construction/archive/20260909-002200')"
+
+out=$(printf '%s\n' "$block" | run --stamp 20260909-001122 --seat DIFFUSER || true)
+check "a hyphen stamp refuses"                   yes "$(has "$out" 'refused: stamp_shape')"
+out=$(printf '%s\n' "$block" | run --stamp 20260909.003300 --seat diffuser || true)
+check "a lowercase seat refuses"                 yes "$(has "$out" 'refused: seat_shape')"
+out=$(printf '%s\n' "$block" | run --stamp 20260909.003300 --seat '' || true)
+check "an absent seat refuses"                   yes "$(has "$out" 'refused: seat_shape')"
+out=$(printf '' | run --stamp 20260909.003300 --seat DIFFUSER || true)
+check "an empty block refuses"                   yes "$(has "$out" 'refused: block_empty')"
+out=$(printf 'an em-dash \342\200\224 here\n' | run --stamp 20260909.003300 --seat DIFFUSER || true)
+check "a non-ASCII byte refuses"                 yes "$(has "$out" 'refused: block_non_ascii')"
+out=$(dd if=/dev/zero bs=1 count=9000 2>/dev/null | tr '\0' 'x' | run --stamp 20260909.003300 --seat DIFFUSER || true)
+check "a block past the bound refuses"           yes "$(has "$out" 'refused: block_too_long')"
+out=$(printf '%s\n' "$block" | run --stamp || true)
+check "a flag given last refuses by name"        yes "$(has "$out" 'refused: value_absent')"
+out=$(printf '%s\n' "$block" | run --seat || true)
+check "and the other flag refuses the same way"  yes "$(has "$out" 'refused: value_absent')"
+out=$(printf '%s\n' "$block" | run --stamp 20260909.003300 --seat DIFFUSER --wat || true)
+check "an unknown argument refuses"              yes "$(has "$out" 'refused: unknown argument')"
+check "and no refusal left a file behind"        no  "$(has "$(ls construction/archive)" '20260909-003300')"
+
+mv tools/fixtures/r/reds_fold_reanchor.sh tools/fixtures/r/gone.sh
+out=$(printf '%s\n' "$block" | run --stamp 20260909.004400 --seat DIFFUSER || true)
+check "an absent filter refuses"                 yes "$(has "$out" 'refused: reanchor_absent')"
+mv tools/fixtures/r/gone.sh tools/fixtures/r/reds_fold_reanchor.sh
+out=$(printf '%s\n' "$block" | run --stamp 20260909.004400 --seat DIFFUSER)
+check "and its return lifts the refusal"         yes "$(has "$out" 'shelf=construction/archive/20260909-004400')"
+
+rm -f construction/ITINERARY.md
+out=$(printf '%s\n' "$block" | run --stamp 20260909.005500 --seat DIFFUSER || true)
+check "a tree without the card refuses"          yes "$(has "$out" 'refused: not_at_root')"
+
+printf 'pass=%s fail=%s\n' "$pass" "$fail"
+[ "$fail" -eq 0 ]

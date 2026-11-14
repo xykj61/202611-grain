@@ -1,0 +1,47 @@
+//! linengrow/setu6_device_lab_check.rye -- write lab.kyri from iface arg or none.
+//!
+//!   linengrow/bin/setu6_device_lab_check           # stand-in (no iface)
+//!   linengrow/bin/setu6_device_lab_check usb0      # armed
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Dir = std.Io.Dir;
+const setu6 = @import("setu6_device_lab.rye");
+
+fn run_check(init: std.process.Init) !u8 {
+    const io = init.io;
+    const allocator = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(allocator);
+    const iface: []const u8 = if (args.len >= 2) args[1] else "";
+    const s = setu6.make_lab_status(iface) orelse {
+        print("setu6-check: RED — cannot build lab status\n", .{});
+        return 1;
+    };
+    var line_buf: [setu6.status_line_max]u8 = undefined;
+    const line = setu6.format_lab_line(s, &line_buf) orelse {
+        print("setu6-check: RED — line overflow\n", .{});
+        return 1;
+    };
+    // invariant: format_lab_line already bounds its own return to status_line_max, restated
+    // here since the write below trusts line's length to stay inside line_buf
+    assert(line.len <= setu6.status_line_max);
+    var kyri_buf: [setu6.max_lab_kyri_len]u8 = undefined;
+    const n = setu6.format_lab_kyri(s, &kyri_buf) orelse {
+        print("setu6-check: RED — kyri overflow\n", .{});
+        return 1;
+    };
+    // invariant: n is the byte count format_lab_kyri wrote into kyri_buf, so the write below
+    // must never slice past what kyri_buf actually holds
+    assert(n <= kyri_buf.len);
+    const cwd = Dir.cwd();
+    try cwd.writeFile(io, .{ .sub_path = setu6.lab_kyri_path, .data = kyri_buf[0..n] });
+    print("setu6-check: {s}\n", .{line});
+    print("setu6-check: wrote {s}\n", .{setu6.lab_kyri_path});
+    print("GREEN: usb-hearth — lab card held on Desk.\n", .{});
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_check(init);
+}

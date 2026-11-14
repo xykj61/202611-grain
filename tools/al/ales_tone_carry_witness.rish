@@ -1,0 +1,51 @@
+# tools/al/ales_tone_carry_witness.rish -- a carried-state low-pass: a filter that spans a re-berthed region seamlessly (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260814/20260814-163000_fill-ales43-resonance-carried-filter.md
+# Stands on: resonance/tone.rye (resonance-audio, accreted with low_pass_carry) and resonance/timeline.rye (resonance-audio -- the Clip).
+#
+# resonance/tone_carry.rye gives resonance-audio's one-pole low-pass a carried state, so a span filtered piece by piece has no fresh
+# transient (no click) at each seam. The selftest proves: a fresh filter (state = 0) equals resonance-audio's from-silence low_pass;
+# a span filtered in two pieces with a carried state equals the whole filtered once, byte-for-byte (the crux); the seam is
+# seamless on a constant (the second piece continues, it does not re-transient); reset re-opens the from-silence transient;
+# an illegal coefficient refuses BadCoeff leaving the state untouched, an out-of-range span BadRange leaving the clip
+# untouched. Purely local -- no network, no keys, no funds, no real device, no real sample rate.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_tone_carry_witness.rish
+
+say "ales-tone-carry: Language EN — resonance-audio gives resonance-audio's one-pole low-pass a carried state, so a filter continues across re-berthed regions rather than restarting its transient (a click) at each seam."
+say "ales-tone-carry: Style Radiant — the law is stated positively: a span filtered in two pieces with a carried state equals the whole filtered once byte-for-byte, and reset re-opens the from-silence transient deliberately."
+say "ales-tone-carry: Lens TAME — bounded Clip, u32 span, i16 samples, full-precision i64 state carried by the caller; low_pass becomes the state = 0 case of one low_pass_carry implementation, so the carried and from-silence forms cannot drift; an illegal coefficient refuses BadCoeff, an out-of-range span BadRange, each before a write; siloed to resonance/, no network, no keys, no funds, no device, no sample rate."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/tone_carry"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/tone_carry.rye -femit-bin=${bin}"]
+assert build.ok else "ales-tone-carry: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/tone_carry.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-tone-carry: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-tone-carry: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-tone-carry' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-tone-carry: selftest did not print the GREEN ales-tone-carry line"
+
+# The refactor that exposed low_pass_carry must leave the shipped filter rungs GREEN -- prove it by their green, not by claim.
+let tone = run ["sh" "-c" "env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/tone.rye -femit-bin=resonance/bin/tone && resonance/bin/tone selftest 2>&1 | grep -q 'GREEN ales-tone' && echo yes"]
+assert (trim tone.out) == "yes" else "ales-tone-carry: the resonance-audio tone witness regressed after the low_pass_carry refactor"
+
+say "ales-tone-carry: GREEN — a carried-state low-pass spans a re-berthed region without a click, the seam invisible because the second piece continues from the first's ending state; low_pass is now the state = 0 case of one implementation, and the shipped resonance-audio tone selftest stays GREEN. The next Resonance rung can carry the high-pass and the shelf/stack, sweep the coefficient under an envelope, or name a crossover in hertz through a real time base."
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

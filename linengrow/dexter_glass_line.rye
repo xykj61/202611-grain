@@ -1,0 +1,100 @@
+//! linengrow/dexter_glass_line.rye -- Dexter line for NativeActivity Skate glass.
+//!
+//! Demo path seeds the first paint; live KEY/tap drain refreshes via
+//! format_dexter_line_live. glass-keyboard: optional blinking caret glyph.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const core = @import("dexter_glass_core.rye");
+const dexter = @import("window_input.rye");
+const emoji = @import("dexter_glass_emoji.rye");
+
+pub const dexter_line_max: u32 = 48;
+/// Skate-safe caret face (glass-keyboard).
+pub const caret_glyph: u8 = '|';
+/// Half-period of the blink (on for this many ms, then off).
+pub const caret_period_ms: u64 = 500;
+
+/// True when the caret should paint at monotonic millisecond `ms`.
+pub fn caret_visible_at(ms: u64) bool {
+    // invariant: period is positive
+    assert(caret_period_ms > 0);
+    return (ms / caret_period_ms) % 2 == 0;
+}
+
+/// Format prompt into the Skate status line (no caret). Returns false if it will not fit.
+pub fn format_dexter_line(prompt: []const u8, out_line: *[dexter_line_max]u8, out_len: *u32) bool {
+    return format_dexter_line_live(prompt, false, out_line, out_len);
+}
+
+/// Last visual segment after the final newline (glass-keyboard thin compose face).
+fn last_line_slice(prompt: []const u8) []const u8 {
+    if (std.mem.lastIndexOfScalar(u8, prompt, '\n')) |i| {
+        // invariant: slice stays inside prompt
+        assert(i < prompt.len);
+        return prompt[i + 1 ..];
+    }
+    return prompt;
+}
+
+fn count_newlines(prompt: []const u8) u32 {
+    var n: u32 = 0;
+    for (prompt) |b| {
+        if (b == '\n') n += 1;
+    }
+    return n;
+}
+
+/// Format prompt with optional caret glyph after the text.
+/// Multiline: shows ¶count - last line (honest thin edge until a taller compose).
+pub fn format_dexter_line_live(
+    prompt: []const u8,
+    caret_on: bool,
+    out_line: *[dexter_line_max]u8,
+    out_len: *u32,
+) bool {
+    // invariant: prompt is bounded for Skate chrome
+    assert(prompt.len <= dexter.max_line_len);
+    assert(out_line.len == dexter_line_max);
+    const breaks = count_newlines(prompt);
+    const tail = last_line_slice(prompt);
+    // glass-keyboard: curated emoji -> atlas cells so Skate can paint faces on the line.
+    var preview: [dexter.max_line_len]u8 = undefined;
+    const preview_len = emoji.skate_preview(tail, preview[0..]);
+    const shown = preview[0..preview_len];
+    const line = if (breaks > 0) blk: {
+        if (caret_on)
+            break :blk std.fmt.bufPrint(out_line, "DEXTER line · P{d} · {s}{c}", .{ breaks, shown, caret_glyph }) catch return false;
+        break :blk std.fmt.bufPrint(out_line, "DEXTER line · P{d} · {s}", .{ breaks, shown }) catch return false;
+    } else blk: {
+        if (caret_on)
+            break :blk std.fmt.bufPrint(out_line, "DEXTER line · {s}{c}", .{ shown, caret_glyph }) catch return false;
+        break :blk std.fmt.bufPrint(out_line, "DEXTER line · {s}", .{shown}) catch return false;
+    };
+    out_len.* = @intCast(line.len);
+    // invariant: the line was formatted into a fixed buffer, so a length of zero leaves nothing
+    // to draw and one past the bound would run past its row
+    assert(out_len.* > 0);
+    assert(out_len.* <= dexter_line_max);
+    if (caret_on) {
+        // invariant: caret is the last painted byte
+        assert(out_line[out_len.* - 1] == caret_glyph);
+    }
+    return true;
+}
+
+/// Demo Dexter submit -> status line. Returns false if the editor diverges.
+pub fn run_demo_dexter_line(out_line: *[dexter_line_max]u8, out_len: *u32) bool {
+    var submitted: [dexter.max_line_len]u8 = undefined;
+    var submitted_len: u32 = 0;
+    const lens = core.run_demo_editor(&submitted, &submitted_len) catch return false;
+    // invariant: demo length matches seated payload
+    assert(lens.submitted_len == core.demo_submitted.len);
+    if (lens.submitted_len != core.demo_submitted.len) return false;
+    return format_dexter_line(submitted[0..submitted_len], out_line, out_len);
+}
+
+comptime {
+    _ = print;
+}

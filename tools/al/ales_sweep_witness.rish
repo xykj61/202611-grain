@@ -1,0 +1,52 @@
+# tools/al/ales_sweep_witness.rish -- a filter sweep: a low-pass whose cutoff moves across a span, seamless because state carries (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260814/20260814-163647_fill-ales44-resonance-filter-sweep.md
+# Stands on: resonance/tone_carry.rye (resonance-audio) and resonance/tone.rye (resonance-audio -- low_pass_carry) and resonance/timeline.rye (resonance-audio -- the Clip).
+#
+# resonance/sweep.rye gives resonance-audio's one-pole low-pass a moving coefficient: it partitions a span into blocks, filters each with a
+# coefficient interpolated from num_from to num_to, and carries ONE state across every block. The selftest proves: a degenerate
+# sweep (num_from == num_to) equals resonance-audio's fixed low_pass over the whole span byte-for-byte (the crux); the schedule's
+# endpoints are exact and its interior monotone and legal within [1, den]; a distinct-endpoint sweep is genuinely time-varying
+# (equal to neither endpoint's fixed filter); a constant input swept settles exactly and never dips at a seam (no re-transient);
+# an illegal endpoint refuses BadCoeff, an out-of-range span BadRange, an illegal block count BadBlocks. Purely local -- no
+# network, no keys, no funds, no real device, no real sample rate.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_sweep_witness.rish
+
+say "ales-sweep: Language EN — resonance-audio gives resonance-audio's low-pass a moving coefficient, so the filter opens or closes across a span (the sweep a musician automates over a phrase) rather than holding one brightness."
+say "ales-sweep: Style Radiant — the law is stated positively: a degenerate sweep from a coefficient to itself equals the fixed low_pass byte-for-byte, a distinct-endpoint sweep genuinely moves the brightness, and every block continues the last with no re-transient at a seam."
+say "ales-sweep: Lens TAME — bounded Clip, u32 span, i16 samples, a named max_sweep_blocks partition, full-precision i64 state carried across every block through resonance-audio's low_pass_carry; the sweep adds only a coefficient schedule, no new arithmetic on the audio path; an illegal endpoint refuses BadCoeff, an out-of-range span BadRange, an illegal partition BadBlocks, each before a write; siloed to resonance/, no network, no keys, no funds, no device, no sample rate."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/sweep"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/sweep.rye -femit-bin=${bin}"]
+assert build.ok else "ales-sweep: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/sweep.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-sweep: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-sweep: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-sweep' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-sweep: selftest did not print the GREEN ales-sweep line"
+
+# The sweep reuses resonance-audio's carried low-pass and resonance-audio's stepping whole -- prove they still stand by their own green, not by claim.
+let carry = run ["sh" "-c" "env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/tone_carry.rye -femit-bin=resonance/bin/tone_carry && resonance/bin/tone_carry selftest 2>&1 | grep -q 'GREEN ales-tone-carry' && echo yes"]
+assert (trim carry.out) == "yes" else "ales-sweep: the resonance-audio carried-filter witness regressed under the sweep"
+
+say "ales-sweep: GREEN — a filter sweep moves a low-pass's cutoff across a span, the block boundaries seamless because resonance-audio's i64 state carries; a sweep from a coefficient to itself equals resonance-audio's fixed low_pass byte-for-byte, a distinct-endpoint sweep genuinely moves the brightness, and a constant input rises to it exactly with no re-transient at any seam; the resonance-audio carried-filter selftest stays GREEN. The next Resonance rung can carry the high-pass and shelf/stack into a sweep, sweep under a keeper-drawn envelope, or name a crossover in hertz through a real time base."
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

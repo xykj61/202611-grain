@@ -1,0 +1,26 @@
+# Keys in This Folder
+
+**Where this sits:** home is [`../../README.md`](../../README.md) - a first hour in your hands is
+[`../../docs-geode/tutorials/the-first-hour.md`](../../docs-geode/tutorials/the-first-hour.md) - the whole
+path from nothing to a signed, sandboxed home is [`../../SOURCE.md`](../../SOURCE.md)
+
+**Language:** EN
+**Last updated:** 2026-09-17 (`225018`; register swept to 0%, joined the DOOR roster)
+**Style:** Gauge, Door setting (see `../GAUGE_STYLE.md`)
+
+---
+
+These two OpenPGP public keys are distinct, rather than duplicates. They share an email and creation date yet carry **different fingerprints** and **different roles**.
+
+| File | Fingerprint (short) | Role |
+|------|---------------------|------|
+| `gpg_signing_06462132.pub.asc` | `0646 2132 ... FA7A` | **Master identity** -- root of trust for tags, messages, and certifying other keys. ASCII-only UID. Stays outside the sandbox. |
+| `rye_signing_DBF853.pub.asc` | `DBF8 5343 ... 2B99` | **Sandbox signing** -- dedicated, revocable key the automated agent uses inside ai-jail. Day-to-day commit **Verified** badges on the forges use this fingerprint. |
+
+PGP armored keys share the same envelope (`-----BEGIN PGP PUBLIC KEY BLOCK-----`, similar line lengths, same email in the UID). **The base64 bodies differ** -- different key material, different fingerprints. Confirm this yourself with `sha256sum` or `gpg --import-options import-show --import <file>`.
+
+**Why keep both in the repo:** anyone cloning the project can verify commits against the sandbox key using what the repo already carries. The master public key is published here so the trust chain is visible -- master certifies sandbox; sandbox signs commits -- and only the public halves ever enter the tree.
+
+---
+
+*May the split stay clear: one key for the root of trust, one for the sandbox that signs the work.*

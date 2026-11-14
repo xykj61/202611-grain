@@ -1,0 +1,79 @@
+//! linengrow/dexter_glass_witness.rye -- proves Dexter glass demo + live KEY drain.
+//!
+//!   rye build linengrow/dexter_glass_witness.rye \
+//!     -femit-bin=linengrow/bin/dexter_glass_witness
+//!   linengrow/bin/dexter_glass_witness
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const core = @import("dexter_glass_core.rye");
+const glass = @import("dexter_glass_line.rye");
+const key = @import("dexter_glass_key.rye");
+const dexter = @import("window_input.rye");
+
+const witness_version = "20260717.182826";
+
+fn run_selftest(_: std.process.Init) !u8 {
+    var submitted: [dexter.max_line_len]u8 = undefined;
+    var submitted_len: u32 = 0;
+    const lens = try core.run_demo_editor(&submitted, &submitted_len);
+    assert(lens.submitted_len == core.demo_submitted.len);
+    assert(std.mem.eql(u8, submitted[0..submitted_len], core.demo_submitted));
+    print("dexter-glass: demo editor submits \"{s}\" -- GREEN\n", .{submitted[0..submitted_len]});
+
+    var line: [glass.dexter_line_max]u8 = undefined;
+    var len: u32 = 0;
+    assert(glass.run_demo_dexter_line(&line, &len));
+    assert(std.mem.indexOf(u8, line[0..len], "DEXTER line") != null);
+    assert(std.mem.indexOf(u8, line[0..len], "glow") != null);
+    print("dexter-glass: Skate line \"{s}\" -- GREEN\n", .{line[0..len]});
+
+    // Live KEY drain -- Android-shaped downs through the same mapper NativeActivity uses.
+    assert(key.action_from_key_down(.{ .key_code = key.keycode_a }) != null);
+    // glass-keyboard: Enter is newline (matches glass ret); send is the ^ key.
+    assert(key.action_from_key_down(.{ .key_code = key.keycode_enter }).? == .newline);
+    assert(key.action_from_key_down(.{ .key_code = key.keycode_del }).? == .backspace);
+    const shift_a = key.action_from_key_down(.{
+        .key_code = key.keycode_a,
+        .meta_state = key.meta_shift_on,
+    }).?;
+    switch (shift_a) {
+        .char_ => |ch| assert(ch == 'A'),
+        else => assert(false),
+    }
+
+    var editor = dexter.LineEditor{};
+    const downs = [_]key.KeyDown{
+        .{ .key_code = key.keycode_a + ('h' - 'a') },
+        .{ .key_code = key.keycode_a + ('i' - 'a') },
+        .{ .key_code = key.keycode_enter },
+    };
+    key.drain_key_downs(&editor, &downs);
+    assert(!editor.pending_submit);
+    assert(std.mem.eql(u8, editor.prompt_slice(), "hi\n"));
+    editor.apply_action(.submit);
+    assert(editor.pending_submit);
+    assert(glass.format_dexter_line(editor.prompt_slice(), &line, &len));
+    assert(std.mem.indexOf(u8, line[0..len], "DEXTER line") != null);
+    assert(std.mem.indexOf(u8, line[0..len], "P1") != null);
+    print("dexter-glass: live KEY drain \"{s}\" -- GREEN\n", .{line[0..len]});
+
+    // glass-keyboard -- caret phase + live line with glyph.
+    assert(glass.caret_visible_at(0));
+    assert(!glass.caret_visible_at(glass.caret_period_ms));
+    assert(glass.caret_visible_at(glass.caret_period_ms * 2));
+    assert(glass.format_dexter_line_live("glow", true, &line, &len));
+    assert(line[len - 1] == glass.caret_glyph);
+    assert(glass.format_dexter_line_live("glow", false, &line, &len));
+    assert(line[len - 1] != glass.caret_glyph);
+    print("dexter-glass: glass-keyboard caret blink phase -- GREEN\n", .{});
+
+    print("dexter-glass: version {s}\n", .{witness_version});
+    print("GREEN: Dexter glass — demo + live KEY + glass-keyboard caret.\n", .{});
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

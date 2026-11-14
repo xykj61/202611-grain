@@ -1,0 +1,74 @@
+//! linengrow/tube1_glass_gate.rye -- glow-publishing door for the NativeActivity present path.
+//!
+//! Builds the seva-broadcaster glow-publishing manifest: three R2 state resources,
+//! `photos` + `contacts` (Resource Scopes), and `network` + `sensors`
+//! (Network - Sensors Grants). Caravan grants match; covering scopes and
+//! live toggles are load-bearing. APK permission emission stays on the
+//! separate glow-publishing.5 path -- glass does not emit Android permissions.
+//! Paints R2 only when this door opens.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const caps = @import("capabilities.rye");
+const tube = @import("tube_manifest.rye");
+const scope_mod = @import("glow_storage_scope.rye");
+const net_mod = @import("glow_network_grant.rye");
+const sens_mod = @import("glow_sensors_grant.rye");
+const tube1 = @import("tube1_admission.rye");
+
+const rw: u8 = caps.right_read | caps.right_write;
+
+/// True when admitted under covering scopes + live Network - Sensors Grants.
+pub fn run_demo_admit() bool {
+    // invariant: read|write mask is non-zero
+    assert(rw != 0);
+    const declared = [_]tube.DeclaredCapability{
+        tube.DeclaredCapability.init("state-ask", rw),
+        tube.DeclaredCapability.init("state-receipt", rw),
+        tube.DeclaredCapability.init("state-reputation", rw),
+        tube.DeclaredCapability.init("photos", caps.right_read),
+        tube.DeclaredCapability.init("contacts", caps.right_read),
+        tube.DeclaredCapability.init(tube1.network_resource, caps.right_net),
+        tube.DeclaredCapability.init(tube1.sensors_resource, caps.right_device),
+    };
+    // invariant: seven declared capabilities for seva-broadcaster glass
+    assert(declared.len == 7);
+    const manifest = tube.build("seva-broadcaster", "0.1.0", &declared, 1024) catch return false;
+
+    var table: caps.CapabilityTable = .{};
+    const agent = table.add_dependent("seva-broadcaster") catch return false;
+    agent.grant(caps.Capability.init("state-ask", rw)) catch return false;
+    agent.grant(caps.Capability.init("state-receipt", rw)) catch return false;
+    agent.grant(caps.Capability.init("state-reputation", rw)) catch return false;
+    agent.grant(caps.Capability.init("photos", caps.right_read)) catch return false;
+    agent.grant(caps.Capability.init("contacts", caps.right_read)) catch return false;
+    agent.grant(caps.Capability.init(tube1.network_resource, caps.right_net)) catch return false;
+    agent.grant(caps.Capability.init(tube1.sensors_resource, caps.right_device)) catch return false;
+
+    const storage = scope_mod.Scope.build(&[_]scope_mod.ScopeEntry{
+        scope_mod.ScopeEntry.init("photos", caps.right_read),
+    }) catch return false;
+    const contacts = scope_mod.Scope.build(&[_]scope_mod.ScopeEntry{
+        scope_mod.ScopeEntry.init("contacts", caps.right_read),
+    }) catch return false;
+    const scopes = [_]*const scope_mod.Scope{ &storage, &contacts };
+    // invariant: the demo admits exactly two scopes, pinned so a manifest that grew a
+    // capability without the gate noticing names itself here
+    assert(scopes.len == 2);
+    const network = net_mod.NetworkGrant.grant();
+    const sensors = sens_mod.SensorsGrant.grant();
+
+    return tube1.admit_manifest_gated(
+        &table,
+        "seva-broadcaster",
+        &manifest,
+        scopes[0..],
+        &network,
+        &sensors,
+    );
+}
+
+comptime {
+    _ = print;
+}

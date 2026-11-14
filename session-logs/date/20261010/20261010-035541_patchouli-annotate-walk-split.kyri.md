@@ -1,0 +1,31 @@
+format session-log-v1
+stamp 20261010.035541
+editor Claude Code in the grain-patchouli tree (patchouli lane)
+provider Anthropic
+product Claude Code
+role patchouli -- blaze/ and tally/ lane, version store and bounded allocator
+modality text
+model unverified
+model_status active runtime unverified
+voice Kyri
+host anonymized Framework bench, America/New_York one-clock zone
+title patchouli annotate walk split out of cmd_annotate, witnesses green
+prompt baton and inner prompt: queue read empty again; widen to a fresh class and land one real repair
+think the lane's tame ratchet still lists cmd_annotate at 86 lines in blaze/src/main.rye, named as remaining by the last lap
+think the cut is the note walk: one pass that prints changed lines and counts them, separable from the load and the summary
+think AnnotateTally carries the six counters the summary and the held line read, so the caller keeps its print and the helper keeps its walk
+think the walk's three bound casts and its two invariants move into the helper with it; the caller keeps the load-level reading
+obs the control mutation in blaze_annotate_cli_control.sh rewrote a bare gone counter; once the counter became t.gone the mutation failed to compile, so the control leg read blank and the witness reds, which is the guard working
+obs the mutation's sed now targets t.gone; the removed continue still sits at the same indentation, so the pen breaks the same skip
+obs no wall time was measured this lap, so no loom line is written
+file blaze/src/main.rye cmd_annotate 86 -> 29 lines; print_annotations added at 53 lines, holding the note walk and its AnnotateTally counts
+file tools/fixtures/m/blaze_annotate_cli_control.sh tomb_shown mutation repointed from gone to t.gone, same skip removed, same expected reading
+file session-logs/date/20261010/20261010-035541_patchouli-annotate-walk-split.kyri this log, born on its day shelf, one row on the shelf index; pushed to xy main at 345c31d10d after a rebase past peer rows
+product_nib 345c31d10d
+suite_nib blaze_annotate_cli_witness GREEN, blaze_annotate_cli_scan verdict=ok, blaze_weave_annotate_witness GREEN, tame_style_check GREEN
+git_nib 345c31d10d
+rota lap 9209, row 4 -- earth breathes in: read the concrete fact at the door first; the fact was a 70-line function the witness had never measured in this lane's main.rye
+orbit round 14 sky -- Wildcard. Holds one page whole.
+scope blaze/src/main.rye cmd_annotate split at the note walk, no behavior change; control mutation repointed to the renamed counter; no new instrument, no claim needed
+status GREEN -- blaze_annotate_cli_witness GREEN after the control repoint, blaze_annotate_cli_scan verdict=ok, blaze_weave_annotate_witness GREEN, tame_style_check bans clean
+recommend keep-going -- next fresh-class repair is apply_batch in blaze/resin_batch.rye, 89 lines, same split discipline and witness

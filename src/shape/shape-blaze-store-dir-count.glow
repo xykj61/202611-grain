@@ -1,0 +1,15 @@
+::  name       blaze store dir count
+::  shape      dirs - int (@u32)
+::  invariant  a Store holds exactly three directory handles (root - blaze -
+::  blobs)
+::  example    3
+::  readers    Blaze - Glow Tend - Sur museum - Ashvini nest-only
+::  nib        equinox-e206-blaze-tend-v0
+::
+::  Equinox e206 - Blaze M4 -- fourth Blaze structure pedestal in src/shape/.
+::  Names Store's directory count from blaze/src/store.rye: the repository
+::  root, the .blaze/ tree, and .blaze/blobs/. Pedestal only; Rye still
+::  owns open - put - get and the sha3 blob names.
++$  blaze-store-dir-count-shape
+  $:  dirs=@u32
+  ==

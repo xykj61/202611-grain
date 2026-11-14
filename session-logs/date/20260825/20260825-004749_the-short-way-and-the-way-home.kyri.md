@@ -1,0 +1,41 @@
+format session-log-v1
+stamp 20260825.004749
+editor Claude Code
+model claude-opus-5
+voice Kyri
+host Vultr SEA NixOS VPS ai-jail pier (Daylight DC-1 hand) -- Eastern (EDT)
+title The short way to run a script, and the way home from a room
+prompt Keaton pasted a macOS onboarding session ending in rishi: unknown command './tools/l/launch-claude-chapter.rish', and asked for a molt / new Gauge-Civic-TAME QA fix or witness across SOURCE.md and the-first-hour tutorial, with cross references and fascia connections to root home and all leaves
+think First, his paste confirms REDS %214 on real metal. bootstrap.sh sets no RYE_LIB, and his rye/bin/rye build succeeded from the repository root, so the argv[0] fallback resolved rye/bin/../lib on macOS. That is better evidence than the simulated control.
+think The failing line was rishi ./tools/l/launch-claude-chapter.rish. Read both named documents before blaming either: SOURCE.md and the-first-hour.md both write rishi run <file> correctly at every one of their call sites. The documents were right. The tool refused a habit that sh, python, and node all reward, and answered it with exit 2.
+think That reading is Civic rather than Gauge -- name what the thing rewards. Rishi rewarded knowing a subcommand, and a newcomer arrives knowing a shape instead.
+think The bounded test is the .rish suffix rather than a filesystem probe. Every subcommand is compared first and none of them ends in .rish, so a script can never shadow one, and rishi rn x.rish still reads as a typo of run rather than being executed.
+think run_file read args[2] for the path and args[3..] for the script's arguments. Rather than a second body, it took a path_at parameter, so both forms share one body and the control proves they hand the script identical arguments -- the invariant that makes the shorthand the same command rather than a lookalike.
+think The usage text carried em-dashes, and so did 116 other places in that file. ASCII-first migrates on touch, so all 116 became -- and the binary rebuilt clean.
+think Graded the three documents before molting any of them: README.md B+ 85, SOURCE.md B+ 88, the-first-hour.md A 94. All above the door, so no molt frame is owed. Measuring at frame-open time closed the frame, which is the answer the QA rule names as legitimate.
+think The cross-reference ask turned out to have a real gap underneath it, and not where I first looked. The three documents Keaton named already point at each other. rishi/README.md and rye/README.md -- the two pages the first hour sends a newcomer to -- pointed nowhere at all. A reader arriving from a search engine had no route home but editing the URL.
+think Measured it rather than guessing at the size: 108 of 115 room READMEs offer no path home. Sweeping 108 at round close is the hurried-fix trap, and each page wants a line placed where a reader will find it. So the two on his path were woven and the rest went under a meter.
+obs The suffix test is what makes the shorthand safe, and it is also what keeps the refusal honest. A shorthand that swallows a typo would be worse than no shorthand, so rishi rn x.rish keeps its exit 2 and the control proves it.
+obs The fascia meter is a ratchet rather than a wall, because a wall reading 108 would red on every lap and be turned off within a day. The ceiling only falls, and the two named pages are held at zero inside it.
+obs A scan holds the ceiling and prints the verdict; the witness asserts the string. Rishi has no integer comparison for a scanned value, and the tree's own index-fold guard already established that shape, so no meter here spells the number twice.
+loom guard=rishi_bare_path behaviors=9 welcomes=5 refusals=2 forms_agree=yes
+loom guard=fascia_home_link total=115 with_path_home=7 no_path_home=108 ceiling=108
+loom qa_report_card readme=85 source=88 first_hour=94 door=80
+file rishi/src/main.rye run_file takes path_at, the dispatch accepts a bare .rish path, the usage teaches both forms, 116 em-dashes to ASCII
+file tools/r/rishi_bare_path_witness.rish nine behaviors on the built binary, the 55th standing guard
+file tools/f/fascia_home_link_witness.rish the orphan count under a ceiling that only falls, the 56th
+file rishi/README.md the shorthand documented in the same commit as the code, and a header naming the way home
+file rye/README.md the same header, since the first hour sends readers here too
+think Weaving eight more rooms in the same round rather than only measuring them, because the itinerary's git nib rule refuses a pin-only follow-up commit and the nib had fallen four commits behind. Real work carries the pin, which is what that rule is for.
+obs The eight are caravan, glow, tally, blaze, comlink, image, brix, context -- placed under each page's Status line where one exists, and under the title where context/README.md has none. The ceiling fell 108 to 100 with the lap, which is how a ratchet is meant to move.
+loom guard=fascia_home_link no_path_home=100 ceiling=100 woven_this_lap=10
+file construction/ITINERARY.md the round's git nib, carried by real work rather than a pin-only commit
+think Finished the weave in the same session rather than leaving 100 rooms measured and untouched, because a home link carries no claim that could turn out false -- unlike the 361 comment labels of REDS %213, where stamping a shape would have written a meaning nobody checked. The two cases look alike and are not, and the difference is whether the added line asserts anything.
+think Read the pre-commit hook before editing anything, and it named two generated pages. docs-geode/libraries/README.md is rendered whole from tools/fixtures/geode_libraries_scan.sh, so a hand-edit there is overwritten on the next run. Taught the generator instead, regenerated, and its own witness stands GREEN.
+think Computed each relative path with relpath per room rather than assuming ../ everywhere, so docs-geode/README.md links tutorials/the-first-hour.md while session-logs/README.md links ../docs-geode/tutorials/the-first-hour.md. Spot-checked three on disk and then let tracked_link prove all of them.
+think Two pages carried no Status line and one opened with a --- front-matter fence before its title, so the block seated under the title in those. cellar/README.md was the fence; it was skipped by the first pass rather than mangled, then handled on its own.
+obs Gated at zero rather than left as a ratchet. The justification is that the population is closed and small -- a room README is written rarely and the repair is one line in a page already open -- so zero is a gate a lap can keep rather than a wall it would turn off.
+loom guard=fascia_home_link total=115 with_path_home=115 no_path_home=0 ceiling=0 arc=108-100-0
+file tools/fixtures/fascia_home_link_scan.sh the ceiling at zero and enforced, with all three measurements recorded beside it
+file tools/fixtures/geode_libraries_scan.sh the generated library index taught the way home at its source
+recommend keep-going the 108 rooms with no path home are measured and under a ceiling; weaving them is mechanical, a few rooms per lap, and the meter falls with each

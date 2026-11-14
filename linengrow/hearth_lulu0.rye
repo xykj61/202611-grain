@@ -1,0 +1,417 @@
+//! linengrow/hearth_lulu0.rye -- hearth-display: Hearth Kyri mold (short home + display preset).
+//!
+//! Waymark hearth-display. A Hearth record carries `home_id` (exactly two lowercase
+//! letters) and a closed `display_preset` enum. Kyri text at the seam;
+//! Skate apply is hearth-display. Device-free validation and round-trip only.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const tally_copy = @import("tally_copy.rye");
+
+pub const waymark: []const u8 = "hearth-display";
+pub const format_tag: []const u8 = "hearth-lulu0-v1";
+pub const home_id_len: u32 = 2;
+pub const max_kyri_len: u32 = 512;
+pub const max_path_len: u32 = 32;
+/// Absolute path under an Android/app files root (`.../kd/hearth.kyri`).
+pub const max_abs_path_len: u32 = 160;
+
+/// Closed Glass phone presets (20:9 Pixel-class ladder + Blazepod content floor).
+pub const DisplayPreset = enum {
+    panel_max,
+    scaled_720,
+    scaled_540,
+    blazepod_floor,
+
+    pub fn name(self: DisplayPreset) []const u8 {
+        return switch (self) {
+            .panel_max => "panel_max",
+            .scaled_720 => "scaled_720",
+            .scaled_540 => "scaled_540",
+            .blazepod_floor => "blazepod_floor",
+        };
+    }
+
+    pub fn from_name(s: []const u8) ?DisplayPreset {
+        if (std.mem.eql(u8, s, "panel_max")) return .panel_max;
+        if (std.mem.eql(u8, s, "scaled_720")) return .scaled_720;
+        if (std.mem.eql(u8, s, "scaled_540")) return .scaled_540;
+        if (std.mem.eql(u8, s, "blazepod_floor")) return .blazepod_floor;
+        return null;
+    }
+
+    /// Logical width × height for this preset (pixels).
+    pub fn logical_size(self: DisplayPreset) struct { w: u32, h: u32 } {
+        return switch (self) {
+            .panel_max => .{ .w = 1080, .h = 2424 },
+            .scaled_720 => .{ .w = 720, .h = 1616 },
+            .scaled_540 => .{ .w = 540, .h = 1212 },
+            // Content budget: Skate 32×20 @ scale 2 (design-provisional Blazepod floor).
+            .blazepod_floor => .{ .w = 512, .h = 640 },
+        };
+    }
+
+    /// True when this preset keeps the Pixel 10a panel aspect (1080:2424).
+    pub fn keeps_panel_aspect(self: DisplayPreset) bool {
+        const sz = self.logical_size();
+        const ref = DisplayPreset.panel_max.logical_size();
+        // invariant: cross-multiply equality
+        return sz.w * ref.h == ref.w * sz.h;
+    }
+
+    /// Closed N-cycle (N=4) -- tap hearth chrome advances; Settings list is hearth-display.
+    pub fn next(self: DisplayPreset) DisplayPreset {
+        return switch (self) {
+            .panel_max => .scaled_720,
+            .scaled_720 => .scaled_540,
+            .scaled_540 => .blazepod_floor,
+            .blazepod_floor => .panel_max,
+        };
+    }
+};
+
+/// Wired Glass preference -- where sync is meant to travel (live USB is later).
+pub const WireLane = enum {
+    local,
+    usb_desk,
+
+    pub fn name(self: WireLane) []const u8 {
+        return switch (self) {
+            .local => "local",
+            .usb_desk => "usb_desk",
+        };
+    }
+
+    pub fn from_name(s: []const u8) ?WireLane {
+        if (std.mem.eql(u8, s, "local")) return .local;
+        if (std.mem.eql(u8, s, "usb_desk")) return .usb_desk;
+        return null;
+    }
+
+    pub fn next(self: WireLane) WireLane {
+        return switch (self) {
+            .local => .usb_desk,
+            .usb_desk => .local,
+        };
+    }
+};
+
+/// Used-Pixel SLC: cellular off by default; optional when the plan exists.
+pub const Cellular = enum {
+    off,
+    optional,
+
+    pub fn name(self: Cellular) []const u8 {
+        return switch (self) {
+            .off => "off",
+            .optional => "optional",
+        };
+    }
+
+    pub fn from_name(s: []const u8) ?Cellular {
+        if (std.mem.eql(u8, s, "off")) return .off;
+        if (std.mem.eql(u8, s, "optional")) return .optional;
+        return null;
+    }
+
+    pub fn next(self: Cellular) Cellular {
+        return switch (self) {
+            .off => .optional,
+            .optional => .off,
+        };
+    }
+};
+
+pub const HearthError = error{
+    HomeIdBadLen,
+    HomeIdBadChar,
+    MissingFormat,
+    MissingHomeId,
+    MissingPreset,
+    UnknownPreset,
+    UnknownWire,
+    UnknownCellular,
+    KyriTooLong,
+    PathTooLong,
+};
+
+/// Validated hearth preference record.
+pub const Hearth = struct {
+    home_id: [home_id_len]u8 = undefined,
+    preset: DisplayPreset = .scaled_540,
+    wire: WireLane = .local,
+    cellular: Cellular = .off,
+
+    pub fn init(home_id: []const u8, preset: DisplayPreset) HearthError!Hearth {
+        return init_full(home_id, preset, .local, .off);
+    }
+
+    pub fn init_with_wire(
+        home_id: []const u8,
+        preset: DisplayPreset,
+        wire: WireLane,
+    ) HearthError!Hearth {
+        return init_full(home_id, preset, wire, .off);
+    }
+
+    pub fn init_full(
+        home_id: []const u8,
+        preset: DisplayPreset,
+        wire: WireLane,
+        cellular: Cellular,
+    ) HearthError!Hearth {
+        try validate_home_id(home_id);
+        var h: Hearth = .{ .preset = preset, .wire = wire, .cellular = cellular };
+        tally_copy.copy_disjoint(u8, h.home_id[0..], home_id);
+        // invariant: copy preserved length
+        assert(h.home_id.len == home_id_len);
+        return h;
+    }
+
+    pub fn home_id_slice(self: *const Hearth) []const u8 {
+        return self.home_id[0..];
+    }
+};
+
+/// Exactly two lowercase ASCII letters.
+pub fn validate_home_id(home_id: []const u8) HearthError!void {
+    if (home_id.len != home_id_len) return error.HomeIdBadLen;
+    // invariant: length pinned
+    assert(home_id.len == 2);
+    var i: u32 = 0;
+    while (i < home_id_len) : (i += 1) {
+        const ch = home_id[i];
+        if (ch < 'a' or ch > 'z') return error.HomeIdBadChar;
+    }
+}
+
+/// Relative path `{home_id}/hearth.kyri` under the short home.
+pub fn relative_hearth_path(home_id: []const u8, out: *[max_path_len]u8) HearthError!u32 {
+    try validate_home_id(home_id);
+    const path = std.fmt.bufPrint(out, "{s}/hearth.kyri", .{home_id}) catch return error.PathTooLong;
+    // invariant: path fits the bound
+    assert(path.len <= max_path_len);
+    assert(path.len > home_id_len);
+    return @intCast(path.len);
+}
+
+/// Absolute path `{files_root}/{home_id}/hearth.kyri`.
+pub fn join_files_hearth_path(
+    files_root: []const u8,
+    home_id: []const u8,
+    out: *[max_abs_path_len]u8,
+) HearthError!u32 {
+    try validate_home_id(home_id);
+    if (files_root.len == 0) return error.PathTooLong;
+    const path = std.fmt.bufPrint(
+        out,
+        "{s}/{s}/hearth.kyri",
+        .{ files_root, home_id },
+    ) catch return error.PathTooLong;
+    // invariant: absolute path fits the bound
+    assert(path.len <= max_abs_path_len);
+    assert(path.len > files_root.len + home_id_len);
+    return @intCast(path.len);
+}
+
+/// Home directory `{files_root}/{home_id}` for mkdir before write.
+pub fn join_files_home_dir(
+    files_root: []const u8,
+    home_id: []const u8,
+    out: *[max_abs_path_len]u8,
+) HearthError!u32 {
+    try validate_home_id(home_id);
+    if (files_root.len == 0) return error.PathTooLong;
+    const path = std.fmt.bufPrint(out, "{s}/{s}", .{ files_root, home_id }) catch return error.PathTooLong;
+    // invariant: the path is copied into a fixed buffer of max_abs_path_len, so a longer one
+    // would arrive truncated and name a different directory
+    assert(path.len <= max_abs_path_len);
+    return @intCast(path.len);
+}
+
+/// Format a Hearth as Kyri text. Returns bytes written.
+pub fn format_kyri(h: Hearth, out: *[max_kyri_len]u8) HearthError!u32 {
+    const text = std.fmt.bufPrint(
+        out,
+        \\format {s}
+        \\home_id {s}
+        \\display_preset {s}
+        \\wire_lane {s}
+        \\cellular {s}
+        \\waymark {s}
+        \\
+    ,
+        .{ format_tag, h.home_id_slice(), h.preset.name(), h.wire.name(), h.cellular.name(), waymark },
+    ) catch return error.KyriTooLong;
+    // invariant: Kyri stays under the ceiling
+    assert(text.len <= max_kyri_len);
+    return @intCast(text.len);
+}
+
+fn is_space(ch: u8) bool {
+    return ch == ' ' or ch == '\t';
+}
+
+fn trim(s: []const u8) []const u8 {
+    var start: usize = 0;
+    while (start < s.len and is_space(s[start])) : (start += 1) {}
+    var end: usize = s.len;
+    while (end > start and is_space(s[end - 1])) : (end -= 1) {}
+    return s[start..end];
+}
+
+/// Parse a hearth-lulu0-v1 Kyri document into a validated Hearth.
+/// `wire_lane` / `cellular` optional -- missing means `.local` / `.off`.
+pub fn parse_kyri(src: []const u8) HearthError!Hearth {
+    if (src.len > max_kyri_len) return error.KyriTooLong;
+    var saw_format = false;
+    var home: ?[]const u8 = null;
+    var preset_name: ?[]const u8 = null;
+    var wire: WireLane = .local;
+    var cellular: Cellular = .off;
+
+    var line_start: usize = 0;
+    while (line_start <= src.len) {
+        const rest = src[line_start..];
+        const nl = std.mem.indexOfScalar(u8, rest, '\n');
+        const line_end = if (nl) |n| line_start + n else src.len;
+        const raw = trim(src[line_start..line_end]);
+        line_start = if (nl) |_| line_end + 1 else src.len + 1;
+
+        if (raw.len == 0 or raw[0] == '#') continue;
+        const sp = std.mem.indexOfScalar(u8, raw, ' ') orelse continue;
+        const key = raw[0..sp];
+        const val = trim(raw[sp + 1 ..]);
+        if (val.len == 0) continue;
+
+        if (std.mem.eql(u8, key, "format")) {
+            if (!std.mem.eql(u8, val, format_tag)) return error.MissingFormat;
+            saw_format = true;
+        } else if (std.mem.eql(u8, key, "home_id")) {
+            home = val;
+        } else if (std.mem.eql(u8, key, "display_preset")) {
+            preset_name = val;
+        } else if (std.mem.eql(u8, key, "wire_lane")) {
+            wire = WireLane.from_name(val) orelse return error.UnknownWire;
+        } else if (std.mem.eql(u8, key, "cellular")) {
+            cellular = Cellular.from_name(val) orelse return error.UnknownCellular;
+        } else if (std.mem.eql(u8, key, "waymark")) {
+            if (!std.mem.eql(u8, val, waymark)) return error.MissingFormat;
+        }
+    }
+
+    if (!saw_format) return error.MissingFormat;
+    const home_id = home orelse return error.MissingHomeId;
+    const pname = preset_name orelse return error.MissingPreset;
+    const preset = DisplayPreset.from_name(pname) orelse return error.UnknownPreset;
+    return try Hearth.init_full(home_id, preset, wire, cellular);
+}
+
+/// Device-free: fixture home `kd` + panel_max round-trips Kyri.
+pub fn kd_panel_max_round_trip() bool {
+    const h = Hearth.init("kd", .panel_max) catch return false;
+    var buf: [max_kyri_len]u8 = undefined;
+    const n = format_kyri(h, &buf) catch return false;
+    const back = parse_kyri(buf[0..n]) catch return false;
+    if (!std.mem.eql(u8, back.home_id_slice(), "kd")) return false;
+    if (back.preset != .panel_max) return false;
+    if (back.wire != .local) return false;
+    return true;
+}
+
+/// Device-free: Kyri without wire_lane / cellular still loads defaults.
+pub fn missing_wire_defaults_local() bool {
+    const src =
+        \\format hearth-lulu0-v1
+        \\home_id kd
+        \\display_preset scaled_540
+        \\waymark hearth-display
+        \\
+    ;
+    const h = parse_kyri(src) catch return false;
+    return h.wire == .local and h.cellular == .off;
+}
+
+/// Device-free: usb_desk round-trips.
+pub fn usb_desk_wire_round_trips() bool {
+    const h = Hearth.init_with_wire("kd", .scaled_540, .usb_desk) catch return false;
+    var buf: [max_kyri_len]u8 = undefined;
+    const n = format_kyri(h, &buf) catch return false;
+    const back = parse_kyri(buf[0..n]) catch return false;
+    return back.wire == .usb_desk;
+}
+
+/// Device-free: cellular optional round-trips.
+pub fn cellular_optional_round_trips() bool {
+    const h = Hearth.init_full("kd", .scaled_540, .local, .optional) catch return false;
+    var buf: [max_kyri_len]u8 = undefined;
+    const n = format_kyri(h, &buf) catch return false;
+    const back = parse_kyri(buf[0..n]) catch return false;
+    return back.cellular == .optional;
+}
+
+/// Device-free: bad home ids are refused.
+pub fn refuses_bad_home_ids() bool {
+    if (Hearth.init("K", .scaled_540)) |_| return false else |_| {}
+    if (Hearth.init("KD", .scaled_540)) |_| return false else |_| {}
+    if (Hearth.init("k1", .scaled_540)) |_| return false else |_| {}
+    if (Hearth.init("abc", .scaled_540)) |_| return false else |_| {}
+    return true;
+}
+
+/// Device-free: Pixel-class presets keep 1080:2424 aspect; floor meets budget.
+pub fn preset_sizes_are_honest() bool {
+    // invariant: panel max matches seated Pixel 10a public numbers
+    const max = DisplayPreset.panel_max.logical_size();
+    // invariant: the preset pins the pixel size it was drawn for, so a display change surfaces
+    // here rather than as a layout that no longer fits the glass
+    assert(max.w == 1080);
+    assert(max.h == 2424);
+    if (!DisplayPreset.panel_max.keeps_panel_aspect()) return false;
+    if (!DisplayPreset.scaled_720.keeps_panel_aspect()) return false;
+    if (!DisplayPreset.scaled_540.keeps_panel_aspect()) return false;
+    // Blazepod floor is content budget, not panel aspect.
+    if (DisplayPreset.blazepod_floor.keeps_panel_aspect()) return false;
+    const floor = DisplayPreset.blazepod_floor.logical_size();
+    if (floor.w < 512) return false;
+    if (floor.h < 640) return false;
+    return true;
+}
+
+/// Device-free: relative path for `kd` is `kd/hearth.kyri`.
+pub fn kd_hearth_path_is_short() bool {
+    var path: [max_path_len]u8 = undefined;
+    const n = relative_hearth_path("kd", &path) catch return false;
+    return std.mem.eql(u8, path[0..n], "kd/hearth.kyri");
+}
+
+/// Device-free: files-root join lands on `.../kd/hearth.kyri`.
+pub fn kd_files_join_is_honest() bool {
+    const root = "/data/user/0/org.glow.app.seva_broadcaster/files";
+    var path: [max_abs_path_len]u8 = undefined;
+    const n = join_files_hearth_path(root, "kd", &path) catch return false;
+    const want = root ++ "/kd/hearth.kyri";
+    return std.mem.eql(u8, path[0..n], want);
+}
+
+/// Device-free: four taps return to the start preset.
+pub fn preset_next_cycles_closed() bool {
+    var p: DisplayPreset = .scaled_540;
+    p = p.next();
+    if (p != .blazepod_floor) return false;
+    p = p.next();
+    if (p != .panel_max) return false;
+    p = p.next();
+    if (p != .scaled_720) return false;
+    p = p.next();
+    return p == .scaled_540;
+}
+
+comptime {
+    _ = print;
+    // invariant: the home id is two bytes and the preset belongs to this ladder, both pinned so
+    // a cycle carried elsewhere names itself
+    assert(home_id_len == 2);
+    assert(std.mem.eql(u8, waymark, "hearth-display"));
+}

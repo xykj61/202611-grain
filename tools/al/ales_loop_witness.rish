@@ -1,0 +1,48 @@
+# tools/al/ales_loop_witness.rish -- the transport loop: a marked region read round and round (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260814/20260814-fill-ales14-resonance-transport-loop.md
+# Stands on: resonance/transport.rye (resonance-audio) -- the play head this rung extends (a loop OFF delegates to it whole); resonance/clock.rye
+# (resonance-audio) -- mark_ms sets the region in real time; resonance/timeline.rye (resonance-audio) -- the Clip the master is.
+#
+# resonance/loop.rye extends resonance-audio's forward play head with a marked region [start, end) it WRAPS at instead of stopping -- the
+# first read that does not end. A loop OFF is resonance-audio exactly; a loop ON cycles the region forever, the head kept within
+# [start,end) so K cycles concatenate to the region repeated K times. The selftest proves: a loop off matches the forward
+# read; a region [1,4) cycles 20,30,40,... exactly; the head stays within the region at any block size; a whole-master loop
+# replays continuously; a single-sample region repeats; make refuses BadLoop; mark_ms places the region in real time; the loop
+# reads only, never mutating the master. Purely local -- no network, no keys, no funds, no real device.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_loop_witness.rish
+
+say "ales-loop: Language EN — resonance-audio reads a marked region round and round: the practice loop, the comping cycle — the first read that does not end."
+say "ales-loop: Style Radiant — the law is stated positively: a loop is a play head that WRAPS at a marked end instead of stopping, the head kept within the region so K cycles concatenate to the region repeated K times, no seam sample skipped or doubled."
+say "ales-loop: Lens TAME — a loop OFF delegates to resonance-audio's read whole (the loop generalizes the transport); no new arithmetic; make refuses BadLoop by name; region bounds proven within the master; read-only, never mutating the master; siloed to resonance/, no network, no keys, no funds, no device."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/loop"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/loop.rye -femit-bin=${bin}"]
+assert build.ok else "ales-loop: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/loop.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-loop: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-loop: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-loop' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-loop: selftest did not print the GREEN ales-loop line"
+
+say "ales-loop: GREEN — the transport loop cycles a marked region exactly, the head kept within it, a loop off reading identically to resonance-audio. The next Resonance rung can name a stereo transport, a scrub window, or a punch region tying playback back to capture."
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

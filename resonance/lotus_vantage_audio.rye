@@ -1,0 +1,394 @@
+//! resonance/resonance_vantage_audio.rye -- Vantage FFI bridge for Resonance
+//! CoreAudio playback and recording. C-ABI exports that Swift
+//! calls through the VantageResonance module map. Lives in resonance/ so
+//! it can import coreaudio.rye and siblings by bare name.
+//!
+//! Build:
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build-lib \
+//!     resonance/resonance_vantage_audio.rye -dynamic \
+//!     -femit-bin=vantage/lib/libresonance_audio.dylib \
+//!     -lc -framework AudioToolbox -framework CoreAudio
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+const coreaudio = @import("coreaudio.rye");
+const coreaudio_c = @import("coreaudio_c.rye");
+const timeline = @import("timeline.rye");
+const clock_mod = @import("clock.rye");
+const record = @import("record.rye");
+const meter_mod = @import("meter.rye");
+const wav = @import("wav.rye");
+
+// -- module-level mutable state (one engine per process) --------
+
+var engine: coreaudio.Engine = coreaudio.Engine.init();
+var master: timeline.Clip = timeline.Clip{};
+var clock: ?clock_mod.Clock = null;
+var initialized: bool = false;
+var looping: bool = true;
+
+// -- recording state (one record engine per process) ------------
+
+var rec_engine: record.Engine = record.Engine.init();
+var rec_buf: record.RecordBuf = record.RecordBuf{};
+var rec_initialized: bool = false;
+
+// -- FFI exports ------------------------------------------------
+
+// invariant: every export is callconv(.c) and uses only
+// C-safe types (u32, bool). No allocation crosses the boundary.
+
+export fn resonance_audio_init_test_tone(
+    num_samples: u32,
+    sample_rate: u32,
+) callconv(.c) bool {
+    if (initialized) return false;
+    if (num_samples == 0) return false;
+
+    // invariant: num_samples is bounded by max_clip.
+    const capped: u32 =
+        if (num_samples > timeline.max_clip)
+            timeline.max_clip
+        else
+            num_samples;
+
+    // D2 square wave at A=432 tuning (144.16 Hz).
+    // Period = 44100 / 144.16 ~ 306. Half = 153 high, 153 low.
+    var i: u32 = 0;
+    while (i < capped) : (i += 1) {
+        master.buf[i] = if ((i % 306) < 153)
+            @as(i16, 24000)
+        else
+            @as(i16, -24000);
+    }
+    master.len = capped;
+
+    // Build clock.
+    const clk = clock_mod.make(sample_rate) catch
+        return false;
+    clock = clk;
+
+    // Open the engine with the master and clock.
+    coreaudio.open(&engine, &master, clk) catch return false;
+    engine.state.looping = looping;
+    initialized = true;
+    return true;
+}
+
+export fn resonance_audio_start() callconv(.c) bool {
+    if (!initialized) return false;
+    if (engine.playing) return true;
+    coreaudio.start(&engine) catch return false;
+    return true;
+}
+
+export fn resonance_audio_stop() callconv(.c) bool {
+    if (!initialized) return false;
+    if (!engine.playing) return true;
+    coreaudio.stop(&engine) catch return false;
+    return true;
+}
+
+export fn resonance_audio_close() callconv(.c) void {
+    if (!initialized) return;
+    coreaudio.close(&engine);
+    clock = null;
+    initialized = false;
+}
+
+export fn resonance_audio_is_open() callconv(.c) bool {
+    return engine.open;
+}
+
+export fn resonance_audio_is_playing() callconv(.c) bool {
+    return engine.playing;
+}
+
+export fn resonance_audio_position() callconv(.c) u32 {
+    return engine.state.trx.position();
+}
+
+export fn resonance_audio_clip_length() callconv(.c) u32 {
+    return master.len;
+}
+
+export fn resonance_audio_callback_count() callconv(.c) u32 {
+    return engine.state.callback_count;
+}
+
+export fn resonance_audio_sample_rate() callconv(.c) u32 {
+    if (clock) |clk| return clk.hz();
+    return 0;
+}
+
+export fn resonance_audio_set_loop(
+    on: bool,
+) callconv(.c) void {
+    looping = on;
+    if (initialized) {
+        engine.state.looping = on;
+    }
+}
+
+export fn resonance_audio_is_looping() callconv(.c) bool {
+    return looping;
+}
+
+export fn resonance_audio_seek_start() callconv(.c) void {
+    if (initialized) {
+        engine.state.trx.pos = 0;
+    }
+}
+
+export fn resonance_audio_set_gain(
+    gain: f32,
+) callconv(.c) void {
+    // invariant: gain is clamped to [0.0, 2.0] at the boundary.
+    const clamped: f32 = if (gain < 0.0)
+        0.0
+    else if (gain > 2.0)
+        2.0
+    else
+        gain;
+    if (initialized) {
+        engine.state.gain = clamped;
+    }
+}
+
+export fn resonance_audio_get_gain() callconv(.c) f32 {
+    if (initialized) return engine.state.gain;
+    return 1.0;
+}
+
+// -- recording FFI exports --------------------------------------
+
+export fn resonance_record_open(
+    sample_rate: u32,
+) callconv(.c) bool {
+    if (rec_initialized) return false;
+    // invariant: playback clock used when available.
+    const clk = if (clock) |c| c else blk: {
+        const c = clock_mod.make(sample_rate) catch
+            return false;
+        clock = c;
+        break :blk c;
+    };
+    record.open(&rec_engine, &rec_buf, clk) catch
+        return false;
+    rec_initialized = true;
+    return true;
+}
+
+export fn resonance_record_start() callconv(.c) bool {
+    if (!rec_initialized) return false;
+    record.start(&rec_engine) catch return false;
+    return true;
+}
+
+export fn resonance_record_stop() callconv(.c) bool {
+    if (!rec_initialized) return false;
+    record.stop(&rec_engine) catch return false;
+    return true;
+}
+
+export fn resonance_record_close() callconv(.c) void {
+    if (!rec_initialized) return;
+    record.close(&rec_engine);
+    rec_initialized = false;
+}
+
+export fn resonance_record_is_open() callconv(.c) bool {
+    return rec_engine.open;
+}
+
+export fn resonance_record_is_recording() callconv(.c) bool {
+    return rec_engine.recording;
+}
+
+export fn resonance_record_meter_peak() callconv(.c) u32 {
+    const m = record.read_meter(&rec_engine);
+    return m.peak;
+}
+
+export fn resonance_record_sample_count() callconv(.c) u32 {
+    return rec_buf.len;
+}
+
+export fn resonance_record_read_buf(
+    out: [*]i16,
+    max_out: u32,
+) callconv(.c) u32 {
+    // invariant: copy at most min(rec_buf.len, max_out) samples.
+    const avail = rec_buf.len;
+    const n: u32 = if (avail < max_out) avail else max_out;
+    var i: u32 = 0;
+    while (i < n) : (i += 1) {
+        out[i] = rec_buf.buf[i];
+    }
+    return n;
+}
+
+export fn resonance_record_to_playback() callconv(.c) bool {
+    if (rec_buf.len == 0) return false;
+    const clip = record.to_clip(&rec_buf);
+    // invariant: clip.len is bounded by max_clip.
+    const copy_len: u32 =
+        if (clip.len > timeline.max_clip)
+            timeline.max_clip
+        else
+            clip.len;
+    var i: u32 = 0;
+    while (i < copy_len) : (i += 1) {
+        master.buf[i] = clip.buf[i];
+    }
+    master.len = copy_len;
+    return true;
+}
+
+export fn resonance_record_export_wav(
+    out: [*]u8,
+    max_out: u32,
+) callconv(.c) u32 {
+    // invariant: refuse when nothing has been recorded.
+    if (rec_buf.len == 0) return 0;
+    // invariant: sample rate comes from the shared clock.
+    const rate: u32 = if (clock) |clk| clk.hz() else 44100;
+    const samples = rec_buf.buf[0..rec_buf.len];
+    const out_slice = out[0..max_out];
+    const byte_len = wav.encode(
+        rate, samples, out_slice,
+    ) catch return 0;
+    return byte_len;
+}
+
+// -- selftest ---------------------------------------------------
+
+pub fn main() !void {
+    print("resonance_vantage_audio selftest\n", .{});
+
+    // 1. init with a test tone.
+    assert(!initialized);
+    const ok = resonance_audio_init_test_tone(512, 44100);
+    assert(ok);
+    assert(initialized);
+    assert(resonance_audio_is_open());
+    assert(!resonance_audio_is_playing());
+    assert(resonance_audio_sample_rate() == 44100);
+
+    // 2. double init refuses.
+    assert(!resonance_audio_init_test_tone(512, 44100));
+
+    // invariant: looping defaults to true.
+    assert(resonance_audio_is_looping());
+    assert(engine.state.looping);
+
+    // 3. start playback.
+    assert(resonance_audio_start());
+    assert(resonance_audio_is_playing());
+
+    // invariant: 80ms is enough for several callback invocations at 44100 Hz.
+    _ = coreaudio_c.usleep(80_000);
+    assert(resonance_audio_callback_count() >= 1);
+    assert(resonance_audio_position() > 0);
+
+    // 5. stop.
+    assert(resonance_audio_stop());
+    assert(!resonance_audio_is_playing());
+
+    // 6. close.
+    resonance_audio_close();
+    assert(!initialized);
+    assert(!resonance_audio_is_open());
+
+    // 7. loop toggle.
+    resonance_audio_set_loop(false);
+    assert(!resonance_audio_is_looping());
+    resonance_audio_set_loop(true);
+    assert(resonance_audio_is_looping());
+
+    // -- recording bridge claims --
+    // 8. open recording.
+    assert(!rec_initialized);
+    assert(!resonance_record_is_open());
+    const rec_ok = resonance_record_open(44100);
+    assert(rec_ok);
+    assert(rec_initialized);
+    assert(resonance_record_is_open());
+    assert(!resonance_record_is_recording());
+
+    // 9. double-open refuses.
+    assert(!resonance_record_open(44100));
+
+    // 10. start recording and capture samples.
+    assert(resonance_record_start());
+    assert(resonance_record_is_recording());
+
+    // invariant: 200ms captures at least one callback of audio.
+    _ = coreaudio_c.usleep(200_000);
+
+    // 11. stop recording.
+    assert(resonance_record_stop());
+    assert(!resonance_record_is_recording());
+
+    // invariant: sample count and meter are readable after stop.
+    const samples = resonance_record_sample_count();
+    const peak = resonance_record_meter_peak();
+    print("  recording: {} samples, peak {}\n", .{ samples, peak });
+
+    // 12. transfer recording to playback (when samples captured).
+    if (samples > 0) {
+        assert(resonance_record_to_playback());
+        assert(master.len > 0);
+        print("  transfer to playback: {} samples\n", .{master.len});
+    } else {
+        // no mic available -- transfer correctly refuses empty buf.
+        assert(!resonance_record_to_playback());
+        print("  no mic input -- transfer skipped (expected)\n", .{});
+    }
+
+    // 13. read recording buffer through FFI.
+    {
+        var read_out: [64]i16 = @splat(0);
+        const got = resonance_record_read_buf(&read_out, 64);
+        // invariant: got is bounded by min(rec_buf.len, max_out).
+        assert(got <= 64);
+        if (samples > 0) {
+            assert(got > 0);
+        } else {
+            assert(got == 0);
+        }
+        print("  read_buf: {} samples\n", .{got});
+    }
+
+    // 14. WAV export through FFI.
+    {
+        // invariant: wav header + samples must fit the output buffer.
+        const wav_max: u32 = wav.header_len + rec_buf.len * wav.sample_bytes;
+        var wav_out: [wav.max_file]u8 = undefined;
+        const wav_len = resonance_record_export_wav(
+            &wav_out, wav_max,
+        );
+        if (samples > 0) {
+            // invariant: returned length is at least the header.
+            assert(wav_len >= wav.header_len);
+            // invariant: RIFF tag at offset 0.
+            assert(wav_out[0] == 'R');
+            assert(wav_out[1] == 'I');
+            assert(wav_out[2] == 'F');
+            assert(wav_out[3] == 'F');
+            print("  wav export: {} bytes\n", .{wav_len});
+        } else {
+            assert(wav_len == 0);
+            print("  no samples -- wav export returns 0 (expected)\n", .{});
+        }
+    }
+
+    // 15. close recording.
+    resonance_record_close();
+    assert(!rec_initialized);
+    assert(!resonance_record_is_open());
+
+    print("resonance_vantage_audio selftest: 15 claims GREEN\n", .{});
+}

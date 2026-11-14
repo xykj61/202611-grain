@@ -1,0 +1,216 @@
+# fleet/fleet-roster.kyri -- the fleet's one seat table.
+#
+# WHY THIS FILE EXISTS. The binding seat -> tree -> engine is the fleet's only real datum, and it
+# was spelled in six independent places across two executables: fleet-loop.sh's allow-list, its
+# want_tree case, its FLEET_DRY case and its run_lap case, plus fleet_rearm.sh's report_seat rows
+# and its relaunch case. Nothing compared them, and by `20260904` two had already drifted -- the
+# loop admitted six seat names while the re-arm reported nine, and the elder-name remap seated on
+# Keaton's word lived in one file and not the other. A rule written six times is a rule six files
+# may quietly come to disagree about; this is that rule written once.
+#
+# THE SHAPE is the standing roster's own: a record opens with `seat` and carries plain key-value
+# lines until the next one. Read it with tools/fixtures/f/fleet_roster_scan.sh rather than by
+# grepping here, so one parse serves sh, Rishi, and the launcher prose alike.
+#
+# STATUS is the field that lets an elder seat stay readable without pretending it runs. `live` is
+# a seat the fleet sails today; `parked` is one whose tree no host currently holds, kept by name
+# because it may sail again and because an absent directory is a filesystem accident where a
+# parked row is a declaration. fleet_rearm.sh already reports an absent tree honestly; this makes
+# that honesty something a reader can check against intent.
+#
+# ELDER names the seat's prior spelling, so a hand who types the old word is corrected rather than
+# refused. The word is retired from the seat name, never from the reader's muscle memory.
+format fleet-roster-v1
+
+# ENGINE `claude` on every live seat, `20261001` on Keaton's word.
+# Models stay in each tree's gitignored settings: bakery `claude-opus-5`,
+# every other live seat `claude-sonnet-5`. The parked aether rows keep the
+# engine they already had. Codex remains a loop a seat can return to; the
+# Codex watcher arms only a seat whose engine reads `codex`.
+# -- the three Earth ships, names seated 20260904 on Keaton's word ----------------------------
+seat incense
+tree grain-incense
+engine claude
+lane law, active-designing, iterative review, and the captain's hat
+status live
+seated 20260904.013013
+
+seat pheromone
+tree grain-pheromone
+engine claude
+lane the molecular star -- the language details a rune wants
+elder furrow
+status live
+seated 20260904.013013
+
+seat petrichor
+tree grain-petrichor
+engine claude
+lane docs-geode (tend, never rename) and prose-product
+elder harvest
+status live
+seated 20260904.013013
+
+# -- three ships seated `20260904.214754` on Keaton's word, awaiting their trees ---------------------
+# STATUS `berthed` is the third word, and it earns its place the way `parked` did: a berthed seat
+# has a lane, a prompt, and a name, and no tree yet. `live` would have the re-arm report an absent
+# directory as if a ship had gone missing, and `parked` would say it had sailed and stopped. Neither
+# is true of a ship being built. `--live` excludes it, so the loop and the recipe stay honest, and
+# the tree birth is `rishi/bin/rishi run tools/b/birth_a_clone.rish /home/keeper/grain-<seat>`
+# followed by a `claude login` on that host, which is a hand.
+seat bakery
+tree grain-bakery
+engine claude
+lane core infrastructure, the Long Return and Lila -- and the fleet's own friction
+status live
+seated 20260904.214754
+
+seat diffuser
+tree grain-diffuser
+engine claude
+lane moonshots and whitepaper research -- toroidal, energy-saving, radial-polar; in tandem with bakery
+status live
+seated 20260904.214754
+
+seat grass
+tree grain-grass
+engine claude
+lane reverse-reading steward -- walk foundations, active-designing, and session logs backward for the oldest unresolved premise beneath the newest plans, and record one disposition (revived, molted, breached, archived, standfasted, yondered, or Mitra-shed) per packet
+status live
+seated 20260904.214754
+lane_updated 20260918.013200 -- construction/ITINERARY.md Now block names this mission; the elder "four auditing passes" line was never repointed when that entry landed, so the seat prompt and the card disagreed until this lap read both
+
+# -- COPAL and PATCHOULI, seated 20260905.164639 on Keaton's word. Two more Earth aromas, and
+# each takes a module family that stood with real code and no standing guard. The pair was measured
+# rather than chosen for symmetry: `blaze/` holds 32 Rye modules and 9,175 lines with 120 files
+# outside it reaching in, and `amphora/` holds 10 modules and 3,861 lines -- and on `20260905`
+# NEITHER had a single witness on the standing roster. Roughly 13,000 lines of load-bearing Rye
+# moved from unguarded to owned by seating these two rows.
+#
+# The lanes are drawn by TERRITORY rather than by topic, because two ships wanting the same files
+# serialize however many cores the pier has. Copal takes the vessels, patchouli takes the core.
+#
+# ALL EIGHT EARTH SEATS READ `live` FROM `20260905.175234`, when the pier grew to 8 vCPU and 16 GB and
+# Keaton asked for eight ships. `status` says whether the fleet sails a seat today, and these five
+# are about to be. It also earns each of them a STAGGER SLOT: `fleet-loop.sh` reads its offset from
+# the LIVE roster, so a berthed ship would have taken slot 1 alongside incense and never staggered
+# at all -- five ships opening their laps in the same second is the one shape the offset exists to
+# prevent. The loop itself never read `status`; it checks only that the seat's tree is this tree.
+#
+# GRASS WAS NOT NARROWED, though a narrowing was proposed in the same breath as these two seats and
+# briefly written here. The proposal read grass's one-line lane -- *the four auditing passes* -- and
+# called it a collision with every other room. Its stanza governs that already, in two places: it
+# says to improve docs-geode *alongside petrichor, whose lane it is -- name a find rather than
+# taking it*, and never to convert a file *into another ship's seat without its word*. A lane
+# summary is not the charter, and the charter had the discipline the summary could not show.
+
+seat copal
+tree grain-copal
+engine claude
+lane amphora and the resins -- vessels, sealing, and what a record keeps when it is put away
+status live
+seated 20260905.164639
+
+seat patchouli
+tree grain-patchouli
+engine claude
+lane blaze and tally -- the weave and the bounded core; the base note the rest is built over
+status live
+seated 20260905.164639
+
+# -- the aether seats, parked. Their charter stays testimony at
+# active-designing/date/20260829/20260829-203718_the-six-bodies-and-the-always-fleet.md, and every law it earned
+# -- one tree per star, claim-as-override, the ruling seats -- the Earth trio inherits whole.
+seat silence
+tree grain-silence
+engine claude
+lane the infrastructure half of Grain in Glow
+status parked
+seated 20260829.203718
+
+seat hush
+tree grain-hush
+engine claude
+lane Pond completes the enclosure, under the accrete-only boundary
+status parked
+seated 20260829.203718
+
+seat dream
+tree grain-dream
+engine codex
+lane the systems core -- Caravan, Tally, the Scribe seams
+status parked
+seated 20260829.203718
+
+# The interactive field sitting. It runs no unattended loop, which is why `engine field` is its
+# own word rather than a blank: a seat with no engine would read as a row somebody forgot to
+# finish, and this one is finished.
+seat sound
+tree grain
+engine field
+lane the interactive bench -- Glow language custody, and where rulings land
+status parked
+seated 20260829.203718
+
+# -- the eight Fire ships, seated 20261009.001346 on Keaton's word.
+# Fire sees. Earth already sails eight live ships. These eight are berthed: a name, a lane,
+# and a prompt, and no tree yet. Birth stays a hand. The watch reads --live, so a berthed
+# ship is not armed, and it takes no stagger slot beside incense.
+# Candle is the fire fleet captain, seated 20261009.095959 on Keaton's word. Berthed still.
+# The other seven defer where a lane brushes the hat. Incense keeps the earth captain's hat.
+seat candle
+tree grain-candle
+engine claude
+lane the fire fleet captain -- the one picture a newcomer can hold, and the hat the other seven defer to
+status berthed
+seated 20261009.001346
+lane_updated 20261009.095959 -- captain of the fire fleet, still berthed, no tree born
+
+seat horizon
+tree grain-horizon
+engine claude
+lane the far edge still readable -- name where sky begins, and stop before it
+status berthed
+seated 20261009.001346
+
+seat shimmer
+tree grain-shimmer
+engine claude
+lane the fascia face as light on the cloth -- four decimals, at most 1.0000 in a round that runs the witness
+status berthed
+seated 20261009.001346
+
+seat mauve
+tree grain-mauve
+engine claude
+lane the gentle color -- G-friendly pictures, warm enough that a child could hear them
+status berthed
+seated 20261009.001346
+
+seat pastel
+tree grain-pastel
+engine claude
+lane the open door -- Bhakta teaching that assumes no hardware background, one idea at a time
+status berthed
+seated 20261009.001346
+
+seat reflect
+tree grain-reflect
+engine claude
+lane the mirror -- a name asked twice returns the same sight, and a look edits nothing
+status berthed
+seated 20261009.001346
+
+seat sapphire
+tree grain-sapphire
+engine claude
+lane the durable page -- a foundation still worth reading on the far side of the years
+status berthed
+seated 20261009.001346
+
+seat neon
+tree grain-neon
+engine claude
+lane the bright sign -- the work said aloud, so it can be seen from the road
+status berthed
+seated 20261009.001346

@@ -1,0 +1,3 @@
+::  Switch with cue of nest jam both mint arm.
+=/  body  (cue (jam (mix from amount) (mix cell gate)))
+?-  kind.cur-record  %mint  body  %send  0

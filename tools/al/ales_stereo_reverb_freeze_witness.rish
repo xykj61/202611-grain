@@ -1,0 +1,61 @@
+# tools/al/ales_stereo_reverb_freeze_witness.rish -- the stereo frozen reverb: the held tail carried across a stereo master (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260815/20260815-115900_fill-ales209-resonance-stereo-reverb-freeze.md
+# Stands on: resonance/stereo_reverb_preset.rye (resonance-audio -- the named-room stereo wet, run over the master unchanged and composed with itself);
+# resonance/reverb_freeze.rye (resonance-audio -- the mono freeze this carries across, the same iterated reverberation and max_passes bound); resonance/pan.rye
+# (the StereoClip); resonance/clock.rye (resonance-audio -- the sample clock); resonance/timeline.rye (resonance-audio -- the Clip each channel is, its saturate the rail).
+#
+# resonance/stereo_reverb_freeze.rye is the thin twin resonance-audio named next -- the SAME iterated reverberation over BOTH channels of a StereoClip, one
+# shared room and depth, the image held. It invents NO new audio arithmetic: the freeze composes resonance-audio's stereo reverb with ITSELF -- pass one the
+# plain stereo wet, each further pass reverberating the reverberation per ear with no cross-channel read, each pass saturating once so an iterated
+# pile-up pins never wraps. The freeze depth is validated up front (BadPasses on a zero or over-bound depth), and the FIRST pass prechecks before it
+# writes, so a refusal leaves both channels dry and balanced (atomic). The selftest proves: at passes = 1 each channel equals stereo_reverb_preset
+# byte for byte (the plain stereo wet); passes = 2 equals stereo_reverb_preset applied twice and passes = 3 thrice, byte for byte on both channels
+# (the freeze IS iterated reverberation); passes = 2 differs from passes = 1 (the freeze deepens); the image is held (a centred master identical
+# channel-to-channel, a stereo master distinct); the channels leave balanced and silence stays silence; and the faults forward atomic (a bad depth
+# BadPasses, a span past the clip DurationTooLong, an out-of-range span BadRange), both channels untouched and balanced. Purely local -- one
+# StereoClip, a validated clock, a bounded freeze depth; no network, no keys, no funds, no real device.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_stereo_reverb_freeze_witness.rish
+
+say "ales-stereo-reverb-freeze: Language EN — resonance-audio gave the MONO reverb its freeze (a held tail sustained by iterated reverberation); a keeper mixing a STEREO master had no such knob, exactly as the early/late balance stopped at mono before resonance-audio carried it across. This rung is the thin twin: the same iterated reverberation over BOTH channels of a StereoClip, one shared room and depth, the image held."
+say "ales-stereo-reverb-freeze: Style Radiant — the freeze is stated positively and proven exact on both channels: at passes = 1 each channel equals resonance-audio's stereo_reverb_preset byte for byte (one pass is exactly the plain stereo wet), passes = 2 equals stereo_reverb_preset applied twice byte for byte and passes = 3 thrice (the freeze IS iterated reverberation), a second pass genuinely deepens the tail. One shared bank feeds both channels, each reverberating its own audio with no cross-channel read, so the image is held; the depth is a named count of passes, not a decay time in seconds."
+say "ales-stereo-reverb-freeze: Lens TAME — one StereoClip of i16 PCM, a validated clock, resonance-audio's fixed reverb banks, and a bounded freeze depth (max_passes, the SAME bound resonance-audio carries); NO new audio arithmetic — the freeze composes the proven stereo reverb with itself, each pass saturating ONCE so an iterated pile-up pins never wraps; StereoReverbFreezeError = stereo_reverb_preset.StereoReverbPresetError || BadPasses, the depth checked BEFORE any conversion and the first pass PRECHECKED so a refusal leaves both channels dry and balanced (atomic), BadPasses / DurationTooLong / BadRange by name before any write; siloed to resonance/, no network, no keys, no funds, no device. 'Freeze' names iterated reverberation honestly, not a literal infinite sustain."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/stereo_reverb_freeze"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/stereo_reverb_freeze.rye -femit-bin=${bin}"]
+assert build.ok else "ales-stereo-reverb-freeze: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/stereo_reverb_freeze.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-stereo-reverb-freeze: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-stereo-reverb-freeze: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-stereo-reverb-freeze' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-stereo-reverb-freeze: selftest did not print the GREEN ales-stereo-reverb-freeze line"
+
+# This rung composes resonance-audio's stereo_reverb_preset with itself over its public API -- re-prove the stereo named-room preset still stands green beside it.
+let preset = run ["sh" "-c" "env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/stereo_reverb_preset.rye -femit-bin=resonance/bin/stereo_reverb_preset && resonance/bin/stereo_reverb_preset selftest 2>&1 | grep -q 'GREEN ales-stereo-reverb-preset' && echo yes"]
+assert (trim preset.out) == "yes" else "ales-stereo-reverb-freeze: the resonance-audio stereo named-room preset regressed under its freeze"
+
+# And resonance-audio's mono freeze over its public API -- re-prove the mono held tail this twin carries across still stands green beside it.
+let mono = run ["sh" "-c" "env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/reverb_freeze.rye -femit-bin=resonance/bin/reverb_freeze && resonance/bin/reverb_freeze selftest 2>&1 | grep -q 'GREEN ales-reverb-freeze' && echo yes"]
+assert (trim mono.out) == "yes" else "ales-stereo-reverb-freeze: the resonance-audio mono freeze regressed under its stereo twin"
+
+say "ales-stereo-reverb-freeze: GREEN — the stereo frozen reverb: the held tail carried across a stereo master, sustained by iterated reverberation, closing the freeze axis whole for mono and stereo. Run resonance-audio's stereo_reverb_preset over the master once per unit of depth — pass one the plain stereo wet, each further pass reverberating the reverberation per ear with no cross-channel read — no new audio arithmetic, each pass saturating once so an iterated pile-up pins never wraps. Proven: at passes = 1 each channel exactly stereo_reverb_preset byte for byte (the plain stereo wet); passes = 2 exactly stereo_reverb_preset applied twice and passes = 3 thrice, byte for byte on both channels (the freeze IS iterated reverberation); passes = 2 differs from passes = 1 (the freeze deepens); the image is held (a centred master identical channel-to-channel, a stereo master distinct); the channels leave balanced and silence stays silence; a zero or over-bound depth refuses BadPasses, a span past the clip DurationTooLong, an out-of-range span BadRange, each leaving both channels untouched and balanced (the depth checked up front, the first pass prechecked, so atomic); the resonance-audio stereo preset and the resonance-audio mono freeze stay GREEN beside it. The freeze axis now stands whole for mono and stereo; a fresh reverb axis (width, wanting its own mid/side primitive) is next."
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

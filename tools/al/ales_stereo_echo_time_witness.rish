@@ -1,0 +1,48 @@
+# tools/al/ales_stereo_echo_time_witness.rish -- stereo_echo_time: the stereo echo spoken in milliseconds, a thin twin over resonance-audio the clock adds only the units to -- the first real-time face of the stereo time-based wing (resonance-audio).
+#
+# Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
+# Design read: active-designing/date/20260815/20260815-090218_fill-ales182-resonance-stereo-echo-in-real-time.md
+# Stands on: resonance/stereo_echo.rye (resonance-audio -- the linked stereo feedback delay this speaks in real time, delegated unchanged), resonance/echo.rye (resonance-audio -- the mono feedback delay, its EchoError the echo half of this face's error set), resonance/clock.rye
+# (resonance-audio -- the sample clock, its samples_for converting ms to a bounded sample count), resonance/pan.rye (resonance-audio -- the StereoClip), resonance/timeline.rye (resonance-audio -- the Clip).
+#
+# resonance/stereo_echo_time.rye echoes a stereo master over a span named in milliseconds: it converts start_ms, count_ms, and delay_ms once through resonance-audio's proven clock.samples_for (bounded, refusing DurationTooLong past the clip), then delegates
+# to resonance-audio's stereo_echo unchanged -- the same linked feedback delay on both channels, now spoken in real time. resonance-audio opened the stereo time-based wing with its primitive; this rung gives it its real-time face exactly as resonance-audio's echo_ms is
+# over resonance-audio's echo, and it is the first stereo module to speak in milliseconds -- the pattern every later stereo real-time twin (a timed multitap, a timed reverb) will follow. The clock adds only the units, and the same conversion feeds both
+# channels, so a millisecond-named stereo echo lands byte-for-byte the same samples on each channel as the index-named stereo echo over the converted delay and span, the image held. Because samples_for is divTrunc(rate-ms, 1000), a delay too
+# short to be one whole sample converts to zero, which the echo refuses BadDelay on both channels before any write, so a sub-sample echo refuses honestly. StereoEchoTimeError is resonance-audio's ClockError beside resonance-audio's EchoError, forwarded whole;
+# values only, never a length; the two channels leave balanced. The crux is four laws: the clock-adds-only-units law (both channels equal to the index-named stereo echo byte for byte), the real-rate law (at 48 kHz 1 ms == 48 samples on both),
+# the dry-identity law (a zero-feedback timed echo the dry master on both), and the forwarding / atomicity / balance law (a sub-sample delay, a long delay, a unity feedback, an out-of-range span each refusing by name with both channels untouched
+# and balanced, count_ms 0 the identity on both, an identical-channel master staying identical).
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/al/ales_stereo_echo_time_witness.rish
+
+say "ales-stereo-echo-time: Language EN — stereo_echo_time echoes a stereo master over a span named in milliseconds by converting start_ms, count_ms, and delay_ms once through resonance-audio's proven clock samples_for, then delegating to resonance-audio's stereo_echo unchanged: the same linked feedback delay on both channels, now spoken in real time. resonance-audio opened the stereo time-based wing with its primitive, a feedback delay carried onto both channels each reading and feeding back through its own live buffer; this rung gives it its real-time face exactly as echo_ms is over echo, and it is the first stereo module to speak in milliseconds, the pattern every later stereo real-time twin will follow. The clock adds only the units, never the audio, and the same conversion feeds both channels, so a millisecond-named stereo echo lands byte for byte the same samples on each channel as the index-named stereo echo over the converted delay and span, the image held. Because samples_for is divTrunc of rate times ms over one thousand, a delay too short to be one whole sample converts to zero, which the echo refuses BadDelay on both channels before any write, so a sub-sample echo refuses honestly rather than silently doing nothing. It forwards resonance-audio's DurationTooLong and resonance-audio's BadDelay, BadFeedback, and BadRange before any write; it writes values only, never a length, so the two channels leave balanced."
+say "ales-stereo-echo-time: Style Radiant — a musician thinks in time, an echo an eighth of a second later, not in a count of sample indices, and the one missing fact is the sample rate the validated clock already holds. resonance-audio seated the stereo delay wing on its primitive; this rung lets a keeper name that echo in milliseconds, the clock adding only the units while the audio path stays resonance-audio's, untouched. The same conversion feeds both channels, so one delay in milliseconds becomes one sample delay applied identically to each, both trains still decaying in lockstep and the image held for free. A millisecond-named stereo echo lands byte for byte the same samples on each channel as the index-named one, and a delay too short to be a whole sample converts to zero and refuses by name rather than doing nothing quietly. The crux is four laws: the clock-adds-only-units law, both channels equal to the index-named stereo echo byte for byte with the channels genuinely differing; the real-rate law, at forty-eight kilohertz one millisecond converting to forty-eight samples on both channels with the first echo sitting exactly there; the dry-identity law, a zero-feedback timed echo the dry master on both channels; and the forwarding, atomicity, and balance law, a sub-sample delay, a delay past the clip, a feedback at unity, and an out-of-range span each refusing by name with both channels untouched and balanced, an empty span the identity on both, and an identical-channel master staying identical through the timed echo."
+say "ales-stereo-echo-time: Lens TAME — two bounded in-process i16 clips (left, right) and a validated clock; three millisecond conversions through the clock's own bounded samples_for, then resonance-audio's proven stereo echo delegated unchanged, so no new arithmetic touches the audio path. The two channels enter balanced (the StereoClip invariant asserted on entry) and the clock is asserted valid so each conversion is bounded and safe; the channels leave balanced (a timed echo writes values only, each length asserted equal and within bound on exit). StereoEchoTimeError is resonance-audio's ClockError composed with resonance-audio's EchoError (DurationTooLong beside BadDelay, BadFeedback, BadRange), the real-time face adding no fault of its own. The clock-adds-only-units law is proven by running both stereo_echo_ms and resonance-audio's stereo_echo on the same per-channel content at one sample per millisecond and demanding byte-for-byte equality on both channels while the channels genuinely differ; the real-rate law by converting one millisecond to forty-eight samples at forty-eight kilohertz and matching the index form; the dry-identity law by a zero feedback numerator passing the dry master on both; and the forwarding, atomicity, and balance law by a sub-sample delay refusing BadDelay, a delay past the clip DurationTooLong, a unity feedback BadFeedback, and an out-of-range span BadRange, each leaving both channels untouched and balanced, an empty span the identity on both, and an identical-channel master staying identical; siloed to resonance/, the delay spoken in milliseconds rather than sample indices and the feedback a named fraction below unity rather than a decibel, no cross-channel feedback, no real sample rate device, no network, no keys, no funds, no speaker."
+
+let zig = "vendor/zig-toolchain/zig"
+# THE BINARY LANDS IN A PEN, NEVER A SHARED PATH IN THE TREE (REDS %700). A fixed path is
+# one name every run in this checkout writes: one run EXECUTES it while another's linker
+# opens it, and the linker refuses with ETXTBSY -- so the guard answers differently on
+# bytes nobody changed. `printf %s` trims the newline a bare capture would keep.
+let pen = run ["sh" "-c" "printf %s $(mktemp -d)"]
+assert pen.ok else "could not make a build pen: ${pen.err_brief}"
+let bin = "${pen.out}/stereo_echo_time"
+
+let build = run ["sh" "-c" "mkdir -p resonance/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh resonance/stereo_echo_time.rye -femit-bin=${bin}"]
+assert build.ok else "ales-stereo-echo-time: build failed — ${build.err_brief}"
+
+let outfile = "resonance/bin/stereo_echo_time.out"
+let selftest = run ["sh" "-c" "${bin} selftest > ${outfile} 2>&1"]
+assert selftest.ok else "ales-stereo-echo-time: selftest exited non-zero — see ${outfile}"
+
+let shown = run ["sh" "-c" "cat ${outfile}"]
+say "ales-stereo-echo-time: ${shown.out_brief}"
+
+let green = run ["sh" "-c" "grep -q 'GREEN ales-stereo-echo-time' ${outfile} && echo yes"]
+assert (trim green.out) == "yes" else "ales-stereo-echo-time: selftest did not print the GREEN ales-stereo-echo-time line"
+
+# The pen is swept here rather than left for the next run to meet.
+let pen_swept = run ["sh" "-c" "rm -rf ${pen.out}"]
+assert pen_swept.ok else "the build pen outlived its witness: ${pen_swept.err_brief}"

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+# rw1_stub_blaze — a history store that speaks only the RW-1 contract.
+# Records every call so the collaboration witness can prove the shell asked.
+set -eu
+mkdir -p .blaze/blobs
+printf '%s\n' "$*" >> .blaze/rw1_stub_calls.log
+case "${1:-}" in
+  init) : > .blaze/HEAD; echo "stub: init" ;;
+  add)  echo "stub: woven ${2:-all}" ;;
+  *)    echo "stub: ${1:-} ok" ;;
+esac
+exit 0

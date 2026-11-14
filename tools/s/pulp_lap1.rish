@@ -1,0 +1,18 @@
+# pulp_lap1.rish -- Pulp lap 0 markdown->blocks witness.
+#
+# Run from the repository root:
+#   rishi/bin/rishi run tools/s/pulp_lap1.rish
+
+let zig = "vendor/zig-toolchain/zig"
+let bin = "pulp/bin/pulp"
+
+let build = run ["sh" "-c" "mkdir -p pulp/bin && env RYE_ZIG=${zig} sh tools/fixtures/r/rye_build.sh pulp/pulp.rye -femit-bin=${bin}"]
+assert build.ok else "Pulp lap 0 build failed"
+
+let selftest = run ["sh" "-c" "${bin} selftest 2>&1"]
+assert selftest.ok else "Pulp selftest exited non-zero"
+assert selftest.out contains "GREEN" else "Pulp selftest not GREEN"
+assert selftest.out contains "rye_fence" else "Pulp missing rye_fence parse"
+assert selftest.out contains "unclosed fence refused" else "Pulp missing fence unwelcome"
+
+say "GREEN: Pulp lap 0 — markdown blocks with rye_fence and rish_fence."
