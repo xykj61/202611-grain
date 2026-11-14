@@ -2,6 +2,7 @@
 
 | Stamp | Title | Notes |
 |---|---|---|
+| 20261114.175422 | [founding-commit deep debride -- five renames into history](20261114/20261114-175422_founding-commit-deep-debride.kyri.md) | Four filter-repo passes, 10 commits re-signed, force-pushed to xy |
 | 20261114.170305 | [module retirement -- module rename landed and sent](20261114/20261114-170305_module-retirement-module-rename.kyri.md) | Rename 2 of 5 complete -- 39 files, 78 symmetric module-to-module replacements |
 | 20261114.153540 | [Pulp and Blaze renames executed](20261114/20261114-153540_pulp-and-blaze-renames-executed.kyri.md) | Four of five approved renames sent -- Tiles, Flare, Pulp, Blaze complete |
 | 20261114.150133 | [confirmed rename ledger -- Flare Pulp Jot](20261114/20261114-150133_confirmed-rename-ledger-flare-pulp-jot.kyri.md) | Flare Pulp Jot seated, module retired, separate passes, execution approved |
