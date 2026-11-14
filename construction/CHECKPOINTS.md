@@ -1,5 +1,10 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261114.152410` -- Flare -> Flare rename (third of five).**
+- **Walk-back nib:** `0f9e36dd06` -- `git show 0f9e36dd06` restores the tree before the Flare rename.
+- **Swept:** `flare/` directory and all flare-named files renamed to flare equivalents. All text references -- `flare`, `Flare`, `FLARE` -- replaced with `flare`, `Flare`, `FLARE` across living and dated files alike, with word-boundary safety to preserve `member`, `remember`, `September`, `membership`, and every other word containing the substring. 34 files carry the word in filenames, 315 files carry standalone references in content. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.
+- **What waits there, worth recalling:** Flare served the corpus forge faithfully from its seating on 20260827, carrying the warmth-of-a-kept-fire metaphor for the module that reads source and radiates what it finds. Flare takes the fire forward -- solar flares erupt outward, forge flares burst when the bellows work -- and clears the namespace collision with Meta's Muse Flare (released 20261109). Keaton chose Flare on 20261114.
+
 **Checkpoint `20261114.151730` -- Tiles -> Tiles rename (first of five).**
 - **Walk-back nib:** `53122f135d` -- `git show 53122f135d` restores the tree before the Tiles rename.
 - **Swept:** `kumara/tile.rye` and all tile-named files renamed to tiles equivalents. All text references -- `tile`, `tiles`, `Tile`, `Tiles` -- replaced with `tile`, `tiles`, `Tile`, `Tiles` across living and dated files alike. 356 files carry the word, 16 files carry it in filenames. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.
