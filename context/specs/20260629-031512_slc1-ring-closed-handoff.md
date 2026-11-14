@@ -29,7 +29,7 @@ The dev-loop scaffold is landed: `./tools/cursor-jail.sh` (POSIX flags today) an
 | All four together | `tools/slc1_accept.rish` |
 | Suite | `rishi/bin/rishi run tools/parity.rish` |
 
-**Implementation home:** `rishi/src/main.rye` -- `History`, `Transcript`, `runInputLine`, `recallByIndex`, `doVersion`, `runMantra` via `std.process.run`, `RISHI_BLAZE` override.
+**Implementation home:** `rishi/src/main.rye` -- `History`, `Transcript`, `runInputLine`, `recallByIndex`, `doVersion`, `runBlaze` via `std.process.run`, `RISHI_BLAZE` override.
 
 **Settled rulings carried in code:** transcript v1 = prompt + input + caught errors (stdout horizon); lazy `.blaze/` on first `:version`; stdin lines **duped into the arena** before the history lap stores them.
 

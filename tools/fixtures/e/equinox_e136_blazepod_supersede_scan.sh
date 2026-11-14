@@ -1,5 +1,5 @@
 #!/bin/sh
-# Equinox e136 -- supersede MantraPod pitch; restore dated elder; seat REDS 47.
+# Equinox e136 -- supersede BlazePod pitch; restore dated elder; seat REDS 47.
 # Exit 0 when elder is whole testimony, new dated pitch names Grain, dated_guard clean.
 # No backtick characters.
 #

@@ -53,7 +53,7 @@ extension AppDelegate {
 
         let manItem = NSMenuItem(
             title: "Focus Blaze",
-            action: #selector(focusMantra),
+            action: #selector(focusBlaze),
             keyEquivalent: "4"
         )
         manItem.keyEquivalentModifierMask = [.command]

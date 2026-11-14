@@ -157,13 +157,13 @@ const Identity = struct {
 };
 
 // -- Blaze event log --------------------------------------------------
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
     state_hash: u32,
 
-    fn init(region: *Region, identity: *const Identity) MantraLog {
+    fn init(region: *Region, identity: *const Identity) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -172,7 +172,7 @@ const MantraLog = struct {
         };
     }
 
-    fn append(self: *MantraLog, message: []const u8) void {
+    fn append(self: *BlazeLog, message: []const u8) void {
         const msg_len: u32 = @intCast(message.len);
         const record_size: u32 = 4 + 4 + msg_len + 4 + 4;
         const offset = self.region.alloc(record_size) catch {
@@ -355,13 +355,13 @@ const SupervisorError = error{
 };
 
 const Supervisor = struct {
-    log: *MantraLog,
+    log: *BlazeLog,
     processes: [max_processes]Process,
     count: u32,
     supervisor_domain: *Domain,
 
     fn init(
-        log: *MantraLog,
+        log: *BlazeLog,
         supervisor_domain: *Domain,
     ) Supervisor {
         return .{
@@ -471,7 +471,7 @@ export fn kmain() callconv(.c) noreturn {
     uart_print("\n");
 
     // -- Blaze log (in supervisor's region)
-    var log = MantraLog.init(&sup_region, &identity);
+    var log = BlazeLog.init(&sup_region, &identity);
 
     // -- Domain registry
     var registry = DomainRegistry.init();

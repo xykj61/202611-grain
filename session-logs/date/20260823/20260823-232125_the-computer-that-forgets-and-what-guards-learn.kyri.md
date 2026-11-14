@@ -5,7 +5,7 @@ model claude-opus-5
 voice Kyri
 host Vultr SEA NixOS VPS ai-jail pier (Daylight DC-1 hand) -- Eastern (EDT)
 title the hardware vision molts into the seed, and the round writes down what its own guards taught
-prompt Keaton asked to add the blazepod, mantrabox, minisforum, cerebras, MMT, WSE, right-to-repair, ecological, recyclable, RAM-only and USB-C-only writings to the seed, molted and reimagined in Gauge Civic TAME; then to tablecloth the round's insights into external research and silo the value into active-designing and active-development.
+prompt Keaton asked to add the blazepod, blazebox, minisforum, cerebras, MMT, WSE, right-to-repair, ecological, recyclable, RAM-only and USB-C-only writings to the seed, molted and reimagined in Gauge Civic TAME; then to tablecloth the round's insights into external research and silo the value into active-designing and active-development.
 think Surveyed before molting. The two Blazepod venture pitches are sub_excluded from the seed, and reading them showed why: three lines of byline naming a coauthor, which is incidental identity rather than identity-as-subject.
 think That is the KYRI.md case again, so the same answer applies -- write a depersonalized Gauge mutant at a fresh stamp, ship it, and leave the dated pitches withheld and whole.
 think Chose one foundation over many molts. The named terms are one thesis rather than a dozen: a computer that forgets by construction and opens with a screwdriver, with a desk companion where the memory lives.

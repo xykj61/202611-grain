@@ -141,8 +141,8 @@ assert q3e.ok else "dimerollDashboardPhaseComplete not found"
 say "  dimerollDashboardPhaseComplete: yes"
 
 let q3f = run ["sh" "-c" "grep -c 'q3_fn_blaze=yes' .lap/act2_launch.txt"]
-assert q3f.ok else "focusMantra not found"
-say "  focusMantra: yes"
+assert q3f.ok else "focusBlaze not found"
+say "  focusBlaze: yes"
 
 # -- Step 4: QEMU integration -- all 10 Dimeroll modules --
 

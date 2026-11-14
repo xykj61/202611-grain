@@ -9,7 +9,7 @@ think InventoryTable with 8-subject fixed capacity, 16-byte names, u32 balances
 think plant and compost add to inventory, harvest and sell subtract, note has no effect
 think standalone entry_matches function avoids auto-ref ambiguity with array-of-struct indexing
 think 7 transactions tell a farm story: 3 on tomatoes (plant 200, harvest 45, sell 20) for the SLC gate
-think replay identity proven by two independent MantraLog + InventoryTable passes
+think replay identity proven by two independent BlazeLog + InventoryTable passes
 obs missing _start inline assembly bootstrap caused 376-byte ELF with no code -- added comptime asm block with .section .text.init
 obs underflow guard: assert balance >= qty before subtraction prevents negative inventory
 obs note verb correctly excluded -- apply() does nothing for .note, so rainfall never enters InventoryTable

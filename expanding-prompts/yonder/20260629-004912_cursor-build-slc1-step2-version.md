@@ -154,13 +154,13 @@ On the first `:version`, ensure `.blaze/` exists -- stat it, and run `blaze init
 The verb itself. A small helper resolves the binary and runs Blaze, reusing the `std.process.run` path `doRun` already proves:
 
 ```zig
-fn mantraBin(allocator: std.mem.Allocator) []const u8 {
+fn blazeBin(allocator: std.mem.Allocator) []const u8 {
     // RISHI_BLAZE overrides; otherwise "blaze" on PATH (settled ruling).
     return std.process.getEnvVarOwned(allocator, "RISHI_BLAZE") catch "blaze";
 }
 
-fn runMantra(allocator: std.mem.Allocator, io: std.Io, args: []const []const u8) !std.process.Child.RunResult {
-    const bin = mantraBin(allocator);
+fn runBlaze(allocator: std.mem.Allocator, io: std.Io, args: []const []const u8) !std.process.Child.RunResult {
+    const bin = blazeBin(allocator);
     const argv = try allocator.alloc([]const u8, args.len + 1);
     argv[0] = bin;
     for (args, 0..) |a, i| argv[i + 1] = a;
@@ -174,7 +174,7 @@ On `:version`, in order:
 
 1. Ensure the store lazily (Phase 2d).
 2. Write the transcript whole to `.blaze/session.log` -- `Dir.cwd().writeFile(io, .{ .sub_path = ".blaze/session.log", .data = transcript.bytes[0..transcript.len] })`.
-3. Weave it -- `runMantra(garden, io, &.{ "add", ".blaze/session.log" })`.
+3. Weave it -- `runBlaze(garden, io, &.{ "add", ".blaze/session.log" })`.
 4. Report the result: on a zero exit, print Blaze's stdout (the advanced HEAD line); otherwise print its stderr and the code, plainly.
 
 Composition holds throughout: Rishi calls the Blaze program and reads its result; Blaze's internals stay in Blaze.

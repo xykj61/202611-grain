@@ -1,7 +1,7 @@
 #!/bin/sh
 # Equinox e135 -- affordable-witness law (REDS 46).
 # Pitch claim rewrite was unlawful on a dated Vision artifact; e136 supersedes.
-# This scan keeps the speed law and leaves MantraPod speech to e136.
+# This scan keeps the speed law and leaves BlazePod speech to e136.
 # Exit 0 when REDS 46 seats, Lexicon names the law, e112 stays fast-green.
 # Does NOT run e115 (too slow for a casual seat -- that is the law).
 # No backtick characters.

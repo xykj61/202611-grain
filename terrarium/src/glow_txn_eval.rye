@@ -162,7 +162,7 @@ const Identity = struct {
 };
 
 // -- Blaze event log --
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
@@ -171,7 +171,7 @@ const MantraLog = struct {
     fn init(
         region: *Region,
         identity: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -180,7 +180,7 @@ const MantraLog = struct {
         };
     }
 
-    fn append(self: *MantraLog, message: []const u8) void {
+    fn append(self: *BlazeLog, message: []const u8) void {
         const msg_len: u32 = @intCast(message.len);
         const record_size: u32 = 4 + 4 + msg_len + 4 + 4;
         const offset = self.region.alloc(record_size) catch {
@@ -434,7 +434,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(log_region_base),
         log_region_budget,
     );
-    var log = MantraLog.init(&log_region, &identity);
+    var log = BlazeLog.init(&log_region, &identity);
 
     // =================================================================
     // PROOF 1: EVALUATE TRANSACTIONS TO BLAZE FACTS
@@ -532,7 +532,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(replay_region_base),
         replay_region_budget,
     );
-    var replay_log = MantraLog.init(&replay_region, &identity);
+    var replay_log = BlazeLog.init(&replay_region, &identity);
 
     // Replay the same 5 transactions
     var ri: u32 = 0;

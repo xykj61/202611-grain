@@ -52,7 +52,7 @@ say "  libscribe.dylib: yes"
 
 let v_blaze = run ["sh" "-c" "echo '${build.out}' | grep -c 'vantage_blaze=yes'"]
 assert v_blaze.ok else "blaze bridge did not build"
-say "  libmantra.dylib: yes"
+say "  libblaze.dylib: yes"
 
 let v_surf = run ["sh" "-c" "echo '${build.out}' | grep -c 'vantage_surf=yes'"]
 assert v_surf.ok else "surf bridge did not build"

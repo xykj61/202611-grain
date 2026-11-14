@@ -62,8 +62,8 @@ Closed rows for `20260801`, in the order the pin held them. Roster:
 - `20260801.013236` — [e139 fuse verify Amber accretion already GREEN](20260801/20260801-013236_e139-fuse-verify-amber-accretion-green.kyri.md) — elder baton · e138 already green · Silo template · 128 reserved
 - `20260801.012557` — [e138 Amber retire by accretion GREEN](20260801/20260801-012557_e138-amber-accretion-green.kyri.md) — e137 breach withdrawn · REDS 48 · amber whole · 128 reserved
 - `20260801.011942` — [e137 Amber→Amphora unify GREEN](20260801/20260801-011942_e137-amber-amphora-unify-green.kyri.md) — breach APPROVED · GATED · Amber pause · cut none · 128 reserved
-- `20260801.005853` — [e136 MantraPod supersede GREEN](20260801/20260801-005853_e136-blazepod-supersede-green.kyri.md) — elder restored · new dated pitch · REDS 47 · 128 reserved
-- `20260801.005200` — [e135 MantraPod living · affordable witness GREEN](20260801/20260801-005200_e135-blazepod-affordable-witness-green.kyri.md) — foundations Riyo·Keaton·Grain · REDS 46 · 128 reserved
+- `20260801.005853` — [e136 BlazePod supersede GREEN](20260801/20260801-005853_e136-blazepod-supersede-green.kyri.md) — elder restored · new dated pitch · REDS 47 · 128 reserved
+- `20260801.005200` — [e135 BlazePod living · affordable witness GREEN](20260801/20260801-005200_e135-blazepod-affordable-witness-green.kyri.md) — foundations Riyo·Keaton·Grain · REDS 46 · 128 reserved
 - `20260801.003811` — [e134 surface census six GREEN](20260801/20260801-003811_e134-surface-count-six-green.kyri.md) — elder chain · suite 10/10 · REDS 45 · 128 reserved
 - `20260801.003457` — [e133 fuse verify dialect already GREEN](20260801/20260801-003457_e133-fuse-verify-dialect-green.kyri.md) — elder baton · e132 already green · first of eleven · 128 reserved
 - `20260801.001244` — [e132 date dialect timestamp GREEN](20260801/20260801-001244_e132-date-dialect-timestamp-green.kyri.md) — compact stamps · suite 10/10 · REDS 44 · 128 reserved

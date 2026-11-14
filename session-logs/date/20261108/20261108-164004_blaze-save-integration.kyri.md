@@ -5,8 +5,8 @@ voice Kyri
 title Blaze save integration landed
 prompt kg -- continue Blaze Filesystem SLC autonomously
 think Scribe settings persistence needs to route through Blaze store rather than direct file I/O
-think scribeSaveToDisk serializes via scribe_settings_save then calls writeMantraBlob with path scribe/settings.kyri
-think scribeLoadFromDisk tries readMantraBlob first, falls back to direct FileManager read for migration
+think scribeSaveToDisk serializes via scribe_settings_save then calls writeBlazeBlob with path scribe/settings.kyri
+think scribeLoadFromDisk tries readBlazeBlob first, falls back to direct FileManager read for migration
 think migration fallback ensures existing users keep settings on first launch after the change
 obs build proven, app launched without crash -- same pattern as all prior movements
 obs fascia 60.148 to 60.149

@@ -6,7 +6,7 @@ title Blazepod RV64G Orbit 27 -- transaction evaluation and Blaze logging
 prompt kg -- continue Blazepod RV64G journey, Orbit 27 transaction evaluation
 think Orbit 27 converts each parsed TransactionRecord into a structured Blaze fact
 think fact encoding uses verb:subject as key (colon-separated) and qty=N[,unit=U][,price=P] as value
-think two independent MantraLog instances in separate memory regions prove replay identity
+think two independent BlazeLog instances in separate memory regions prove replay identity
 think key format verification checks colon separator with non-empty verb and subject
 obs build_fact() assembles structured key:value in a 128-byte scratch buffer -- verb:subject=qty=N,unit=U,price=P
 obs replay identity proven by building two independent logs from identical transactions and comparing state hashes

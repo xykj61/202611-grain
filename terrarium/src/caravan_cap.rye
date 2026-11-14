@@ -178,13 +178,13 @@ const Fact = struct {
     payload: [max_payload_len]u8,
 };
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
     state_hash: u32,
 
-    fn init(region: *Region, identity: *const Identity) MantraLog {
+    fn init(region: *Region, identity: *const Identity) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -193,7 +193,7 @@ const MantraLog = struct {
         };
     }
 
-    fn append(self: *MantraLog, payload: []const u8) void {
+    fn append(self: *BlazeLog, payload: []const u8) void {
         assert(self.count < max_facts);
         assert(payload.len <= max_payload_len);
         const raw = self.region.alloc(fact_size) catch
@@ -450,7 +450,7 @@ export fn kmain() callconv(.c) noreturn {
     uart_print("\n");
 
     // -- Blaze log
-    var log = MantraLog.init(&region, &identity);
+    var log = BlazeLog.init(&region, &identity);
 
     // -- Domain registry
     var registry = DomainRegistry.init();

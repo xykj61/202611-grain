@@ -8,7 +8,7 @@ think the witness needs to exercise the full Vantage FFI bridge end-to-end -- bu
 think selftest claim lines appear in stderr (Rye print writes to stderr) -- assert against st.err rather than st.out
 think structural checks cover the full integration surface: dylib, C header, modulemap, Swift bridge functions, and the save integration path through scribe/settings.kyri
 obs 8 Vantage selftest proves: init empty, digest deterministic, verify matches, catalog add and get, catalog update, save-load roundtrip, load refuses bad format, catalog list
-obs 4 structural checks: dylib at vantage/lib/libmantra.dylib, C header with blaze_selftest, VantageMantra in modulemap, writeMantraBlob and readMantraBlob in TabSetup.swift
+obs 4 structural checks: dylib at vantage/lib/libblaze.dylib, C header with blaze_selftest, VantageBlaze in modulemap, writeBlazeBlob and readBlazeBlob in TabSetup.swift
 obs 1 save integration check: scribe/settings.kyri path wired through both bridge functions in TabSetup.swift
 obs 13 proves total, GREEN on metal -- Blaze Filesystem SLC complete (5 of 5 movements)
 obs fascia 60.149 -> 60.150 -- README.md badge and ITINERARY.md card both updated

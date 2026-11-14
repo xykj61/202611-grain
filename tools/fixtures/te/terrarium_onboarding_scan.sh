@@ -69,8 +69,8 @@ check_artifact vantage_scribe vantage/lib/libscribe.dylib
 
 printf "step=vantage_blaze\n"
 $RYE build-lib blaze/blaze_vantage.rye -dynamic \
-  -femit-bin=vantage/lib/libmantra.dylib 2>/dev/null || true
-check_artifact vantage_blaze vantage/lib/libmantra.dylib
+  -femit-bin=vantage/lib/libblaze.dylib 2>/dev/null || true
+check_artifact vantage_blaze vantage/lib/libblaze.dylib
 
 printf "step=vantage_surf\n"
 env RYE_ZIG="$RYE_ZIG" \
@@ -84,7 +84,7 @@ printf "step=terrarium_binary\n"
 swiftc -I terrarium/.build -I vantage/include \
   -L terrarium/.build -L vantage/lib \
   -lSkateCore -lbloom -ldimeroll -lresonance_audio \
-  -lscribe -lmantra -lsurf \
+  -lscribe -lblaze -lsurf \
   -o terrarium/.build/Terrarium terrarium/app/*.swift \
   -framework AppKit 2>/dev/null || true
 check_artifact terrarium_binary terrarium/.build/Terrarium

@@ -246,9 +246,9 @@
 
 - [x] **Movement 29: Blaze tab -- placeholder for the next act** -- `20261106.195400`
   - SLC gate: clicking "Blaze" in the sidebar creates a Blaze tab with placeholder content
-  - focusMantra() lazy-creates tab with identifier "blaze", soft purple on near-black
+  - focusBlaze() lazy-creates tab with identifier "blaze", soft purple on near-black
   - closeTab() protects "blaze" alongside the three existing built-in tabs
-  - Build clean, focusMantra symbol confirmed in binary
+  - Build clean, focusBlaze symbol confirmed in binary
 
 - [x] **Movement 30: Act II integration witness -- the field ledger** (`20261106.200349`)
   - SLC gate: witness proves the full Dimeroll composition -- tab, launcher, selector, views, queries, dashboard

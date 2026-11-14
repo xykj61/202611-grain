@@ -1,4 +1,4 @@
-# Waymark — e136 MantraPod supersede GREEN
+# Waymark — e136 BlazePod supersede GREEN
 
 **Stamp:** `20260801.005853`  
 **Seat:** e136  

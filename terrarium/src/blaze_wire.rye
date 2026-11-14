@@ -3,7 +3,7 @@
 //! Orbit 19: facts written inside the emulated machine travel out
 //! through the wire and replay identically on the host side.
 //!
-//! The guest builds the same five-boot-fact MantraLog as Orbit 18,
+//! The guest builds the same five-boot-fact BlazeLog as Orbit 18,
 //! serializes each fact over UART in a structured text protocol, and
 //! sends the seed and final state hash. The Terrarium host (Swift)
 //! implements its own djb2, reconstructs the log, replays it, and
@@ -222,7 +222,7 @@ const Identity = struct {
     }
 };
 
-// -- Fact and MantraLog -----------------------------------------------
+// -- Fact and BlazeLog -----------------------------------------------
 
 const max_payload_len: u32 = 64;
 const fact_header_bytes: u32 = 4 + 4 + 4 + 4;
@@ -237,7 +237,7 @@ const Fact = struct {
     payload: [max_payload_len]u8,
 };
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
@@ -247,7 +247,7 @@ const MantraLog = struct {
     fn init(
         region: *Region,
         identity: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -258,7 +258,7 @@ const MantraLog = struct {
     }
 
     fn append(
-        self: *MantraLog,
+        self: *BlazeLog,
         payload: []const u8,
     ) error{ OutOfBounds, PayloadTooLong, LogFull }!void {
         if (payload.len > max_payload_len)
@@ -299,7 +299,7 @@ const MantraLog = struct {
     }
 
     fn canonical_bytes(
-        self: *const MantraLog,
+        self: *const BlazeLog,
         fact: *const Fact,
     ) [76]u8 {
         _ = self;
@@ -335,7 +335,7 @@ const MantraLog = struct {
         return buf;
     }
 
-    fn replay(self: *const MantraLog) u32 {
+    fn replay(self: *const BlazeLog) u32 {
         var state: u32 = 0;
         var i: u32 = 0;
         while (i < self.count) : (i += 1) {
@@ -403,7 +403,7 @@ export fn kmain() noreturn {
     uart_print("Blaze Wire -- Orbit 19\n");
     uart_print("facts travel through the glass\n\n");
 
-    // -- Build the MantraLog (identical to Orbit 18) ---
+    // -- Build the BlazeLog (identical to Orbit 18) ---
     const seed: [seed_length]u8 = .{
         0x4B, 0x75, 0x6D, 0x61, 0x72, 0x61, 0x20, 0x73,
         0x65, 0x65, 0x64, 0x20, 0x66, 0x6F, 0x72, 0x20,
@@ -416,7 +416,7 @@ export fn kmain() noreturn {
     const arena_base: [*]u8 = @ptrFromInt(0x80180000);
     var region = Region.init(arena_base, arena_budget);
 
-    var log = MantraLog.init(&region, &identity);
+    var log = BlazeLog.init(&region, &identity);
 
     const facts = [_][]const u8{
         "pill: self-compile proof verified",

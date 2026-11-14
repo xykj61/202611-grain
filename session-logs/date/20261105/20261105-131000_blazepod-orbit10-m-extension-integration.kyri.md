@@ -6,7 +6,7 @@ title Blazepod RV64G Orbit 10 -- M extension integration witness on RV64IM
 prompt kg -- Orbit 10: M extension integration witness proving all M-ext work with hardware arithmetic
 think design a single witness covering all M-extension work: pill, calculator, seal, and full boot, with a helper script for builds and census to avoid Rishi $ escaping
 think 11 modules: self_compile, tally_arena, aurora_console, blaze_log, blaze_wire, caravan_cap, caravan_supervision, steward, glow_app, glow_m_ext, amphora_seal
-think blaze_wire must produce blaze_wire64.elf and pass argument blaze_wire64 to the Terrarium Swift app -- exact string match in isMantraWireStage
+think blaze_wire must produce blaze_wire64.elf and pass argument blaze_wire64 to the Terrarium Swift app -- exact string match in isBlazeWireStage
 think 7-stage witness: CPU features, build all 11, pill identity, Glow calculator, Amphora seal, full boot (8 substeps), hardware census
 think helper script with 3 stages: build (11 modules with -mcpu=generic_rv64+m), swift (Terrarium app), census (M-ext instruction count via llvm-objdump)
 obs ALL 7 STAGES GREEN on first run -- no iteration needed

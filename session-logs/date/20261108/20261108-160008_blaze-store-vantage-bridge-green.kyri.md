@@ -13,7 +13,7 @@ obs Digest is deterministic (same data same hash), verify correctly accepts matc
 loom blaze_vantage=selftest proves=8 exports=10 catalog_max=256 path_max=255
 file [blaze/blaze_vantage.rye](../../blaze/blaze_vantage.rye) Blaze store Vantage bridge -- SHA3-256 content-addressing, in-memory catalog, Kyri serialization, 10 C exports, 8 prove functions
 file [vantage/include/vantage_blaze.h](../../vantage/include/vantage_blaze.h) C header for Blaze FFI bridge
-file [vantage/include/module.modulemap](../../vantage/include/module.modulemap) added VantageMantra module
+file [vantage/include/module.modulemap](../../vantage/include/module.modulemap) added VantageBlaze module
 file [construction/ITINERARY.md](../../construction/ITINERARY.md) fascia 60.145 to 60.146
 file [README.md](../../README.md) fascia badge 60.145 to 60.146
 file [active-tablecloth/date/202611/00/20261108-155213_blaze-filesystem-slc/CHECKLIST.md](../../active-tablecloth/date/202611/00/20261108-155213_blaze-filesystem-slc/CHECKLIST.md) movement 1 checked

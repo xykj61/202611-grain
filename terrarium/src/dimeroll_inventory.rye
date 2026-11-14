@@ -622,7 +622,7 @@ const Identity = struct {
     }
 };
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
@@ -631,7 +631,7 @@ const MantraLog = struct {
     fn init(
         region: *Region,
         identity: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -642,7 +642,7 @@ const MantraLog = struct {
 
     // layout per entry: len_u32(4) + sig(4) + fact(flen)
     // len_u32 = 4 + flen (the sig+fact portion)
-    fn append(self: *MantraLog, fact: []const u8) ?u32 {
+    fn append(self: *BlazeLog, fact: []const u8) ?u32 {
         const flen: u32 = @intCast(fact.len);
         const total: u32 = 4 + 4 + flen;
         const offset = self.region.alloc(total) orelse
@@ -1279,8 +1279,8 @@ export fn kmain() callconv(.c) noreturn {
         replay_region_base,
         region_budget,
     );
-    var log = MantraLog.init(&log_region, &identity);
-    var replay_log = MantraLog.init(
+    var log = BlazeLog.init(&log_region, &identity);
+    var replay_log = BlazeLog.init(
         &replay_region,
         &identity,
     );

@@ -211,7 +211,7 @@ The full checklist lives at `active-tablecloth/20261105-085747_blazepod-rv64g-jo
   in Act I, a looking pass rather than a build.
 - **Resonance on the hart** -- audio processing on the bare Blazepod. Orbit 19 proves
   one operation; the full DAW is a separate journey.
-- **Multi-Blazepod sync** -- two Mantrapods sharing Blaze facts through Mycelium.
+- **Multi-Blazepod sync** -- two Blazepods sharing Blaze facts through Mycelium.
   The persistence story for a household with more than one device.
 
 ---

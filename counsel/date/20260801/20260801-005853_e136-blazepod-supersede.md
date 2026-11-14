@@ -1,4 +1,4 @@
-# e136 — supersede MantraPod pitch · restore dated elder
+# e136 — supersede BlazePod pitch · restore dated elder
 
 **Stamp:** `20260801.005853`  
 **Seat:** e136 · Equinox Chapter (deca · nest-10 · true deepest · 256 rounds)  

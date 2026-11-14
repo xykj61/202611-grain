@@ -38,7 +38,7 @@ The **graduation rule** follows Gall's Law: *an aspect becomes a module on the d
 - **M0 — the promise on paper.** Token-fact shapes and their witnesses, design only; opens after the Edit 5 ruling and Amber's first lap, in that order.
 - **M1 — one issuer, one holder.** Mint, send, receipt, and balance-as-fold, witnessed on one node.
 - **M2 — mailable.** A MUR crosses Comlink's fact lane between two nodes and a signed receipt crosses back.
-- **M3 — digital land.** A plot is a name-claim fact with extent in Realidream's shared graph; its deed is a signed fact bound to a Kumara holder; plots trade in MUR, for people on ordinary internet connections and for Mantrapods on the dock wire alike.
+- **M3 — digital land.** A plot is a name-claim fact with extent in Realidream's shared graph; its deed is a signed fact bound to a Kumara holder; plots trade in MUR, for people on ordinary internet connections and for Blazepods on the dock wire alike.
 - **M4 — the market season.** Many issuers, open exchange — and only here does Mycelium's question truly open.
 
 ## Mycelium and the Road-Keeper — Two Aspects of Comlink

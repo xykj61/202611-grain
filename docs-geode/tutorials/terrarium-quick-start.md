@@ -86,7 +86,7 @@ rye/bin/rye build-lib scribe/scribe_vantage.rye -dynamic \
 
 # Blaze -- content-addressed blob store
 rye/bin/rye build-lib blaze/blaze_vantage.rye -dynamic \
-  -femit-bin=vantage/lib/libmantra.dylib
+  -femit-bin=vantage/lib/libblaze.dylib
 
 # Surf -- social identity, feed, and relay
 env RYE_ZIG=vendor/zig-toolchain/zig \
@@ -105,7 +105,7 @@ Now the Swift shell links against everything you just built:
 swiftc -I terrarium/.build -I vantage/include \
   -L terrarium/.build -L vantage/lib \
   -lSkateCore -lbloom -ldimeroll -lresonance_audio \
-  -lscribe -lmantra -lsurf \
+  -lscribe -lblaze -lsurf \
   -o terrarium/.build/Terrarium terrarium/app/*.swift \
   -framework AppKit
 ```

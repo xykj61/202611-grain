@@ -35,9 +35,9 @@ extension AppDelegate {
         }
     }
 
-    func handleMantraWire() {
-        guard !mantraVerifySent else { return }
-        mantraVerifySent = true
+    func handleBlazeWire() {
+        guard !blazeVerifySent else { return }
+        blazeVerifySent = true
 
         let lines = serialBuffer.components(
             separatedBy: "\n"
@@ -46,7 +46,7 @@ extension AppDelegate {
         guard let seedLine = lines.first(
             where: { $0.hasPrefix("MSEED:") }
         ) else {
-            sendMantraVerify(ok: false)
+            sendBlazeVerify(ok: false)
             return
         }
         let seedHex = String(
@@ -56,7 +56,7 @@ extension AppDelegate {
               let seed = hexToBytes(seedHex),
               seed.count == 32
         else {
-            sendMantraVerify(ok: false)
+            sendBlazeVerify(ok: false)
             return
         }
 
@@ -64,14 +64,14 @@ extension AppDelegate {
             $0.hasPrefix("MFACT:")
         }
         guard !factLines.isEmpty else {
-            sendMantraVerify(ok: false)
+            sendBlazeVerify(ok: false)
             return
         }
 
         guard let stateLine = lines.first(
             where: { $0.hasPrefix("MSTATE:") }
         ) else {
-            sendMantraVerify(ok: false)
+            sendBlazeVerify(ok: false)
             return
         }
         let stateHex = String(
@@ -80,7 +80,7 @@ extension AppDelegate {
         guard let guestState = UInt32(
             stateHex, radix: 16
         ) else {
-            sendMantraVerify(ok: false)
+            sendBlazeVerify(ok: false)
             return
         }
 
@@ -114,7 +114,7 @@ extension AppDelegate {
                 appendLine(
                     "--- host: bad fact \(i)"
                 )
-                sendMantraVerify(ok: false)
+                sendBlazeVerify(ok: false)
                 return
             }
 
@@ -124,7 +124,7 @@ extension AppDelegate {
                 appendLine(
                     "--- host: chain break at \(i)"
                 )
-                sendMantraVerify(ok: false)
+                sendBlazeVerify(ok: false)
                 return
             }
 
@@ -147,7 +147,7 @@ extension AppDelegate {
                     "--- host: tag mismatch at "
                     + "\(i)"
                 )
-                sendMantraVerify(ok: false)
+                sendBlazeVerify(ok: false)
                 return
             }
 
@@ -170,7 +170,7 @@ extension AppDelegate {
             + String(stateHash, radix: 16)
             + (ok ? " MATCH" : " MISMATCH")
         )
-        sendMantraVerify(ok: ok)
+        sendBlazeVerify(ok: ok)
     }
 
     func hostDjb2(_ data: Data) -> UInt32 {
@@ -251,7 +251,7 @@ extension AppDelegate {
         )
     }
 
-    func sendMantraVerify(ok: Bool) {
+    func sendBlazeVerify(ok: Bool) {
         let msg = ok
             ? "MVERIFY:ok\n"
             : "MVERIFY:fail\n"

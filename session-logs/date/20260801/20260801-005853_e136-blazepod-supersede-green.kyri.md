@@ -4,7 +4,7 @@ editor Cursor
 model Cursor Grok 4.5 300k High Fast
 voice Riyo
 host Cursor Cloud — Eastern one-clock continuity via UTC mono after e135
-title e136 MantraPod supersede GREEN
+title e136 BlazePod supersede GREEN
 prompt kg · fuse counsel dated_guard · pitch cannot be edited in place · supersede lean
 think counsel measured dated Vision · no living ledger · no freeze pointer · claim rewrite is the breach
 think e135 affordable-witness law stays · pitch and kin claim rewrite restored to elder bytes

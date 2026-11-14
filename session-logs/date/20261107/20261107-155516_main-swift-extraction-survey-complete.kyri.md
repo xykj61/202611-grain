@@ -12,7 +12,7 @@ think sidebarModules is the only remaining static data -- 5 items, too small to 
 think stage classification booleans (lines 39-48) derive from runtime CLI args, not static configuration
 think launchQemu timeout values (lines 2197-2202) are stage-conditional runtime behavior, not extractable data
 think considered extracting Blaze crypto helpers (Djb2Swift, keyedDjb2Sign, hexToBytes, writeU32BE) -- 60 lines of pure algorithm
-think crypto helpers are too small and too tightly coupled to the stateful handleMantraWire loop for FFI to be worthwhile -- djb2 is four lines of math, FFI overhead per hash call would cost more than it saves
+think crypto helpers are too small and too tightly coupled to the stateful handleBlazeWire loop for FFI to be worthwhile -- djb2 is four lines of math, FFI overhead per hash call would cost more than it saves
 think checked crypto/ library -- has real crypto (ed25519, sha256, etc.) but djb2 is non-cryptographic and does not belong there
 think checked SkateCore (1,409 lines across 9 files) -- all UI types (FrameGrid, EventRing, ConsentRail, AccessibilitySnapshot), nothing extractable
 think checked terrarium/ for other source files -- only main.swift exists

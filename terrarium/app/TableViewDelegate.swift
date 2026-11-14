@@ -8,7 +8,7 @@ extension AppDelegate: NSTableViewDataSource {
         in tableView: NSTableView
     ) -> Int {
         if tableView.tag == 9001 {
-            return mantraCatalogRows.count
+            return blazeCatalogRows.count
         }
         if tableView === audioTrackTable {
             return audioTracks.count
@@ -62,7 +62,7 @@ extension AppDelegate: NSTableViewDelegate {
         row: Int
     ) -> NSView? {
         if tableView.tag == 9001 {
-            return mantraCatalogCellView(
+            return blazeCatalogCellView(
                 tableColumn: tableColumn,
                 row: row
             )
@@ -297,15 +297,15 @@ extension AppDelegate: NSTableViewDelegate {
         return cell
     }
 
-    func mantraCatalogCellView(
+    func blazeCatalogCellView(
         tableColumn: NSTableColumn?,
         row: Int
     ) -> NSView? {
         guard let colId = tableColumn?.identifier
                   .rawValue,
-              row < mantraCatalogRows.count
+              row < blazeCatalogRows.count
         else { return nil }
-        let entry = mantraCatalogRows[row]
+        let entry = blazeCatalogRows[row]
         let val: String
         switch colId {
         case "path": val = entry.0
@@ -348,7 +348,7 @@ extension AppDelegate: NSTableViewDelegate {
         case "Dimeroll":
             focusDimeroll()
         case "Blaze":
-            focusMantra()
+            focusBlaze()
         case "Bloom":
             focusBloom()
         case "Audio":

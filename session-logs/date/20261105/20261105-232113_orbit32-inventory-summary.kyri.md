@@ -6,7 +6,7 @@ title Blazepod RV64G Orbit 32 -- Ledger page: inventory summary
 prompt kg through Orbit 32 -- inventory summary derived from Blaze log
 
 think Orbit 32 draws current inventory below the transaction list, derived from the Blaze log in real time rather than from a running total -- the SLC gate proves the derived inventory matches direct running balances after 5 transactions
-think the module extends dimeroll_ledger by adding parse_fact_slice to walk variable-length MantraLog entries using a 4-byte length prefix (len_u32 + sig + fact), extracting verb, subject, and qty from each fact's bytes
+think the module extends dimeroll_ledger by adding parse_fact_slice to walk variable-length BlazeLog entries using a 4-byte length prefix (len_u32 + sig + fact), extracting verb, subject, and qty from each fact's bytes
 think root cause of 17/18 was transaction data: 7 of 9 records had has_unit = false where dimeroll_ledger has has_unit = true with proper units (seeds for plant, kg for harvest/sell) -- the build_fact function had already been fixed to emit the unit field, so matching the data completed the hash chain alignment
 think derive_inventory_from_log reads the log region by offset: each entry is len_u32(4) + sig(4) + fact(flen), the walker reads len_u32 first, computes flen = len_u32 - 4, then parses fact bytes at addr + 8 to extract verb/subject/qty and apply to the inventory table
 think InventoryTable carries 3 subjects after 9 transactions: tomatoes 95 (plant 200 - harvest 60 - sell 30 - sell 15), peppers 15 (plant 50 - harvest 25 + sell 10 gives net 15), leaves 30 (compost 30)

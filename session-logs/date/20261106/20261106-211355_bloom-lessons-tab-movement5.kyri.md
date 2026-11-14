@@ -4,7 +4,7 @@ session-header 20261104/20261104-190813_orbit3-rv32i-toolchain.kyri.md
 voice Kyri
 title Bloom lessons tab in Terrarium -- Movement 5
 prompt Keaton said kg -- integrate first three Bloom curriculum stages as navigable lessons in the Terrarium macOS app
-think focusMantra() is the cleanest template -- lazy tab creation with dark background, centered content, sidebar routing, closeTab protection
+think focusBlaze() is the cleanest template -- lazy tab creation with dark background, centered content, sidebar routing, closeTab protection
 think four edit points identified: sidebarModules array, focusBloom() method, sidebar switch routing, closeTab guard
 think loadBloomLessons reads stage-01 through stage-03 markdown files from repoRoot/bloom/curriculum/ at runtime, extracts titles from first heading line
 think focusBloom creates NSScrollView wrapping NSTextView for scrollable lesson content, 40-point nav bar with Previous/Next buttons and title label

@@ -20,7 +20,7 @@
 //         swiftc -I terrarium/.build -I vantage/include \
 //           -L terrarium/.build -L vantage/lib \
 //           -lSkateCore -lbloom -ldimeroll -lresonance_audio \
-//           -lscribe -lmantra \
+//           -lscribe -lblaze \
 //           -o terrarium/.build/Terrarium terrarium/app/*.swift \
 //           -framework AppKit
 // Run:    DYLD_LIBRARY_PATH=terrarium/.build:vantage/lib \
@@ -34,7 +34,7 @@ import SkateCore
 import VantageBloom
 import VantageDimeroll
 import VantageResonance
-import VantageMantra
+import VantageBlaze
 import VantageScribe
 import VantageSurf
 
@@ -49,7 +49,7 @@ let stage: String = CommandLine.arguments.count > 1
 let isFramebufStage = stage == "framebuf"
     || stage == "aurora_console"
 let isWireStage = stage == "wire"
-let isMantraWireStage = stage == "blaze_wire"
+let isBlazeWireStage = stage == "blaze_wire"
     || stage == "blaze_wire64"
 let isContentWireStage = stage == "content_wire"
     || stage == "realidream"
@@ -81,7 +81,7 @@ class AppDelegate: NSObject,
     var serialBuffer = ""
     var inputPipe: Pipe?
     var wireAckSent = false
-    var mantraVerifySent = false
+    var blazeVerifySent = false
     var contentReqCount = 0
     var frameGridView: FrameGridView?
     var serialLines: [String] = []
@@ -167,7 +167,7 @@ class AppDelegate: NSObject,
         ),
     ]
     var audioTrackTable: NSTableView?
-    var mantraCatalogRows: [(String, String, String)]
+    var blazeCatalogRows: [(String, String, String)]
         = []
     var surfPubkeyHex: String = ""
     var surfSecretBytes: [UInt8] = []
@@ -463,7 +463,7 @@ class AppDelegate: NSObject,
         scribe_settings_init()
         scribeLoadFromDisk()
 
-        loadMantraCatalog()
+        loadBlazeCatalog()
 
         setupMenu()
         updateFocusIndicator()

@@ -4,7 +4,7 @@ editor Cursor
 model Cursor Grok 4.5 300k High Fast
 voice Riyo
 host Cursor Cloud — Eastern one-clock continuity via UTC mono after e134
-title e135 MantraPod living · affordable witness GREEN
+title e135 BlazePod living · affordable witness GREEN
 prompt kg · update blazepod venture pitch · continue · fuse counsel surface-count + slow-scan batons
 think living HEAD already cleared surface six at e134 · pitch still spoke Reya 2 · Kaeden · Rye OS
 think foundations first on-touch — Radiant pass pitch + kin device-that-forgets to Riyo · Keaton Livermore · Grain

@@ -11,7 +11,7 @@ think bounded leases count down by tick; at zero the capability auto-expires and
 think confer grants a capability with a rights mask and lease countdown; revoke withdraws it; exercise performs a two-wall check (active flag + rights)
 think cap table bounded at 8 slots per domain, domain registry at 4 domains -- both ceilings proven by REFUSED messages on overflow
 think 9 proof sections in kmain: domain creation, confer, exercise R+W, rights wall (X refused), tick/expire, post-expiry refusal, revoke, cap table ceiling, domain registry ceiling
-think inline MantraLog records 11 facts with chain integrity via prev_hash linking and keyed djb2 hash
+think inline BlazeLog records 11 facts with chain integrity via prev_hash linking and keyed djb2 hash
 obs first compile needed two fixes: unused return values from confer() and registry.create() -- Zig requires discarding non-void returns with _ =
 obs Rishi witness syntax learned from tame_boot_witness.rish: use let (not set), run ["sh" "-c" "..."] for complex commands, result.out contains "string" (not contains result.out "string")
 obs all 9 proofs GREEN on first QEMU run after the compile fixes -- the model is clean

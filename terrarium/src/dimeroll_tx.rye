@@ -151,12 +151,12 @@ const Identity = struct {
 };
 
 // =============================================================
-// MantraLog (append-only signed fact log)
+// BlazeLog (append-only signed fact log)
 // =============================================================
 
 const max_facts: u32 = 32;
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
@@ -165,7 +165,7 @@ const MantraLog = struct {
     fn init(
         r: *Region,
         id: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = r,
             .identity = id,
@@ -174,7 +174,7 @@ const MantraLog = struct {
         };
     }
 
-    fn append(self: *MantraLog, fact: []const u8) void {
+    fn append(self: *BlazeLog, fact: []const u8) void {
         // invariant: log not full
         assert(self.count < max_facts);
         // invariant: fact fits in region
@@ -854,7 +854,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(log_region_base),
         log_region_budget,
     );
-    var log = MantraLog.init(
+    var log = BlazeLog.init(
         &log_region,
         &identity,
     );
@@ -1113,7 +1113,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(replay_region_base),
         replay_region_budget,
     );
-    var replay_log = MantraLog.init(
+    var replay_log = BlazeLog.init(
         &replay_region,
         &identity,
     );

@@ -31,26 +31,26 @@ assert (st.err contains "catalog list") else "vantage proves catalog list"
 say "blaze-filesystem: vantage bridge -- 8 proves GREEN (init, digest, verify, add, update, roundtrip, refuse, list)."
 
 say "blaze-filesystem: verifying dylib exists for Terrarium linking..."
-let dylib = run ["sh" "-c" "test -f vantage/lib/libmantra.dylib"]
-assert dylib.ok else "blaze vantage: libmantra.dylib missing from vantage/lib/"
+let dylib = run ["sh" "-c" "test -f vantage/lib/libblaze.dylib"]
+assert dylib.ok else "blaze vantage: libblaze.dylib missing from vantage/lib/"
 
 say "blaze-filesystem: verifying C header and modulemap..."
 let header = run ["sh" "-c" "test -f vantage/include/vantage_blaze.h && grep -q 'blaze_selftest' vantage/include/vantage_blaze.h"]
 assert header.ok else "blaze vantage: vantage_blaze.h missing or incomplete"
 
-let modmap = run ["sh" "-c" "grep -q 'VantageMantra' vantage/include/module.modulemap"]
-assert modmap.ok else "blaze vantage: VantageMantra missing from modulemap"
+let modmap = run ["sh" "-c" "grep -q 'VantageBlaze' vantage/include/module.modulemap"]
+assert modmap.ok else "blaze vantage: VantageBlaze missing from modulemap"
 
 say "blaze-filesystem: verifying Swift bridge functions exist in TabSetup..."
-let swift_write = run ["sh" "-c" "grep -q 'func writeMantraBlob' terrarium/app/TabSetup.swift"]
-assert swift_write.ok else "blaze-filesystem: writeMantraBlob missing from TabSetup.swift"
+let swift_write = run ["sh" "-c" "grep -q 'func writeBlazeBlob' terrarium/app/TabSetup.swift"]
+assert swift_write.ok else "blaze-filesystem: writeBlazeBlob missing from TabSetup.swift"
 
-let swift_read = run ["sh" "-c" "grep -q 'func readMantraBlob' terrarium/app/TabSetup.swift"]
-assert swift_read.ok else "blaze-filesystem: readMantraBlob missing from TabSetup.swift"
+let swift_read = run ["sh" "-c" "grep -q 'func readBlazeBlob' terrarium/app/TabSetup.swift"]
+assert swift_read.ok else "blaze-filesystem: readBlazeBlob missing from TabSetup.swift"
 
-let swift_save = run ["sh" "-c" "grep -q 'writeMantraBlob' terrarium/app/TabSetup.swift | head -1"]
+let swift_save = run ["sh" "-c" "grep -q 'writeBlazeBlob' terrarium/app/TabSetup.swift | head -1"]
 
-let save_integration = run ["sh" "-c" "grep -q 'writeMantraBlob' terrarium/app/TabSetup.swift && grep -q 'readMantraBlob' terrarium/app/TabSetup.swift && grep -q 'scribe/settings.kyri' terrarium/app/TabSetup.swift"]
+let save_integration = run ["sh" "-c" "grep -q 'writeBlazeBlob' terrarium/app/TabSetup.swift && grep -q 'readBlazeBlob' terrarium/app/TabSetup.swift && grep -q 'scribe/settings.kyri' terrarium/app/TabSetup.swift"]
 assert save_integration.ok else "blaze-filesystem: save integration -- scribe/settings.kyri path missing from TabSetup.swift"
 
 say "blaze-filesystem: 8 proves from Vantage selftest, 4 structural checks, 1 save integration check."

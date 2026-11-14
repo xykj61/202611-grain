@@ -5,7 +5,7 @@
 **Style:** Gauge at Field, with Bhakta and Teacher registers where the content faces a learner
 **Room:** vision -- the architecture is proposed; no witness binds it yet
 **Voice:** Kyri
-**Inspirations:** DJINN's grain-school and grain-atlas (TypeScript/Vite/React, live at grain.school and atlas.grain.school) -- Guardian Dragon school from teamcarry11/archive-concept-mantraphone -- the grain-lineage-silo -- Silo Technique -- Civic Style -- Atthowe ecology -- Siya materials research -- rail and veganic biodiesel insights -- Pond/Puddle p2p personal servers
+**Inspirations:** DJINN's grain-school and grain-atlas (TypeScript/Vite/React, live at grain.school and atlas.grain.school) -- Guardian Dragon school from teamcarry11/archive-concept-blazephone -- the grain-lineage-silo -- Silo Technique -- Civic Style -- Atthowe ecology -- Siya materials research -- rail and veganic biodiesel insights -- Pond/Puddle p2p personal servers
 
 ---
 
@@ -79,7 +79,7 @@ bloom/
     lesson-04-running-a-query.md
     lesson-05-the-blaze-tab.md
   assets/
-    guardian-dragon-lineart.svg       -- kept from archive-concept-mantraphone
+    guardian-dragon-lineart.svg       -- kept from archive-concept-blazephone
 ```
 
 ### Option B: nested under `active-tablecloth/`

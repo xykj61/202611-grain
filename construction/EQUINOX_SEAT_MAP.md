@@ -93,7 +93,7 @@
 | Law library Last updated | **10** bare-date · **1** full-stamp (Lexicon · first of eleven) · one compact roof |
 | REDS | **57** rows |
 | surface census | **six** through elder chain (e134) · suite **10/10** |
-| MantraPod pitch | **superseded** e136 · living speech `20260801-005853` · elder `20260629-020012` kept whole |
+| BlazePod pitch | **superseded** e136 · living speech `20260801-005853` · elder `20260629-020012` kept whole |
 | affordable witness | **seated** e135 · REDS 46 · e115 not nested in casual seats |
 | dated Vision law | **seated** e136 · REDS 47 · claim rewrites supersede · never silent in-place |
 | Cellar | **e148 Class P** module `cellar/` · **e149 Class W parked** — wire shoulder `amber-ring1-season` restored · versioned shoulder waits |

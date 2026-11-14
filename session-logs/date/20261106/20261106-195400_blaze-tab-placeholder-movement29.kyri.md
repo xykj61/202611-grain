@@ -5,18 +5,18 @@ voice Kyri
 title Blaze tab placeholder -- Movement 29 landed
 prompt kg -- Movement 29: Blaze tab placeholder, sidebar routing
 
-think focusMantra() follows the same lazy-creation pattern as focusDimeroll() -- scan tabView items for identifier "blaze", select if found, create if not
+think focusBlaze() follows the same lazy-creation pattern as focusDimeroll() -- scan tabView items for identifier "blaze", select if found, create if not
 think Placeholder is simpler than Dimeroll -- just a centered label on dark purple background, no module popup, no table, no query panel
 think Color palette uses soft purple (0.7/0.5/0.9) on near-black (0.06/0.04/0.08) to distinguish from Dimeroll's warm gold
 think Subtitle "Signed, sealed, and witnessed" hints at Blaze's cryptographic purpose
 think closeTab() updated to protect "blaze" tab alongside "terminal", "grid", "dimeroll"
-think Sidebar switch statement updated with "Blaze" case routing to focusMantra()
+think Sidebar switch statement updated with "Blaze" case routing to focusBlaze()
 
-obs 3 edits to terrarium/app/main.swift -- focusMantra function (68 lines), sidebar routing case, closeTab protection
-obs Build verified clean on both steps, focusMantra symbol confirmed in binary via nm and swift demangle
+obs 3 edits to terrarium/app/main.swift -- focusBlaze function (68 lines), sidebar routing case, closeTab protection
+obs Build verified clean on both steps, focusBlaze symbol confirmed in binary via nm and swift demangle
 obs Pattern matches Movement 16 (Dimeroll tab) but deliberately minimal -- placeholder only, no real functionality
 
-[terrarium/app/main.swift](../../terrarium/app/main.swift) focusMantra lazy tab creation, sidebar routing, closeTab protection
+[terrarium/app/main.swift](../../terrarium/app/main.swift) focusBlaze lazy tab creation, sidebar routing, closeTab protection
 [active-tablecloth/20261106-131535_realidream-composition-journey/CHECKLIST.md](../../active-tablecloth/20261106-131535_realidream-composition-journey/CHECKLIST.md) Movement 29 checked off
 [active-tablecloth/20261106-131535_realidream-composition-journey/PROGRESS.md](../../active-tablecloth/20261106-131535_realidream-composition-journey/PROGRESS.md) Movement 29 row added
 

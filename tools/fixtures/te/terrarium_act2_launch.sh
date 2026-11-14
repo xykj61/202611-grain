@@ -121,7 +121,7 @@ check_symbol "q3_query_results" "dimerollQueryResults"
 check_demangle "q3_fn_parse_query" "parseDimerollQueryLine"
 check_demangle "q3_fn_dashboard" "launchDimerollDashboard"
 check_demangle "q3_fn_dash_complete" "dimerollDashboardPhaseComplete"
-check_demangle "q3_fn_blaze" "focusMantra"
+check_demangle "q3_fn_blaze" "focusBlaze"
 
 # -- Step 4: Launch all 10 Dimeroll ELFs through QEMU --
 

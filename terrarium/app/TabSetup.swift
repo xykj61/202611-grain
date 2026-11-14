@@ -3,7 +3,7 @@ import SkateCore
 import VantageBloom
 import VantageDimeroll
 import VantageResonance
-import VantageMantra
+import VantageBlaze
 import VantageSurf
 import VantageScribe
 
@@ -342,7 +342,7 @@ extension AppDelegate {
         launchDimerollDashboard()
     }
 
-    @objc func focusMantra() {
+    @objc func focusBlaze() {
         guard let tv = tabView else { return }
         for i in 0..<tv.numberOfTabViewItems {
             let item = tv.tabViewItem(at: i)
@@ -386,9 +386,9 @@ extension AppDelegate {
             false
         container.addSubview(titleLbl)
 
-        loadMantraCatalog()
+        loadBlazeCatalog()
 
-        let storePath = mantraStoreDir()
+        let storePath = blazeStoreDir()
         let pathLbl = NSTextField(
             labelWithString: storePath
         )
@@ -423,7 +423,7 @@ extension AppDelegate {
             false
         container.addSubview(countLbl)
 
-        let entries = mantraCatalogEntries()
+        let entries = blazeCatalogEntries()
         let scroll = NSScrollView()
         scroll.hasVerticalScroller = true
         scroll.borderType = .noBorder
@@ -466,7 +466,7 @@ extension AppDelegate {
         colSize.width = 80
         tv2.addTableColumn(colSize)
 
-        mantraCatalogRows = entries
+        blazeCatalogRows = entries
         tv2.dataSource = self
         tv2.delegate = self
         tv2.tag = 9001
@@ -544,7 +544,7 @@ extension AppDelegate {
         tv.selectTabViewItem(item)
     }
 
-    func mantraCatalogEntries()
+    func blazeCatalogEntries()
         -> [(String, String, String)]
     {
         var buf = [UInt8](repeating: 0, count: 65536)
@@ -2126,7 +2126,7 @@ extension AppDelegate {
     }
 
     func scribeLoadFromDisk() {
-        if let data = readMantraBlob(
+        if let data = readBlazeBlob(
             path: "scribe/settings.kyri"
         ) {
             data.withUnsafeBytes { raw in
@@ -2167,7 +2167,7 @@ extension AppDelegate {
         )
         guard wrote > 0 else { return }
         let data = Data(buf[0..<Int(wrote)])
-        _ = writeMantraBlob(
+        _ = writeBlazeBlob(
             data: data,
             path: "scribe/settings.kyri"
         )
@@ -2609,31 +2609,31 @@ extension AppDelegate {
 
     // -- Blaze persistence ----------------------------------------
 
-    func mantraStoreDir() -> String {
+    func blazeStoreDir() -> String {
         let home = FileManager.default
             .homeDirectoryForCurrentUser.path
         return home + "/.grain/blaze"
     }
 
-    func mantraBlobDir() -> String {
-        mantraStoreDir() + "/blobs"
+    func blazeBlobDir() -> String {
+        blazeStoreDir() + "/blobs"
     }
 
-    func mantraCatalogPath() -> String {
-        mantraStoreDir() + "/catalog.kyri"
+    func blazeCatalogPath() -> String {
+        blazeStoreDir() + "/catalog.kyri"
     }
 
-    func mantraEnsureDirs() {
+    func blazeEnsureDirs() {
         let fm = FileManager.default
         try? fm.createDirectory(
-            atPath: mantraBlobDir(),
+            atPath: blazeBlobDir(),
             withIntermediateDirectories: true
         )
     }
 
-    func loadMantraCatalog() {
+    func loadBlazeCatalog() {
         blaze_init()
-        let path = mantraCatalogPath()
+        let path = blazeCatalogPath()
         guard let data = FileManager.default
             .contents(atPath: path)
         else { return }
@@ -2648,8 +2648,8 @@ extension AppDelegate {
         }
     }
 
-    func saveMantraCatalog() {
-        mantraEnsureDirs()
+    func saveBlazeCatalog() {
+        blazeEnsureDirs()
         let maxLen: UInt32 = 65536
         var buf = [UInt8](
             repeating: 0, count: Int(maxLen)
@@ -2660,15 +2660,15 @@ extension AppDelegate {
         guard wrote > 0 else { return }
         let data = Data(buf[0..<Int(wrote)])
         FileManager.default.createFile(
-            atPath: mantraCatalogPath(),
+            atPath: blazeCatalogPath(),
             contents: data
         )
     }
 
-    func writeMantraBlob(data: Data, path: String)
+    func writeBlazeBlob(data: Data, path: String)
         -> Bool
     {
-        mantraEnsureDirs()
+        blazeEnsureDirs()
 
         var digestOut = [UInt8](
             repeating: 0, count: 64
@@ -2688,7 +2688,7 @@ extension AppDelegate {
         ) ?? ""
         guard !hexDigest.isEmpty else { return false }
 
-        let blobPath = mantraBlobDir()
+        let blobPath = blazeBlobDir()
             + "/" + hexDigest
         let fm = FileManager.default
         if !fm.fileExists(atPath: blobPath) {
@@ -2712,11 +2712,11 @@ extension AppDelegate {
         }
         guard result >= 0 else { return false }
 
-        saveMantraCatalog()
+        saveBlazeCatalog()
         return true
     }
 
-    func readMantraBlob(path: String) -> Data? {
+    func readBlazeBlob(path: String) -> Data? {
         var digestOut = [UInt8](
             repeating: 0, count: 64
         )
@@ -2736,7 +2736,7 @@ extension AppDelegate {
         ) ?? ""
         guard !hexDigest.isEmpty else { return nil }
 
-        let blobPath = mantraBlobDir()
+        let blobPath = blazeBlobDir()
             + "/" + hexDigest
         return FileManager.default
             .contents(atPath: blobPath)
@@ -3275,7 +3275,7 @@ extension AppDelegate {
     }
 
     func surfLoadIdentity() {
-        if let seedData = readMantraBlob(
+        if let seedData = readBlazeBlob(
             path: "surf/identity/seed"
         ), seedData.count == 32 {
             let seed = [UInt8](seedData)
@@ -3315,7 +3315,7 @@ extension AppDelegate {
                 String(format: "%02x", $0)
             }.joined()
             let seedData = Data(seed)
-            let _ = writeMantraBlob(
+            let _ = writeBlazeBlob(
                 data: seedData,
                 path: "surf/identity/seed"
             )
@@ -3332,13 +3332,13 @@ extension AppDelegate {
         )
         guard written > 0 else { return }
         let data = Data(buf[0..<Int(written)])
-        let _ = writeMantraBlob(
+        let _ = writeBlazeBlob(
             data: data, path: "surf/feed"
         )
     }
 
     func surfLoadFeed() {
-        guard let data = readMantraBlob(
+        guard let data = readBlazeBlob(
             path: "surf/feed"
         ), data.count >= 4 else { return }
         let bytes = [UInt8](data)
@@ -3477,13 +3477,13 @@ extension AppDelegate {
         )
         guard written > 0 else { return }
         let data = Data(buf[0..<Int(written)])
-        let _ = writeMantraBlob(
+        let _ = writeBlazeBlob(
             data: data, path: "surf/follows"
         )
     }
 
     func surfLoadFollows() {
-        guard let data = readMantraBlob(
+        guard let data = readBlazeBlob(
             path: "surf/follows"
         ), data.count >= 4 else { return }
         let bytes = [UInt8](data)

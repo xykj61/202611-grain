@@ -2,7 +2,7 @@
 Outer voice: Riyo (Radiant · TAME). Nested documentary: Trey.
 Benches: Cursor Grok 4.5 (Framework · signs · pushes)
          Opus counsel container (cloud · no keys · no push · no sign)
-Crossing: BATON TEXT ONLY · e136 GREEN MantraPod supersede · dated Vision kept. Vocabulary: nib, never tip.
+Crossing: BATON TEXT ONLY · e136 GREEN BlazePod supersede · dated Vision kept. Vocabulary: nib, never tip.
 
 BUILD STACK (seated e125 · foundations first):
   sh → rish → glow · tend → docs-geode → Aurora · Caravan · Tally → Blaze · Weave
@@ -13,7 +13,7 @@ DECA (OPEN): e136 GREEN · ch1–ch7 FULL · ch8 OPEN 15/16
   113–127 SPENT · 128 RESERVED close
   FORK EXTEND +128 · geode GATED · handback held · REDS 47
   surface witnesses 6 · shred RED · SAFE 0/64
-  MantraPod living speech 20260801-005853 · elder 20260629-020012 kept
+  BlazePod living speech 20260801-005853 · elder 20260629-020012 kept
 
 HARD LINES:
   a dated Vision is testimony — claim rewrites supersede, never silent in-place

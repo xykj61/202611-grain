@@ -1,4 +1,4 @@
-# e135 — MantraPod living · affordable witness
+# e135 — BlazePod living · affordable witness
 
 **Stamp:** `20260801.005200`  
 **Seat:** e135 · Equinox Chapter (deca · nest-10 · true deepest · 256 rounds)  
@@ -10,7 +10,7 @@
 
 ## What Keaton opened
 
-Update the MantraPod venture pitch and continue. Counsel's nested baton had already cleared the surface-count chain on living HEAD (e134). The second finding — slow elder scans — still waited a seat.
+Update the BlazePod venture pitch and continue. Counsel's nested baton had already cleared the surface-count chain on living HEAD (e134). The second finding — slow elder scans — still waited a seat.
 
 ## Foundations pass (on-touch)
 
@@ -46,7 +46,7 @@ This seat **names** the law. It does **not** campaign a rewrite of e114–e116. 
 
 ## What this seat clears
 
-- MantraPod + device-that-forgets living voice / coauthor / Grain umbrella  
+- BlazePod + device-that-forgets living voice / coauthor / Grain umbrella  
 - Lexicon **affordable witness** · **Blazepod**  
 - REDS row 46  
 - Fast elder e112 still green (spot-check)  

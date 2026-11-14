@@ -38,7 +38,7 @@ extension AppDelegate {
                 "unix:\(sockPath),server=on,wait=off",
                 "-kernel", elfPath
             ]
-        } else if isWireStage || isMantraWireStage
+        } else if isWireStage || isBlazeWireStage
             || isContentWireStage
         {
             proc.arguments = [
@@ -59,7 +59,7 @@ extension AppDelegate {
             proc.arguments = args
         }
 
-        if isWireStage || isMantraWireStage
+        if isWireStage || isBlazeWireStage
             || isContentWireStage
         {
             let inp = Pipe()
@@ -102,8 +102,8 @@ extension AppDelegate {
                         {
                             self?.handleWireFact()
                         }
-                        if isMantraWireStage,
-                           !(self?.mantraVerifySent
+                        if isBlazeWireStage,
+                           !(self?.blazeVerifySent
                                ?? true),
                            let buf =
                                self?.serialBuffer,
@@ -112,7 +112,7 @@ extension AppDelegate {
                                options: .regularExpression
                            ) != nil
                         {
-                            self?.handleMantraWire()
+                            self?.handleBlazeWire()
                         }
                         if isContentWireStage,
                            let buf =
@@ -157,7 +157,7 @@ extension AppDelegate {
                 let timeout: Double =
                     stage == "realidream" ? 210
                     : isFramebufStage ? 20
-                    : isMantraWireStage ? 30
+                    : isBlazeWireStage ? 30
                     : isContentWireStage ? 30
                     : 10
                 DispatchQueue.global().asyncAfter(

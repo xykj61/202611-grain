@@ -130,7 +130,7 @@ const Identity = struct {
     }
 };
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
@@ -139,7 +139,7 @@ const MantraLog = struct {
     fn init(
         region: *Region,
         identity: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -149,7 +149,7 @@ const MantraLog = struct {
     }
 
     fn append(
-        self: *MantraLog,
+        self: *BlazeLog,
         fact: []const u8,
     ) ?u32 {
         const total = 4 + fact.len;
@@ -526,8 +526,8 @@ export fn kmain() callconv(.c) noreturn {
         replay_region_base,
         region_budget,
     );
-    var log = MantraLog.init(&log_region, &identity);
-    var replay_log = MantraLog.init(
+    var log = BlazeLog.init(&log_region, &identity);
+    var replay_log = BlazeLog.init(
         &replay_region,
         &identity,
     );

@@ -12,4 +12,4 @@ orbit round 5 Aries -- the talent verb
 [terrarium/app/QemuLauncher.swift](../../terrarium/app/QemuLauncher.swift) new file -- 268 lines, extension AppDelegate with launchQemu, captureFramebuffer, dumpAndExit, findQemu
 [terrarium/app/main.swift](../../terrarium/app/main.swift) removed QEMU launch block and process lifecycle functions, 1,722 to 1,464 lines
 [construction/ITINERARY.md](../../construction/ITINERARY.md) git nib updated to d78037274b
-recommend kg -- next: extract UI setup functions (~543 lines, setupMenu/focusDimeroll/focusMantra etc.) into a new UISetup.swift, continuing Quest 2 shell restructuring
+recommend kg -- next: extract UI setup functions (~543 lines, setupMenu/focusDimeroll/focusBlaze etc.) into a new UISetup.swift, continuing Quest 2 shell restructuring

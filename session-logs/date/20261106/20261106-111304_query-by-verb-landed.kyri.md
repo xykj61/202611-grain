@@ -9,7 +9,7 @@ think QueryResult struct holds up to 9 indices into the transactions array, with
 think query_by_verb scans all 9 transactions by GlowVerb enum and collects matching indices
 think all 5 verbs queried: harvest 2, sell 3, plant 2, compost 1, note 1
 think completeness check proves all 5 verbs cover all 9 transactions with no gaps
-think replay identity proven by two independent MantraLog passes producing identical state hash 0xe9cf083f
+think replay identity proven by two independent BlazeLog passes producing identical state hash 0xe9cf083f
 think 19 proofs total: 2 Blaze (count + hash), 12 verb filters (count + content for each of 5 verbs), 1 completeness, 2 replay identity, plus structural checks
 obs module built cleanly on first attempt, all 19 proofs passed on first QEMU run, witness GREEN on first run -- the dimeroll module pattern is well-established after Quest 2.1 and 2.2
 rota lap 14510, row 0 -- Aether, the row that hears: no deep read this movement, pure build

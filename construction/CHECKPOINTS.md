@@ -1,5 +1,10 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261114.153101` -- Blaze -> Blaze rename (fifth of five).**
+- **Walk-back nib:** `7ec765d106` -- `git show 7ec765d106` restores the tree before the Blaze rename.
+- **Swept:** `blaze/` directory and all blaze-named files renamed to blaze equivalents. All text references -- `blaze`, `Blaze`, `BLAZE` -- replaced with `blaze`, `Blaze`, `BLAZE` across living and dated files alike. 349 files carry the word in filenames, 4,166 files carry references in content. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.
+- **What waits there, worth recalling:** Blaze served the version control and store module faithfully from its seating, carrying the Sanskrit chant metaphor for the act of repeating a hash and proving it has not changed. Blaze takes the fire metaphor further -- because our trees evolve so much, and the version control is so visual, it really is like the fireplace and hearth of Grain. Keaton chose Blaze on 20261114.
+
 **Checkpoint `20261114.152851` -- Pulp -> Pulp rename (fourth of five).**
 - **Walk-back nib:** `e91ac8b81a` -- `git show e91ac8b81a` restores the tree before the Pulp rename.
 - **Swept:** `pulp/` directory and all pulp-named files renamed to pulp equivalents. All text references -- `pulp`, `Pulp`, `PULP` -- replaced with `pulp`, `Pulp`, `PULP` across living and dated files alike. 49 files carry the word in filenames, 287 files carry references in content. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.

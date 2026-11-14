@@ -49,7 +49,7 @@ Each extraction is a Swift file that main.swift's AppDelegate delegates to, rath
 2. **`BloomLoader.swift`** -- `loadBloomLessons()` and the seven room-loading blocks. Returns structured content rather than mutating AppDelegate arrays.
 3. **`DimerollController.swift`** -- `focusDimeroll()`, `rebuildDimerollColumns()`, `handleDimerollQuery()`, the dashboard phased launch. Owns the column definitions and the active-module state.
 4. **`DimerollParser.swift`** -- The seven parse functions (`parseDimerollInventoryLine` through `parseDimerollSealLine`) and the dispatch logic in `parseDimerollTransactions()`.
-5. **`MantraWireHandler.swift`** -- `handleWireFact()`, `handleMantraWire()`, the djb2 chain replay.
+5. **`BlazeWireHandler.swift`** -- `handleWireFact()`, `handleBlazeWire()`, the djb2 chain replay.
 6. **`CryptoHelpers.swift`** -- `Djb2Swift`, `keyedDjb2Sign`, `hexToBytes`, `writeU32BE`.
 7. **`WindowBuilder.swift`** -- The inline window/tab-bar/sidebar construction from `applicationDidFinishLaunching`.
 
@@ -106,7 +106,7 @@ TAME asks for short functions named with a verb. Seven methods exceed 100 lines:
 | `loadBloomLessons()` | ~272 | Loads all 7 Bloom rooms |
 | `launchQemu()` | ~153 | Builds QEMU arguments and launches process |
 | `dimerollCellView()` | ~150 | 8-branch cell rendering |
-| `handleMantraWire()` | ~135 | Blaze chain verification with djb2 replay |
+| `handleBlazeWire()` | ~135 | Blaze chain verification with djb2 replay |
 | `rebuildDimerollColumns()` | ~120 | 11-branch column definitions |
 
 Each of these methods handles multiple concerns within its body. `focusDimeroll()` builds labels, tables, buttons, scroll views, and layout constraints -- five distinct responsibilities in one method.
@@ -140,7 +140,7 @@ A reader accessing `row.4` must count tuple positions to know what field they ar
 2. **Extract DimerollParser** -- second-highest sameness (7 parsers sharing one pattern), plus unnamed types. Named structs arrive with this extraction.
 3. **Extract QemuBridge** -- resolves the duplicated `findQemu()` and isolates process management.
 4. **Extract CryptoHelpers** -- smallest extraction (57 lines), zero dependencies on AppDelegate state.
-5. **Extract MantraWireHandler** -- isolates the Blaze wire protocol, directly relevant to the Blaze SLC.
+5. **Extract BlazeWireHandler** -- isolates the Blaze wire protocol, directly relevant to the Blaze SLC.
 6. **Extract DimerollController** -- the largest extraction, best done after DimerollParser provides named types.
 7. **Extract WindowBuilder** -- the UI construction code, best done last since it touches the most AppDelegate state.
 

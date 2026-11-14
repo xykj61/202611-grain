@@ -8,7 +8,7 @@ prompt Keaton approved the TAME audit of Terrarium code, all 3733 lines of main.
 
 think audit reading was completed in the prior context window -- all 3733 lines of main.swift and 9 SkateCore files
 think wrote the design essay with concrete line-numbered findings across single-stranded composition, sameness, massive methods, unnamed types
-think 7 proposed extractions ordered by impact: BloomLoader first (highest sameness, Blaze SLC relevance), then DimerollParser, QemuBridge, CryptoHelpers, MantraWireHandler, DimerollController, WindowBuilder
+think 7 proposed extractions ordered by impact: BloomLoader first (highest sameness, Blaze SLC relevance), then DimerollParser, QemuBridge, CryptoHelpers, BlazeWireHandler, DimerollController, WindowBuilder
 think active-tablecloth holds 8 entries today, well under 256 -- a monthly date fold is sound future-proofing but not urgent yet
 think documented the folding convention in the README for when the room approaches its bound
 think added missing Bloom and Blaze boards to the active-tablecloth README table

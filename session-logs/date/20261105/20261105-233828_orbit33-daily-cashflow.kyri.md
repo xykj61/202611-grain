@@ -9,7 +9,7 @@ think Orbit 33 derives cash flow from the Blaze log using the same parse_fact_sl
 think CashFlowTable accumulates revenue from sell transactions only: txn.verb == .sell and txn.has_price, computing rev = txn.qty * txn.price_cents per subject
 think the SLC gate proves derived cash flow matches direct running totals after 4 transactions (the first sell), and full derivation matches after all 9 transactions
 think tomatoes sell 30x250=7500 + sell 15x300=4500 = 12000; peppers sell 10x375=3750; TOTAL=15750, no expenses in this dataset, net = revenue
-think the module follows the identical pattern to dimeroll_inventory: walk MantraLog entries by offset using len_u32(4) + sig(4) + fact(flen) layout, parse each fact, apply matching transactions to the derived CashFlowTable, then compare against the running table
+think the module follows the identical pattern to dimeroll_inventory: walk BlazeLog entries by offset using len_u32(4) + sig(4) + fact(flen) layout, parse each fact, apply matching transactions to the derived CashFlowTable, then compare against the running table
 
 obs 18/18 proofs GREEN on QEMU -- SLC gate derived matches running at 4, full 9-txn derivation matches, Blaze hash 0xe9cf083f, replay identity proven, Aurora cash flow table rendered
 obs ELF size 14200 bytes (472 bytes larger than Orbit 32's 13728 -- price parsing adds to the derivation path)

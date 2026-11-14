@@ -7,7 +7,7 @@
 **Voice:** Kyri
 **Register:** Radiant warmth
 **Merges:** `20261106-204423_bloom-educational-ecosystem.md` (structure, blake2b analysis) and `20261106-204430_bloom-educational-platform.md` (content, galaxy names, demos)
-**Silo sources:** DJINN's grain-school and grain-atlas (node777 on GitHub) -- Guardian Dragon school (teamcarry11/archive-concept-mantraphone) -- grain-lineage-silo -- Atthowe ecology -- Civic Style -- Teacher Style -- Silo Technique
+**Silo sources:** DJINN's grain-school and grain-atlas (node777 on GitHub) -- Guardian Dragon school (teamcarry11/archive-concept-blazephone) -- grain-lineage-silo -- Atthowe ecology -- Civic Style -- Teacher Style -- Silo Technique
 
 ---
 
@@ -386,7 +386,7 @@ The compass rose alignment happens at each act boundary (Movements 20, 40, 60, 7
 
 - DJINN's grain-school (node777 on GitHub) -- MIT licensed, interactive classroom
 - DJINN's grain-atlas (node777 on GitHub) -- MIT licensed, star-chart workbench
-- Guardian Dragon curriculum (teamcarry11/archive-concept-mantraphone) -- ten-stage learning path
+- Guardian Dragon curriculum (teamcarry11/archive-concept-blazephone) -- ten-stage learning path
 - grain-lineage-silo (six siloed documents in `external-research/grain-lineage-silo/`)
 - Helen Atthowe's ecological work (honored in `gratitude/helen-atthowe.md`)
 

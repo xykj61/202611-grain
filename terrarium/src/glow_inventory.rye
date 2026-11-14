@@ -153,10 +153,10 @@ const Identity = struct {
 };
 
 // =============================================================
-// MantraLog -- append-only signed fact log
+// BlazeLog -- append-only signed fact log
 // =============================================================
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     state_hash: u32,
@@ -165,7 +165,7 @@ const MantraLog = struct {
     fn init(
         region: *Region,
         identity: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -175,7 +175,7 @@ const MantraLog = struct {
     }
 
     fn append(
-        self: *MantraLog,
+        self: *BlazeLog,
         msg: []const u8,
     ) void {
         const sig = self.identity.sign(msg);
@@ -186,7 +186,7 @@ const MantraLog = struct {
         const total = header_size + msg_len;
 
         const ptr = self.region.alloc(total) catch {
-            halt_error("MantraLog: out of memory\n");
+            halt_error("BlazeLog: out of memory\n");
         };
 
         // Length (little-endian)
@@ -606,7 +606,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(log_region_base),
         log_region_budget,
     );
-    var log = MantraLog.init(
+    var log = BlazeLog.init(
         &log_region,
         &identity,
     );
@@ -785,7 +785,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(replay_region_base),
         replay_region_budget,
     );
-    var replay_log = MantraLog.init(
+    var replay_log = BlazeLog.init(
         &replay_region,
         &identity,
     );

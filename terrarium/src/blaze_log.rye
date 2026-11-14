@@ -201,14 +201,14 @@ const Fact = struct {
 
 const max_facts: u32 = 32;
 
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
     state_hash: u32,
     facts: [max_facts]*Fact,
 
-    fn init(region: *Region, identity: *const Identity) MantraLog {
+    fn init(region: *Region, identity: *const Identity) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -219,7 +219,7 @@ const MantraLog = struct {
     }
 
     fn append(
-        self: *MantraLog,
+        self: *BlazeLog,
         payload: []const u8,
     ) error{ OutOfBounds, PayloadTooLong, LogFull }!void {
         // invariant: count inside ceiling
@@ -264,7 +264,7 @@ const MantraLog = struct {
         assert(self.count <= max_facts);
     }
 
-    fn canonical_bytes(self: *const MantraLog, fact: *const Fact) [fact_size - 4]u8 {
+    fn canonical_bytes(self: *const BlazeLog, fact: *const Fact) [fact_size - 4]u8 {
         _ = self;
         // invariant: canonical form is seq + prev_hash + payload_len
         //            + payload, without the tag
@@ -297,7 +297,7 @@ const MantraLog = struct {
     // hash, and return the final state hash. If any signature or chain
     // link disagrees, replay halts with an error message.
 
-    fn replay(self: *const MantraLog) u32 {
+    fn replay(self: *const BlazeLog) u32 {
         var running_hash: u32 = 0;
         var i: u32 = 0;
         while (i < self.count) : (i += 1) {
@@ -370,7 +370,7 @@ export fn kmain() noreturn {
     uart_print(" facts\n\n");
 
     // -- Append boot facts
-    var log = MantraLog.init(&region, &identity);
+    var log = BlazeLog.init(&region, &identity);
 
     const facts = [_][]const u8{
         "pill: self-compile proof verified",

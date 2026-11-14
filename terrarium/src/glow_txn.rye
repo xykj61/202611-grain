@@ -161,7 +161,7 @@ const Identity = struct {
 };
 
 // -- Blaze event log --
-const MantraLog = struct {
+const BlazeLog = struct {
     region: *Region,
     identity: *const Identity,
     count: u32,
@@ -170,7 +170,7 @@ const MantraLog = struct {
     fn init(
         region: *Region,
         identity: *const Identity,
-    ) MantraLog {
+    ) BlazeLog {
         return .{
             .region = region,
             .identity = identity,
@@ -179,7 +179,7 @@ const MantraLog = struct {
         };
     }
 
-    fn append(self: *MantraLog, message: []const u8) void {
+    fn append(self: *BlazeLog, message: []const u8) void {
         const msg_len: u32 = @intCast(message.len);
         const record_size: u32 = 4 + 4 + msg_len + 4 + 4;
         const offset = self.region.alloc(record_size) catch {
@@ -357,7 +357,7 @@ export fn kmain() callconv(.c) noreturn {
         @ptrFromInt(log_region_base),
         log_region_budget,
     );
-    var log = MantraLog.init(&log_region, &identity);
+    var log = BlazeLog.init(&log_region, &identity);
 
     // =================================================================
     // PROOF 1: PARSE AND DISPLAY TRANSACTION FORMS

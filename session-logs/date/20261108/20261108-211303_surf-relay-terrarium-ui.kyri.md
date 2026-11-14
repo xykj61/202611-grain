@@ -15,7 +15,7 @@ think relay UI needs three controls in the Social tab: address field (default 12
 think TabSetup.swift holds the Social tab layout -- insert relay controls between follow-count label and filter segment
 think main.swift needs stored properties for the address field, status label, and publish toggle state
 think surfComposeAction needs a relay-publish path gated by the publish toggle and parsed address
-think build requires all six Vantage dylibs -- libsurf, libbloom, libdimeroll, libresonance_audio, libmantra, libscribe
+think build requires all six Vantage dylibs -- libsurf, libbloom, libdimeroll, libresonance_audio, libblaze, libscribe
 obs four edits to TabSetup.swift: relay subview creation, constraint wiring, action methods (parse/fetch/toggle), compose-action publish path
 obs three additions to main.swift: surfRelayAddrField, surfRelayStatusLabel, surfRelayPublishOn stored properties
 obs build failed three times before landing: first missing module search paths, second Swift 6 concurrency errors, third missing Vantage dylib linker flags -- resolved by linking all six dylibs

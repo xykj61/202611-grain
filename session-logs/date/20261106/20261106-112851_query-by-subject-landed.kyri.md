@@ -8,7 +8,7 @@ think Movement 37 is query by subject -- "Show me everything about tomatoes"
 think query_by_subject scans all 9 transactions via str_eq byte-by-byte comparison against a subject string
 think QueryResult struct holds up to 9 indices into the transactions array, with a count field -- same pattern as verb module
 think initial build produced Blaze hash mismatch: 0xf6d9677e instead of expected 0xe9cf083f
-think root cause: MantraLog.append had a completely different hash chain algorithm -- the subject module used a full Djb2 hash computation over previous state bytes concatenated with fact bytes, while the verb module uses the simple multiply-accumulate self.state_hash = self.state_hash *% 31 +% sig
+think root cause: BlazeLog.append had a completely different hash chain algorithm -- the subject module used a full Djb2 hash computation over previous state bytes concatenated with fact bytes, while the verb module uses the simple multiply-accumulate self.state_hash = self.state_hash *% 31 +% sig
 think fix: replaced the elaborate Djb2-over-bytes block (lines 177-191) with the simple one-liner matching the verb module
 think after fix: 19/19 ALL PROOFS PASSED, hash matches 0xe9cf083f
 obs the dimeroll module pattern is solid -- the hash mismatch was a copy divergence rather than a design fault. The simple multiply-accumulate hash chain is the canonical algorithm across all dimeroll modules sharing the 9-transaction dataset.

@@ -17,7 +17,7 @@ Bloom draws inspiration from three sources, each siloed through our own voice:
 
 1. **DJINN's Grain School and Grain Atlas** -- an interactive classroom with Kyri teaching at a blackboard, a star-chart workbench with eight views of the grain tree, and a Terrarium fish-tank world. The School teaches through lessons and voices; the Atlas maps the tree seven ways. We honor DJINN's design by studying it and building our own version in Terrarium's native Swift surface.
 
-2. **The Guardian Dragon curriculum** (archived at `teamcarry11/archive-concept-mantraphone`) -- a ten-stage learning path from storytelling to technical vision, framed around a "Guardian Dragon" that protects rather than consumes. Its curriculum runs from Meeting the Dragons through Memory, Processes, Files, Networks, Security, Sustainability, Right-to-Repair, and Technical Vision. We silo the teaching structure and the biocyclic vegan ecology through our own voice, generalized for any US state.
+2. **The Guardian Dragon curriculum** (archived at `teamcarry11/archive-concept-blazephone`) -- a ten-stage learning path from storytelling to technical vision, framed around a "Guardian Dragon" that protects rather than consumes. Its curriculum runs from Meeting the Dragons through Memory, Processes, Files, Networks, Security, Sustainability, Right-to-Repair, and Technical Vision. We silo the teaching structure and the biocyclic vegan ecology through our own voice, generalized for any US state.
 
 3. **The grain-lineage-silo** -- six documents carrying the toroidal hardware proposal, bounded optimization, state-at-center, dual-description design principle, one-carrier-many-flows, and whole-in-every-part. These are already siloed into plain engineering language at `external-research/grain-lineage-silo/`.
 
@@ -281,7 +281,7 @@ This is Conway's Law applied to quality: the audit mirrors the structure, and te
 
 - [DJINN's Grain School](https://github.com/node777/grain-school) -- MIT licensed, interactive classroom
 - [DJINN's Grain Atlas](https://github.com/node777/grain-atlas) -- MIT licensed, star-chart workbench
-- [Guardian Dragon curriculum](https://github.com/teamcarry11/archive-concept-mantraphone) -- ten-stage learning path
+- [Guardian Dragon curriculum](https://github.com/teamcarry11/archive-concept-blazephone) -- ten-stage learning path
 - [Olimex RVPC](https://github.com/OLIMEX/RVPC) -- one-Euro RISC-V educational computer kit (CERN-OHL-S v2)
 - [VSDSquadron RISC-V board](https://shop.electronicsforu.com/product/vsdsquadron-risc-v-and-vlsi-educational-board/) -- educational RISC-V development board
 - [BLAKE2 paper](https://www.blake2.net/blake2.pdf) -- the original BLAKE2 specification
