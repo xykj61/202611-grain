@@ -857,7 +857,7 @@ Radiant pass `20260727.230010` — path re-point only; claims unchanged
 | **73** | **Anvil corpus view** | **Landed** | Rye query hits → Skate `corpusviewtest`; parity **259**; stamp `181653` |
 | **74** | **Lattice lap 3 reduce_sum** | **Landed** | Full-matrix sum into 1×1; parity **260**; stamp `182118` |
 | **75** | **Pulp lap 3 headings** | **Landed** | `extract_headings` from outline fixture; parity **261**; stamp `182118` |
-| **76** | **Pulp outline view** | **Landed** | Headings → Skate `scribbleviewtest`; parity **262**; stamp `182118` |
+| **76** | **Pulp outline view** | **Landed** | Headings → Skate `pulpviewtest`; parity **262**; stamp `182118` |
 | **77** | **Assist view lap 4 kinds** | **Landed** | Rye + rish snippet counts on Skate; parity **263**; stamp `182118` |
 | **78** | **Lattice lap 4 scale** | **Landed** | Elementwise scale · shape assert; parity **264**; stamp `182502` |
 | **79** | **Anvil corpus prefix view** | **Landed** | path_prefix pond/ → Skate; parity **265**; stamp `182502` |
@@ -868,12 +868,12 @@ Radiant pass `20260727.230010` — path re-point only; claims unchanged
 | **84** | **Pulp lap 4 paragraphs** | **Landed** | `extract_paragraphs` from outline; parity **270**; stamp `185542` |
 | **85** | **Dimeroll P&L view** | **Landed** | Income statement → Skate `pnlviewtest`; parity **271**; stamp `185542` |
 | **86** | **Lattice lap 6 mul** | **Landed** | Elementwise Hadamard mul; parity **272**; stamp `185947` |
-| **87** | **Pulp paragraphs view** | **Landed** | Prose bodies → Skate `scribbleparaviewtest`; parity **273**; stamp `185947` |
+| **87** | **Pulp paragraphs view** | **Landed** | Prose bodies → Skate `pulpparaviewtest`; parity **273**; stamp `185947` |
 | **88** | **Dimeroll BS view** | **Landed** | Balance sheet → Skate `bsviewtest`; parity **274**; stamp `185947` |
 | **89** | **Lantern lap 4 top_p** | **Landed** | top_p range + fixture pin; parity **275**; stamp `185947` |
 | **90** | **Lattice lap 7 fill** | **Landed** | Fill tensor with constant; parity **276**; stamp `190319` |
 | **91** | **Dimeroll TB view** | **Landed** | Trial balance → Skate `tbviewtest`; parity **277**; stamp `190319` |
-| **92** | **Pulp fence kinds view** | **Landed** | rye/rish/plain counts → Skate `scribblefenceviewtest`; parity **278**; stamp `190319` |
+| **92** | **Pulp fence kinds view** | **Landed** | rye/rish/plain counts → Skate `pulpfenceviewtest`; parity **278**; stamp `190319` |
 | **93** | **Lantern lap 5 err_stop** | **Landed** | err_stop fixture pin; parity **279**; stamp `190319` |
 | **94** | **Lattice lap 8 copy** | **Landed** | Shape-asserted tensor copy; parity **280**; stamp `190800` |
 | **95** | **Anvil corpus rye prefix view** | **Landed** | rye + pond/ → Skate `corpusryeprefixviewtest`; parity **281**; stamp `190800` |
@@ -881,7 +881,7 @@ Radiant pass `20260727.230010` — path re-point only; claims unchanged
 | **97** | **Lantern lap 6 stop_sequence** | **Landed** | stop_sequence fixture pin; parity **283**; stamp `190800` |
 | **98** | **Lattice lap 9 sub** | **Landed** | Elementwise subtract; parity **284**; stamp `191112` |
 | **99** | **Dimeroll journal view** | **Landed** | Journal entries → Skate `journalviewtest`; parity **285**; stamp `191112` |
-| **100** | **Pulp plain snippets view** | **Landed** | Unmarked fences → Skate `scribbleplainviewtest`; parity **286**; stamp `191112` |
+| **100** | **Pulp plain snippets view** | **Landed** | Unmarked fences → Skate `pulpplainviewtest`; parity **286**; stamp `191112` |
 | **101** | **Lantern lap 7 stop_sequence pin** | **Landed** | Request-side stop_sequence pin; parity **287**; stamp `191112` |
 | **102** | **Assist view lap 5 plain+journal** | **Landed** | Plain fences + journal memos on assist fold; parity **288**; stamp `192018` |
 | **103** | **Assist sight lap 3 plain+journal** | **Landed** | Plain + journal on carriage assist fold; parity **289**; stamp `192018` |
@@ -891,11 +891,11 @@ Radiant pass `20260727.230010` — path re-point only; claims unchanged
 | **107** | **Anvil corpus tools prefix view** | **Landed** | tools/ → Skate `corpustoolsprefixviewtest`; parity **293**; stamp `192749` |
 | **108** | **Lantern lap 8 prompt pin** | **Landed** | Request-side prompt pin; parity **294**; stamp `192749` |
 | **109** | **Lattice lap 11 div** | **Landed** | Elementwise divide + zero refuse; parity **295**; stamp `193358` |
-| **110** | **Pulp rye snippets view** | **Landed** | Rye fences → Skate `scribbleryeviewtest`; parity **296**; stamp `193358` |
+| **110** | **Pulp rye snippets view** | **Landed** | Rye fences → Skate `pulpryeviewtest`; parity **296**; stamp `193358` |
 | **111** | **Anvil corpus dimeroll prefix view** | **Landed** | dimeroll/ → Skate `corpuscandyprefixviewtest`; parity **297**; stamp `193358` |
 | **112** | **Lantern lap 9 max_tokens pin** | **Landed** | Request-side max_tokens pin; parity **298**; stamp `193358` |
 | **113** | **Lattice lap 12 reduce_mean** | **Landed** | Full-matrix mean into 1×1; parity **299**; stamp `200203` |
-| **114** | **Pulp rish snippets view** | **Landed** | Rish fences → Skate `scribblerishviewtest`; parity **300**; stamp `200203` |
+| **114** | **Pulp rish snippets view** | **Landed** | Rish fences → Skate `pulprishviewtest`; parity **300**; stamp `200203` |
 | **115** | **Linengrow sight lap 3 chart** | **Landed** | Chart on steward glass; parity **301**; stamp `200203` |
 | **116** | **Lantern lap 10 text pin** | **Landed** | Response text_pin; parity **302**; stamp `200203` |
 | **117** | **Lattice lap 13 abs** | **Landed** | Elementwise abs; parity **303**; stamp `200819` |

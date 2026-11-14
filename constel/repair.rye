@@ -360,7 +360,7 @@ fn run_selftest() !u8 {
 
     // 7. OVER A REAL SKY -- constels-naming -> constels-naming. A leader log grows by termed decrees: a term-1 prefix the whole sky committed, then
     //    a term-2 suffix under a NEW leader. A follower holds the term-1 prefix plus a term-1 OLD leader's uncommitted appends
-    //    (the exact scribbles constels-naming proved could never commit). Repair removes precisely that tissue and installs the true tail.
+    //    (the exact pulps constels-naming proved could never commit). Repair removes precisely that tissue and installs the true tail.
     {
         var sb = switchboard.Switchboard{};
         try sb.stand_up(4);
@@ -391,13 +391,13 @@ fn run_selftest() !u8 {
         const c3 = try term.run_termed_decree(&sb, &terms, l1n, 2, 33);
         _ = try leader.append_entry(2, c3);
 
-        // Meanwhile the OLD term-1 leader (slot 0), out-voted so it could never commit (constels-naming), had still scribbled into its own
+        // Meanwhile the OLD term-1 leader (slot 0), out-voted so it could never commit (constels-naming), had still pulpd into its own
         // follower log -- an uncommitted stale-term-1 suffix.
         _ = try follower.append_entry(1, 900);
         _ = try follower.append_entry(1, 901);
         assert(!follower.matches(&leader)); // the follower has forked locally
 
-        // Repair heals it: the stale-term-1 scribbles are shed, the true term-2 tail installed.
+        // Repair heals it: the stale-term-1 pulps are shed, the true term-2 tail installed.
         const gained = try repair(&follower, &leader);
         assert(gained == 1); // exactly the leader's one term-2 entry
         assert(follower.matches(&leader));
@@ -429,7 +429,7 @@ fn run_selftest() !u8 {
         "the common prefix byte-unchanged and the uncommitted stale-term tail gone; ONLY THE UNCOMMITTED TAIL MOVES (a behind " ++
         "follower repaired by pure append, an already-current one with zero changes, a longer one shed to the leader's length); " ++
         "NO FORK across repair — two followers with different divergent suffixes both converge onto the one leader and thus onto " ++
-        "each other; and OVER A REAL SKY the constels-naming out-voted old leader's uncommitted term-1 scribbles are precisely the tissue " ++
+        "each other; and OVER A REAL SKY the constels-naming out-voted old leader's uncommitted term-1 pulps are precisely the tissue " ++
         "repair removes before installing the new leader's true term-2 tail; bounded to the cap — no socket, no network, no " ++
         "keys, no funds, no real address ever formed\n", .{});
     return 0;

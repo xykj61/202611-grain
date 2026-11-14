@@ -1,5 +1,10 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261114.152851` -- Pulp -> Pulp rename (fourth of five).**
+- **Walk-back nib:** `e91ac8b81a` -- `git show e91ac8b81a` restores the tree before the Pulp rename.
+- **Swept:** `pulp/` directory and all pulp-named files renamed to pulp equivalents. All text references -- `pulp`, `Pulp`, `PULP` -- replaced with `pulp`, `Pulp`, `PULP` across living and dated files alike. 49 files carry the word in filenames, 287 files carry references in content. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.
+- **What waits there, worth recalling:** Pulp served the Markdown parser faithfully from its seating, carrying the image of handwriting broken down to its strokes. Pulp takes the raw-material metaphor further -- Markdown text broken to constituent parts, the raw pulp other modules build from. Pulp is reserved for a future drawing/stylus Graintablet app. Keaton chose Pulp on 20261114.
+
 **Checkpoint `20261114.152410` -- Flare -> Flare rename (third of five).**
 - **Walk-back nib:** `0f9e36dd06` -- `git show 0f9e36dd06` restores the tree before the Flare rename.
 - **Swept:** `flare/` directory and all flare-named files renamed to flare equivalents. All text references -- `flare`, `Flare`, `FLARE` -- replaced with `flare`, `Flare`, `FLARE` across living and dated files alike, with word-boundary safety to preserve `member`, `remember`, `September`, `membership`, and every other word containing the substring. 34 files carry the word in filenames, 315 files carry standalone references in content. Working-tree rename commit; the founding commit rewrite awaits custody gate 5 on Keaton's hand.

@@ -47,7 +47,7 @@ It holds because a leader creates at most one entry per (index) in its term, and
 4. **The heal** — a follower with a divergent stale-term suffix is repaired to match the leader exactly; the common prefix is byte-unchanged; the divergent suffix is gone.
 5. **Only the uncommitted tail moves** — the agreed prefix is never rewritten (append-only preserved for it); a follower already matching is repaired with zero changes.
 6. **No fork across repair** — two followers with *different* divergent suffixes both repair to the *same* leader log and thus to each other.
-7. **Over a real sky** — a leader log built by constels-naming termed decrees in term 2; a follower carrying a term-1 stale leader's uncommitted appends; repair heals it, dramatizing constels-naming → constels-naming (the out-voted old leader's local scribbles are the exact tissue repair removes).
+7. **Over a real sky** — a leader log built by constels-naming termed decrees in term 2; a follower carrying a term-1 stale leader's uncommitted appends; repair heals it, dramatizing constels-naming → constels-naming (the out-voted old leader's local pulps are the exact tissue repair removes).
 
 ## The gate stays the gate
 

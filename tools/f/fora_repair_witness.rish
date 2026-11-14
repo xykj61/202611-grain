@@ -12,7 +12,7 @@
 # entries -- Raft's Log Matching Property, named in Constel's terms. The selftest proves: append is ordered and term-monotonic
 # (TermRegressed, LogFull); the Log Matching Property by enumeration; consistent_at gates a suffix; the heal makes a divergent
 # follower match exactly, common prefix unchanged; only the uncommitted tail moves; no fork across repair (two followers with
-# different suffixes both converge); and over a real sky the constels-naming old leader's uncommitted scribbles are precisely the tissue
+# different suffixes both converge); and over a real sky the constels-naming old leader's uncommitted pulps are precisely the tissue
 # repair removes. Purely local -- no socket, no network, no keys, no funds, no real address ever formed.
 #
 # Run from the repository root:

@@ -15,7 +15,7 @@ Radiant pass `20260725.035134`
 
 ## Why Gather Them
 
-A companion combed a year of scribbles and drew out seven plain ideas, each clear enough to stand on its own. Standing apart, they read as gentle philosophy. Standing together, beside the repository, they read as something firmer: the roots of specific things we are building. The modules are the branches; these are what they grow from. To see the whole tree, it helps to look once at the roots, and to name which branch each one feeds.
+A companion combed a year of pulps and drew out seven plain ideas, each clear enough to stand on its own. Standing apart, they read as gentle philosophy. Standing together, beside the repository, they read as something firmer: the roots of specific things we are building. The modules are the branches; these are what they grow from. To see the whole tree, it helps to look once at the roots, and to name which branch each one feeds.
 
 We keep the seven essays separate on purpose. Each is single-stranded, about one thing, composable with the rest -- the same discipline we hold for code. This piece is the composition: it lays the seven side by side and shows where each touches the work.
 

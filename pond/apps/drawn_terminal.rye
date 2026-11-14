@@ -36,26 +36,26 @@
 //!   pond/bin/drawn-terminal corpustoolsprefixviewtest # Flare tools/ prefix -> Skate
 //!   pond/bin/drawn-terminal corpuscandyprefixviewtest # Flare dimeroll/ prefix -> Skate
 //!   pond/bin/drawn-terminal corpusappsprefixviewtest # Flare pond/apps/ prefix -> Skate
-//!   pond/bin/drawn-terminal scribbleviewtest # Pulp outline headings -> Skate
-//!   pond/bin/drawn-terminal scribbleparaviewtest # Pulp paragraphs -> Skate
-//!   pond/bin/drawn-terminal scribblefenceviewtest # Pulp fence kinds -> Skate
-//!   pond/bin/drawn-terminal scribbleplainviewtest # Pulp plain snippets -> Skate
-//!   pond/bin/drawn-terminal scribbleryeviewtest # Pulp rye snippets -> Skate
-//!   pond/bin/drawn-terminal scribblerishviewtest # Pulp rish snippets -> Skate
-//!   pond/bin/drawn-terminal scribbleh1viewtest # Pulp h1 headings -> Skate
-//!   pond/bin/drawn-terminal scribbleh2viewtest # Pulp h2 headings -> Skate
-//!   pond/bin/drawn-terminal scribbleh3viewtest # Pulp h3 headings -> Skate
-//!   pond/bin/drawn-terminal scribbledepthviewtest # Pulp h1/h2/h3 depth tallies -> Skate
-//!   pond/bin/drawn-terminal scribbletallyviewtest # Pulp headings+paragraphs tally -> Skate
-//!   pond/bin/drawn-terminal scribbleblocksviewtest # Pulp block count -> Skate
-//!   pond/bin/drawn-terminal scribblefenceheadingviewtest # Pulp fence+heading combo -> Skate
-//!   pond/bin/drawn-terminal scribbletallyblocksviewtest # Pulp tally+blocks combo -> Skate
-//!   pond/bin/drawn-terminal scribbleparablocksviewtest # Pulp paragraphs+blocks combo -> Skate
-//!   pond/bin/drawn-terminal scribbleh1blocksviewtest # Pulp h1+blocks combo -> Skate
-//!   pond/bin/drawn-terminal scribbleh2blocksviewtest # Pulp h2+blocks combo -> Skate
-//!   pond/bin/drawn-terminal scribbleh3blocksviewtest # Pulp h3+blocks combo -> Skate
-//!   pond/bin/drawn-terminal scribbleryeblocksviewtest # Pulp rye+blocks combo -> Skate
-//!   pond/bin/drawn-terminal scribblerishblocksviewtest # Pulp rish+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulpviewtest # Pulp outline headings -> Skate
+//!   pond/bin/drawn-terminal pulpparaviewtest # Pulp paragraphs -> Skate
+//!   pond/bin/drawn-terminal pulpfenceviewtest # Pulp fence kinds -> Skate
+//!   pond/bin/drawn-terminal pulpplainviewtest # Pulp plain snippets -> Skate
+//!   pond/bin/drawn-terminal pulpryeviewtest # Pulp rye snippets -> Skate
+//!   pond/bin/drawn-terminal pulprishviewtest # Pulp rish snippets -> Skate
+//!   pond/bin/drawn-terminal pulph1viewtest # Pulp h1 headings -> Skate
+//!   pond/bin/drawn-terminal pulph2viewtest # Pulp h2 headings -> Skate
+//!   pond/bin/drawn-terminal pulph3viewtest # Pulp h3 headings -> Skate
+//!   pond/bin/drawn-terminal pulpdepthviewtest # Pulp h1/h2/h3 depth tallies -> Skate
+//!   pond/bin/drawn-terminal pulptallyviewtest # Pulp headings+paragraphs tally -> Skate
+//!   pond/bin/drawn-terminal pulpblocksviewtest # Pulp block count -> Skate
+//!   pond/bin/drawn-terminal pulpfenceheadingviewtest # Pulp fence+heading combo -> Skate
+//!   pond/bin/drawn-terminal pulptallyblocksviewtest # Pulp tally+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulpparablocksviewtest # Pulp paragraphs+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulph1blocksviewtest # Pulp h1+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulph2blocksviewtest # Pulp h2+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulph3blocksviewtest # Pulp h3+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulpryeblocksviewtest # Pulp rye+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulprishblocksviewtest # Pulp rish+blocks combo -> Skate
 //!   pond/bin/drawn-terminal corpusryecandyprefixviewtest # Flare rye + dimeroll/ -> Skate
 //!   pond/bin/drawn-terminal corpusrishtoolsprefixviewtest # Flare rish + tools/ -> Skate
 //!   pond/bin/drawn-terminal corpusryeappsprefixviewtest # Flare rye + pond/apps/ -> Skate
@@ -1556,7 +1556,7 @@ fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     const n = try pulp.parse_markdown(text, &blocks);
     var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
     const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (pn != 3) return error.BadScribbleFixture;
+    if (pn != 3) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_para_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp paragraphs view") };
@@ -1664,7 +1664,7 @@ fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     var blocks: [pulp.max_blocks]pulp.Block = undefined;
     const n = try pulp.parse_markdown(text, &blocks);
     const kinds = pulp.count_fence_kinds(blocks[0..n]);
-    if (kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadScribbleFixture;
+    if (kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_fence_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp fence kinds view") };
@@ -1718,7 +1718,7 @@ fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const n = try pulp.parse_markdown(text, &blocks);
     var snippets: [pulp.max_blocks]pulp.Snippet = undefined;
     const sn = try pulp.extract_plain_snippets(blocks[0..n], &snippets);
-    if (sn != 1) return error.BadScribbleFixture;
+    if (sn != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_plain_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp plain snippets view") };
@@ -1777,7 +1777,7 @@ fn compose_pulp_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface
     const n = try pulp.parse_markdown(text, &blocks);
     var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
     const sn = try pulp.extract_rye_snippets(blocks[0..n], &snippets);
-    if (sn != 2) return error.BadScribbleFixture;
+    if (sn != 2) return error.BadPulpFixture;
     // invariant: the golden rye snippets are matched by content rather than by index, so a
     // reordered extractor reds here instead of drawing the wrong two
     assert(std.mem.indexOf(u8, snippets[0].text_slice(), "init.minimal.args") != null);
@@ -1835,7 +1835,7 @@ fn compose_pulp_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     const n = try pulp.parse_markdown(text, &blocks);
     var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
     const sn = try pulp.extract_rish_snippets(blocks[0..n], &snippets);
-    if (sn != 2) return error.BadScribbleFixture;
+    if (sn != 2) return error.BadPulpFixture;
     // invariant: the golden rish snippets are matched by content rather than by index, so a
     // reordered extractor reds here instead of drawing the wrong two
     assert(std.mem.indexOf(u8, snippets[0].text_slice(), "lantern lap") != null);
@@ -2878,7 +2878,7 @@ fn compose_pulp_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.Ska
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const hn = try pulp.extract_headings(blocks[0..n], &headings);
-    if (hn != 3) return error.BadScribbleFixture;
+    if (hn != 3) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp outline view") };
@@ -2934,7 +2934,7 @@ fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const hn = try pulp.extract_headings_at_depth(blocks[0..n], 1, &headings);
-    if (hn != 1) return error.BadScribbleFixture;
+    if (hn != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h1_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h1 view") };
@@ -2988,7 +2988,7 @@ fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const hn = try pulp.extract_headings_at_depth(blocks[0..n], 2, &headings);
-    if (hn != 2) return error.BadScribbleFixture;
+    if (hn != 2) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h2_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h2 view") };
@@ -3042,7 +3042,7 @@ fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const hn = try pulp.extract_headings_at_depth(blocks[0..n], 3, &headings);
-    if (hn != 1) return error.BadScribbleFixture;
+    if (hn != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h3_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h3 view") };
@@ -3206,7 +3206,7 @@ fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const h1 = try pulp.extract_headings_at_depth(blocks[0..n], 1, &headings);
     const h2 = try pulp.extract_headings_at_depth(blocks[0..n], 2, &headings);
     const h3 = try pulp.extract_headings_at_depth(blocks[0..n], 3, &headings);
-    if (h1 != 1 or h2 != 1 or h3 != 1) return error.BadScribbleFixture;
+    if (h1 != 1 or h2 != 1 or h3 != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_depth_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp depth view") };
@@ -3534,7 +3534,7 @@ fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const hn = try pulp.extract_headings(blocks[0..n], &headings);
     var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
     const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (hn != 3 or pn != 3) return error.BadScribbleFixture;
+    if (hn != 3 or pn != 3) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_tally_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp tally view") };
@@ -3586,7 +3586,7 @@ fn compose_pulp_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surf
     const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
     var blocks: [pulp.max_blocks]pulp.Block = undefined;
     const n = try pulp.parse_markdown(text, &blocks);
-    if (n != 6) return error.BadScribbleFixture;
+    if (n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp blocks view") };
@@ -3641,7 +3641,7 @@ fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) 
     const kinds = pulp.count_fence_kinds(fence_blocks[0..fence_n]);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const hn = try pulp.extract_headings(fence_blocks[0..fence_n], &headings);
-    if (hn != 1 or kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadScribbleFixture;
+    if (hn != 1 or kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_fence_heading_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp fence heading view") };
@@ -3697,7 +3697,7 @@ fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) !
     const hn = try pulp.extract_headings(blocks[0..n], &headings);
     var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
     const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (hn != 3 or pn != 3 or n != 6) return error.BadScribbleFixture;
+    if (hn != 3 or pn != 3 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_tally_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp tally blocks view") };
@@ -3751,7 +3751,7 @@ fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     const n = try pulp.parse_markdown(text, &blocks);
     var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
     const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (pn != 3 or n != 6) return error.BadScribbleFixture;
+    if (pn != 3 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_para_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp para blocks view") };
@@ -3805,7 +3805,7 @@ fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const h1 = try pulp.extract_headings_at_depth(blocks[0..n], 1, &headings);
-    if (h1 != 1 or n != 6) return error.BadScribbleFixture;
+    if (h1 != 1 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h1_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h1 blocks view") };
@@ -3859,7 +3859,7 @@ fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const h2 = try pulp.extract_headings_at_depth(blocks[0..n], 2, &headings);
-    if (h2 != 2 or n != 6) return error.BadScribbleFixture;
+    if (h2 != 2 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h2_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h2 blocks view") };
@@ -3913,7 +3913,7 @@ fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const n = try pulp.parse_markdown(text, &blocks);
     var headings: [pulp.max_headings]pulp.Heading = undefined;
     const h3 = try pulp.extract_headings_at_depth(blocks[0..n], 3, &headings);
-    if (h3 != 1 or n != 6) return error.BadScribbleFixture;
+    if (h3 != 1 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h3_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h3 blocks view") };
@@ -3967,7 +3967,7 @@ fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]
     const n = try pulp.parse_markdown(text, &blocks);
     var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
     const rye_n = try pulp.extract_rye_snippets(blocks[0..n], &snippets);
-    if (rye_n != 1 or n != 4) return error.BadScribbleFixture;
+    if (rye_n != 1 or n != 4) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_rye_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp rye blocks view") };
@@ -4021,7 +4021,7 @@ fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     const n = try pulp.parse_markdown(text, &blocks);
     var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
     const rish_n = try pulp.extract_rish_snippets(blocks[0..n], &snippets);
-    if (rish_n != 1 or n != 4) return error.BadScribbleFixture;
+    if (rish_n != 1 or n != 4) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_rish_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp rish blocks view") };
@@ -5770,31 +5770,31 @@ pub fn main(init: std.process.Init) !u8 {
     if (args.len >= 2 and std.mem.eql(u8, args[1], "corpusappsprefixviewtest")) {
         return run_corpus_apps_prefix_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpviewtest")) {
         return run_pulp_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleparaviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpparaviewtest")) {
         return run_pulp_para_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribblefenceviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpfenceviewtest")) {
         return run_pulp_fence_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleplainviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpplainviewtest")) {
         return run_pulp_plain_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleryeviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpryeviewtest")) {
         return run_pulp_rye_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribblerishviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulprishviewtest")) {
         return run_pulp_rish_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleh1viewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph1viewtest")) {
         return run_pulp_h1_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleh2viewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph2viewtest")) {
         return run_pulp_h2_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleh3viewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph3viewtest")) {
         return run_pulp_h3_view_witness(garden, io);
     }
     if (args.len >= 2 and std.mem.eql(u8, args[1], "corpusryecandyprefixviewtest")) {
@@ -5818,37 +5818,37 @@ pub fn main(init: std.process.Init) !u8 {
     if (args.len >= 2 and std.mem.eql(u8, args[1], "corpussumlinesviewtest")) {
         return run_corpus_sum_lines_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbledepthviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpdepthviewtest")) {
         return run_pulp_depth_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbletallyviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulptallyviewtest")) {
         return run_pulp_tally_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleblocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpblocksviewtest")) {
         return run_pulp_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribblefenceheadingviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpfenceheadingviewtest")) {
         return run_pulp_fence_heading_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbletallyblocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulptallyblocksviewtest")) {
         return run_pulp_tally_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleparablocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpparablocksviewtest")) {
         return run_pulp_para_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleh1blocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph1blocksviewtest")) {
         return run_pulp_h1_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleh2blocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph2blocksviewtest")) {
         return run_pulp_h2_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleh3blocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph3blocksviewtest")) {
         return run_pulp_h3_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribbleryeblocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpryeblocksviewtest")) {
         return run_pulp_rye_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "scribblerishblocksviewtest")) {
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulprishblocksviewtest")) {
         return run_pulp_rish_blocks_view_witness(garden, io);
     }
     if (args.len >= 2 and std.mem.eql(u8, args[1], "exceptionviewtest")) {

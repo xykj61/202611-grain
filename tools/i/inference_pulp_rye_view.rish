@@ -10,8 +10,8 @@ let build = run ["sh" "tools/fixtures/p/pond_build_drawn_terminal.sh"]
 assert build.ok else "drawn_terminal build failed for pulp rye view"
 assert build.out contains "GREEN:" else "drawn_terminal build did not reach GREEN"
 
-let view = run ["sh" "-c" "${bin} scribbleryeviewtest 2>&1"]
-assert view.ok else "drawn terminal scribbleryeviewtest exited non-zero"
+let view = run ["sh" "-c" "${bin} pulpryeviewtest 2>&1"]
+assert view.ok else "drawn terminal pulpryeviewtest exited non-zero"
 assert view.out contains "rye snippets view" else "rye snippets view missing expected output"
 assert view.out contains "GREEN" else "Pulp rye snippets view not GREEN"
 assert view.out contains "lines=5" else "rye snippets view missing five-line frame"

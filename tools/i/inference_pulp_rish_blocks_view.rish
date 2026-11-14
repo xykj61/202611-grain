@@ -4,8 +4,8 @@ say "build: Pulp rish blocks view — drawn-terminal compile"
 let build = run ["sh" "tools/fixtures/p/pond_build_drawn_terminal.sh"]
 assert build.ok else "drawn_terminal build failed for pulp rish blocks view"
 assert build.out contains "GREEN:" else "drawn_terminal build did not reach GREEN"
-let view = run ["sh" "-c" "${bin} scribblerishblocksviewtest 2>&1"]
-assert view.ok else "drawn terminal scribblerishblocksviewtest exited non-zero"
+let view = run ["sh" "-c" "${bin} pulprishblocksviewtest 2>&1"]
+assert view.ok else "drawn terminal pulprishblocksviewtest exited non-zero"
 assert view.out contains "pulp rish blocks view" else "rish blocks view missing expected output"
 assert view.out contains "GREEN" else "Pulp rish blocks view not GREEN"
 assert view.out contains "lines=5" else "rish blocks view missing five-line frame"
