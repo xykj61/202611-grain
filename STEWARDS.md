@@ -29,7 +29,7 @@
 | `cellar/` | Archival module | Blaze / Weave |
 | `flare/` · `lantern/` · `lattice/` · `pulp/` | Faculties | **Quin** |
 | `keys/` and key art | Identity custody | Kumara today; **Rhyz** at proven supersede |
-| `pond/` | Isolation stratum | non-module, as seated |
+| `pond/` | Isolation stratum | application stratum, as seated |
 
 ## Questions this map teaches
 
