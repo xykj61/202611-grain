@@ -2,6 +2,7 @@
 
 | Stamp | Title | Notes |
 |---|---|---|
+| 20261114.153540 | [Pulp and Blaze renames executed](20261114/20261114-153540_pulp-and-blaze-renames-executed.kyri.md) | Four of five approved renames sent -- Tiles, Flare, Pulp, Blaze complete |
 | 20261114.150133 | [confirmed rename ledger -- Flare Pulp Jot](20261114/20261114-150133_confirmed-rename-ledger-flare-pulp-jot.kyri.md) | Flare Pulp Jot seated, module retired, separate passes, execution approved |
 | 20261114.145530 | [Flare Pulp module evaluation and rename candidates](20261114/20261114-145530_flare-pulp-module-evaluation-and-rename-candidates.kyri.md) | Lore and Pulp recommended, module retired, five deep debrides ledgered |
 | 20261114.135707 | [fire vision name candidates for Blaze rename](20261114/20261114-135707_fire-vision-blaze-rename-candidates.kyri.md) | Vigil leads -- faithful watching by firelight, the visual blaze |
