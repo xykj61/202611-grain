@@ -16,8 +16,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grainos_version = "20261115.105000";
-pub const myofascia_reading = "56.630";
+pub const grainos_version = "20261115.111500";
+pub const myofascia_reading = "56.650";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -134,6 +134,53 @@ pub fn main(init: std.process.Init) !u8 {
         try argv.append(a, "libraries/shastra/champu/bin/gopala_champu_weave");
         try argv.append(a, "show");
         const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "glow")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(a, "tools/.build/glow_compile_cli");
+        for (args[2..]) |x| try argv.append(a, x);
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "resonance-bounce")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(a, "tools/.build/studio_wav_bounce");
+        for (args[2..]) |x| try argv.append(a, x);
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "vantage")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(a, "tools/.build/vantage_mac_live");
+        for (args[2..]) |x| try argv.append(a, x);
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "carry-apk")) {
+        const r = try std.process.run(a, io, .{
+            .argv = &[_][]const u8{
+                "languages/rishi/bin/rishi",
+                "run",
+                "tools/c/build_dc1_apk.rish",
+            },
+        });
         print("{s}{s}", .{ r.stdout, r.stderr });
         return switch (r.term) {
             .exited => |c| c,

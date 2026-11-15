@@ -29,7 +29,7 @@ All boards now live under `date/YYYYMM/NN/` (folded `20261107`).
 
 | Board | Equinox | Status |
 |---|---|---|
-| [`20261103-005948_resonance-working-studio/`](date/202611/00/20261103-005948_resonance-working-studio/README.md) | Resonance DAW Equinox 1 -- The Working Studio | Active |
+| [`20261103-005948_lotus-working-studio/`](date/202611/00/20261103-005948_lotus-working-studio/README.md) | Resonance DAW Equinox 1 -- The Working Studio (`studio_wav_bounce.rye` + `vantage_resonance_audio.h` + `session.brix`) | **Complete -- 4-Track 48 kHz `.wav` & `VantageResonance` Proven (`56.650`)** |
 | [`20261103-184811_glow-language-journey/`](date/202611/00/20261103-184811_glow-language-journey/README.md) | Glow Language Journey -- Clean Foundations, Living Stdlib, Ready for Resonance | Complete |
 | [`20261104-161857_terrarium-boot-journey/`](date/202611/00/20261104-161857_terrarium-boot-journey/README.md) | Terrarium Boot Journey -- From a Cold Hart to a Living World Under Glass | Complete |
 | [`20261105-085747_blazepod-rv64g-journey/`](date/202611/00/20261105-085747_blazepod-rv64g-journey/README.md) | Blazepod RV64G Journey -- From a Working Hart to a Living Server | **Acts I-II Complete (40/40 QEMU GREEN + `rv64_pill.rye` + BOM M41/M48); Physical Board Gate M42-M50 Awaiting Silicon** |

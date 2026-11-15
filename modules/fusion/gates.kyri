@@ -70,3 +70,6 @@ must_contain context/REMOTE_ROSTER.md grain-ww/202611-grain
 must_contain modules/fusion/fusion.brix cold_bridge
 ascii_7bit docs-geode/lessons/guides/README.md
 ascii_7bit docs-geode/tutorials/vantage-and-carry-interfaces.md
+max_cols 80 modules/fusion/sow_native_gates.rye
+max_cols 80 modules/resonance/studio_wav_bounce.rye
+max_cols 80 languages/glow/driver/glow_compile_cli.rye

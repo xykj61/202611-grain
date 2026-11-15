@@ -1,0 +1,5 @@
+::  languages/glow/examples/double_harvest.glow -- Standalone Glow gate!
+/!  16384
+|=  harvest=@ud                                         ::  input crate count
+^-  @ud                                                 ::  doubled + 7 bonus
+%+  add  (mul harvest 2)  7                             ::  2 * harvest + 7
