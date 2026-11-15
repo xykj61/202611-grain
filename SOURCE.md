@@ -106,7 +106,7 @@ gemini -y -m gemini-4-carbon
 ## 6. Next Horizons
 
 - **First 60 minutes hands-on:** [`docs-geode/tutorials/the-first-hour.md`](docs-geode/tutorials/the-first-hour.md)
-- **Active RFC project boards:** [`active-tablecloth/README.md`](active-tablecloth/README.md)
+- **Active RFC project boards:** [`active-pulp/README.md`](active-pulp/README.md)
 - **RAM-only (`4 GiB+`) + Von Neumann (`NVMe / Wi-Fi / Cellular`) Blazepod target:** [`blazepod/README.md`](blazepod/README.md)
 
 ---

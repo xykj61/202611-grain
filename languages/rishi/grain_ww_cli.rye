@@ -1,11 +1,14 @@
 //! languages/rishi/grain_ww_cli.rye -- Universal `grain-ww` Umbrella CLI!
 //!
-//! Stamp: `20261115.123500`.
+//! Stamp: `20261115.135500`.
 //! Sovereign umbrella binary (`brew install grain-ww`, `apt install grain-ww`,
 //! `nix profile install nixpkgs#grain-ww`, `pacman -S grain-ww`, `apk add
 //! grain-ww`) matching our `grain-ww.com` / `github.com/grain-ww` home:
 //!   - `grain-ww version`           -- Chronological stamp & Myofascia reading
-//!   - `grain-ww round-load`        -- Calfive 15-Sign round, element, & theme
+//!   - `grain-ww stamp [sprig.ext]` -- Auto-DST `-utc`/`-est`/`-edt` One-Clock
+//!   - `grain-ww pulp [board.md]`   -- `[15..9375]` prepend Movement stack
+//!   - `grain-ww puddle`            -- Live kernel UDP roaming Mosh/scp proof
+//!   - `grain-ww round-load`        -- Calfive 15-Sign movement & theme
 //!   - `grain-ww doctor`            -- <50 ms toolchain & Glasswall check
 //!   - `grain-ww prove`             -- Fusion gate runner
 //!   - `grain-ww sundial`           -- Live Sundial baton & health roll
@@ -23,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.134000";
-pub const myofascia_reading = "56.760";
+pub const grain_ww_version = "20261115.135500";
+pub const myofascia_reading = "56.775";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -51,6 +54,7 @@ fn run_doctor(io: std.Io) !u8 {
     print("  [GREEN] Rye compiler      : languages/rye/bin/rye{c}", .{nl});
     print("  [GREEN] Rishi steward     : languages/rishi/bin/rishi{c}", .{nl});
     print("  [GREEN] Vantage core      : modules/comlink/vantage/{c}", .{nl});
+    print("  [GREEN] Active Pulp room  : active-pulp/{c}", .{nl});
     print("  [GREEN] Myofascia reading : {s} / 100.000{c}", .{
         myofascia_reading,
         nl,
@@ -106,6 +110,33 @@ pub fn main(init: std.process.Init) !u8 {
     const sub = args[1];
     if (std.mem.eql(u8, sub, "selftest")) return run_selftest(io);
     if (std.mem.eql(u8, sub, "doctor")) return run_doctor(io);
+    if (std.mem.eql(u8, sub, "stamp")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/one_clock",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "pulp")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pulp_movement_stack",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "puddle")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/puddle_udp_live",
+            null,
+            args[2..],
+        );
+    }
     if (std.mem.eql(u8, sub, "round-load")) {
         return dispatch_exec(
             a,
@@ -115,7 +146,6 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-
     if (std.mem.eql(u8, sub, "prove")) {
         return dispatch_exec(
             a,

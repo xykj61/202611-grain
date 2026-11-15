@@ -31,9 +31,9 @@ let r_rl = run ["languages/rishi/bin/grain-ww" "round-load"]
 assert r_rl.ok else "grain-ww round-load failed"
 assert (r_rl.err contains "Calfive Round Load") else "round-load output missing header"
 
-# 3. Zero living `lotus_*` files in resonance/, vantage/include/, terrarium/, or active-tablecloth/
-let no_lotus = run ["sh" "-c" "! ls -d modules/resonance/*lotus* modules/comlink/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* active-tablecloth/date/202611/00/*lotus* 2>/dev/null"]
-assert no_lotus.ok else "leftover lotus_* path found in resonance, vantage, terrarium, or active-tablecloth!"
+# 3. Zero living `lotus_*` files in resonance/, vantage/include/, terrarium/, or active-pulp/
+let no_lotus = run ["sh" "-c" "! ls -d modules/resonance/*lotus* modules/comlink/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* active-pulp/date/202611/00/*lotus* 2>/dev/null"]
+assert no_lotus.ok else "leftover lotus_* path found in resonance, vantage, terrarium, or active-pulp!"
 
 # 4. Zero ascending numbers in guide filenames or compiler/citizen .glow headers
 let no_num_guides = run ["sh" "-c" "! ls docs-geode/lessons/guides/[0-9]* 2>/dev/null"]

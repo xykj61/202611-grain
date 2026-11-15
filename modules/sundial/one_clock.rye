@@ -1,28 +1,22 @@
 //! modules/sundial/one_clock.rye -- Set-and-Forget UTC / Auto-DST One-Clock!
 //!
-//! Stamp: `20261115.133500` -- Implements Keaton's enterprise & government
-//! One-Clock architecture:
-//!   - **Template default (`CLOCK_CONFIG.template.kyri`):** `UTC` (`utc`) so
-//!     any unconfigured clone worldwide emits unambiguous universal time!
-//!   - **Gitignored local `CLOCK_CONFIG.kyri`:** Set `zone America/New_York`
-//!     ONCE ("set and forget") -- pure civil-calendar math in Rye computes the
-//!     exact 2nd-Sunday-in-March `02:00` -> `edt` (`UTC-4`) and 1st-Sunday-in-
-//!     November `02:00` -> `est` (`UTC-5`) transitions automatically for 2026,
-//!     2027, and every future year with zero manual seasonal flips!
-//!   - Emits both code stamps (`YYYYMMDD.HHMMSS`) and explicit-zone file names
-//!     (`YYYYMMDD-HHMMSS-utc_sprig.ext` / `YYYYMMDD-HHMMSS-est_sprig.ext` /
-//!     `YYYYMMDD-HHMMSS-edt_sprig.ext`)!
+//! Stamp: `20261115.135500` -- Powers `grain-ww stamp [<sprig.ext>]`!
+//!   - Reads local gitignored `CLOCK_CONFIG.kyri` (falling back to universal
+//!     `UTC` from `context/templates/CLOCK_CONFIG.template.kyri` if absent),
+//!   - Automatically transitions `America/New_York` between `-est` (`UTC-5`)
+//!     and `-edt` (`UTC-4`) across March/November for all years,
+//!   - Mints approved `-utc` / `-est` / `-edt` dated filenames!
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const version = "20261115.133500";
+pub const version = "20261115.135500";
 const nl: u8 = 10;
 
 pub const ZonePolicy = enum(u8) {
-    utc_universal = 0,    // Template default for new users (`-utc`)
-    america_new_york = 1, // Auto-switching `est` (UTC-5) / `edt` (UTC-4)!
+    utc_universal = 0,
+    america_new_york = 1,
 };
 
 pub const CivilStamp = struct {
@@ -32,10 +26,9 @@ pub const CivilStamp = struct {
     hour: u32,
     minute: u32,
     second: u32,
-    abbr: []const u8, // "utc", "est", or "edt"
+    abbr: []const u8,
 };
 
-/// Howard Hinnant's proven `civil_from_days` algorithm (exact for all years!).
 fn civil_from_days(z_in: i64) struct { y: u32, m: u32, d: u32 } {
     const z = z_in + 719468;
     const era: i64 = @divFloor(if (z >= 0) z else z - 146096, 146097);
@@ -60,23 +53,17 @@ fn days_from_civil(y_in: u32, m_in: u32, d_in: u32) i64 {
     return era * 146097 + @as(i64, @intCast(doe)) - 719468;
 }
 
-/// Day of week (`0 = Sunday .. 6 = Saturday`) for `days` since 1970-01-01.
 fn weekday_sun0(days: i64) u32 {
-    const r = @mod(days + 4, 7);
-    return @intCast(r);
+    return @intCast(@mod(days + 4, 7));
 }
 
-/// Exact US Eastern DST check in UTC seconds:
-///   - Starts 2nd Sunday of March at `07:00 UTC` (`02:00 EST -> 03:00 EDT`),
-///   - Ends 1st Sunday of November at `06:00 UTC` (`02:00 EDT -> 01:00 EST`)!
 pub fn is_us_eastern_dst_utc(unix_sec: i64) bool {
     const days = @divFloor(unix_sec, 86400);
     const y = civil_from_days(days).y;
 
     const mar1 = days_from_civil(y, 3, 1);
     const mar1_dow = weekday_sun0(mar1);
-    const first_sun_mar = mar1 + @mod(7 - @as(i64, mar1_dow), 7);
-    const second_sun_mar = first_sun_mar + 7;
+    const second_sun_mar = mar1 + @mod(7 - @as(i64, mar1_dow), 7) + 7;
     const dst_start_utc = second_sun_mar * 86400 + 7 * 3600;
 
     const nov1 = days_from_civil(y, 11, 1);
@@ -103,7 +90,6 @@ pub fn resolve_stamp(unix_sec: i64, policy: ZonePolicy) CivilStamp {
     const days = @divFloor(adj_sec, 86400);
     const rem: u64 = @intCast(@mod(adj_sec, 86400));
     const ymd = civil_from_days(days);
-    // invariant: month in 1..12 and day in 1..31.
     assert(ymd.m >= 1 and ymd.m <= 12 and ymd.d >= 1 and ymd.d <= 31);
     return .{
         .year = ymd.y,
@@ -138,42 +124,83 @@ pub fn format_filename_stamp(
     );
 }
 
+fn load_policy(a: std.mem.Allocator, io: std.Io) ZonePolicy {
+    const cwd = std.Io.Dir.cwd();
+    const txt = cwd.readFileAlloc(
+        io,
+        "CLOCK_CONFIG.kyri",
+        a,
+        .limited(4096),
+    ) catch {
+        return .utc_universal;
+    };
+    if (std.mem.indexOf(u8, txt, "America/New_York") != null) {
+        return .america_new_york;
+    }
+    return .utc_universal;
+}
+
 fn run_selftest() !u8 {
-    // 1. Today (Nov 15, 2026 18:00 UTC) in America/New_York -> `13:00:00-est`!
     const nov_2026_utc: i64 = days_from_civil(2026, 11, 15) * 86400 + 18 * 3600;
     const s_nov = resolve_stamp(nov_2026_utc, .america_new_york);
     if (!std.mem.eql(u8, s_nov.abbr, "est") or s_nov.hour != 13) {
         return error.Nov2026NotEst;
     }
-
-    // 2. Mar 15, 2027 18:00 UTC (after Mar 14 switch!) -> `14:00:00-edt`!
     const mar_2027_utc: i64 = days_from_civil(2027, 3, 15) * 86400 + 18 * 3600;
     const s_mar = resolve_stamp(mar_2027_utc, .america_new_york);
     if (!std.mem.eql(u8, s_mar.abbr, "edt") or s_mar.hour != 14) {
         return error.Mar2027AutoSwitchFailed;
     }
-
-    // 3. Nov 8, 2027 18:00 UTC (after Nov 7 switch!) -> `13:00:00-est`!
     const nov_2027_utc: i64 = days_from_civil(2027, 11, 8) * 86400 + 18 * 3600;
     const s_nov27 = resolve_stamp(nov_2027_utc, .america_new_york);
     if (!std.mem.eql(u8, s_nov27.abbr, "est") or s_nov27.hour != 13) {
         return error.Nov2027AutoSwitchFailed;
     }
-
-    // 4. Template default `UTC` -> `18:00:00-utc_report.md`!
     const s_utc = resolve_stamp(nov_2026_utc, .utc_universal);
     var fbuf: [128]u8 = undefined;
     const fname = try format_filename_stamp(s_utc, "report.md", &fbuf);
     if (!std.mem.eql(u8, fname, "20261115-180000-utc_report.md")) {
         return error.BadUtcFilename;
     }
-
     print("GREEN: one_clock -- UTC & 2026/2027 EST<->EDT auto-DST.{c}", .{
         nl,
     });
     return 0;
 }
 
-pub fn main() !u8 {
-    return run_selftest();
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    const pol = load_policy(a, io);
+    const now_ts = std.Io.Clock.real.now(io);
+    const ns_per_s: i96 = 1_000_000_000;
+    const unix_sec: i64 = @intCast(@divFloor(now_ts.nanoseconds, ns_per_s));
+    const cs = resolve_stamp(unix_sec, pol);
+
+    if (args.len >= 2) {
+        var fbuf: [192]u8 = undefined;
+        const fname = try format_filename_stamp(cs, args[1], &fbuf);
+        print("{s}{c}", .{ fname, nl });
+    } else {
+        print(
+            "{d:0>4}{d:0>2}{d:0>2}.{d:0>2}{d:0>2}{d:0>2} ({s}){c}",
+            .{
+                cs.year,
+                cs.month,
+                cs.day,
+                cs.hour,
+                cs.minute,
+                cs.second,
+                cs.abbr,
+                nl,
+            },
+        );
+    }
+    return 0;
 }

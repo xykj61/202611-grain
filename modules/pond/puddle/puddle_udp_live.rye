@@ -1,0 +1,167 @@
+//! modules/pond/puddle/puddle_udp_live.rye -- Live Kernel UDP Roaming Daemon!
+//!
+//! Stamp: `20261115.135500` -- Powers `grain-ww puddle`!
+//! Binds real OS `AF_INET` `SOCK_DGRAM` UDP sockets on `127.0.0.1:0` and
+//! proves live native<->cloud `Pond Puddle` Mosh-style roaming:
+//!   1. Opens real `Puddle` server UDP socket + enrolls `Kumara` Ed25519 key,
+//!   2. Sends signed `epoch_seq=1` turn from **UDP Socket A** (office Wi-Fi),
+//!   3. Switches to a brand-new **UDP Socket B** (cellular LTE roam -- new OS
+//!      source port!), sends signed `epoch_seq=2` turn, and receives the
+//!      server's signed `ACK:2` datagram back on **Socket B** seamlessly!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const c = std.c;
+const Ed25519 = std.crypto.sign.Ed25519;
+const puddle = @import("puddle_remote.rye");
+
+pub const version = "20261115.135500";
+const nl: u8 = 10;
+
+/// Wire frame: `[epoch_seq: u64 LE (8B)][pubkey (32B)][sig (64B)][diff (N B)]`
+fn pack_wire_turn(
+    epoch_seq: u64,
+    kp: Ed25519.KeyPair,
+    diff: []const u8,
+    out: []u8,
+) ![]const u8 {
+    assert(out.len >= 104 + diff.len);
+    std.mem.writeInt(u64, out[0..8], epoch_seq, .little);
+    const pk_b = kp.public_key.toBytes();
+    @memcpy(out[8..40], &pk_b);
+    const sig = try kp.sign(diff, null);
+    const sig_b = sig.toBytes();
+    @memcpy(out[40..104], &sig_b);
+    @memcpy(out[104 .. 104 + diff.len], diff);
+    return out[0 .. 104 + diff.len];
+}
+
+fn bind_loopback_udp(port_out: *u16) !c.fd_t {
+    const fd = c.socket(c.AF.INET, c.SOCK.DGRAM, 0);
+    if (fd < 0) return error.SocketCreateFailed;
+
+    var addr = std.mem.zeroes(c.sockaddr.in);
+    addr.family = c.AF.INET;
+    addr.port = 0;
+    addr.addr = std.mem.nativeToBig(u32, 0x7F00_0001); // 127.0.0.1
+
+    if (c.bind(fd, @ptrCast(&addr), @sizeOf(c.sockaddr.in)) != 0) {
+        _ = c.close(fd);
+        return error.BindFailed;
+    }
+    var bound = std.mem.zeroes(c.sockaddr.in);
+    var slen: c.socklen_t = @sizeOf(c.sockaddr.in);
+    if (c.getsockname(fd, @ptrCast(&bound), &slen) != 0) {
+        _ = c.close(fd);
+        return error.GetsocknameFailed;
+    }
+    port_out.* = std.mem.bigToNative(u16, bound.port);
+    // invariant: kernel assigned a non-zero ephemeral UDP port on 127.0.0.1.
+    assert(port_out.* > 0);
+    return fd;
+}
+
+fn send_and_step_server(
+    cli_fd: c.fd_t,
+    srv_fd: c.fd_t,
+    srv_port: u16,
+    host: *puddle.PuddleHost,
+    pkt: []const u8,
+) !u16 {
+    var dst = std.mem.zeroes(c.sockaddr.in);
+    dst.family = c.AF.INET;
+    dst.port = std.mem.nativeToBig(u16, srv_port);
+    dst.addr = std.mem.nativeToBig(u32, 0x7F00_0001);
+
+    const sent = c.sendto(
+        cli_fd,
+        pkt.ptr,
+        pkt.len,
+        0,
+        @ptrCast(&dst),
+        @sizeOf(c.sockaddr.in),
+    );
+    if (sent != @as(isize, @intCast(pkt.len))) return error.SendFailed;
+
+    var rx: [256]u8 = undefined;
+    var peer = std.mem.zeroes(c.sockaddr.in);
+    var plen: c.socklen_t = @sizeOf(c.sockaddr.in);
+    const n_isize = c.recvfrom(
+        srv_fd,
+        &rx,
+        rx.len,
+        0,
+        @ptrCast(&peer),
+        &plen,
+    );
+    if (n_isize < 104) return error.ShortUdpFrame;
+    const n: usize = @intCast(n_isize);
+    const peer_port = std.mem.bigToNative(u16, peer.port);
+
+    const seq = std.mem.readInt(u64, rx[0..8], .little);
+    var pk: [32]u8 = undefined;
+    @memcpy(&pk, rx[8..40]);
+    var sig: [64]u8 = undefined;
+    @memcpy(&sig, rx[40..104]);
+
+    try host.step_roaming_turn(.{
+        .epoch_seq = seq,
+        .client_ip_tag = peer_port,
+        .state_diff = rx[104..n],
+        .pubkey = pk,
+        .sig = sig,
+    });
+
+    // Send ACK back to whichever roaming socket just spoke!
+    var ack_buf: [32]u8 = undefined;
+    const ack = try std.fmt.bufPrint(&ack_buf, "PUDDLE_ACK:{d}", .{seq});
+    _ = c.sendto(srv_fd, ack.ptr, ack.len, 0, @ptrCast(&peer), plen);
+    assert(peer_port > 0);
+    return peer_port;
+}
+
+pub fn main() !u8 {
+    var srv_port: u16 = 0;
+    var wifi_port: u16 = 0;
+    var lte_port: u16 = 0;
+    const srv_fd = try bind_loopback_udp(&srv_port);
+    defer _ = c.close(srv_fd);
+    const wifi_fd = try bind_loopback_udp(&wifi_port);
+    defer _ = c.close(wifi_fd);
+    const lte_fd = try bind_loopback_udp(&lte_port);
+    defer _ = c.close(lte_fd);
+
+    var host = puddle.PuddleHost.init();
+    const seed: [32]u8 = @splat(0x5A);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    try host.enroll_kumara_pubkey(kp.public_key.toBytes());
+
+    var p1_buf: [192]u8 = undefined;
+    const p1 = try pack_wire_turn(1, kp, "pane:tty0,row=1", &p1_buf);
+    const seen1 = try send_and_step_server(
+        wifi_fd,
+        srv_fd,
+        srv_port,
+        &host,
+        p1,
+    );
+
+    // Roam to LTE UDP socket (different port!) & receive ACK on LTE socket!
+    var p2_buf: [192]u8 = undefined;
+    const p2 = try pack_wire_turn(2, kp, "pane:tty0,row=2", &p2_buf);
+    const seen2 = try send_and_step_server(lte_fd, srv_fd, srv_port, &host, p2);
+    if (seen1 == seen2) return error.SocketsDidNotDiffer;
+
+    var ack_rx: [64]u8 = undefined;
+    const got = c.recvfrom(lte_fd, &ack_rx, ack_rx.len, 0, null, null);
+    if (got <= 0) return error.MissingRoamedAck;
+    const ack_s = ack_rx[0..@intCast(got)];
+    if (!std.mem.eql(u8, ack_s, "PUDDLE_ACK:2")) return error.BadRoamedAck;
+
+    print(
+        "GREEN: puddle_udp_live -- UDP roam :{d} -> :{d} -> ACK proven.{c}",
+        .{ seen1, seen2, nl },
+    );
+    return 0;
+}

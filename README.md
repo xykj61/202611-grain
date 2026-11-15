@@ -41,9 +41,9 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.760** / 100.000 |
+| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.775** / 100.000 |
 | **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **30** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.134000** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.135500** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->
@@ -74,7 +74,7 @@ Every runtime faculty inside [`modules/`](modules/README.md) co-locates its pure
 | **Isolation & Custody** | [`modules/caravan/`](modules/caravan/), [`modules/pond/`](modules/pond/README.md), [`modules/crypto/`](modules/crypto/) | Fault-isolated capability supervision, auditable key retention/erasure (`caravan/custody/`), citizen sandboxes, and SHA3 / ChaCha20-Poly1305 / Ed25519 |
 | **Storage, Wire & Market** | [`modules/blaze/`](modules/blaze/src/main.rye), [`modules/tablecloth/`](modules/tablecloth/README.md), [`modules/amphora/`](modules/amphora/README.md), [`modules/kumara/`](modules/kumara/README.md), [`modules/comlink/`](modules/comlink/README.md), [`modules/market/`](modules/market/README.md) | Content-addressed weaves, vector & named-bead search, sealed vessels, sovereign identity, encrypted P2P wire turns, and balanced double-entry Dimeroll accounting |
 | **Surface, Studio, AI & Apps** | [`modules/brushstroke/`](modules/brushstroke/README.md), [`modules/resonance/`](modules/resonance/README.md), [`modules/flare/`](modules/flare/README.md), [`modules/apps/`](modules/apps/README.md) | Immediate-mode `FrameGrid` UI (`skate/` + `image/`), 48 kHz creative audio studio (`mikrophone/` + `composition/`), license-clean local AI, and citizen apps (`linengrow`, `bloom`, `mycelium`, `colloquium`) |
-| **Truth, Plans & Vaults** | [`docs-geode/`](docs-geode/README.md), [`active-tablecloth/`](active-tablecloth/README.md), [`mitra-shed/`](mitra-shed/README.md), [`yonder/`](yonder/README.md) | Unified crystal documentation, active RFC boards, Anuradha/Mitra *accrete-never-break* fossil prep (`shed-prep.md`), and the single bottom-sorted `yonder/` archive vault |
+| **Truth, Plans & Vaults** | [`docs-geode/`](docs-geode/README.md), [`active-pulp/`](active-pulp/README.md), [`mitra-shed/`](mitra-shed/README.md), [`yonder/`](yonder/README.md) | Unified crystal documentation, prepend-to-front Pulp movement boards, Anuradha/Mitra *accrete-never-break* fossil prep (`shed-prep.md`), and the single bottom-sorted `yonder/` archive vault |
 
 Brand marks -- featuring **Cavalhatriz** + **Noto Sans Mono** (alongside `Iosevka`, `JetBrains Mono`, and `Fira Code`) in our vegan **Oat / Material Purple / Material Red** palette -- live in [`assets/`](assets/README.md).
 

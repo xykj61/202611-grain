@@ -31,7 +31,6 @@
 !/LICENSE-MIT
 !/LICENSE-APACHE
 !/LICENSE-CC-BY
-!/PUBKEYS.template.md
 !/PUBKEYS.md
 !/CONTRIBUTING.md
 !/Makefile
@@ -67,7 +66,7 @@ modules/**/.zig-cache/
 !/active-designing/
 !/active-development/
 !/active-reviving/
-!/active-tablecloth/
+!/active-pulp/
 !/bloom/
 !/waymarks/
 !/journey/

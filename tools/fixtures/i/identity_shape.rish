@@ -6,12 +6,12 @@
 # Run from the repository root:
 #   rishi/bin/rishi run tools/fixtures/i/identity_shape.rish
 
-let template = run ["sh" "-c" "test -f PUBKEYS.template.md"]
+let template = run ["sh" "-c" "test -f context/templates/PUBKEYS.template.md"]
 assert template.ok else "template missing"
 
 let has_root = run ["sh" "-c" "test -f PUBKEYS.md"]
 let has_context = run ["sh" "-c" "test -f context/PUBKEYS.md"]
-if (has_root.ok == false) then if (has_context.ok == false) then say "No PUBKEYS.md at root or context/ — forks begin from PUBKEYS.template.md."
+if (has_root.ok == false) then if (has_context.ok == false) then say "No PUBKEYS.md at root or context/ — forks begin from context/templates/PUBKEYS.template.md."
 if (has_root.ok == false) then if (has_context.ok == false) then say "IDENTITY-GREEN (template-only)"
 if (has_root.ok == false) then if (has_context.ok == false) then exit 0
 

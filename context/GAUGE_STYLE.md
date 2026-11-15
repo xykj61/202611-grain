@@ -23,5 +23,5 @@ A carpenter's **marking gauge** scores one crisp, true line in wood before the s
 Match header weight to the distance of the reader:
 
 - **Door (`README.md`, room `README.md`, `SOURCE.md`):** Welcoming front threshold -- carries `Language`, `Stamp`, `Voice`, `Style`, and `Status` (`Room: checkable | vision | mixed`), followed immediately by plain-English purpose and runnable commands.
-- **Field (`active-tablecloth/`, `blazepod/`, architecture specs):** Working blueprints -- crisp ASCII block diagrams, bounded memory tables, and numbered orbits.
+- **Field (`active-pulp/`, `blazepod/`, architecture specs):** Working blueprints -- crisp ASCII block diagrams, bounded memory tables, and numbered orbits.
 - **Bench (`session-logs/`, `mitra-shed/SHRED_PREP.md`, `.kyri` receipts):** Compact operational records -- zero filler, exact commit nibs, exact witness verdicts.

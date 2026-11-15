@@ -22,7 +22,7 @@
 | **[`assets/`](assets/README.md)** | Outlined SVG+PNG brand suite (`iosevka`, `jetbrains-mono`, `fira-code`, `noto-sans-mono`) in vegan `oat`/`evergreen`/`amber`, `keys/`, and `press/` |
 | **[`context/`](context/README.md)** | Single-stranded style & TAME canons, `SPELLBOOK.md`, `MODEL_ROSTER.kyri`, and `templates/` (`PUBLISH_TARGETS.template.kyri`) |
 | **[`foundations/`](foundations/README.md)** | Timeless architectural, sovereign-custody, and biocyclic vegan ecological essays |
-| **[`active-tablecloth/`](active-tablecloth/README.md)** | Living project boards folded under `date/YYYYMM/NN/` |
+| **[`active-pulp/`](active-pulp/README.md)** | Living Markdown checklists & prepend-to-front `[15 75 375 1875 9375]` Movement stacks (`grain-ww pulp`), folded under `date/YYYYMM/NN/` |
 | **[`nixos/`](nixos/README.md)** | Declarative NixOS pier closures and [`grain-ww` 5-distro recipes](nixos/grain-ww-packaging/README.md) (`brew`, `nix`, `apt`, `pacman`, `apk`) |
 | **[`tools/`](tools/)** | Plain-named Rishi witnesses (`*_witness.rish`) and deterministic build scripts |
 | **[`gratitude/`](gratitude/README.md)** | Clean-room upstream acknowledgments and full license texts |

@@ -34,7 +34,6 @@ allow LICENSE-CC-BY
 allow LICENSE-MIT
 allow MAP.md
 allow ORGANIZING.md
-allow PUBKEYS.template.md
 allow README.md
 allow SECURITY.md
 allow SOURCE.md
@@ -85,7 +84,6 @@ scrub     LICENSE-CC-BY
 scrub     LICENSE-MIT
 scrub     MAP.md
 scrub     ORGANIZING.md
-template  PUBKEYS.template.md
 scrub     README.md
 scrub     SECURITY.md
 scrub     SOURCE.md
@@ -121,7 +119,7 @@ personal  PUBKEYS.md
 personal  SAFE.md
 personal  SKILL.md
 personal  STEWARDS.md
-personal  active-tablecloth
+personal  active-pulp
 personal  construction
 personal  journey
 personal  publish-redirect.rish
