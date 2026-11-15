@@ -4,30 +4,20 @@
 # Format: one key-value pair per line, space-separated. Lines starting with
 # '#' are comments; blank lines are ignored.
 #
-# Molted 20260810.145743 from the elder "veganreyklah2" descriptor
-# (version 20260629.004912) for fascia health; refreshed 20261114.203000 to
-# seat multi-provider model metadata and gemini-4-carbon as the Gemini-class
-# default for model usage and upstream branch pushing on xy.
-#
-# Keys:
-#   name     -- the project name (one value)
-#   version  -- descriptor version (Rye chronological stamp)
-#   remote   -- primary git ordering remote
-#   branch_* -- integration and per-provider upstream push branches
-#   model_*  -- default model id per provider class
-#   door_*   -- root instruction file per agent CLI
-#   file     -- one tracked brick/source file (multiple, in order)
-#   alias    -- typo resolution (from to). Seated 20260727.235754.
+# Refreshed 20261115.031500: myofascia 56.505, unified root yonder/,
+# clean-sheet docs-geode/, blazepod/, mitra-shed/, and Gemini 4 Carbon primary
+# bench (.claude and .cursor archived under yonder/).
 
 name grain
-version 20261114.203000
+version 20261115.032000
+myofascia 56.510
 
 # Upstream git remote and branch-pushing defaults
 remote xy
 branch_main main
 branch_push_default gemini-4-carbon
 
-# Multi-provider model and door metadata (full table: context/MODEL_ROSTER.kyri)
+# Active primary bench: Google Gemini CLI (gemini-4-carbon)
 provider_gemini Google
 product_gemini Gemini CLI
 model_gemini gemini-4-carbon
@@ -36,14 +26,14 @@ push_remote_gemini xy
 push_branch_gemini gemini-4-carbon
 door_gemini GEMINI.md
 settings_gemini .gemini/settings.json
+rules_gemini .gemini/rules/README.md
 
+# Archived benches preserved in yonder/ (full table: context/MODEL_ROSTER.kyri)
 provider_claude Anthropic
 product_claude Claude Code
 model_claude claude-opus-4-6
-model_claude_settings claude-sonnet-4-6
-branch_claude claude-opus-4-6
-door_claude CLAUDE.md
-settings_claude .claude/settings.json
+door_claude yonder/claude/CLAUDE.md
+settings_claude yonder/claude/settings.json
 
 provider_codex OpenAI
 product_codex Codex CLI
@@ -52,26 +42,19 @@ model_codex gpt-6-sol
 provider_cursor Cursor
 product_cursor Cursor Agent CLI
 model_cursor grok-4.7-high
-settings_cursor .cursor/cli.json
+settings_cursor yonder/cursor/cli.json
 
 provider_opencode Together AI
 product_opencode OpenCode
 model_opencode together/deepseek-ai/DeepSeek-V4-Pro-0813
-door_opencode AGENTS.md
+door_opencode yonder/opencode-AGENTS.md
 
 provider_antigravity Google
 product_antigravity Antigravity CLI
 binary_antigravity agy
 
-# Typo resolution (Brix) -- Prim was a mis-hear of Prin
+# Typo and synthesis aliases
 alias Prim Prin
-
-# The six bodies and their synthesis (seated 20260827.212800, Keaton's word).
-# Three presence-and-absence pairs -- Mind/Mystery, Sound/Silence, Dream/Hush --
-# and CHOIR, the seventh launch that is not a seventh hand: one voice
-# performing all six lanes in one bounded round, only while every loop is
-# stopped. Synonym discipline: "synthesis launch" and "the seventh seat" are
-# spoken forms of Choir; neither is a second implementation (alias-sameness).
 alias Synthesis Choir
 file tools/l/launch-choir-synthesis-chapter.rish
 
@@ -81,9 +64,10 @@ file rye/src/main.rye
 # Rishi shell
 file rishi/src/main.rye
 
-# Tally memory model
+# Tally memory model and Blazepod two-mode profile
 file tally/seed.rye
 file tally/gardens.rye
+file blazepod/blazepod.brix
 
 # Caravan supervision
 file caravan/seed.rye
@@ -94,26 +78,26 @@ file caravan/chain.rye
 # Blaze version control
 file blaze/src/main.rye
 
-# Gate trio -- Rishi only (tools/*.rish)
+# Gate witness runner
 file tools/p/parity.rish
 
-# Flare, the inference module (Lattice - Pulp - Lantern - Kiln) -- named
-# 20260827, REDS %300; elder name Q-vane stays a readable peer. The craft
-# faculty is Kiln from 20260827.195316.
-file lattice/lattice_core.rye
-file pulp/pulp_core.rye
-file lantern/lantern_core.rye
+# Flare inference faculties (Lattice - Pulp - Lantern - Kiln)
+file flare/lattice/lattice_core.rye
+file flare/pulp/pulp_core.rye
+file flare/lantern/lantern_core.rye
 file flare/flare_core.rye
 
 # Identity and topology (Kumara - Comlink)
 file kumara/kumara.rye
 file comlink/topology.rye
 
-# Sundial -- the health face
+# Sundial -- health percent and myofascia indicator
 file sundial/sundial.rye
 
-# Living documentation and multi-provider metadata
+# Living front doors, geode, shed ledger, and model roster
 file GEMINI.md
+file README.md
+file SOURCE.md
+file docs-geode/README.md
+file mitra-shed/README.md
 file context/MODEL_ROSTER.kyri
-file construction/ROADMAP.md
-file construction/TASKS.md

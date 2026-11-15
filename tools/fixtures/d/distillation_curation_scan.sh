@@ -97,6 +97,8 @@ BEGIN {
   vcounts[verdict]++
   if (mode == "--ledger" && verdict != "archive_custody") {
     print verdict, reason, p
+  } else if (mode == "--prune-list" && verdict == "archive_custody") {
+    print p
   }
 }
 END {

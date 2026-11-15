@@ -2,6 +2,7 @@
 
 | Stamp | Title | Notes |
 |---|---|---|
+| 20261114.235900 | [Distillation Quest 1 landed](20261114/20261114-235900_essential-distillation-quest1-landed.kyri.md) | 27,880 -> 9,031 files (-18,849); 14 stub/closed rooms shed |
 | 20261114.203000 | [seat gemini-4-carbon branch, Gemini doors/rules/dotfiles, and multi-provider metadata](20261114/20261114-203000_gemini-4-carbon-bench-and-metadata.kyri.md) | Branch gemini-4-carbon + xy/gemini-4-carbon push defaults, GEMINI.md, .gemini/settings.json, .geminiignore, gemini-bench rule twins, .brix, and MODEL_ROSTER.kyri |
 | 20261114.181500 | [Glow SLC exploration -- no full SLC built yet](20261114/20261114-181500_glow-slc-exploration.kyri.md) | 505 .glow files surveyed, all generators and placards, no complete application |
 | 20261114.180200 | [Seventh Sense Software (7s.software) review](20261114/20261114-180200_seventh-sense-software-review.kyri.md) | Seven principles closely parallel Grain disciplines, no DJINN mention found |

@@ -25,7 +25,7 @@ This second Glow board charts the architectural leap that turns those proofs int
 
 ## 2. Measured Baseline and Cross-Bench Findings (`20261114`)
 
-Two independent studies on `20261114` -- the carbon bench's [first-principles study](../../../../../external-research/date/20261114/20261114-214200_glow-first-principles-hoon-runes-and-compiler.md) and [counsel reply](../../../../../counsel/replies/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md), alongside Claude Opus 4.6's coverage map (`20261114.214130`) and cross-bench reply (`20261114.222433`) -- established the exact ground at commit `d98bbaac`:
+Two independent studies on `20261114` -- the carbon bench's [first-principles study](../../../../../external-research/date/20261114/20261114-214200_glow-first-principles-hoon-runes-and-compiler.md) and [counsel reply](../../../../../active-designing/date/20261114/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md), alongside Claude Opus 4.6's coverage map (`20261114.214130`) and cross-bench reply (`20261114.222433`) -- established the exact ground at commit `d98bbaac`:
 
 - **137 `.rye` files sit flat in `glow/`:** 22 `rune_*.rye` parsers, 33 `lower_*.rye` emitters (`lower_shop_gate.rye` at 101 KB, `lower_face.rye` at 64 KB), 64 `*_witness.rye` checks, and core seams (`glow_run.rye` at 764 lines; `tokens.rye` at 624 lines), plus **385** fixture desks under `glow/gen/a..z/`.
 - **30 digraph heads run live in `glow/tokens.rye` and `tools/fixtures/g/glow_digraph_table.txt`**, spanning 8 of Hoon's 13 rune families (`|+`, `%^`, `?&`, and `?|` are all live and witnessed in `lower_shop_gate_witness.rye`), while `active-designing/docs/glow/runes.md` still lists only **21** -- proving why one data table must generate both lexer dispatch and documentation.
@@ -143,7 +143,7 @@ Once `Sheaf`, `Pith`, `Mill`, `|_` doors, `=^` state threading, `;~` wire parser
 - **Master 25-Orbit Checklist & Rationale:** [`CHECKLIST.md`](CHECKLIST.md)
 - **Milestone Progress Log:** [`PROGRESS.md`](PROGRESS.md)
 - **First-Principles Study (`external-research/`):** [`../../../../../external-research/date/20261114/20261114-214200_glow-first-principles-hoon-runes-and-compiler.md`](../../../../../external-research/date/20261114/20261114-214200_glow-first-principles-hoon-runes-and-compiler.md)
-- **Cross-Bench Reply (`counsel/replies/`):** [`../../../../../counsel/replies/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md`](../../../../../counsel/replies/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md)
+- **Cross-Bench Reply (`counsel/replies/`):** [`../../../../../active-designing/date/20261114/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md`](../../../../../active-designing/date/20261114/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md)
 - **Prior Glow Journey (Complete):** [`../20261103-184811_glow-language-journey/README.md`](../20261103-184811_glow-language-journey/README.md)
 - **Terrarium Boot Journey (Complete):** [`../20261104-161857_terrarium-boot-journey/README.md`](../20261104-161857_terrarium-boot-journey/README.md)
 - **Living ITINERARY:** [`../../../../../construction/ITINERARY.md`](../../../../../construction/ITINERARY.md)

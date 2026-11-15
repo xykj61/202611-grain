@@ -1,1 +1,5 @@
-../../../waymarks/date/20260801/20260801-134653_e182-q46-errors-named-green.md
+# Waymark — e182 Q46 errors named GREEN
+
+**Stamp:** `20260801.134653` · Equinox · Amphora CLI · J3  
+**GREEN:** 26 faults · 26 doors · RestoreUnwritable grown · IdentityFork kept  
+**Next:** kg Q47 audits

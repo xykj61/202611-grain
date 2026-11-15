@@ -1,10 +1,9 @@
-# Gemini CLI indexing -- leave git truth whole; skip heavy / closed shelves.
-# Twin of .cursorignore for Gemini CLI (.gemini/settings.json respects both
-# .gitignore and .geminiignore). Syntax: gitignore-shaped.
+# Gemini CLI indexing -- leave git truth whole; skip heavy / yondered shelves.
+# Syntax: gitignore-shaped (.gemini/settings.json respects .gitignore and .geminiignore).
 
-# --- Closed archive shelves (every module's archive/ is cold storage) ---
+# --- The single cold-horizon & archive vault (open explicitly by path if needed) ---
+yonder/
 **/archive/
-.cursor-archive/
 
 # --- Build caches and emitted binaries ---
 tools/.cache/
@@ -17,7 +16,7 @@ glow/bin/
 rye/bin/
 rishi/bin/
 
-# --- Heavy vendored / elder reference trees (still on disk; open by path) ---
+# --- Heavy vendored reference trees ---
 vendor/
 old/
 vere/
@@ -25,7 +24,6 @@ gratitude/nix/
 gratitude/s6/
 gratitude/skalibs/
 gratitude/zon/
-external-research/yonder/strengthening-compiler/
 
 # --- Editor / agent / enclosure local state ---
 loops/

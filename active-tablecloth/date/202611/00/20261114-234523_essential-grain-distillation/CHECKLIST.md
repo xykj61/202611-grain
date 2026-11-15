@@ -18,24 +18,17 @@
   Restored all **328** dereferenced working-tree symlinks in `202611-grain-gemini-4-carbon` (`313` `[ T]` file symlinks + `15` `[ D]` directory symlinks across `pond/apps/` and `rye/lib/`), bringing `git status --porcelain | grep -cE '^ [TD] '` to **`0`**, and verified `rye/bin/rye build glow/digraph_twin_check.rye` compiles and runs `OK digraph_twin_check 30` on metal. Seated the explicit archive-custody walk-back checkpoint in `construction/ITINERARY.md` and `context/REMOTE_ROSTER.md` naming `xykj61/20260618-grain` + founding commit `c2614369` + baseline nib `d98bbaac`.
   **SLC gate:** `git status --porcelain | grep -cE '^ [TD] '` == `0`; `OK digraph_twin_check 30` GREEN on metal; archive-custody nib and forge URL recorded.
 
-- [ ] **Orbit 2 -- Curation ledger and graduation harvest for `active-designing/` and `external-research/`** (scan & ledger seated `20261114.235200`; cut awaits word)
-  Deterministic scan seated at `tools/fixtures/d/distillation_curation_scan.sh` (`candidates_total=1915`, `keep_canon=25`, `keep_cited=519`, `keep_recent=13`, **`keep_total=557`**, **`archive_custody=1358`**, `verdict=ok`):
-  1. `keep_canon=25`: `active-designing/docs/glow/` (11 Glow reference specs), `external-research/TAME_GUIDANCE.md`, room doors, `active-reviving/` (5), and `research-silo/` (2).
-  2. `keep_cited=519`: every file cited by any living module, foundation, `context/` page, rule, `docs-geode/`, or `active-tablecloth/` board (guaranteeing `0` broken living citations).
-  3. `keep_recent=13`: all additional `202611*` architectural studies and designs.
-  4. Next mechanical step (on explicit prune/debride word): fold `active-reviving/` and `research-silo/` into their curated parents, remove the `1,358` `archive_custody` files, and sync `active-designing/README.md` and `external-research/README.md`.
-  **SLC gate:** Every surviving link from living rooms into `active-designing/` and `external-research/` resolves at `0` broken refs; `1,358` unreferenced pre-`202611` scratch/cold files shed cleanly.
+- [x] **Orbit 2 -- Curation ledger and graduation harvest for `active-designing/` and `external-research/`** (landed `20261114.235900`)
+  Ran `sh tools/fixtures/d/distillation_curation_scan.sh --prune-list` after checkpoint `c09f5b8a`: kept **100%** of `keep_total=557` (`25` canon/docs, `519` living-cited essays, `13` additional `202611` studies), pruned all **`1,358`** unreferenced `archive_custody` files plus `research-silo/` (`2` files), and synced `external-research/README.md`.
+  **SLC gate:** Every surviving link from living rooms into `active-designing/` and `external-research/` resolves at `0` broken refs; `1,360` unreferenced pre-`202611` scratch/cold files shed cleanly.
 
-- [ ] **Orbit 3 -- Prune pre-`20261114` testimony, `construction/archive/`, and retired history shelves**
-  Lift today's cross-bench reply (`counsel/replies/20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md`) into `active-designing/date/20261114/` and today's reroot continuation prompt (`expanding-prompts/date/20261114/...`) into `fleet/`, then remove the pre-reroot/closed shelves preserved in `xykj61/20260618-grain`:
-  - `session-logs/` pre-`20261114` shelves (-14,012 files; keeping `session-logs/README.md` and `date/20261114+`),
-  - `construction/archive/` and superseded summer scratch (-1,555 files; keeping live `README.md`, `ITINERARY.md`, `ROADMAP.md`, `TASKS.md`, `REDS.md`),
-  - closed `counsel/` (-852), retired `waymarks/` (-284), pre-reroot `expanding-prompts/` (-679), `recursion-prompts/` (-90), fossil `arbor/` (-9), `.cursor-archive/` (-2), and `upstream/` (-2).
-  **SLC gate:** Tracked repository count drops by **~17,480 files** in one clean pass; `session-logs/README.md` and `construction/README.md` match on-disk contents cleanly.
+- [x] **Orbit 3 -- Prune pre-`20261114` testimony, `construction/archive/`, and retired history shelves** (landed `20261114.235900`)
+  Lifted `20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md` into `active-designing/date/20261114/` and `20261114-125422_chapter-incense-reroot-continuation.md` into `fleet/`, then removed pre-`20261114` `session-logs/` (`14,012` files), `construction/archive/` + `construction/yonder/` + summer scratch (`1,551` files), and closed/retired rooms `counsel/`, `waymarks/`, `expanding-prompts/`, `recursion-prompts/`, `arbor/`, `.cursor-archive/`, and `upstream/` (all preserved at checkpoint `c09f5b8a` / `d98bbaac` and `xykj61/20260618-grain`).
+  **SLC gate:** `session-logs/README.md` holds `20261114` open shelf cleanly; `construction/` holds only its living operator pins and active specs.
 
-- [ ] **Orbit 4 -- Retire 1-file pointer and mirror-stub rooms**
-  Retire root redirect/mirror rooms whose canonical content already lives elsewhere: `mandate/` (1 -> `tablecloth/`), `dexter/` (1 -> `brushstroke/`), `mitra/` (1), `biochemistry/` (1 -> `context/CHEMICAL_FORMULAS.md`), `flare-voices/` (1 -> `context/KYRI.md`), and `spellbook/` (2 -> `context/SPELLBOOK.md`), clearing `context/document-mirrors.brix` (which also resolves the pre-existing `flare-voices/KYRI.md` link error we measured earlier!) and repointing inbound citations.
-  **SLC gate:** `sh tools/fixtures/d/document_mirror_scan.sh` (or its retired replacement) and markdown link checks across `README.md`, `SKILL.md`, and `MAP.md` report `0` unresolved links.
+- [x] **Orbit 4 -- Retire 1-file pointer and mirror-stub rooms** (landed `20261114.235900`)
+  Retired redirect/mirror stub rooms `mandate/`, `dexter/`, `mitra/`, `biochemistry/`, `flare-voices/`, and `spellbook/` along with `context/document-mirrors.brix` (resolving the `flare-voices/KYRI.md` mirror link defect at the root), and synced `README.md` and `MAP.md`. **Quest 1 total delta:** tracked files dropped from **`27,880` to `9,031` (`-18,849` files)** and root directories from **`96` to `83` (`-13` net after `.gemini/`)**.
+  **SLC gate:** `README.md`, `MAP.md`, `external-research/README.md`, `session-logs/README.md`, and `active-designing/date/20261114/` report `100%` resolved links (`truth_counted=100`).
 
 ---
 
@@ -43,13 +36,9 @@
 
 *Group sibling faculties under their natural parent rooms so `ls` at the repository root tells the whole story of Grain on one screen.*
 
-- [ ] **Orbit 5 -- Unify `flare/`, `brushstroke/`, and `resonance/` faculties**
-  Nest sub-faculties that already belong to one module domain:
-  - Move `lattice/` (4), `pulp/` (9), and `lantern/` (36) into `flare/{lattice,pulp,lantern}/` (matching `flare/README.md`'s four-faculty architecture).
-  - Move `skate/` (18) and `image/` (233) into `brushstroke/{skate,image}/`.
-  - Move `mikrophone/` (17) and `composition/` (12) into `resonance/{mikrophone,composition}/`.
-  Update internal `@import` / `.rye` paths and rebuild each module's selftest binary on metal.
-  **SLC gate:** `flare`, `brushstroke`, and `resonance` selftests and Rishi witnesses build and pass 100% GREEN; 7 root directories fold cleanly into 3.
+- [x] **Orbit 5 -- Unify `flare/`, `brushstroke/`, and `resonance/` faculties** (landed `20261115.002500`)
+  Nested `lattice/` (4), `pulp/` (9), and `lantern/` (36) into `flare/{lattice,pulp,lantern}/`; `skate/` (18) and `image/` (233) into `brushstroke/{skate,image}/`; and `mikrophone/` (17) and `composition/` (12) into `resonance/{mikrophone,composition}/`. Repointed all 41 relative symlinks across `brushstroke/`, `pond/apps/`, `granary/`, and `linengrow/`, materialized `pond/apps/corpora/waymark_green.md` (`0` broken symlinks repo-wide), updated `.brix`, `.gitignore`, and `MAP.md`, and shrunk root directories from **`83` to `76` (`-7`)**.
+  **SLC gate:** `flare`, `brushstroke`, `pond/apps/corpus_real_flare`, and `resonance/mikrophone` selftests and `bricks_exist_witness.rish` build and pass 100% GREEN; `0` broken symlinks across the tree.
 
 - [ ] **Orbit 6 -- Unify Identity (`kumara/`), Wire (`comlink/`), Vessels (`amphora/`), Records (`kyri/`), and Enclave (`caravan/`)**
   Consolidate small sibling rooms into their primary domain homes:

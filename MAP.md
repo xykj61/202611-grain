@@ -27,7 +27,7 @@ Welcome, traveler. Something over a hundred doors face you at this root -- `ls -
 | **3 - The Why** | The reasons beneath the work | `foundations/` - `saga/` |
 | **4 - The Language & the Machines** | Glow and the module ring | `glow/` - `src/` - the ring |
 | **5 - The Teaching** | Pages that teach only what runs | `docs/` - `docs-geode/` - `manual/` - `docs-geode/edu/yonder/` - `nixos-guide/` |
-| **6 - The Workrooms** | Where the work is shaped and recorded | `active-designing/` - `active-reviving/` - `waymarks/` - `expanding-prompts/` - `construction/` - `counsel/` - `session-logs/` - `composition/` - `kyri-resins/` - `tools/` |
+| **6 - The Workrooms** | Where the work is shaped and recorded | `active-designing/` - `active-reviving/` - `active-tablecloth/` - `construction/` - `session-logs/` - `kyri-resins/` - `tools/` |
 | **7 - The Reading Room** | The world, studied whole with thanks | `external-research/` - `study/` - `gratitude/` - `vendor/` |
 
 Beside the seven stand **the private rooms** -- one person's own record, withheld from the public seed by `template-manifest.kyri`: `keys/` - `press/` - `classical-vedic-astrology/` - `rye-learning-process/`, and the identity cards (`PUBKEYS.md` - `SAFE.md` - `STEWARDS.md` - the filled `GLOW_*.kyri`).
@@ -90,9 +90,9 @@ The **module ring** is the machinery, each home with its own witnesses. Take the
 | [`vault/`](vault/README.md) | secrets |
 | [`settlement/`](settlement/README.md) | a point becomes an address |
 | [`tablecloth/`](tablecloth/README.md) | the store and artifact database |
-| [`image/`](image/README.md) | a picture you own |
-| [`resonance/`](resonance/README.md) | the creative suite |
-| [`mikrophone/`](mikrophone/README.md) | the firmware that forgets |
+| [`brushstroke/image/`](brushstroke/image/README.md) | a picture you own |
+| [`resonance/`](resonance/README.md) | the creative suite (with `mikrophone/` and `composition/` inside) |
+| [`resonance/mikrophone/`](resonance/mikrophone/README.md) | the firmware that forgets |
 | [`brix/`](brix/README.md) | composition |
 | [`encoding/`](encoding/README.md) | bytes, parity-checked |
 | [`constel/`](constel/README.md) | piers that can never be real |
@@ -100,7 +100,7 @@ The **module ring** is the machinery, each home with its own witnesses. Take the
 | [`sundial/`](sundial/README.md) | the health face |
 | [`docs-geode/cookbook/`](docs-geode/cookbook/README.md) | the cookbook stdlib |
 | [`colloquium/`](colloquium/README.md) | the civic-legislative module |
-| [`granary/`](granary/README.md) - [`mandi/`](mandi/README.md) - [`amphora/`](amphora/README.md) - [`mycelium/`](mycelium/README.md) - [`lantern/`](lantern/README.md) - [`lattice/`](lattice/README.md) - [`pulp/`](pulp/README.md) - [`cellar/`](cellar/README.md) - [`dimeroll/`](dimeroll/README.md) | Named here without a gloss; open the room's own README for what it proves |
+| [`granary/`](granary/README.md) - [`mandi/`](mandi/README.md) - [`amphora/`](amphora/README.md) - [`mycelium/`](mycelium/README.md) - [`flare/lantern/`](flare/lantern/README.md) - [`flare/lattice/`](flare/lattice/README.md) - [`flare/pulp/`](flare/pulp/README.md) - [`cellar/`](cellar/README.md) - [`dimeroll/`](dimeroll/README.md) | Named here without a gloss; open the room's own README for what it proves |
 
 ### 5 - The Teaching
 
@@ -119,14 +119,11 @@ When a page here says GREEN, a machine said it first. Three shelves, each for a 
 
 | Room | What is shaped there |
 |---|---|
-| [`active-designing/`](active-designing/README.md) | The hot bench -- briefs being shaped now, the horizon in its `yonder/` |
+| [`active-designing/`](active-designing/README.md) | The hot bench -- curated briefs and architectural designs |
 | `active-reviving/` | Its sibling, re-growing elders into Glow beside them |
-| [`waymarks/`](waymarks/) | The claim shelf |
-| `expanding-prompts/` | The runnable plans |
-| `construction/` | The living instruments: **ITINERARY** is what is true right now and what comes next -- `TASKS.md` and `ROADMAP.md` fused into it on `20260823.103804` and stand as pointers now -- and **REDS** is what we got wrong and what caught it |
-| `counsel/` | The advice ledger |
-| `upstream/` | Reports filed outward, and when we last checked |
-| `session-logs/` - `kyri-resins/` | The diary and its compressions |
+| [`active-tablecloth/`](active-tablecloth/README.md) | Living RFC project boards, checklists, and progress logs |
+| `construction/` | The living instruments: **ITINERARY** is what is true right now and what comes next, **CHECKPOINTS** holds walk-back nibs, and **REDS** is what we got wrong and what caught it |
+| `session-logs/` - `kyri-resins/` | The `202611-grain` session diary (pre-reroot logs archived at `xykj61/20260618-grain`) and its compressions |
 | [`tools/`](tools/) | Where the witnesses live -- the little judges that make every GREEN in this tree mean something |
 
 ### 7 - The Reading Room
