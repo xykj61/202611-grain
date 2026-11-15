@@ -1,0 +1,151 @@
+//! modules/caravan/custody/vault_zeroize_seal.rye -- 3-Ring Custody & Wipe!
+//!
+//! Stamp: `20261115.152000` -- `Movement 8/15 : Scorpio` (*Anuradha covenant:
+//! Mitra loyalty & clean secret zeroization*), superseding legacy `mand/`
+//! under `modules/caravan/custody/` (`grain-ww vault-lease`):
+//!   1. **Ring 1 (`mint_puddle_lease`):** Bounded-TTL 32-byte ephemeral secret
+//!      lease (`valid_until_epoch`) for `Pond Puddle` remote servers,
+//!   2. **Ring 2 (`use_or_zeroize` & `revoke_and_shred`):** Executes
+//!      `@volatile` `std.crypto.secureZero(u8, &secret)` on expiry or explicit
+//!      revocation so DRAM holds `0x00` across all 32 bytes,
+//!   3. **Ring 3 (`TombstoneReceipt`):** Emits a 32-byte `Blaze` SHA3-256
+//!      erasure proof recording key-ID + wipe epoch with zero secret residue!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.152000";
+pub const max_leases: u32 = 32;
+const nl: u8 = 10;
+
+pub const CustodyError = error{
+    VaultFull,
+    ZeroTtlRefused,
+    BadLeaseId,
+    LeaseShreddedOrExpired,
+};
+
+pub const EphemeralLease = struct {
+    key_id: u64,
+    secret_bytes: [32]u8,
+    valid_until_epoch: u64,
+    shredded: bool,
+    tombstone_sha3: [32]u8,
+
+    pub fn is_all_zero(self: *const EphemeralLease) bool {
+        var acc: u8 = 0;
+        for (self.secret_bytes) |b| acc |= b;
+        return acc == 0;
+    }
+};
+
+pub const CustodyVault = struct {
+    leases: [max_leases]EphemeralLease,
+    count: u32,
+
+    pub fn init() CustodyVault {
+        return std.mem.zeroes(CustodyVault);
+    }
+
+    pub fn mint_puddle_lease(
+        self: *CustodyVault,
+        key_id: u64,
+        raw_secret: [32]u8,
+        now_epoch: u64,
+        ttl_epochs: u64,
+    ) CustodyError!u32 {
+        if (ttl_epochs == 0) return error.ZeroTtlRefused;
+        if (self.count >= max_leases) return error.VaultFull;
+
+        const id = self.count;
+        self.leases[id] = .{
+            .key_id = key_id,
+            .secret_bytes = raw_secret,
+            .valid_until_epoch = now_epoch + ttl_epochs,
+            .shredded = false,
+            .tombstone_sha3 = @splat(0),
+        };
+        self.count += 1;
+        // invariant: newly minted lease has positive TTL window.
+        assert(self.leases[id].valid_until_epoch > now_epoch);
+        return id;
+    }
+
+    pub fn revoke_and_shred(
+        self: *CustodyVault,
+        id: u32,
+        wipe_epoch: u64,
+    ) CustodyError![32]u8 {
+        if (id >= self.count) return error.BadLeaseId;
+        var slot = &self.leases[id];
+        std.crypto.secureZero(u8, &slot.secret_bytes);
+        slot.shredded = true;
+
+        var h = Sha3_256.init(.{});
+        h.update("caravan-custody-tombstone-v1:");
+        var b16: [16]u8 = undefined;
+        std.mem.writeInt(u64, b16[0..8], slot.key_id, .little);
+        std.mem.writeInt(u64, b16[8..16], wipe_epoch, .little);
+        h.update(&b16);
+        h.final(&slot.tombstone_sha3);
+
+        // invariant: all 32 secret bytes in DRAM are strictly 0x00 after shred!
+        assert(slot.shredded and slot.is_all_zero());
+        return slot.tombstone_sha3;
+    }
+
+    /// Returns secret ONLY while `now_epoch < valid_until_epoch`; auto-shreds
+    /// immediately the instant `now_epoch >= valid_until_epoch`!
+    pub fn read_active_secret(
+        self: *CustodyVault,
+        id: u32,
+        now_epoch: u64,
+    ) CustodyError![32]u8 {
+        if (id >= self.count) return error.BadLeaseId;
+        const slot = &self.leases[id];
+        if (slot.shredded) return error.LeaseShreddedOrExpired;
+        if (now_epoch >= slot.valid_until_epoch) {
+            _ = try self.revoke_and_shred(id, now_epoch);
+            return error.LeaseShreddedOrExpired;
+        }
+        assert(!slot.shredded and now_epoch < slot.valid_until_epoch);
+        return slot.secret_bytes;
+    }
+};
+
+fn run_selftest() !u8 {
+    var vault = CustodyVault.init();
+    const secret: [32]u8 = @splat(0xA5);
+
+    // 1. Mint lease valid on [100..110); active at 105, auto-zeroized at 110!
+    const lid = try vault.mint_puddle_lease(9001, secret, 100, 10);
+    const active = try vault.read_active_secret(lid, 105);
+    if (active[0] != 0xA5) return error.ActiveReadCorrupt;
+
+    if (vault.read_active_secret(lid, 110)) |_| {
+        return error.ExpiredLeaseReadAccepted;
+    } else |err| {
+        if (err != error.LeaseShreddedOrExpired) return err;
+    }
+    if (!vault.leases[lid].is_all_zero()) return error.DramSecretNotZeroed;
+
+    // 2. Explicit GDPR / steward revocation emits non-zero Blaze tombstone!
+    const lid2 = try vault.mint_puddle_lease(9002, secret, 200, 50);
+    const tomb = try vault.revoke_and_shred(lid2, 203);
+    if (!vault.leases[lid2].is_all_zero()) return error.RevokeNotZeroed;
+    if (tomb[0] == 0 and tomb[1] == 0 and tomb[2] == 0) {
+        return error.EmptyTombstone;
+    }
+
+    print(
+        "GREEN: vault_zeroize_seal -- secureZero DRAM wipe & SHA3 tomb.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

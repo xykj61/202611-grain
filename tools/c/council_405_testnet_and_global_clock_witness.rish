@@ -23,11 +23,16 @@ assert b_oc.ok else "one_clock build failed"
 let r_oc = run ["tools/.build/one_clock" "selftest"]
 assert r_oc.ok else "one_clock global selftest failed"
 
-# 4. Tablecloth `Gleaner` Glasswall anti-tracker intake + CLI `Recommend`!
+# 4. Tablecloth `Gleaner` + Caravan `vault_zeroize_seal` + CLI `Recommend`!
 let b_gl = run ["sh" rb "modules/tablecloth/gleaner_intake.rye" "-femit-bin=tools/.build/gleaner_intake"]
 assert b_gl.ok else "gleaner_intake build failed"
 let r_gl = run ["tools/.build/gleaner_intake"]
 assert r_gl.ok else "gleaner_intake selftest failed"
+
+let b_vz = run ["sh" rb "modules/caravan/custody/vault_zeroize_seal.rye" "-femit-bin=tools/.build/vault_zeroize_seal"]
+assert b_vz.ok else "vault_zeroize_seal build failed"
+let r_vz = run ["tools/.build/vault_zeroize_seal"]
+assert r_vz.ok else "vault_zeroize_seal selftest failed"
 
 let b_cli = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
 assert b_cli.ok else "grain_ww_cli build failed"
@@ -36,5 +41,10 @@ assert r_mov.ok else "grain-ww movement failed"
 assert (r_mov.err contains "Recommend ") else "grain-ww movement missing Recommend line!"
 let r_gcli = run ["languages/rishi/bin/grain-ww" "gleaner"]
 assert r_gcli.ok else "grain-ww gleaner failed"
+let r_vcli = run ["languages/rishi/bin/grain-ww" "vault-lease"]
+assert r_vcli.ok else "grain-ww vault-lease failed"
 
-say "GREEN: council_405_testnet_and_global_clock_witness -- [15..9375] Recommend wheel, 15-galaxy 405 testnet, global One-Clock, & Gleaner proven."
+let shed_chk = run ["sh" "-c" "! grep -q 'active-tablecloth' mitra-shed/shed-prep.md && grep -q 'vault_zeroize_seal.rye' mitra-shed/shed-prep.md"]
+assert shed_chk.ok else "mitra-shed/shed-prep.md stale link or missing custody entry!"
+
+say "GREEN: council_405_testnet_and_global_clock_witness -- [15..9375] Recommend wheel, 405 testnet, One-Clock, Gleaner, & Vault zeroize proven."

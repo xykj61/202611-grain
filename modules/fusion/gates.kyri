@@ -101,3 +101,5 @@ max_cols 80 modules/comlink/vantage/vantage_council_puddle.rye
 max_cols 80 modules/pond/puddle/puddle_scp_cli.rye
 max_cols 80 modules/pond/testnet/council_405_testnet.rye
 max_cols 80 modules/tablecloth/gleaner_intake.rye
+max_cols 80 modules/caravan/custody/vault_zeroize_seal.rye
+ascii_7bit mitra-shed/shed-prep.md
