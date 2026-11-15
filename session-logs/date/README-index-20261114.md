@@ -2,6 +2,8 @@
 
 | Stamp | Title | Notes |
 |---|---|---|
+| 20261114.205447 | [Glow missing rune families -- the full Hoon map and the fas/Ford insight](20261114/20261114-205447_glow-missing-rune-families.kyri.md) | All twelve Hoon families mapped, fas/Ford insight: Brix for structure, Blaze for data, Flare for inference |
+| 20261114.205447 | [Glow missing rune families -- the full Hoon map and the fas/Ford insight](20261114/20261114-205447_glow-missing-rune-families.kyri.md) | All twelve Hoon families mapped, fas/Ford runes distributed across Brix/Blaze/Flare, four gaps named |
 | 20261114.200951 | [Glow from first principles -- language, transpiler, and rooms](20261114/20261114-200951_glow-first-principles-design.kyri.md) | Design essay: rune vocabulary, transpiler architecture, directory organization, SLC gap |
 | 20261114.181500 | [Glow SLC exploration -- no full SLC built yet](20261114/20261114-181500_glow-slc-exploration.kyri.md) | 505 .glow files surveyed, all generators and placards, no complete application |
 | 20261114.180200 | [Seventh Sense Software (7s.software) review](20261114/20261114-180200_seventh-sense-software-review.kyri.md) | Seven principles closely parallel Grain disciplines, no DJINN mention found |
