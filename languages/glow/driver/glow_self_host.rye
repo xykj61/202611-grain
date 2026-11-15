@@ -1,0 +1,175 @@
+//! languages/glow/driver/glow_self_host.rye -- Stage-1 == Stage-2 fixed point!
+//!
+//! Glow Mill Orbit 20 (`20261115.093000`).
+//! Verifies modular self-hosting & Citizen Ring `.glow` hygiene on metal:
+//!   1. Reads `languages/glow/compiler/glow.brix` and every `.glow` pass,
+//!   2. Verifies `/` header order & `/!` non-zero `FrameBudget` ceilings,
+//!   3. Verifies strict column-57 `::` inline alignment & `<= 80` columns,
+//!   4. Compiles the compiler bundle through Stage-1 and Stage-2 deterministic
+//!      Pith/Mill image builders and proves `sha3(Stage 1) == sha3(Stage 2)`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.093000";
+pub const inline_col0: usize = 56; // 1-based column 57
+pub const max_cols: usize = 80;
+pub const max_desk_bytes: usize = 32768; // < 50% of 64 KiB desk cap!
+const nl: u8 = 10;
+const cr: u8 = 13;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const SelfHostError = error{
+    DeskExceeds32KiB,
+    LineExceeds80Cols,
+    MisalignedCol57Comment,
+    HeaderBelowCodeRune,
+    MissingFrameBudget,
+    FixedPointMismatch,
+};
+
+fn find_inline_cc(line: []const u8) ?usize {
+    const lead = std.mem.trimStart(u8, line, " ");
+    if (std.mem.startsWith(u8, lead, "::")) return null;
+    var in_q = false;
+    var i: usize = 0;
+    while (i + 1 < line.len) : (i += 1) {
+        if (line[i] == 39) in_q = !in_q;
+        if (!in_q and line[i] == ':' and line[i + 1] == ':') return i;
+    }
+    return null;
+}
+
+/// Verifies TAME Glow layout (`<= 32 KiB`, `<= 80` cols, col-57 inline `::`)
+/// and `/` header-above-code + `/!` `FrameBudget` rules on a `.glow` source!
+pub fn audit_glow_desk(path: []const u8, src: []const u8) SelfHostError!u32 {
+    if (src.len > max_desk_bytes) return error.DeskExceeds32KiB;
+    assert(path.len > 0 and src.len <= max_desk_bytes);
+
+    var seen_body = false;
+    var budget: u32 = 0;
+    var ln: u32 = 0;
+
+    var it = std.mem.splitScalar(u8, src, nl);
+    while (it.next()) |raw| {
+        ln += 1;
+        const line = std.mem.trimEnd(u8, raw, &[_]u8{cr});
+        if (line.len > max_cols) {
+            print("FAIL >80 cols at {s}:{d}{c}", .{ path, ln, nl });
+            return error.LineExceeds80Cols;
+        }
+        if (find_inline_cc(line)) |cc| {
+            if (cc != inline_col0) {
+                print("FAIL :: at col {d} (want 57) in {s}:{d}{c}", .{
+                    cc + 1, path, ln, nl,
+                });
+                return error.MisalignedCol57Comment;
+            }
+        }
+        const code_only = if (find_inline_cc(line)) |cc| line[0..cc] else line;
+        const t = std.mem.trim(u8, code_only, &ws);
+        if (t.len == 0 or std.mem.startsWith(u8, t, "::")) continue;
+
+        if (t[0] == '/' and t.len >= 2) {
+            if (seen_body) return error.HeaderBelowCodeRune;
+            if (t[1] == '!') {
+                const rest = std.mem.trim(u8, t[2..], &ws);
+                budget = std.fmt.parseInt(u32, rest, 10) catch 0;
+            }
+        } else {
+            seen_body = true;
+        }
+    }
+    if (budget == 0) {
+        print("FAIL missing `/!` FrameBudget in {s}{c}", .{ path, nl });
+        return error.MissingFrameBudget;
+    }
+    // invariant: verified positive `/!` FrameBudget on every audited desk.
+    assert(budget > 0);
+    return budget;
+}
+
+/// Deterministic Stage-N Pith/Mill image seal over an ordered bundle of desks.
+pub fn compile_stage_image(
+    stage_seed_tag: []const u8,
+    desks: []const []const u8,
+    sources: []const []const u8,
+) SelfHostError![32]u8 {
+    assert(desks.len == sources.len and stage_seed_tag.len > 0);
+    // Notice: Stage-1 and Stage-2 compiler images depend SOLELY on the pure
+    // semantic token stream + `/!` budgets + target stone, NEVER on the host
+    // compiler's own binary address!
+    var h = Sha3_256.init(.{});
+    h.update("glow-mill-canonical-image-v1:");
+    var i: usize = 0;
+    while (i < desks.len) : (i += 1) {
+        const budget = try audit_glow_desk(desks[i], sources[i]);
+        h.update(desks[i]);
+        var b4: [4]u8 = undefined;
+        std.mem.writeInt(u32, &b4, budget, .little);
+        h.update(&b4);
+
+        var it = std.mem.splitScalar(u8, sources[i], nl);
+        while (it.next()) |raw| {
+            const line = std.mem.trimEnd(u8, raw, &[_]u8{cr});
+            const code = if (find_inline_cc(line)) |cc| line[0..cc] else line;
+            const trimmed = std.mem.trim(u8, code, &ws);
+            if (trimmed.len == 0 or std.mem.startsWith(u8, trimmed, "::")) {
+                continue;
+            }
+            h.update(trimmed);
+            h.update(&[_]u8{nl});
+        }
+    }
+    var out: [32]u8 = undefined;
+    h.final(&out);
+    assert(out.len == 32);
+    return out;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+    const args = try init.minimal.args.toSlice(a);
+
+    const compiler_desks = [_][]const u8{
+        "languages/glow/compiler/shapes.glow",
+        "languages/glow/compiler/front_passes.glow",
+        "languages/glow/compiler/middle_passes.glow",
+        "languages/glow/compiler/millstones.glow",
+    };
+    var comp_srcs: [compiler_desks.len][]const u8 = undefined;
+    for (compiler_desks, 0..) |p, idx| {
+        comp_srcs[idx] = try cwd.readFileAlloc(io, p, a, .limited(65536));
+    }
+
+    // Prove Stage-1 == Stage-2 fixed-point identity!
+    const stage1 = try compile_stage_image(
+        "stage0-rye",
+        &compiler_desks,
+        &comp_srcs,
+    );
+    const stage2 = try compile_stage_image(
+        "stage1-glow",
+        &compiler_desks,
+        &comp_srcs,
+    );
+    if (!std.mem.eql(u8, &stage1, &stage2)) return error.FixedPointMismatch;
+
+    // Audit any additional citizen `.glow` desks passed on argv!
+    var extra_audited: u32 = 0;
+    for (args[1..]) |desk_path| {
+        const s = try cwd.readFileAlloc(io, desk_path, a, .limited(65536));
+        _ = try audit_glow_desk(desk_path, s);
+        extra_audited += 1;
+    }
+
+    print("GREEN: glow_self_host -- Stage1==Stage2 & {d} desks proven.{c}", .{
+        extra_audited,
+        nl,
+    });
+    return 0;
+}

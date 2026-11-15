@@ -27,6 +27,9 @@ max_cols 80 languages/glow/assay/assay_types.rye
 max_cols 80 languages/glow/assay/assay_bounds.rye
 max_cols 80 languages/glow/pith/pith_ir.rye
 max_cols 80 languages/glow/mill/mill_emit.rye
+max_cols 80 languages/glow/driver/glow_self_host.rye
+max_cols 80 languages/glow/compiler/glow.brix
+max_cols 80 modules/resonance/session.brix
 max_cols 80 modules/comlink/vantage/carry.rye
 max_cols 80 modules/comlink/parcel/parcel_core.rye
 max_cols 80 modules/resonance/earpiece/earpiece_core.rye
