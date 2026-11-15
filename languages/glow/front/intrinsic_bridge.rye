@@ -1,6 +1,6 @@
 //! languages/glow/front/intrinsic_bridge.rye -- Checked `u64` & `~%` FIPS-202.
 //!
-//! Glow Mill Orbit 5 (`20261115.091000`).
+//! Glow Mill Stamp: `20261115.091000`).
 //! Citizen stdlib bridge pairing pure Glow checked `@u32`/`@u64` arithmetic &
 //! `~%  %sha3-256` / `~%  %ed25519-verify` hints with verified Rye primitives:
 //!   - Refuses `u64` overflow/underflow/div-by-zero by name,

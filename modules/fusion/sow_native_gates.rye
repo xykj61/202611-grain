@@ -1,6 +1,6 @@
 //! modules/fusion/sow_native_gates.rye -- Native Rye `sow` secret & key gate!
 //!
-//! Orbits 136-138 (`20261115.110500`): Pure TAME Rye companion to `fusion_sow`
+//! Stamp: `20261115.110500`): Pure TAME Rye companion to `fusion_sow`
 //! scanning seed files in memory for API keys (`AIza...`, `sk-ant-...`,
 //! `sk-proj-...`, `sk-or-v1-...`, `ghp_...`, `github_pat_...`, `AKIA...`) and
 //! SSH/PGP private key headers without spawning external grep processes!

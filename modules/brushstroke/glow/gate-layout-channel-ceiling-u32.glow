@@ -5,7 +5,7 @@
 ::  law        brushstroke/skate_cell_grid.rye 8-bit palette per channel
 ::  example    128 -> 1 - 256 -> 0
 ::  readers    Brushstroke - Skate - Glow layout
-::  nib        glow-language journey Orbit 10 -- layout shapes (20261104)
+::  nib        glow-language journey -- layout shapes (20261104)
 ::
 ::  Skate's cell grid paints each cell with an 8-bit color per channel.
 ::  Red, green, and blue each stay at or under 255. This gate is that

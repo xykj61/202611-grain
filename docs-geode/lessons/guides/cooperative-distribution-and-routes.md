@@ -1,6 +1,6 @@
-# Guide 03 -- Cooperative Distribution and Routes
+# Guide -- Cooperative Distribution and Routes
 
-**Stage:** Bloom Practice Layer (M18)
+**Stage:** Bloom Practice Layer
 **Voice:** Teacher & Civic
 
 ---

@@ -1,10 +1,11 @@
 //! languages/rishi/grain_ww_cli.rye -- Universal `grain-ww` Umbrella CLI!
 //!
-//! Orbits 151-165 (`20261115.113500`).
+//! Stamp: `20261115.123500`.
 //! Sovereign umbrella binary (`brew install grain-ww`, `apt install grain-ww`,
 //! `nix profile install nixpkgs#grain-ww`, `pacman -S grain-ww`, `apk add
 //! grain-ww`) matching our `grain-ww.com` / `github.com/grain-ww` home:
 //!   - `grain-ww version`           -- Chronological stamp & Myofascia reading
+//!   - `grain-ww round-load`        -- Calfive 15-Sign round, element, & theme
 //!   - `grain-ww doctor`            -- <50 ms toolchain & Glasswall check
 //!   - `grain-ww prove`             -- Fusion gate runner
 //!   - `grain-ww sundial`           -- Live Sundial baton & health roll
@@ -22,8 +23,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.121500";
-pub const myofascia_reading = "56.700";
+pub const grain_ww_version = "20261115.123500";
+pub const myofascia_reading = "56.715";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -105,6 +106,15 @@ pub fn main(init: std.process.Init) !u8 {
     const sub = args[1];
     if (std.mem.eql(u8, sub, "selftest")) return run_selftest(io);
     if (std.mem.eql(u8, sub, "doctor")) return run_doctor(io);
+    if (std.mem.eql(u8, sub, "round-load")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/calfive_wheel",
+            null,
+            args[2..],
+        );
+    }
 
     if (std.mem.eql(u8, sub, "prove")) {
         return dispatch_exec(

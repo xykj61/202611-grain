@@ -1,6 +1,6 @@
 //! languages/glow/trellis/trellis_ast.rye -- Iterative bounded `AstGarden`.
 //!
-//! Glow Mill Orbit 8 (`20261115.091000`).
+//! Glow Mill Stamp: `20261115.091000`).
 //! Builds Glow's `AstGarden` (`max_nodes = 1024`, explicit `work_stack: [64]`
 //! with ZERO Rye call-stack recursion!):
 //!   - Supports core runes (`|=`, `=/`, `?:`, `%+`, `|-`) AND state-machine /

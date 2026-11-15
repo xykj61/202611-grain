@@ -5,7 +5,7 @@
 ::  law        brushstroke/skate_cell_grid.rye grid_cols=40
 ::  example    1 -> 1 - 40 -> 1 - 41 -> 0
 ::  readers    Brushstroke - Skate - Glow layout
-::  nib        glow-language journey Orbit 10 -- layout shapes (20261104)
+::  nib        glow-language journey -- layout shapes (20261104)
 ::
 ::  A rectangle's width cannot exceed the grid's column count. A width
 ::  of zero is structurally allowed -- a hidden element has no extent.

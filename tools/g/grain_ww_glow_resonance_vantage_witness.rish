@@ -1,4 +1,4 @@
-# tools/g/grain_ww_glow_resonance_vantage_150_witness.rish -- `grain-ww` Suite!
+# tools/g/grain_ww_glow_resonance_vantage_witness.rish -- `grain-ww` Suite!
 #
 # Proves on real metal (`Myofascia: 56.665`):
 #   1. `grain-ww` universal CLI (`version` + `doctor`) + native macOS Swift
@@ -69,4 +69,4 @@ let ex_ref = run ["tools/.build/seva_clamp" "12000"]
 assert (ex_ref.ok == false) else "seva_clamp(12000) failed to refuse!"
 assert (ex_ref.err contains "seva-bps-above-ten-thousand") else "seva_clamp(12000) missing trail!"
 
-say "GREEN: grain_ww_glow_resonance_vantage_150_witness -- grain-ww CLI/doctor, Swift VantageApp, Resonance WAV, & multi-rune grain-ww glow (welcome + refusal) proven."
+say "GREEN: grain_ww_glow_resonance_vantage_witness -- grain-ww CLI/doctor, Swift VantageApp, Resonance WAV, & multi-rune grain-ww glow proven."

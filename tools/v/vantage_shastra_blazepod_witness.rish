@@ -1,4 +1,5 @@
-# tools/v/vantage_shastra_blazepod_100_witness.rish -- 100th Orbit (`56.600`)!
+# tools/v/vantage_shastra_blazepod_witness.rish -- Multi-Target VantageCarry,
+# 30-Song Tiruppavai + Rasamrita, Realidream, & RV64GC Blazepod!
 #
 # Proves on real metal:
 #   1. `modules/comlink/vantage/carry.rye` cross-compiles cleanly from ONE
@@ -49,4 +50,4 @@ assert r_rc.ok else "realidream_compose selftest failed"
 let b_bp = run [rye "build" "blazepod/rv64_pill.rye" "-target" "riscv64-freestanding" "-fno-entry" "-femit-bin=tools/.build/blazepod_rv64.elf"]
 assert b_bp.ok else "blazepod/rv64_pill.rye RV64GC build failed"
 
-say "GREEN: vantage_shastra_blazepod_100_witness -- 4-target VantageCarry, 30-song Tiruppavai + Rasamrita, Realidream, & RV64GC Blazepod proven (Myofascia 56.600)."
+say "GREEN: vantage_shastra_blazepod_witness -- 4-target VantageCarry, 30-song Tiruppavai + Rasamrita, Realidream, & RV64GC Blazepod proven."

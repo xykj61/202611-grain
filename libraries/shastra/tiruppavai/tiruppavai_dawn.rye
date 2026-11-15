@@ -1,6 +1,6 @@
 //! libraries/shastra/tiruppavai/tiruppavai_dawn.rye -- All 30 Andal Dawn Songs!
 //!
-//! Orbits 91-93 (`20261115.095000`): Reads all 30 songs (`1..30`) of Andal's
+//! Stamp: `20261115.095000`): Reads all 30 songs (`1..30`) of Andal's
 //! *Tiruppavai* from `libraries/shastra/tiruppavai/tiruppavai_30.kyri` and
 //! synthesizes a bounded, zero-floating-point **48 kHz Dawn Bell** waveform!
 //!

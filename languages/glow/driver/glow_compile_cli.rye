@@ -1,6 +1,6 @@
 //! languages/glow/driver/glow_compile_cli.rye -- `.glow` -> Native Binary!
 //!
-//! Orbits 156-160 (`20261115.113500`): Multi-rune `grain-ww glow` compiler!
+//! Stamp: `20261115.113500`): Multi-rune `grain-ww glow` compiler!
 //! Supports:
 //!   - `/!` `FrameBudget` > 0, `<= 80` cols, & col-57 `::` verification,
 //!   - `|=` gate parameter, `=/  name=@ud  <expr>` local bindings,

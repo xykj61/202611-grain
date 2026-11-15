@@ -1,11 +1,11 @@
 #!/bin/sh
-# tools/fixtures/l/resonance_audio_integration_scan.sh -- build and run the Resonance Audio bridge selftest.
+# tools/fixtures/r/resonance_audio_integration_scan.sh -- build and run the Resonance Audio bridge selftest.
 #
 # Exercises the complete Resonance Audio FFI surface end to end: init, play, stop,
 # close, loop toggle, gain, recording, record-to-playback, WAV export.
 # The selftest lives in resonance/resonance_vantage_audio.rye and asserts 15 claims.
 #
-#   sh tools/fixtures/l/resonance_audio_integration_scan.sh
+#   sh tools/fixtures/r/resonance_audio_integration_scan.sh
 #
 # Emits key=value readings for the witness to gate.
 

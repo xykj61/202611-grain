@@ -1,45 +1,75 @@
-# GEMINI.md -- Primary Agent Door for the Grain Carbon Bench
+# Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Language:** EN
-**Stamp:** `20261115.031500` (EST)
-**Voice:** Kyri
-**Style:** Gauge at Door, Radiant warmth
-**Status:** Living (`Room: checkable` -- primary standing instruction door; elder `.claude/` and `.cursor/` benches rest in [`yonder/`](yonder/README.md))
+**Stamp:** `20261115.123500`
+**Voice:** Kyri (Gauge, Teacher, Radiant, & Civic)
+**Branch:** `xy/gemini-4-carbon` (`publish-seed` -> `grain-ww/202611-grain`)
 
 ---
 
-## 1. Bench Identity, Model, and Git Branch
+## 1. Master Principle -- Sameness Is the Macro
 
-- **Primary Model & CLI:** Google Gemini CLI running **`gemini-4-carbon`**.
-- **Active Repository & Branch:** `xykj61/202611-grain`, pushing GPG-signed fast-forward commits (`git commit -S`) to **`xy/gemini-4-carbon`** (outbound SSH enabled via `.gemini/hooks/enable-git-ssh.sh`).
-- **Historical Archive:** Pre-`20261114` cold logs remain permanently reachable in `xykj61/20260618-grain` (walk-back nib `d98bbaac`); local retired shelves (`docs-old`, `docs-geode-old`, `claude`, `cursor`, `saga`, and former `archive/` drawers) rest in root **[`yonder/`](yonder/README.md)** (skipped by `.geminiignore` unless opened explicitly by path).
+Compress the system by making parts publicly similar -- **one value model**
+(Brix/Kyri/wire), **one pure fold** over signed facts (`Blaze`), **one UI**
+(`modules/comlink/vantage/`), and **one plain vocabulary** -- never through
+hidden macros, private dialects, or duplicated platform logic.
+
+- **Scoped subdirectory guides** (loaded automatically when entering them):
+  - [`languages/GEMINI.md`](languages/GEMINI.md) -- Rye, Glow, Rishi, Brix, Kyri
+  - [`modules/GEMINI.md`](modules/GEMINI.md) -- Vantage, Resonance, Pond, Ring-0
+  - [`libraries/GEMINI.md`](libraries/GEMINI.md) -- Shastra, Risala, Curriculum
+- **Detailed rule cards:** [`.gemini/rules/README.md`](.gemini/rules/README.md)
+  ([`stamp-and-name.md`](.gemini/rules/stamp-and-name.md),
+  [`tame-guidance.md`](.gemini/rules/tame-guidance.md),
+  [`comlink-tendency.md`](.gemini/rules/comlink-tendency.md),
+  [`alias-sameness.md`](.gemini/rules/alias-sameness.md)).
 
 ---
 
-## 2. Core Engineering & Style Mandates
+## 2. Stamp and Name -- Count, Never Number
 
-Read the single-stranded canons in [`context/`](context/README.md) and operational rules in [`.gemini/rules/`](.gemini/rules/README.md):
-
-1. **[TAME Core](context/TAME_CORE.md):** Bound every loop, recursion, and buffer; allocate inside static **Tally** memory gardens (`u32` memory indices, `u64` wire/clock values); write `>= 2` `// invariant:` assertions per function; enforce **`80`-column lines** and **7-bit ASCII** (`::` aligned at column `57` in `.glow`).
-2. **Chronological Versioning Only (`YYYYMMDD.HHMMSS`):** Never introduce semantic versioning (`1.2.3`). Every version across Glow, Rye, Rishi, Brix, Kyri, and docs is a monotonic chronological stamp ([`docs-geode/api/chronological-versioning.md`](docs-geode/api/chronological-versioning.md)).
-3. **Comlink Naming & Myofascia Health:** Prefer warm, plain agricultural and craft words; legacy 4-letter waymarks (`STOA`, `TUBE`, etc.) are retired. Our connective-tissue health metric is **Myofascia** (`56.500` baseline, advancing `+0.001` per completed orbit in [`modules/sundial/sundial.rye`](modules/sundial/sundial.rye)).
-4. **Accrete-Never-Break & Mitra Shed:** Grow living replacements beside elders first, catalog fossil candidates in [`mitra-shed/shed-prep.md`](mitra-shed/shed-prep.md), and execute cuts only on Keaton's explicit word.
-5. **Single-Stranded Voice:** Combine [Gauge](context/GAUGE_STYLE.md) precision, [Teacher](context/TEACHER_STYLE.md) hospitality (`docs-geode/`), [Radiant](context/RADIANT_STYLE.md) biocyclic warmth, and [Kyri](context/KYRI.md) directness.
+1. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
+   versions/headers; `YYYYMMDD-HHMMSS_sprig.ext` for dated records) order work;
+   plain descriptive names state meaning.
+2. **Zero ascending serial numbers in living names or headers:** Never mint
+   sequence numbers (`01-`, `_100_`, `Orbit 14`, `v2`, `lap3`, `WAYMARK[0-9]+`)
+   into filenames, function names, or standing file headers. Derive totals by
+   measurement (`git rev-list --count HEAD`, `wc -l`).
+3. **Zero semantic versioning:** Only chronological `YYYYMMDD.HHMMSS` pins
+   exist across `.brix`, `.rye`, and `grain-ww` packages (*Evergrow*: updates
+   within an epoch name offer more and require less).
+4. **Dated testimony stays untouched:** Files whose basename carries a
+   `YYYYMMDD-HHMMSS` stamp keep every word and path they wrote; living files
+   sweep forward on touch.
 
 ---
 
-## 3. Essential Commands on Metal
+## 3. TAME Code & Prose Discipline
 
-```sh
-# Toolchain & compiler bootstrap
-sh tools/f/fetch-toolchain.sh
-cd languages/rye && ./bootstrap.sh && cd ../..
-mkdir -p languages/rishi/bin
-languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
+- **Bounded everything:** Fixed capacities on every loop, slice, queue, and
+  `Tally` arena; explicit bit widths (`u32` memory indices, `u64` wire/ledger);
+  zero unbounded recursion.
+- **Assertions & Refusals:** `>= 2` `// invariant:` assertions per non-trivial
+  function. Ring-0 / `terrarium/` failures write `sifive_test` `0x0001_3333`
+  (exit 1), never `0x5555`. Every welcome witness pairs with a refusal witness.
+- **80 Columns & 7-Bit ASCII:** Hard `<= 80`-column limit across `.rye`,
+  `.glow`, `.brix`, and `.kyri`; Glow inline `::` opens at **column 57**
+  (`0`-based index `56`). Strict 7-bit ASCII across code and living docs.
+- **Native-5 Spine:** Only **Rye**, **Glow**, **Rishi**, **Brix**, and **Kyri**
+  (plus thin platform shells in `terrarium/`). Zero Python or JavaScript.
 
-# Core witnesses
-languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
-languages/rishi/bin/rishi run tools/b/brix_infuse_witness.rish
-mkdir -p modules/sundial/bin
-languages/rye/bin/rye build modules/sundial/sundial.rye -femit-bin=modules/sundial/bin/sundial && modules/sundial/bin/sundial
-```
+---
+
+## 4. Architecture & Naming Laws
+
+- **Universal CLI & Package:** **`grain-ww`** (`grain_ww` / `com.grainww` where
+  identifier syntax forbids hyphens).
+- **Vantage Owns All UI & Studio State:** `Carry` (`Carry Tablet`, `Carry
+  Mobile`) and `Station` desktop surfaces are implemented strictly inside
+  `modules/comlink/vantage/`. `Resonance` delivers its full 3-Zone Desktop DAW
+  in `Vantage Station` posture and a Field Stem Sketchpad in `Carry`. Use
+  **`Resonance`** (never the retired DAW name `Lotus`).
+- **Civic Glasswall:** Write-only RLCD framebuffers, hardware-switched +
+  bystander-lamp-gated `Earpiece` voice capture, zero ad/telemetry SDKs.
+- **Calfive Rhythm (`15 - 75 - 375 - 1,875 - 9,375`):** Run
+  `languages/rishi/bin/grain-ww round-load` to read the current 15-sign round
+  (`(commit_count - 1) % 15 + 1`), element, goal, and Myofascia reading.

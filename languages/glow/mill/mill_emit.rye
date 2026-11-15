@@ -1,6 +1,6 @@
 //! languages/glow/mill/mill_emit.rye -- RV64GC, AArch64, & Rye fixed-point!
 //!
-//! Glow Mill Orbits 12-15 (`20261115.091500`).
+//! Glow Mill Stamp: `20261115.091500`).
 //! Dual-silicon + TAME Rye backend lowering `PithIR` simultaneously to:
 //!   1. `RV64GC` / `RV32IM` words (`addi`, `add`, `mul`, `ret` `0x8067`),
 //!   2. `AArch64` (Apple Silicon) 32-bit machine words (`movz`, `add`, `madd`,

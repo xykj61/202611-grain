@@ -1,4 +1,4 @@
-::  modules/comlink/glow/fold-comlink-turn.glow -- Orbit 22 112B replay guard
+::  modules/comlink/glow/fold-comlink-turn.glow -- 112B replay guard
 /!  16384
 |%
 ++  fold-comlink-turn

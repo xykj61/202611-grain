@@ -1,6 +1,6 @@
 //! blazepod/rv64_pill.rye -- Freestanding 64-bit `RV64GC` RAM-only Blazepod!
 //!
-//! Orbits 99-100 (`20261115.095500`): Targets our flagship 64-bit RAM-only
+//! Stamp: `20261115.095500`): Targets our flagship 64-bit RAM-only
 //! RISC-V Blazepod boards (`Milk-V Oasis SG2380` 128 GB LPDDR5 & `ESWIN
 //! EIC7702X` 64 GB LPDDR5):
 //!   - 64-bit `u64` stack initialization (`0x8020_0000`),

@@ -1,6 +1,6 @@
 //! languages/glow/pith/pith_ir.rye -- Narrow-waist SSA/ANF `PithIR`.
 //!
-//! Glow Mill Orbit 11 (`20261115.091500`).
+//! Glow Mill Stamp: `20261115.091500`).
 //! Compact, typed SSA/ANF intermediate representation (`<= 24` opcodes):
 //!   - Every front-end sugar lowers into `PithIR`,
 //!   - Canonical binary/SHA3-256 serialization feeds `Fusion` early cutoff

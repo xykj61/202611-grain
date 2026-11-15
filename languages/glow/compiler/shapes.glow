@@ -1,4 +1,4 @@
-::  languages/glow/compiler/shapes.glow -- Orbit 16 compiler shapes
+::  languages/glow/compiler/shapes.glow -- compiler shapes
 /!  16384
 |%
 +$  token-span

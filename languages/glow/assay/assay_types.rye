@@ -1,6 +1,6 @@
 //! languages/glow/assay/assay_types.rye -- `LayoutTable` & `?-` exhaustiveness.
 //!
-//! Glow Mill Orbit 9 (`20261115.091000`).
+//! Glow Mill Stamp: `20261115.091000`).
 //! Deterministic target-independent memory layout & exhaustiveness prover:
 //!   - Assigns identical byte offsets & alignments on 32-bit (`RV32I`) and
 //!     64-bit (`RV64GC` / `AArch64`) targets using fixed-width Glow atoms,

@@ -1,6 +1,6 @@
 //! languages/glow/front/glow_fmt.rye -- Col-57 `::` aligner & 80-col gate.
 //!
-//! Glow Mill Orbit 4 (`20261115.091000`).
+//! Glow Mill Stamp: `20261115.091000`).
 //! Enforces and auto-formats Grain's Glow layout law:
 //!   - Code occupies columns 1..56,
 //!   - Inline `::` comment opens at column 57 (`index 56`, 0-based),

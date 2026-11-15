@@ -1,13 +1,11 @@
-# tools/v/vantage_interactive_writes_and_200_witness.rish -- 200th Orbit (`56.700`)!
+# tools/v/vantage_interactive_writes_witness.rish -- Interactive Vantage Writes!
 #
-# Proves Waves B & C on real metal:
+# Proves on real metal:
 #   1. `modules/comlink/vantage/vantage_mutations.rye` (Dimeroll double-entry
 #      posts with `sum(nets) == 0`, Scribe Champu SHA3-256 seals, & Surf notes),
 #   2. `modules/comlink/vantage/vantage_app.rye` interactive write routing across
-#      macOS host, WASM (`vantage_app.wasm`), Android `arm64-v8a` (`libvantage_app_dc1.a`),
-#      and macOS Swift `vantage_mac_live.swift` (`+ Write/Seal` toolbar button),
-#   3. Zero open `[ ]` items remaining across `glow-mill`, `lotus-working-studio`,
-#      `lotus-macos-native-rebuild`, `bloom-onboarding`, and `realidream` boards!
+#      macOS host, WASM (`vantage_app.wasm`), Android `arm64-v8a`, and macOS
+#      Swift `vantage_mac_live.swift` (`+ Write/Seal` toolbar button)!
 
 let rb = "tools/fixtures/r/rye_build.sh"
 let rye = "languages/rye/bin/rye"
@@ -36,4 +34,4 @@ assert b_swift.ok else "swiftc vantage_mac_live rebuild failed"
 let r_mac = run ["tools/.build/vantage_mac_live" "--selftest"]
 assert r_mac.ok else "vantage_mac_live selftest failed"
 
-say "GREEN: vantage_interactive_writes_and_200_witness -- Interactive Dimeroll/Scribe/Surf writes inside Vantage + 200th Orbit (Myofascia 56.700) proven."
+say "GREEN: vantage_interactive_writes_witness -- Interactive Dimeroll/Scribe/Surf writes inside Vantage proven."

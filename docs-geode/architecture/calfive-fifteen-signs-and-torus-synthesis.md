@@ -17,18 +17,20 @@ Building an entire computer, operating system, hardware handheld, and multi-year
 
 ---
 
-## 2. The Synchronized Multiples-of-5 Hierarchy (`15 - 75 - 225`)
+## 2. The Synchronized Panchanga Powers-of-5 Hierarchy (`15 - 75 - 375 - 1,875 - 9,375`)
 
-| Unit | Exact Composition | Count of Base Units | Myofascia Delta | Plain Meaning |
-|---|---|---|---|---|
-| **1 Movement** | Smallest witnessed gesture (edit + compile + check) | `1` movement | `+0.0002` | One breath of honest craft |
-| **1 Orbit** | **`5` Movements** (survey -> red -> code -> green -> tidy) | `5` movements | **`+0.001`** | One complete, self-contained pass on metal |
-| **1 Quest** | **`3` Orbits = `15` Movements** | **`15` movements** | `+0.003` | Walks all **15 Signs** once at the micro-scale |
-| **1 Journey** | **`5` Quests = `15` Orbits** | **`15` orbits** (`75` movements) | **`+0.015`** | Walks all **15 Signs** once at the orbit scale! |
-| **1 Section** | **`3` Journeys = `15` Quests = `45` Orbits** | **`45` orbits** (`15` quests) | `+0.045` | Walks all **15 Signs** once at the quest scale! |
-| **1 Chapter** | **`5` Sections = `15` Journeys = `75` Quests = `225` Orbits** | **`15` journeys** (`225` orbits) | **`+0.225`** | Walks all **15 Signs** once at the journey scale! |
+Seated in [`../../foundations/20260826-014901_the-panchanga.md`](../../foundations/20260826-014901_the-panchanga.md) and executable via `grain-ww round-load` ([`../../modules/sundial/calfive_wheel.rye`](../../modules/sundial/calfive_wheel.rye)):
 
-Notice the crystalline fractal: **1 Quest = 15 Movements**, **1 Journey = 15 Orbits**, **1 Section = 15 Quests**, **1 Chapter = 15 Journeys** (`15, 30, 45, 60, 75...`). Knowing how to steer fifteen steps teaches you how to steer a week, a season, and a decade.
+| Ring | Exact Composition | Count of Rounds | Plain Meaning |
+|---|---|---|---|
+| **1 Round** | One bounded working session / witnessed commit | `1` round | One complete breath of honest craft |
+| **1 Orbit** | **`15` Rounds** (`(commit_count - 1) % 15 + 1`) | **`15` rounds** | Walks all **15 Signs** once (`Aries`..`Siya`) |
+| **1 Quest** | **`5` Orbits** (`15 x 5`) | **`75` rounds** | Five complete 15-sign laps |
+| **1 Journey** | **`5` Quests** (`75 x 5`) | **`375` rounds** | One enduring product or language arc |
+| **1 Equinox** | **`5` Journeys** (`375 x 5`) | **`1,875` rounds** | One turning of the seasonal wheel |
+| **1 Chapter** | **`5` Equinoxes** (`1,875 x 5`) | **`9,375` rounds** | Binding horizon for *Linengrow* & books |
+
+*(Note per `stamp-and-name`: a **Movement** is an uncounted named part of a plan on a Tablecloth checklist; the Panchanga rings above are pure counted capacities, never forecast labels.)*
 
 ---
 

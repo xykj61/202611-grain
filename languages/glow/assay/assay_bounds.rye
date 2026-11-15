@@ -1,6 +1,6 @@
 //! languages/glow/assay/assay_bounds.rye -- Compile-time `FrameBudget` prover.
 //!
-//! Glow Mill Orbit 10 (`20261115.091500`).
+//! Glow Mill Stamp: `20261115.091500`).
 //! Proves worst-case memory and execution bounds at compile time:
 //!   - Every `|-` (`barhep`) loop MUST carry either an explicit positive tick
 //!     ceiling (`tick_ceiling > 0`) or a structurally shrinking measure,

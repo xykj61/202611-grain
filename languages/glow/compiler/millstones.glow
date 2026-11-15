@@ -1,4 +1,4 @@
-::  languages/glow/compiler/millstones.glow -- Orbit 19 Rye & RISC-V stones
+::  languages/glow/compiler/millstones.glow -- Rye & RISC-V stones
 /-  compiler-shapes
 /+  middle-passes
 /!  32768

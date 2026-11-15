@@ -75,21 +75,21 @@ The five-row council rota stays the lap's deep read. This table is the orbit rou
 
 | Round | Sign | Mode | Element | Goal | The round's verb |
 |---|---|---|---|---|---|
-| 1 | Aries | cardinal | fire | talent | Commence. Finish one to-do. |
-| 2 | Taurus | fixed | earth | law | What must stop, found the way Venus finds a thing already worth keeping: one repeat, named plainly, and left standing -- fertile ground kept whole rather than torn up in haste. |
-| 3 | Gemini | dual | air | fun | Say the work aloud, in one sentence. |
-| 4 | Cancer | cardinal | water | aesthetics | The picture a newcomer can see, offered the way the Moon offers care: held gently, easy to feel at home in, so the first look already feels welcomed. |
-| 5 | Leo | fixed | fire | talent | The economics check. Products, services, infrastructure. The check reads. |
-| 6 | Virgo | dual | earth | law | What must stop. The untidiness across the whole run. |
-| 7 | Libra | cardinal | air | fun | The two checks meet the way Venus meets a partner, each answering the other in balance, and settle into one green line. |
-| 8 | Scorpio | fixed | water | aesthetics | The picture held whole. The fold page, once its links resolve. |
-| 9 | Sagittarius | dual | fire | talent | The mission, in Bhakta, Gauge, Radiant, and Twilight. |
-| 10 | Capricorn | cardinal | earth | law | What must stop. The bound. Fascia's face moves by at most 1.0000. |
-| 11 | Aquarius | fixed | air | fun | One clear type, studied. |
-| 12 | Pisces | dual | water | aesthetics | The wish. One beautiful close. |
-| 13 | sky | cardinal | aether | heart | Wildcard. May borrow one other verb. Names the heart page. |
-| 14 | sky | fixed | aether | heart | Wildcard. Holds one page whole. |
-| 15 | sky | dual | aether | heart | Wildcard, and Siya's chair. Her name stays. The round may borrow one verb. |
+| 1 | Aries | cardinal | fire | talent | Ignite the seed: ship the smallest real file that runs on metal today (*Gall's Law*). |
+| 2 | Taurus | fixed | earth | law | Tend fertile ground: guard **Tally** bounds and keep what already nourishes (*Moon exalted in Taurus*). |
+| 3 | Gemini | dual | air | fun | Speak simply between twins: pair pure citizen **Glow** with metal **Rye** in one clear sentence. |
+| 4 | Cancer | cardinal | water | aesthetics | Make the home safe: **Pond** shelter, **Glasswall**, and a warm first-hour welcome (*Moon's care*). |
+| 5 | Leo | fixed | fire | talent | Stand in daylight: **Dimeroll** books balance to zero in plain sight and **Seva** shines without rent. |
+| 6 | Virgo | dual | earth | law | Measure and prune with care: 80-col, 7-bit ASCII, **stamp-and-name**, and **TAME** two-assertion gates. |
+| 7 | Libra | cardinal | air | fun | Meet in balance: welcome path and refusal path answer each other equally; **Evergrow** keeps every promise. |
+| 8 | Scorpio | fixed | water | aesthetics | Anuradha's covenant: **Mitra** loyalty for friends' code and clean cryptographic zeroization for secrets. |
+| 9 | Sagittarius | dual | fire | talent | Aim toward long wisdom: connect proven code to living **Bloom** and **Shastra** lessons (*Tattva* & *Rasa*). |
+| 10 | Capricorn | cardinal | earth | law | Stone and right-to-repair: bare-metal RISC-V harts, replaceable screws, and ten-year **Blazepod** endurance. |
+| 11 | Aquarius | fixed | air | fun | Commons and constellation: peer-to-peer **Comlink** and **Colloquium** serving neighbors without a gatekeeper. |
+| 12 | Pisces | dual | water | aesthetics | Twilight close and offering: clear residue, run one clean `publish-seed`, and close with gratitude (*Aparigraha*). |
+| 13 | sky | cardinal | aether | heart | Aether hears: step back from the code to ask *why does this exist, and whom does it serve?* |
+| 14 | sky | fixed | aether | heart | Hold the whole cup: compress two apparent opposites into one single-stranded macro (*Sameness Is the Macro*). |
+| 15 | sky | dual | aether | heart | Siya's chair -- circulation and return. Her name stays. Carry the harvest whole across the torus into the next Dawn. |
 
 The plan that seated this table is [`../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md`](../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md).
 

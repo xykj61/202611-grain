@@ -1,6 +1,6 @@
-# tools/l/resonance_module_roster_witness.rish -- the module roster names every module beside it.
+# tools/r/resonance_module_roster_witness.rish -- the module roster names every module beside it.
 #
-#   rishi/bin/rishi run tools/l/resonance_module_roster_witness.rish
+#   rishi/bin/rishi run tools/r/resonance_module_roster_witness.rish
 #
 # WHY. resonance/README.md stood at 297,878 bytes on 20260824 and a reader entering the creative suite
 # used it as the roster of what is here. It named 83 of the 240 .rye modules in the directory, and

@@ -1,6 +1,6 @@
 //! modules/comlink/vantage/surf_social_grid.rye -- Surf 40x8 FrameGrid (M28)!
 //!
-//! Orbit 128 (`20261115.104500`): Renders calm, chronological `Surf` Social
+//! Stamp: `20261115.104500`): Renders calm, chronological `Surf` Social
 //! peer updates into a bounded `8 x 40` (`Skate` `FrameGrid` dimensions!)
 //! inside **`modules/comlink/vantage/`** so macOS Swift, WASM, and Daylight
 //! DC-1 Carry Tablet render `Surf` with zero layout logic in the host shell!

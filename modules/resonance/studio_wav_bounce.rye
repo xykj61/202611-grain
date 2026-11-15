@@ -1,6 +1,6 @@
 //! modules/resonance/studio_wav_bounce.rye -- 4-Track 48kHz Studio `.wav`!
 //!
-//! Orbits 141-145 (`20261115.111000`): Renders all 4 tracks declared in
+//! Stamp: `20261115.111000`): Renders all 4 tracks declared in
 //! `modules/resonance/session.brix` into a playable 48 kHz 16-bit mono RIFF
 //! `.wav` file using pure bounded integer DSP (zero floating-point!):
 //!   - Track 0: `dawn-tanpura` (216 Hz root + 324 Hz fifth drone),

@@ -1,6 +1,6 @@
-# Guide 02 -- Clean Processing and Craft Mill
+# Guide -- Clean Processing and Craft Mill
 
-**Stage:** Bloom Practice Layer (M17)
+**Stage:** Bloom Practice Layer
 **Voice:** Teacher & Civic
 
 ---

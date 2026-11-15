@@ -1,6 +1,6 @@
-# Guide 01 -- Biocyclic Vegan Farm Management
+# Guide -- Biocyclic Vegan Farm Management
 
-**Stage:** Bloom Practice Layer (M16)
+**Stage:** Bloom Practice Layer
 **Voice:** Teacher & Civic
 
 ---

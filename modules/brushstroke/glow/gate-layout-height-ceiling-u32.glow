@@ -5,7 +5,7 @@
 ::  law        brushstroke/skate_cell_grid.rye grid_rows=8
 ::  example    1 -> 1 - 8 -> 1 - 9 -> 0
 ::  readers    Brushstroke - Skate - Glow layout
-::  nib        glow-language journey Orbit 10 -- layout shapes (20261104)
+::  nib        glow-language journey -- layout shapes (20261104)
 ::
 ::  A rectangle's height cannot exceed the grid's row count.
 |=  sample=@u32

@@ -1,6 +1,6 @@
 //! modules/comlink/vantage/carry.rye -- Vantage Carry application core & FFI.
 //!
-//! Orbits 66-67 (`20261115.090500`): Implements `Carry` (`Carry Tablet` on
+//! Stamp: `20261115.090500`): Implements `Carry` (`Carry Tablet` on
 //! Daylight Computer DC-1 Kotlin, `Carry Mobile` handheld RLCD, macOS Swift,
 //! and browser WASM) strictly in terms of **Vantage**.
 //!

@@ -78,3 +78,8 @@ max_cols 80 modules/comlink/vantage/resonance_dsp.rye
 max_cols 80 modules/comlink/vantage/resonance_station.rye
 max_cols 80 modules/comlink/vantage/vantage_mutations.rye
 ascii_7bit docs-geode/tutorials/resonance-station-daw.md
+max_cols 80 modules/sundial/calfive_wheel.rye
+ascii_7bit GEMINI.md
+ascii_7bit languages/GEMINI.md
+ascii_7bit modules/GEMINI.md
+ascii_7bit libraries/GEMINI.md

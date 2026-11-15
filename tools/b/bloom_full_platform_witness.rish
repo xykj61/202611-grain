@@ -1,0 +1,27 @@
+# tools/b/bloom_full_platform_witness.rish -- Bloom Cooperative & Pond Platform!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Verify plain-named guides & GUI tutorial exist and obey 7-bit ASCII
+let g_chk = run ["sh" "-c" "test -f docs-geode/lessons/guides/biocyclic-vegan-farm-management.md && test -f docs-geode/lessons/guides/clean-processing-and-craft-mill.md && test -f docs-geode/lessons/guides/cooperative-distribution-and-routes.md && test -f docs-geode/lessons/guides/steward-coordination-and-rail-cadence.md && test -f docs-geode/tutorials/vantage-and-carry-interfaces.md"]
+assert g_chk.ok else "missing Bloom guide or GUI tutorial"
+
+# 2. M21-M27: 14-galaxy Pond testnet, Kumara/Blake2s, Comlink, Blaze, Quorum, Dimeroll
+let b_gt = run ["sh" rb "modules/pond/testnet/galaxy_testnet.rye" "-femit-bin=tools/.build/galaxy_testnet"]
+assert b_gt.ok else "galaxy_testnet.rye build failed"
+let r_gt = run ["tools/.build/galaxy_testnet"]
+assert r_gt.ok else "galaxy_testnet selftest failed"
+
+# 3. M28: Vantage Surf 40x8 FrameGrid (native macOS + WASM)
+let b_sg = run ["sh" rb "modules/comlink/vantage/surf_social_grid.rye" "-femit-bin=tools/.build/surf_social_grid"]
+assert b_sg.ok else "surf_social_grid.rye build failed"
+let r_sg = run ["tools/.build/surf_social_grid"]
+assert r_sg.ok else "surf_social_grid selftest failed"
+
+let sg_wasm = run [rye "build" "modules/comlink/vantage/surf_social_grid.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/surf_social_grid.wasm"]
+assert sg_wasm.ok else "surf_social_grid wasm32 cross-compile failed"
+
+say "GREEN: bloom_full_platform_witness -- Guides, 14-galaxy Pond testnet, & Vantage Surf FrameGrid proven."

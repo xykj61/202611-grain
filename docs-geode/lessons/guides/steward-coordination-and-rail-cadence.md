@@ -1,6 +1,6 @@
-# Guide 04 -- Steward Coordination and Rail Cadence
+# Guide -- Steward Coordination and Rail Cadence
 
-**Stage:** Bloom Practice Layer (M19)
+**Stage:** Bloom Practice Layer
 **Voice:** Teacher & Civic
 
 ---

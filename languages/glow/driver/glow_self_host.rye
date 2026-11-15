@@ -1,6 +1,6 @@
 //! languages/glow/driver/glow_self_host.rye -- Stage-1 == Stage-2 fixed point!
 //!
-//! Glow Mill Orbit 20 (`20261115.093000`).
+//! Glow Mill Stamp: `20261115.093000`).
 //! Verifies modular self-hosting & Citizen Ring `.glow` hygiene on metal:
 //!   1. Reads `languages/glow/compiler/glow.brix` and every `.glow` pass,
 //!   2. Verifies `/` header order & `/!` non-zero `FrameBudget` ceilings,

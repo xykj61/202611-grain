@@ -1,6 +1,6 @@
 //! modules/brushstroke/skate/realidream_compose.rye -- Realidream Glasswall!
 //!
-//! Orbits 96-98 (`20261115.095500`): Pure TAME immediate-mode `Realidream`
+//! Stamp: `20261115.095500`): Pure TAME immediate-mode `Realidream`
 //! surface composer uniting:
 //!   - `Blaze` content-addressed weave head digest (`[32]u8`),
 //!   - `VantageCarry` posture (`0=station`, `1=tablet_dc1`, `2=mobile_deck`)

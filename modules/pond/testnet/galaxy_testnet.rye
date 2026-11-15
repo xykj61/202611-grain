@@ -1,6 +1,6 @@
 //! modules/pond/testnet/galaxy_testnet.rye -- 14-Galaxy Pond Testnet (M21-M27)!
 //!
-//! Orbits 121-127 (`20261115.104500`): Proves Bloom Onboarding Act II Quests
+//! Stamp: `20261115.104500`): Proves Bloom Onboarding Act II Quests
 //! 5 & 6 in bounded TAME Rye:
 //!   - M21: 14 isolated Pond galaxies (`~siya` .. `~dill`),
 //!   - M22: `Kumara` SHA3-256 identity nib + `Blake2s-256` wire handshake key,
