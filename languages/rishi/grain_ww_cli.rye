@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.153500";
-pub const myofascia_reading = "56.865";
+pub const grain_ww_version = "20261115.155000";
+pub const myofascia_reading = "56.880";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -308,6 +308,15 @@ pub fn main(init: std.process.Init) !u8 {
             "languages/rishi/bin/rishi",
             "run",
             &[_][]const u8{"tools/c/build_dc1_apk.rish"},
+        );
+    }
+    if (std.mem.eql(u8, sub, "blazepod-check")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/rv64_glasswall_boot",
+            null,
+            args[2..],
         );
     }
 

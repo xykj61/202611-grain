@@ -1,0 +1,28 @@
+# tools/b/blazepod_rv64_glasswall_witness.rish -- Movement 10/15 (`Capricorn`):
+# Bare-Metal `RV64GC` Blazepod Glasswall Hart0 Attestation Witness!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Host selftest + `grain-ww blazepod-check` CLI!
+let b_host = run ["sh" rb "blazepod/rv64_glasswall_boot.rye" "-femit-bin=tools/.build/rv64_glasswall_boot"]
+assert b_host.ok else "rv64_glasswall_boot host build failed"
+let r_host = run ["tools/.build/rv64_glasswall_boot"]
+assert r_host.ok else "rv64_glasswall_boot selftest failed"
+
+# 2. Cross-compile freestanding `riscv64-freestanding` (`RV64GC`) ELF!
+let b_rv64 = run ["languages/rye/bin/rye" "build" "blazepod/rv64_glasswall_boot.rye" "-target" "riscv64-freestanding" "-fno-entry" "-femit-bin=tools/.build/rv64_glasswall_boot.elf"]
+assert b_rv64.ok else "riscv64-freestanding RV64GC cross-compile failed"
+
+let f_chk = run ["file" "tools/.build/rv64_glasswall_boot.elf"]
+assert f_chk.ok else "file command failed on rv64_glasswall_boot.elf"
+assert (f_chk.out contains "UCB RISC-V") else "rv64_glasswall_boot.elf is not a RISC-V ELF!"
+
+# 3. Rebuild `grain-ww` CLI & run `grain-ww blazepod-check`!
+let b_gw = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_gw.ok else "grain_ww_cli build failed"
+let r_bc = run ["languages/rishi/bin/grain-ww" "blazepod-check"]
+assert r_bc.ok else "grain-ww blazepod-check failed"
+
+say "GREEN: blazepod_rv64_glasswall_witness -- RV64GC freestanding ELF & Glasswall hart0 pins proven."

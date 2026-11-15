@@ -1,0 +1,114 @@
+//! blazepod/rv64_glasswall_boot.rye -- Bare-Metal RV64GC Glasswall Attest!
+//!
+//! Stamp: `20261115.155000` -- `Movement 10/15 : Capricorn` (*Stone & repair:
+//! bare-metal RISC-V & ten-year hardware*), powering `grain-ww blazepod-check`
+//! and cross-compiling cleanly to `riscv64-freestanding-none` (`RV64GC`)!
+//!   1. Verifies **`tally-ram` empty-NVMe pin** (`nvme_present == false`),
+//!   2. Verifies **physical SPI NOR `/WP` jumper** (`spi_wp_locked == true`),
+//!   3. Verifies **Glasswall series mic/lamp circuit** (`!mic_vdd or lamp_on`),
+//!   4. Verifies **`>= 4096 MiB` LPDDR5 DRAM** before `Aurora` hart0 entry,
+//!      emitting `sifive_test` `0x5555` (`PASS`) or `0x0001_3333` (`FAIL`)!
+
+const std = @import("std");
+const builtin = @import("builtin");
+const assert = std.debug.assert;
+
+pub const version = "20261115.155000";
+pub const sifive_pass: u32 = 0x0000_5555;
+pub const sifive_fail: u32 = 0x0001_3333;
+pub const min_dram_mib: u32 = 4096;
+const nl: u8 = 10;
+
+pub const BootPins = extern struct {
+    nvme_present: bool,
+    spi_wp_locked: bool,
+    mic_vdd_closed: bool,
+    bystander_lamp_lit: bool,
+    dram_mib: u32,
+};
+
+pub fn evaluate_hart0_pins(pins: BootPins) u32 {
+    // 1. `tally-ram` forbids persistent NVMe media in volatile mode!
+    if (pins.nvme_present) return sifive_fail;
+    // 2. Boot SPI NOR must have hardware `/WP` jumper asserted!
+    if (!pins.spi_wp_locked) return sifive_fail;
+    // 3. Glasswall law: mic VDD may never close unless bystander LED is lit!
+    if (pins.mic_vdd_closed and !pins.bystander_lamp_lit) return sifive_fail;
+    // 4. Blazepod requires >= 4 GiB LPDDR5 for bounded Tally slabs!
+    if (pins.dram_mib < min_dram_mib) return sifive_fail;
+
+    // invariant: passed boot guarantees RAM-only + locked ROM + >= 4 GiB!
+    assert(!pins.nvme_present and pins.spi_wp_locked);
+    assert(pins.dram_mib >= min_dram_mib);
+    return sifive_pass;
+}
+
+export fn blazepod_glasswall_hart0_gate(
+    nvme_present: bool,
+    spi_wp_locked: bool,
+    mic_vdd_closed: bool,
+    bystander_lamp_lit: bool,
+    dram_mib: u32,
+) u32 {
+    return evaluate_hart0_pins(.{
+        .nvme_present = nvme_present,
+        .spi_wp_locked = spi_wp_locked,
+        .mic_vdd_closed = mic_vdd_closed,
+        .bystander_lamp_lit = bystander_lamp_lit,
+        .dram_mib = dram_mib,
+    });
+}
+
+fn run_selftest() !u8 {
+    // Welcome 1: Clean `tally-ram` 8 GiB Blazepod with mic VDD open -> 0x5555!
+    const ok1 = evaluate_hart0_pins(.{
+        .nvme_present = false,
+        .spi_wp_locked = true,
+        .mic_vdd_closed = false,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    });
+    if (ok1 != sifive_pass) return error.CleanBootRejected;
+
+    // Refusal 1: Rogue NVMe inserted in `tally-ram` slot -> 0x0001_3333!
+    const bad_nvme = evaluate_hart0_pins(.{
+        .nvme_present = true,
+        .spi_wp_locked = true,
+        .mic_vdd_closed = false,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    });
+    if (bad_nvme != sifive_fail) return error.RogueNvmeAccepted;
+
+    // Refusal 2: Unjumpered SPI NOR `/WP` -> 0x0001_3333!
+    const bad_wp = evaluate_hart0_pins(.{
+        .nvme_present = false,
+        .spi_wp_locked = false,
+        .mic_vdd_closed = false,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    });
+    if (bad_wp != sifive_fail) return error.UnlockedSpiAccepted;
+
+    // Refusal 3: Mic VDD closed with unlit bystander lamp -> 0x0001_3333!
+    const bad_mic = evaluate_hart0_pins(.{
+        .nvme_present = false,
+        .spi_wp_locked = true,
+        .mic_vdd_closed = true,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    });
+    if (bad_mic != sifive_fail) return error.SilentMicAccepted;
+
+    if (builtin.os.tag != .freestanding) {
+        std.debug.print(
+            "GREEN: rv64_glasswall_boot -- RV64GC hart0 pins (0x5555).{c}",
+            .{nl},
+        );
+    }
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

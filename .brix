@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.153500
-myofascia 56.865
+version 20261115.155000
+myofascia 56.880
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -88,6 +88,8 @@ file modules/comlink/council_405.rye
 file modules/comlink/council_mycelium_weave.rye
 file modules/comlink/glow/gate-council-405.glow
 file modules/comlink/vantage/vantage_council_puddle.rye
+file blazepod/rv64_glasswall_boot.rye
+file modules/aurora/glow/gate-riscv-hart-boot.glow
 file modules/pond/puddle/puddle_remote.rye
 file modules/pond/puddle/puddle_udp_live.rye
 file modules/pond/puddle/puddle_scp_cli.rye
