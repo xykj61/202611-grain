@@ -1,0 +1,150 @@
+//! modules/pond/testnet/council_405_testnet.rye -- 15-Galaxy 405-Seat Mesh!
+//!
+//! Stamp: `20261115.145000` -- Unifies Keaton's **`d15 -> 3 -> 9 -> 405`**
+//! Council Sky across `Pond`, `Comlink`, `Kumara`, `Dimeroll`, and `Puddle`:
+//!   - **15 Calfive Galaxies (`Aries`..`Siya`)** x **27 Nakshatra Seats** =
+//!     **405 Sovereign Seats**,
+//!   - **Exact Fractal Quorums:** `9/15` Galaxies = `243/405` (`60.000%`
+//!     Operational) & `12/15` Galaxies = `324/405` (`80.000%` Constitutional),
+//!   - **Conserved 15-Galaxy Dimeroll Settlement:** `sum(balances) == 0`,
+//!   - **Enacted `Pond Puddle` Rollout:** Once `324/405` seals in `Blaze`,
+//!     all 15 Galaxy Puddle hosts verify & commit the signed release parcel!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Ed25519 = std.crypto.sign.Ed25519;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.145000";
+pub const galaxy_count: usize = 15;
+pub const seats_per_galaxy: u32 = 27;
+pub const total_seats: u32 = 405;
+pub const quorum_60pct_seats: u32 = 243; // 9 * 27!
+pub const quorum_80pct_seats: u32 = 324; // 12 * 27!
+const nl: u8 = 10;
+
+pub const TestnetError = error{
+    ConservationBroken,
+    QuorumNotReached,
+    BadParcelDigest,
+    BadSignature,
+};
+
+pub const GalaxyPier = struct {
+    id: u8,
+    net_mala: i64,
+    deployed_sha3: [32]u8,
+    deployed: bool,
+};
+
+pub const Council405Mesh = struct {
+    piers: [galaxy_count]GalaxyPier,
+
+    pub fn init() Council405Mesh {
+        // invariant: 9*27 == 243 (60%) & 12*27 == 324 (80%) of 405!
+        assert(9 * seats_per_galaxy == quorum_60pct_seats);
+        assert(12 * seats_per_galaxy == quorum_80pct_seats);
+        var m = std.mem.zeroes(Council405Mesh);
+        var g: usize = 0;
+        while (g < galaxy_count) : (g += 1) {
+            m.piers[g].id = @intCast(g);
+        }
+        return m;
+    }
+
+    pub fn settle_cross_galaxy(
+        self: *Council405Mesh,
+        from_g: usize,
+        to_g: usize,
+        mala: u64,
+    ) TestnetError!void {
+        const delta: i64 = @intCast(mala);
+        self.piers[from_g].net_mala -= delta;
+        self.piers[to_g].net_mala += delta;
+
+        var sum: i64 = 0;
+        for (self.piers) |p| sum += p.net_mala;
+        if (sum != 0) return error.ConservationBroken;
+        assert(sum == 0);
+    }
+
+    pub fn enact_and_deploy_puddle(
+        self: *Council405Mesh,
+        affirming_galaxies: u32,
+        parcel: []const u8,
+        expected_sha3: [32]u8,
+        pk_bytes: [32]u8,
+        sig_bytes: [64]u8,
+    ) TestnetError!u32 {
+        const yes_seats = affirming_galaxies * seats_per_galaxy;
+        if (yes_seats < quorum_80pct_seats) return error.QuorumNotReached;
+
+        var got_sha3: [32]u8 = undefined;
+        Sha3_256.hash(parcel, &got_sha3, .{});
+        if (!std.mem.eql(u8, &got_sha3, &expected_sha3)) {
+            return error.BadParcelDigest;
+        }
+        const pk = Ed25519.PublicKey.fromBytes(pk_bytes) catch {
+            return error.BadSignature;
+        };
+        const sig = Ed25519.Signature.fromBytes(sig_bytes);
+        sig.verify(&got_sha3, pk) catch return error.BadSignature;
+
+        var g: usize = 0;
+        while (g < galaxy_count) : (g += 1) {
+            self.piers[g].deployed_sha3 = got_sha3;
+            self.piers[g].deployed = true;
+        }
+        assert(yes_seats >= 324);
+        return yes_seats;
+    }
+};
+
+fn run_selftest() !u8 {
+    var mesh = Council405Mesh.init();
+
+    // 1. Cross-Galaxy Dimeroll across Aries(0) -> Virgo(5) -> Siya(14)
+    try mesh.settle_cross_galaxy(0, 5, 1200);
+    try mesh.settle_cross_galaxy(5, 14, 450);
+
+    // 2. 11 Galaxies (297/405 = 73.3%) MUST refuse 80% constitutional rollout!
+    const seed: [32]u8 = @splat(0x33);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    const pkg = "release grain-ww 20261115.145000";
+    var sha3: [32]u8 = undefined;
+    Sha3_256.hash(pkg, &sha3, .{});
+    const sig = try kp.sign(&sha3, null);
+
+    if (mesh.enact_and_deploy_puddle(
+        11,
+        pkg,
+        sha3,
+        kp.public_key.toBytes(),
+        sig.toBytes(),
+    )) |_| {
+        return error.EnactedBelow324;
+    } else |err| {
+        if (err != error.QuorumNotReached) return err;
+    }
+
+    // 3. 12 Galaxies (324/405 = exact 80.0%) enacts & deploys all 15 Puddles!
+    const seats = try mesh.enact_and_deploy_puddle(
+        12,
+        pkg,
+        sha3,
+        kp.public_key.toBytes(),
+        sig.toBytes(),
+    );
+    if (seats != 324 or !mesh.piers[14].deployed) return error.DeployMissed;
+
+    print(
+        "GREEN: council_405_testnet -- 15 galaxies, 324/405, & Puddle.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,26 @@
+# tools/c/council_405_testnet_and_global_clock_witness.rish -- 15-Galaxy 405
+# Council Testnet, Global Auto-DST Clock, & `[15..9375]` Calfive Witness!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. `[15 75 375 1875 9375]` Calfive Movement wheel!
+let b_cw = run ["sh" rb "modules/sundial/calfive_wheel.rye" "-femit-bin=tools/.build/calfive_wheel"]
+assert b_cw.ok else "calfive_wheel build failed"
+let r_cw = run ["tools/.build/calfive_wheel" "selftest"]
+assert r_cw.ok else "calfive_wheel selftest failed"
+
+# 2. 15-Galaxy 405-Seat Council + Dimeroll + Pond Puddle testnet!
+let b_ct = run ["sh" rb "modules/pond/testnet/council_405_testnet.rye" "-femit-bin=tools/.build/council_405_testnet"]
+assert b_ct.ok else "council_405_testnet build failed"
+let r_ct = run ["tools/.build/council_405_testnet"]
+assert r_ct.ok else "council_405_testnet selftest failed"
+
+# 3. Global US/EU/IST/JST/UTC bare-metal One-Clock!
+let b_oc = run ["sh" rb "modules/sundial/one_clock.rye" "-femit-bin=tools/.build/one_clock"]
+assert b_oc.ok else "one_clock build failed"
+let r_oc = run ["tools/.build/one_clock" "selftest"]
+assert r_oc.ok else "one_clock global selftest failed"
+
+say "GREEN: council_405_testnet_and_global_clock_witness -- [15..9375] Movement wheel, 15-galaxy 405 testnet, & global One-Clock proven."

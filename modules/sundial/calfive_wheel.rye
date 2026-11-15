@@ -1,24 +1,26 @@
-//! modules/sundial/calfive_wheel.rye -- Calfive 15-Sign Wheel & Round Load!
+//! modules/sundial/calfive_wheel.rye -- `[15..9375]` Calfive Movement Wheel!
 //!
-//! Stamp: 20261115.123500 -- Single-strands the Panchanga (`15 - 75 - 375 -
-//! 1,875 - 9,375` rounds) and the 15-Sign Wheel (`Aries`..`Pisces` + 3 `sky`
-//! Aether seats ending at `Siya`) into an executable TAME Rye witness & CLI
-//! (`grain-ww round-load`).
+//! Stamp: `20261115.145000` -- Strict `round -> movement` Calfive Panchanga:
+//!   `[15, 75, 375, 1875, 9375] : [orbit, quest, journey, section, chapter]`
+//!   - `1 Orbit` strictly means **completion of 15 Movements**,
+//!   - 15-Sign Wheel (`Aries`..`Pisces` + 3 `sky` Aether seats ending at
+//!     `Siya`), executable via `grain-ww round-load` / `grain-ww movement`!
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const version = "20261115.123500";
+pub const version = "20261115.145000";
 pub const sign_count: u32 = 15;
-pub const quest_rounds: u32 = 75;
-pub const journey_rounds: u32 = 375;
-pub const equinox_rounds: u32 = 1875;
-pub const chapter_rounds: u32 = 9375;
+pub const orbit_movements: u32 = 15;
+pub const quest_movements: u32 = 75;
+pub const journey_movements: u32 = 375;
+pub const section_movements: u32 = 1875;
+pub const chapter_movements: u32 = 9375;
 const nl: u8 = 10;
 
 pub const SignSeat = struct {
-    round: u8,
+    movement: u8,
     sign: []const u8,
     mode: []const u8,
     element: []const u8,
@@ -28,7 +30,7 @@ pub const SignSeat = struct {
 
 pub const wheel = [sign_count]SignSeat{
     .{
-        .round = 1,
+        .movement = 1,
         .sign = "Aries",
         .mode = "cardinal",
         .element = "fire",
@@ -37,7 +39,7 @@ pub const wheel = [sign_count]SignSeat{
             "Ignite the seed: ship the smallest real file on metal.",
     },
     .{
-        .round = 2,
+        .movement = 2,
         .sign = "Taurus",
         .mode = "fixed",
         .element = "earth",
@@ -46,7 +48,7 @@ pub const wheel = [sign_count]SignSeat{
             "Tend fertile ground: guard Tally bounds & keep what works.",
     },
     .{
-        .round = 3,
+        .movement = 3,
         .sign = "Gemini",
         .mode = "dual",
         .element = "air",
@@ -55,7 +57,7 @@ pub const wheel = [sign_count]SignSeat{
             "Speak between twins: pair citizen Glow with Rye plainly.",
     },
     .{
-        .round = 4,
+        .movement = 4,
         .sign = "Cancer",
         .mode = "cardinal",
         .element = "water",
@@ -64,7 +66,7 @@ pub const wheel = [sign_count]SignSeat{
             "Make the home safe: Pond shelter, Glasswall, warm welcome.",
     },
     .{
-        .round = 5,
+        .movement = 5,
         .sign = "Leo",
         .mode = "fixed",
         .element = "fire",
@@ -73,7 +75,7 @@ pub const wheel = [sign_count]SignSeat{
             "Stand in daylight: Dimeroll books balance & Seva shines.",
     },
     .{
-        .round = 6,
+        .movement = 6,
         .sign = "Virgo",
         .mode = "dual",
         .element = "earth",
@@ -82,7 +84,7 @@ pub const wheel = [sign_count]SignSeat{
             "Measure & prune: 80-col, ASCII, stamp-and-name, TAME gates.",
     },
     .{
-        .round = 7,
+        .movement = 7,
         .sign = "Libra",
         .mode = "cardinal",
         .element = "air",
@@ -91,7 +93,7 @@ pub const wheel = [sign_count]SignSeat{
             "Meet in balance: welcome & refusal paths answer each other.",
     },
     .{
-        .round = 8,
+        .movement = 8,
         .sign = "Scorpio",
         .mode = "fixed",
         .element = "water",
@@ -100,7 +102,7 @@ pub const wheel = [sign_count]SignSeat{
             "Anuradha covenant: Mitra loyalty & clean secret zeroization.",
     },
     .{
-        .round = 9,
+        .movement = 9,
         .sign = "Sagittarius",
         .mode = "dual",
         .element = "fire",
@@ -109,7 +111,7 @@ pub const wheel = [sign_count]SignSeat{
             "Aim toward wisdom: connect proven code to Bloom & Shastra.",
     },
     .{
-        .round = 10,
+        .movement = 10,
         .sign = "Capricorn",
         .mode = "cardinal",
         .element = "earth",
@@ -118,7 +120,7 @@ pub const wheel = [sign_count]SignSeat{
             "Stone & repair: bare-metal RISC-V & ten-year hardware.",
     },
     .{
-        .round = 11,
+        .movement = 11,
         .sign = "Aquarius",
         .mode = "fixed",
         .element = "air",
@@ -127,7 +129,7 @@ pub const wheel = [sign_count]SignSeat{
             "Commons & Comlink: peer constellations without gatekeepers.",
     },
     .{
-        .round = 12,
+        .movement = 12,
         .sign = "Pisces",
         .mode = "dual",
         .element = "water",
@@ -136,7 +138,7 @@ pub const wheel = [sign_count]SignSeat{
             "Twilight close: clear residue & offer one clean seed.",
     },
     .{
-        .round = 13,
+        .movement = 13,
         .sign = "sky",
         .mode = "cardinal",
         .element = "aether",
@@ -145,7 +147,7 @@ pub const wheel = [sign_count]SignSeat{
             "Aether hears: step back and ask whom the work serves.",
     },
     .{
-        .round = 14,
+        .movement = 14,
         .sign = "sky",
         .mode = "fixed",
         .element = "aether",
@@ -154,7 +156,7 @@ pub const wheel = [sign_count]SignSeat{
             "Hold the whole cup: compress two truths into one macro.",
     },
     .{
-        .round = 15,
+        .movement = 15,
         .sign = "sky (Siya)",
         .mode = "dual",
         .element = "aether",
@@ -164,34 +166,32 @@ pub const wheel = [sign_count]SignSeat{
     },
 };
 
-pub fn seat_for_commit_count(commit_count: u64) SignSeat {
-    const eff = if (commit_count == 0) 1 else commit_count;
+pub fn seat_for_movement_count(mov_count: u64) SignSeat {
+    const eff = if (mov_count == 0) 1 else mov_count;
     const idx: usize = @intCast((eff - 1) % sign_count);
     // invariant: 15-sign modulo index lies strictly in 0..14.
     assert(idx < sign_count);
     const s = wheel[idx];
-    assert(s.round == idx + 1);
+    assert(s.movement == idx + 1);
     return s;
 }
 
 fn run_selftest() !u8 {
-    // Verify Panchanga x5 ring progression: 15 -> 75 -> 375 -> 1875 -> 9375
-    if (sign_count * 5 != quest_rounds or
-        quest_rounds * 5 != journey_rounds or
-        journey_rounds * 5 != equinox_rounds or
-        equinox_rounds * 5 != chapter_rounds)
+    // Verify x5 elemental progression: [15, 75, 375, 1875, 9375]
+    if (orbit_movements * 5 != quest_movements or
+        quest_movements * 5 != journey_movements or
+        journey_movements * 5 != section_movements or
+        section_movements * 5 != chapter_movements)
     {
         return error.PanchangaRatioBroken;
     }
-    if (!std.mem.eql(u8, seat_for_commit_count(1).sign, "Aries")) {
-        return error.Round1NotAries;
+    if (!std.mem.eql(u8, seat_for_movement_count(1).sign, "Aries")) {
+        return error.Movement1NotAries;
     }
-    if (!std.mem.eql(u8, seat_for_commit_count(15).sign, "sky (Siya)")) {
-        return error.Round15NotSiya;
+    if (!std.mem.eql(u8, seat_for_movement_count(15).sign, "sky (Siya)")) {
+        return error.Movement15NotSiya;
     }
-    print("GREEN: calfive_wheel -- 15 signs & x5 Panchanga proven.{c}", .{
-        nl,
-    });
+    print("GREEN: calfive_wheel -- [15..9375] & 15 signs proven.{c}", .{nl});
     return 0;
 }
 
@@ -210,22 +210,22 @@ pub fn main(init: std.process.Init) !u8 {
     const ws_trim = [_]u8{ 32, 9, 13, 10 };
     const trimmed = std.mem.trim(u8, r.stdout, &ws_trim);
     const cnt = std.fmt.parseInt(u64, trimmed, 10) catch 1;
-    const seat = seat_for_commit_count(cnt);
-    const q_place = ((cnt - 1) % quest_rounds) + 1;
+    const seat = seat_for_movement_count(cnt);
+    const orbits_done = cnt / orbit_movements;
+    const q_place = ((cnt - 1) % quest_movements) + 1;
 
-    print("Calfive Round Load (commits={d}, quest_step={d}/75):{c}", .{
-        cnt,
-        q_place,
-        nl,
-    });
-    print("  Round {d}/15 : {s} ({s} {s} -- goal: {s}){c}", .{
-        seat.round,
+    print(
+        "Calfive Round Load [15..9375] (mov={d}, orb={d}, q={d}/75):{c}",
+        .{ cnt, orbits_done, q_place, nl },
+    );
+    print("  Movement {d}/15 : {s} ({s} {s} -- goal: {s}){c}", .{
+        seat.movement,
         seat.sign,
         seat.mode,
         seat.element,
         seat.goal,
         nl,
     });
-    print("  Theme       : {s}{c}", .{ seat.craft_verb, nl });
+    print("  Theme          : {s}{c}", .{ seat.craft_verb, nl });
     return 0;
 }

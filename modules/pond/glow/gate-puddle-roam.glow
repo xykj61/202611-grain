@@ -1,0 +1,10 @@
+::  modules/pond/glow/gate-puddle-roam.glow -- Monotonic roaming turn!
+/!  16384
+|%
+++  gate-puddle-roam
+  |=  [high-water=@ud next-epoch=@ud]                   ::  Mosh UDP sequence
+  ^-  @ud                                               ::  committed epoch
+  ~|  'puddle-replay-epoch-refused'                     ::  anti-replay law!
+  ?>  (gth next-epoch high-water)                       ::  strictly climbs
+  next-epoch
+--
