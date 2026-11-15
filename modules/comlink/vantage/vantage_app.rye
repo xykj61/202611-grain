@@ -1,9 +1,9 @@
 //! modules/comlink/vantage/vantage_app.rye -- Unified Vantage Carry & Station!
 //!
-//! Waves A & B (`20261115.121500`): Unites `carry.rye`, `bloom.rye`,
-//! `resonance_station.rye` (3-Zone Desktop DAW in `Vantage Station`), and
-//! `vantage_mutations.rye` (live conserved writes in `Dimeroll`, `Scribe`, &
-//! `Surf`)!
+//! Stamp: `20261115.143500` -- Unites all 6 interactive rooms (`Bloom`,
+//! `Dimeroll`, `Resonance` 3-Zone DAW, `Scribe`, `Civic/Blaze` 405-Council +
+//! `Pulp` + `Tablecloth` + `Pond Puddle` + `Glasswall`, and `Surf`) across
+//! `aarch64-macos`, `wasm32-wasi`, and `aarch64-linux-android`!
 
 const std = @import("std");
 const builtin = @import("builtin");
@@ -12,8 +12,9 @@ const carry = @import("carry.rye");
 const bloom = @import("bloom.rye");
 const res_station = @import("resonance_station.rye");
 const muts = @import("vantage_mutations.rye");
+const civic_room = @import("vantage_council_puddle.rye");
 
-pub const version = "20261115.121500";
+pub const version = "20261115.143500";
 const nl: u8 = 10;
 
 const dimeroll_views = [_][]const u8{
@@ -72,7 +73,6 @@ export fn vantage_app_res_toggle_solo0_ffi() void {
     res_station.resonance_station_toggle_solo0_ffi();
 }
 
-/// Interactive Write/Seal action routed by Vantage's active room!
 export fn vantage_app_write_active_room_ffi() bool {
     ensure_store();
     switch (app_state.active_tab) {
@@ -86,6 +86,10 @@ export fn vantage_app_write_active_room_ffi() bool {
             _ = write_store.seal_scribe_draft(
                 "[gadya] Clear thought [padya] |= x=@ud x",
             ) catch return false;
+            return true;
+        },
+        4 => {
+            write_store.step_civic_council_and_puddle();
             return true;
         },
         5 => {
@@ -163,11 +167,24 @@ pub fn render_screen(st: *const carry.VantageCarryState, out: []u8) u32 {
             ) catch return @intCast(pos);
             pos += s_row.len;
         },
-        4 => append_line(
-            out,
-            &pos,
-            "  Blaze: Content-Addressed Weaves & 3-Tier Harness",
-        ),
+        4 => {
+            const c_st = civic_room.CivicCommandState{
+                .tz_tag = "est",
+                .completed_movements = 305,
+                .council_yes_votes = write_store.council_yes_votes,
+                .puddle_roam_seq = write_store.puddle_roam_seq,
+                .glasswall_mic_open = false,
+            };
+            const c_frame = c_st.render_glasswall_frame(out[pos..]) catch {
+                return @intCast(pos);
+            };
+            pos += c_frame.len;
+            append_line(
+                out,
+                &pos,
+                "  Blaze + Tablecloth TCLOTH01: SHA3-sealed FK/KV workspace",
+            );
+        },
         else => {
             const sf_hdr = std.fmt.bufPrint(
                 out[pos..],
@@ -187,7 +204,6 @@ pub fn render_screen(st: *const carry.VantageCarryState, out: []u8) u32 {
             }
         },
     }
-    // invariant: rendered screen byte count never exceeds caller capacity.
     assert(pos <= out.len);
     return @intCast(pos);
 }
@@ -207,7 +223,7 @@ fn run_selftest() !u8 {
         return error.MissingBloomCurriculum;
     }
 
-    // Tab 1 (Dimeroll): interactive post updates journal & preserves sum == 0!
+    // Tab 1 (Dimeroll)
     _ = vantage_app_touch_ffi(0, 900, 500, 12);
     _ = vantage_app_touch_ffi(2, 650, 502, 12);
     if (!vantage_app_write_active_room_ffi()) return error.DimerollWriteFailed;
@@ -216,7 +232,7 @@ fn run_selftest() !u8 {
         return error.MissingPostedDimerollEntry;
     }
 
-    // Station (1200dp) Tab 2 (Resonance): 3-Zone Desktop DAW!
+    // Station (1200dp) Tab 2 (Resonance)
     vantage_app_init_ffi(1200, 1600);
     _ = vantage_app_touch_ffi(0, 600, 24, 10);
     _ = vantage_app_touch_ffi(2, 600, 24, 10);
@@ -229,7 +245,7 @@ fn run_selftest() !u8 {
         return error.MissingStationDawInVantage;
     }
 
-    // Tab 3 (Scribe): interactive Champu seal increments revision!
+    // Tab 3 (Scribe)
     _ = vantage_app_touch_ffi(0, 880, 24, 10);
     _ = vantage_app_touch_ffi(2, 880, 24, 10);
     if (!vantage_app_write_active_room_ffi()) return error.ScribeSealFailed;
@@ -238,9 +254,18 @@ fn run_selftest() !u8 {
         return error.MissingScribeSealCount;
     }
 
+    // Tab 4 (Civic / Blaze): + Write/Seal advances 243 -> 324 (80%:ENACTED)!
+    _ = vantage_app_touch_ffi(0, 1140, 24, 10);
+    _ = vantage_app_touch_ffi(2, 1140, 24, 10);
+    if (!vantage_app_write_active_room_ffi()) return error.CivicStepFailed;
+    const n4 = vantage_app_render_screen_ffi(&scr, 2048);
+    if (std.mem.indexOf(u8, scr[0..n4], "80%:ENACTED") == null) {
+        return error.MissingCivicEnacted;
+    }
+
     if (builtin.os.tag != .freestanding) {
         std.debug.print(
-            "GREEN: vantage_app -- Station DAW & interactive writes proven.{c}",
+            "GREEN: vantage_app -- 6-tab DAW, Civic 405, & writes proven.{c}",
             .{nl},
         );
     }

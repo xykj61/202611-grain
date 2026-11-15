@@ -98,3 +98,4 @@ max_cols 80 modules/flare/pulp/pulp_object_recall.rye
 max_cols 80 modules/tablecloth/sql_workspace.rye
 max_cols 80 modules/comlink/council_mycelium_weave.rye
 max_cols 80 modules/comlink/vantage/vantage_council_puddle.rye
+max_cols 80 modules/pond/puddle/puddle_scp_cli.rye

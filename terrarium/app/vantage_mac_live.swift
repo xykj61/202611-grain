@@ -75,6 +75,13 @@ func runHeadlessSelftest() -> Int32 {
     let sStation = readVantageScreen()
     guard sStation.contains("RESONANCE STATION DESKTOP DAW") else { return 7 }
 
+    // Tap Tab 4 (Civic/Blaze) and trigger + Write/Seal -> 80%:ENACTED!
+    _ = vantage_app_touch_ffi(0, 1140, 24, 10)
+    _ = vantage_app_touch_ffi(2, 1140, 24, 10)
+    guard vantage_app_write_active_room_ffi() else { return 8 }
+    let sCivic = readVantageScreen()
+    guard sCivic.contains("80%:ENACTED") else { return 9 }
+
     fputs("GREEN: vantage_mac_live -- Swift <-> Rye VantageApp FFI proven.\n", stderr)
     return 0
 }
@@ -107,7 +114,7 @@ final class VantageWindowController: NSObject, NSApplicationDelegate {
         let bar = NSStackView()
         bar.orientation = .horizontal
         bar.spacing = 6
-        let labels = ["Bloom", "Dimeroll", "Resonance", "Scribe", "Blaze", "Surf"]
+        let labels = ["Bloom", "Dimeroll", "Resonance", "Scribe", "Civic/Blaze", "Surf"]
         for (idx, lbl) in labels.enumerated() {
             let btn = NSButton(
                 title: lbl,

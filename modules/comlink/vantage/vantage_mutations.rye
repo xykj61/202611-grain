@@ -1,23 +1,19 @@
 //! modules/comlink/vantage/vantage_mutations.rye -- Interactive Write/Save!
 //!
-//! Wave B (`20261115.121000`): Upgrades `Vantage` from read-only room display
-//! to live, conserved, content-addressed **write & seal** mutations owned 100%
-//! inside `modules/comlink/vantage/`:
-//!   1. `Dimeroll` Interactive Double-Entry Post (`post_dimeroll_entry`:
-//!      records a balanced `debit` / `credit` leg in `MALA`, refuses `amount ==
-//!      0` or `debit == credit`, and maintains `sum(nets) == 0`!),
-//!   2. `Scribe / Linengrow` Champu Seal (`seal_scribe_champu`: validates
-//!      `[gadya]` + `[padya]` structure and computes a 32-byte `Blaze` SHA3-256
-//!      receipt nib!),
-//!   3. `Surf` Calm Post Append (`append_surf_post`: appends a signed peer note
-//!      into the bounded chronological `Surf` feed with zero ad hooks!).
+//! Stamp: `20261115.143500` -- Live, conserved, content-addressed mutations
+//! owned 100% inside `modules/comlink/vantage/`:
+//!   1. `Dimeroll` Double-Entry Post (`sum(balances) == 0`!),
+//!   2. `Scribe / Linengrow` Champu Seal (32-byte `Blaze` SHA3-256 nib),
+//!   3. `Civic / Blaze` `405`-Seat Council Ballot & `Pond Puddle` Roam Step
+//!      (`243/405 = 60.0%` operational & `324/405 = 80.0%` constitutional!),
+//!   4. `Surf` Calm Chronological Post Append!
 
 const std = @import("std");
 const builtin = @import("builtin");
 const assert = std.debug.assert;
 const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
 
-pub const version = "20261115.121000";
+pub const version = "20261115.143500";
 pub const max_accounts: u32 = 8;
 pub const max_entries: u32 = 32;
 pub const max_notes: u32 = 16;
@@ -45,6 +41,8 @@ pub const VantageWriteStore = struct {
     entries: [max_entries]LedgerEntry,
     entry_count: u32,
     scribe_revisions: u32,
+    council_yes_votes: u32,
+    puddle_roam_seq: u64,
     last_blaze_nib: [32]u8,
     surf_notes: [max_notes][48]u8,
     surf_lens: [max_notes]u8,
@@ -52,6 +50,8 @@ pub const VantageWriteStore = struct {
 
     pub fn init() VantageWriteStore {
         var st = std.mem.zeroes(VantageWriteStore);
+        st.council_yes_votes = 243; // 60.0% operational quorum ready!
+        st.puddle_roam_seq = 1;
         st.append_surf("Dawn harvest: 30kg biocyclic oats milled") catch {};
         assert(st.sum_balances() == 0);
         return st;
@@ -91,7 +91,6 @@ pub const VantageWriteStore = struct {
         self.entries[self.entry_count] = e;
         self.entry_count += 1;
 
-        // invariant: double-entry conservation sum(balances) == 0 holds!
         assert(self.sum_balances() == 0 and self.entry_count <= max_entries);
     }
 
@@ -107,6 +106,21 @@ pub const VantageWriteStore = struct {
         self.scribe_revisions += 1;
         assert(self.scribe_revisions >= 1);
         return self.last_blaze_nib;
+    }
+
+    /// Advances Council affirmative coalition by +81 (capped at 405) & steps
+    /// the live Pond Puddle roaming UDP epoch!
+    pub fn step_civic_council_and_puddle(self: *VantageWriteStore) void {
+        self.council_yes_votes = @min(self.council_yes_votes + 81, 405);
+        self.puddle_roam_seq += 1;
+        var h = Sha3_256.init(.{});
+        h.update("blaze-civic-405:");
+        var b4: [4]u8 = undefined;
+        std.mem.writeInt(u32, &b4, self.council_yes_votes, .little);
+        h.update(&b4);
+        h.final(&self.last_blaze_nib);
+        // invariant: Council votes never exceed 405 seats.
+        assert(self.council_yes_votes <= 405 and self.puddle_roam_seq >= 2);
     }
 
     pub fn append_surf(
@@ -141,12 +155,17 @@ fn run_selftest() !u8 {
         return error.BadScribeSeal;
     }
 
+    ws.step_civic_council_and_puddle();
+    if (ws.council_yes_votes != 324 or ws.puddle_roam_seq != 2) {
+        return error.CivicStepBroken;
+    }
+
     try ws.append_surf("Second calm update from ~siya");
     if (ws.surf_count != 2) return error.SurfAppendBroken;
 
     if (builtin.os.tag != .freestanding) {
         std.debug.print(
-            "GREEN: vantage_mutations -- Dimeroll, Scribe, & Surf writes.{c}",
+            "GREEN: vantage_mutations -- Dimeroll, Scribe, Civic, & Surf.{c}",
             .{nl},
         );
     }
