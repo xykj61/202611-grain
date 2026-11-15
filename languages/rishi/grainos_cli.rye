@@ -16,8 +16,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grainos_version = "20261115.100000";
-pub const myofascia_reading = "56.600";
+pub const grainos_version = "20261115.102500";
+pub const myofascia_reading = "56.615";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -107,6 +107,31 @@ pub fn main(init: std.process.Init) !u8 {
     if (std.mem.eql(u8, sub, "rasamrita")) {
         var argv: std.ArrayListUnmanaged([]const u8) = .empty;
         try argv.append(a, "libraries/shastra/rasamrita/bin/rasamrita_waves");
+        try argv.append(a, "show");
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "sikshastakam")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(
+            a,
+            "libraries/shastra/sikshastakam/bin/sikshastakam_eight",
+        );
+        for (args[2..]) |x| try argv.append(a, x);
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "champu")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(a, "libraries/shastra/champu/bin/gopala_champu_weave");
         try argv.append(a, "show");
         const r = try std.process.run(a, io, .{ .argv = argv.items });
         print("{s}{s}", .{ r.stdout, r.stderr });

@@ -1,0 +1,170 @@
+//! modules/comlink/vantage/vantage_app.rye -- Unified Vantage Carry App Core!
+//!
+//! Orbits 106-110 (`20261115.101500`): Completes the "Carry in Terms of
+//! Vantage" architecture by uniting `carry.rye`, `bloom.rye`, and `Dimeroll` /
+//! `Resonance` / `Scribe` / `Blaze` / `Surf` room manifests behind one FFI!
+
+const std = @import("std");
+const builtin = @import("builtin");
+const assert = std.debug.assert;
+const carry = @import("carry.rye");
+const bloom = @import("bloom.rye");
+
+pub const version = "20261115.101500";
+const nl: u8 = 10;
+
+const dimeroll_views = [_][]const u8{
+    "Dashboard",
+    "Transactions",
+    "Inventory",
+    "Cash Flow",
+    "Ledger",
+    "Seal",
+    "Price",
+};
+
+const resonance_tracks = [_][]const u8{
+    "Track 0: Dawn Tanpura (48 kHz)",
+    "Track 1: Tiruppavai Bell",
+    "Track 2: Glasswall Earpiece (HW-Gated)",
+    "Track 3: Linen Percussion",
+};
+
+var app_state: carry.VantageCarryState =
+    carry.VantageCarryState.init(720, 1600);
+
+export fn vantage_app_init_ffi(shortest_dp: u32, viewport_px: u32) void {
+    app_state = carry.VantageCarryState.init(shortest_dp, viewport_px);
+}
+
+export fn vantage_app_touch_ffi(
+    kind: u32,
+    x_px: i32,
+    y_px: i32,
+    radius_or_pressure: u32,
+) bool {
+    return app_state.ingest_pointer(kind, x_px, y_px, radius_or_pressure);
+}
+
+export fn vantage_app_pinch_ffi(permille: u32) void {
+    app_state.apply_pinch_permille(permille);
+}
+
+export fn vantage_app_active_tab_ffi() u32 {
+    return app_state.active_tab;
+}
+
+export fn vantage_app_posture_ffi() u32 {
+    return @intFromEnum(app_state.posture);
+}
+
+fn append_line(out: []u8, pos: *usize, text: []const u8) void {
+    if (pos.* + text.len + 1 > out.len) return;
+    @memcpy(out[pos.* .. pos.* + text.len], text);
+    pos.* += text.len;
+    out[pos.*] = nl;
+    pos.* += 1;
+}
+
+pub fn render_screen(st: *const carry.VantageCarryState, out: []u8) u32 {
+    assert(st.active_tab < carry.tab_count);
+    var pos: usize = st.render_status_bar(out);
+    if (pos + 1 <= out.len) {
+        out[pos] = nl;
+        pos += 1;
+    }
+
+    const layout_line = switch (st.posture) {
+        .station_desktop => "Layout: Station Three-Column Desk",
+        .carry_tablet_split => "Layout: Daylight DC-1 Split-Pane RLCD",
+        .carry_mobile_deck => "Layout: Carry Mobile Single-Thumb Deck",
+    };
+    append_line(out, &pos, layout_line);
+
+    switch (st.active_tab) {
+        0 => {
+            for (bloom.galaxies, 1..) |g, idx| {
+                const row = std.fmt.bufPrint(
+                    out[pos..],
+                    "  Bloom {d}. {s} ({d} stages){c}",
+                    .{ idx, g.name, g.files.len, nl },
+                ) catch break;
+                pos += row.len;
+            }
+        },
+        1 => {
+            for (dimeroll_views, 1..) |v, idx| {
+                const row = std.fmt.bufPrint(
+                    out[pos..],
+                    "  Dimeroll {d}. {s}{c}",
+                    .{ idx, v, nl },
+                ) catch break;
+                pos += row.len;
+            }
+        },
+        2 => {
+            for (resonance_tracks) |tr| append_line(out, &pos, tr);
+        },
+        3 => append_line(
+            out,
+            &pos,
+            "  Scribe: Linengrow & Gopala-champu Literate Desk",
+        ),
+        4 => append_line(
+            out,
+            &pos,
+            "  Blaze: Content-Addressed Weaves & 3-Tier Harness",
+        ),
+        else => append_line(
+            out,
+            &pos,
+            "  Surf: Realidream Peer-to-Peer Content Galaxies",
+        ),
+    }
+    // invariant: rendered screen byte count never exceeds caller capacity.
+    assert(pos <= out.len);
+    return @intCast(pos);
+}
+
+export fn vantage_app_render_screen_ffi(out_ptr: [*]u8, out_cap: u32) u32 {
+    if (out_cap == 0) return 0;
+    return render_screen(&app_state, out_ptr[0..out_cap]);
+}
+
+fn run_selftest() !u8 {
+    vantage_app_init_ffi(720, 1600);
+    var scr: [1024]u8 = undefined;
+    const n0 = vantage_app_render_screen_ffi(&scr, 1024);
+    if (std.mem.indexOf(u8, scr[0..n0], "Bloom 1. Curriculum (10 stages)") ==
+        null)
+    {
+        return error.MissingBloomCurriculum;
+    }
+
+    _ = vantage_app_touch_ffi(0, 900, 500, 12);
+    _ = vantage_app_touch_ffi(2, 650, 502, 12);
+    if (vantage_app_active_tab_ffi() != 1) return error.ExpectedDimerollTab;
+    const n1 = vantage_app_render_screen_ffi(&scr, 1024);
+    if (std.mem.indexOf(u8, scr[0..n1], "Dimeroll 5. Ledger") == null) {
+        return error.MissingDimerollLedger;
+    }
+
+    _ = vantage_app_touch_ffi(0, 900, 500, 12);
+    _ = vantage_app_touch_ffi(2, 650, 502, 12);
+    const n2 = vantage_app_render_screen_ffi(&scr, 1024);
+    if (std.mem.indexOf(u8, scr[0..n2], "Track 1: Tiruppavai Bell") == null) {
+        return error.MissingResonanceTrack;
+    }
+
+    if (builtin.os.tag != .freestanding) {
+        std.debug.print(
+            "GREEN: vantage_app -- Bloom, Dimeroll, & Resonance in Vantage.{c}",
+            .{nl},
+        );
+    }
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

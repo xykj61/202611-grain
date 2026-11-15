@@ -32,3 +32,8 @@ module VantageCarry {
     header "vantage_carry.h"
     export *
 }
+
+module VantageApp {
+    header "vantage_app.h"
+    export *
+}

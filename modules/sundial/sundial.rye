@@ -15,7 +15,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const sundial_version = "20261115.100000";
+pub const sundial_version = "20261115.102500";
 
 pub const max_modules: u32 = 256;
 
@@ -145,10 +145,10 @@ pub const Sundial = struct {
 };
 
 fn run_selftest() !u8 {
-    // Baseline 56.500 + 100 completed orbits = 56.600 (56600 milli-points).
-    var s = Sundial.init_orbits(100);
+    // Baseline 56.500 + 115 completed orbits = 56.615 (56615 milli-points).
+    var s = Sundial.init_orbits(115);
     if (s.myofascia != 56) return error.MyofasciaWholeWrong;
-    if (s.myofascia_milli != 56600) return error.MyofasciaMilliWrong;
+    if (s.myofascia_milli != 56615) return error.MyofasciaMilliWrong;
     try s.add("kumara", true, "witness-status", "20261115", "kumara-tile");
     try s.add("vault", true, "witness-status", "20261115", "vault-split");
     try s.add("basin", true, "witness-status", "20261115", "basin-suite");
@@ -195,7 +195,7 @@ fn run_selftest() !u8 {
         if (err != error.SourcelessReading) return err;
     }
 
-    print("sundial: myofascia 56.600 (base 56.500 + 100 * 0.001).\n", .{});
+    print("sundial: myofascia 56.615 (base 56.500 + 115 * 0.001).\n", .{});
     print("sundial: version {s}\n", .{sundial_version});
     print("GREEN: sundial -- health percent and myofascia proven.\n", .{});
     return 0;
@@ -215,7 +215,7 @@ fn status(green: bool) []const u8 {
 }
 
 fn run_emit(io: std.Io) !u8 {
-    var s = Sundial.init_orbits(100);
+    var s = Sundial.init_orbits(115);
     try s.add("glow", true, "witness-status", "20261115", "digraph-twin-30");
     try s.add("brix", true, "witness-status", "20261115", "brix-infuse");
     try s.add("flare", true, "witness-status", "20261115", "flare-faculties");

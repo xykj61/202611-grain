@@ -37,6 +37,9 @@ max_cols 80 modules/brushstroke/touch/touch_core.rye
 max_cols 80 modules/brushstroke/touch/carry_frame_wire.rye
 max_cols 80 libraries/shastra/tiruppavai/tiruppavai_dawn.rye
 max_cols 80 libraries/shastra/rasamrita/rasamrita_waves.rye
+max_cols 80 libraries/shastra/sikshastakam/sikshastakam_eight.rye
+max_cols 80 libraries/shastra/champu/gopala_champu_weave.rye
+max_cols 80 modules/comlink/vantage/vantage_app.rye
 max_cols 80 modules/brushstroke/skate/realidream_compose.rye
 max_cols 80 blazepod/rv64_pill.rye
 max_cols 80 modules/pond/pond_cli.rye
