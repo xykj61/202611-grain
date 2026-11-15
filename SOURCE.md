@@ -37,28 +37,28 @@ cd ~/202611-grain-gemini-4-carbon
 # 1. Fetch and SHA-256-verify Zig 0.17.0 into vendor/zig-toolchain/ (gitignored)
 sh tools/f/fetch-toolchain.sh
 
-# 2. Cold-bootstrap the Rye compiler (rye/bin/rye)
-cd rye && ./bootstrap.sh && cd ..
+# 2. Cold-bootstrap the Rye compiler (languages/rye/bin/rye)
+cd languages/rye && ./bootstrap.sh && cd ../..
 
-# 3. Compile the Rishi shell and witness runner (rishi/bin/rishi)
-mkdir -p rishi/bin
-rye/bin/rye build rishi/src/main.rye -femit-bin=rishi/bin/rishi
+# 3. Compile the Rishi shell and witness runner (languages/rishi/bin/rishi)
+mkdir -p languages/rishi/bin
+languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
 
 # 4. Run a fast health check across the root .brix course
-rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
 ```
 
-Every emitted binary (`rye/bin/`, `rishi/bin/`, `glow/bin/`) and `vendor/zig-toolchain/` stays gitignored by design: **source travels in Git; machines build binaries fresh from verified pins.**
+Every emitted binary (`languages/*/bin/`, `modules/**/bin/`) and `vendor/zig-toolchain/` stays gitignored by design: **source travels in Git; machines build binaries fresh from verified pins.**
 
 ---
 
 ## 3. Configure Your Local Host and Profile Cards (Gitignored)
 
-Copy the two root `.kyri` templates to their local filenames (which `.gitignore` keeps strictly on your machine, never committed):
+Copy the two tracked `.kyri` templates from [`context/templates/`](context/templates/) to their local root filenames (which `.gitignore` keeps strictly on your machine, never committed):
 
 ```sh
-cp GLOW_HOST.template.kyri GLOW_HOST.kyri
-cp GLOW_PROFILE.template.kyri GLOW_PROFILE.kyri
+cp context/templates/GLOW_HOST.template.kyri GLOW_HOST.kyri
+cp context/templates/GLOW_PROFILE.template.kyri GLOW_PROFILE.kyri
 ```
 
 Fill in your OS, timezone (one-clock chronological stamps `YYYYMMDD.HHMMSS` always reflect your real local wall clock), and preferred agent bench (`Gemini CLI`, `gemini-4-carbon`).

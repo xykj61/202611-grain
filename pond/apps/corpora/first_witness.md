@@ -1,1 +1,0 @@
-../../../manual/tutorials/first-witness.md

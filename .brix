@@ -1,16 +1,14 @@
 # .brix -- Grain
 # Course descriptor: name, version, multi-provider model and branch defaults,
-# and the bricks (source files) Blaze tracks.
-# Format: one key-value pair per line, space-separated. Lines starting with
-# '#' are comments; blank lines are ignored.
+# and the bricks (source files) Blaze tracks across languages/ and modules/.
 #
-# Refreshed 20261115.031500: myofascia 56.505, unified root yonder/,
-# clean-sheet docs-geode/, blazepod/, mitra-shed/, and Gemini 4 Carbon primary
-# bench (.claude and .cursor archived under yonder/).
+# Refreshed 20261115.042000: myofascia 56.519 (19 completed orbits),
+# languages/ + modules/ root consolidation, unified docs-geode/, blazepod/,
+# mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.032000
-myofascia 56.510
+version 20261115.042000
+myofascia 56.519
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -58,41 +56,42 @@ alias Prim Prin
 alias Synthesis Choir
 file tools/l/launch-choir-synthesis-chapter.rish
 
-# Rye compiler
-file rye/src/main.rye
+# Five-language spine (languages/)
+file languages/rye/src/main.rye
+file languages/rishi/src/main.rye
+file languages/glow/tokens.rye
+file languages/brix/infuse.rye
+file languages/kyri/scribe/reader.rye
 
-# Rishi shell
-file rishi/src/main.rye
-
-# Tally memory model and Blazepod two-mode profile
-file tally/seed.rye
-file tally/gardens.rye
+# Tally memory gardens and Blazepod two-mode profile
+file modules/tally/seed.rye
+file modules/tally/gardens.rye
 file blazepod/blazepod.brix
 
-# Caravan supervision
-file caravan/seed.rye
-file caravan/bounded.rye
-file caravan/twin.rye
-file caravan/chain.rye
+# Caravan supervision and custody
+file modules/caravan/seed.rye
+file modules/caravan/bounded.rye
+file modules/caravan/twin.rye
+file modules/caravan/chain.rye
 
 # Blaze version control
-file blaze/src/main.rye
+file modules/blaze/src/main.rye
 
 # Gate witness runner
 file tools/p/parity.rish
 
 # Flare inference faculties (Lattice - Pulp - Lantern - Kiln)
-file flare/lattice/lattice_core.rye
-file flare/pulp/pulp_core.rye
-file flare/lantern/lantern_core.rye
-file flare/flare_core.rye
+file modules/flare/lattice/lattice_core.rye
+file modules/flare/pulp/pulp_core.rye
+file modules/flare/lantern/lantern_core.rye
+file modules/flare/flare_core.rye
 
 # Identity and topology (Kumara - Comlink)
-file kumara/kumara.rye
-file comlink/topology.rye
+file modules/kumara/kumara.rye
+file modules/comlink/topology.rye
 
 # Sundial -- health percent and myofascia indicator
-file sundial/sundial.rye
+file modules/sundial/sundial.rye
 
 # Living front doors, geode, shed ledger, and model roster
 file GEMINI.md

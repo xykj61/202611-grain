@@ -1,1 +1,0 @@
-../../bloom/ecology/materials-and-supply-chain.md

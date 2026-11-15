@@ -63,8 +63,8 @@ Run it a second time and watch what happens: it sees `0.17.0` already standing, 
 **Rye** (`.rye`) is Grain's systems language: explicit integer widths (`u32` in memory, `u64` on the wire), bounded **Tally** memory gardens, and zero hidden heap allocations. Because the Rye compiler is written in Rye itself, `rye/bootstrap.sh` bridges the cold start once using `vendor/zig-toolchain/zig`:
 
 ```sh
-cd rye && ./bootstrap.sh && cd ..
-rye/bin/rye version
+cd languages/rye && ./bootstrap.sh && cd ../..
+languages/rye/bin/rye version
 ```
 
 You will see Rye report its **chronological version stamp** (`YYYYMMDD.HHMMSS` -- later is always a larger number, with zero semantic-version guesswork) alongside `backend: zig 0.17.0`.
@@ -76,15 +76,15 @@ You will see Rye report its **chronological version stamp** (`YYYYMMDD.HHMMSS` -
 **Rishi** (`.rish`) is Grain's structured shell and witness runner. Compile it with the `rye` binary you just built:
 
 ```sh
-mkdir -p rishi/bin
-rye/bin/rye build rishi/src/main.rye -femit-bin=rishi/bin/rishi
+mkdir -p languages/rishi/bin
+languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
 ```
 
 Silence on compilation means clean success. Now ask Rishi to run two real witnesses over the tree's `.brix` descriptor ([`../../.brix`](../../.brix)):
 
 ```sh
-rishi/bin/rishi run tools/b/bricks_exist_witness.rish
-rishi/bin/rishi run tools/b/brix_infuse_witness.rish
+languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/b/brix_infuse_witness.rish
 ```
 
 Watch the terminal print `GREEN: bricks-exist` and `GREEN: brix infuse`. Nobody typed that `GREEN` into a markdown badge -- your own CPU just compiled and verified both positive and negative cases on metal.
@@ -98,9 +98,9 @@ Watch the terminal print `GREEN: bricks-exist` and `GREEN: brix infuse`. Nobody 
 Verify all 30 live Glow rune digraphs on your machine:
 
 ```sh
-mkdir -p glow/bin
-rye/bin/rye build glow/digraph_twin_check.rye -femit-bin=glow/bin/digraph_twin_check
-glow/bin/digraph_twin_check
+mkdir -p languages/glow/bin
+languages/rye/bin/rye build languages/glow/digraph_twin_check.rye -femit-bin=languages/glow/bin/digraph_twin_check
+languages/glow/bin/digraph_twin_check
 ```
 
 Seeing `OK digraph_twin_check 30` confirms your Glow toolchain is live and ready.

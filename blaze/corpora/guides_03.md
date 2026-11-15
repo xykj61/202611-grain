@@ -1,1 +1,0 @@
-../../bloom/guides/farm-management.md

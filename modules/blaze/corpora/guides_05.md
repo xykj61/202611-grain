@@ -1,0 +1,1 @@
+../../apps/bloom/guides/staff-coordination.md

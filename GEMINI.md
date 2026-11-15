@@ -22,8 +22,8 @@ Read the single-stranded canons in [`context/`](context/README.md) and operation
 
 1. **[TAME Core](context/TAME_CORE.md):** Bound every loop, recursion, and buffer; allocate inside static **Tally** memory gardens (`u32` memory indices, `u64` wire/clock values); write `>= 2` `// invariant:` assertions per function; enforce **`80`-column lines** and **7-bit ASCII** (`::` aligned at column `57` in `.glow`).
 2. **Chronological Versioning Only (`YYYYMMDD.HHMMSS`):** Never introduce semantic versioning (`1.2.3`). Every version across Glow, Rye, Rishi, Brix, Kyri, and docs is a monotonic chronological stamp ([`docs-geode/api/chronological-versioning.md`](docs-geode/api/chronological-versioning.md)).
-3. **Comlink Naming & Myofascia Health:** Prefer warm, plain agricultural and craft words; legacy 4-letter waymarks (`STOA`, `TUBE`, etc.) are retired. Our connective-tissue health metric is **Myofascia** (`56.500` baseline, advancing `+0.001` per completed orbit in [`sundial/sundial.rye`](sundial/sundial.rye)).
-4. **Accrete-Never-Break & Mitra Shed:** Grow living replacements beside elders first, catalog fossil candidates in [`mitra-shed/SHRED_PREP.md`](mitra-shed/SHRED_PREP.md), and execute cuts only on Keaton's explicit word.
+3. **Comlink Naming & Myofascia Health:** Prefer warm, plain agricultural and craft words; legacy 4-letter waymarks (`STOA`, `TUBE`, etc.) are retired. Our connective-tissue health metric is **Myofascia** (`56.500` baseline, advancing `+0.001` per completed orbit in [`modules/sundial/sundial.rye`](modules/sundial/sundial.rye)).
+4. **Accrete-Never-Break & Mitra Shed:** Grow living replacements beside elders first, catalog fossil candidates in [`mitra-shed/shed-prep.md`](mitra-shed/shed-prep.md), and execute cuts only on Keaton's explicit word.
 5. **Single-Stranded Voice:** Combine [Gauge](context/GAUGE_STYLE.md) precision, [Teacher](context/TEACHER_STYLE.md) hospitality (`docs-geode/`), [Radiant](context/RADIANT_STYLE.md) biocyclic warmth, and [Kyri](context/KYRI.md) directness.
 
 ---
@@ -33,11 +33,13 @@ Read the single-stranded canons in [`context/`](context/README.md) and operation
 ```sh
 # Toolchain & compiler bootstrap
 sh tools/f/fetch-toolchain.sh
-cd rye && ./bootstrap.sh && cd ..
-rye/bin/rye build rishi/src/main.rye -femit-bin=rishi/bin/rishi
+cd languages/rye && ./bootstrap.sh && cd ../..
+mkdir -p languages/rishi/bin
+languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
 
 # Core witnesses
-rishi/bin/rishi run tools/b/bricks_exist_witness.rish
-rishi/bin/rishi run tools/b/brix_infuse_witness.rish
-rye/bin/rye build sundial/sundial.rye -femit-bin=sundial/bin/sundial && sundial/bin/sundial
+languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/b/brix_infuse_witness.rish
+mkdir -p modules/sundial/bin
+languages/rye/bin/rye build modules/sundial/sundial.rye -femit-bin=modules/sundial/bin/sundial && modules/sundial/bin/sundial
 ```

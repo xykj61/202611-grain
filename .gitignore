@@ -101,6 +101,8 @@
 !/mandate/
 !/tablecloth/
 !/colloquium/
+!/languages/
+!/modules/
 !/mitra/
 !/mitra-shed/
 !/blazepod/
@@ -288,9 +290,14 @@ tools/glow/
 # from the tree. Authored code here is Rye; the few genuine Zig files are named back.
 *.zig
 !rye/lib/*.zig
+!languages/rye/lib/*.zig
 !tools/fixtures/**/*.zig
 .zig-cache/
 zig-cache/
+**/bin/
+/languages/glow/.cache/
+/modules/caravan/.*/
+/modules/resonance/.sing.lock/
 
 # --- macOS extended attributes and Finder artifacts (host moved from Linux) -
 # The Linux-host .gitignore above only named .DS_Store; the Mac host adds a

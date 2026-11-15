@@ -1,1 +1,1 @@
-../../crypto/ed25519_scalarmul.rye
+../../modules/crypto/ed25519_scalarmul.rye

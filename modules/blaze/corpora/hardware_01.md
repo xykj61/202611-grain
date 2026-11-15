@@ -1,0 +1,1 @@
+../../apps/bloom/hardware/home-forge.md
