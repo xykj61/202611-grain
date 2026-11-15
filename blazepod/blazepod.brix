@@ -32,5 +32,5 @@ cellular_dma_policy deny_all_iopmp
 
 # Display and studio defaults
 surface_driver skate-ram
-surface_palette evergreen-amber-oat
+surface_palette purple-red-oat
 audio_sample_rate_hz 48000

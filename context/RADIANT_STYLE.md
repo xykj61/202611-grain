@@ -23,7 +23,7 @@ When a sentence is clear enough for a thoughtful fourteen-year-old and exact eno
 
 Grain draws deep design inspiration from **Helen Atthowe's veganic, closed-loop biocyclic agriculture** ([`../foundations/20260823-034321_the-return-that-feeds-everyone.md`](../foundations/20260823-034321_the-return-that-feeds-everyone.md)): a healthy living system generates its own fertility from plant-based cover crops, mineral balance, and biodiversity without animal exploitation or toxic runoff.
 
-In software, hardware, and visual design (`Linengrow` vegan `oat` `#F5F3EE` + botanical `evergreen` `#004D40` + sunlit `amber` `#FFA000`), that ethic translates directly into engineering habits:
+In software, hardware, and visual design (`Linengrow` vegan `oat` `#F5F3EE` + Material `purple` `#4A148C` + Material `red` `#D32F2F`), that ethic translates directly into engineering habits:
 
 - **Zero extractive bloat:** Hardware lasts a decade longer when software runs briskly inside `4 GiB` of RAM (`blazepod/`) instead of demanding disposable upgrades.
 - **Compost what is superseded (`Mitra` & `Yonder`):** Elder work is thanked, preserved cleanly in [`../yonder/`](../yonder/README.md) or prepared gently in [`../mitra-shed/`](../mitra-shed/README.md), and never wasted.

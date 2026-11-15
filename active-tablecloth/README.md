@@ -36,9 +36,9 @@ All boards now live under `date/YYYYMM/NN/` (folded `20261107`).
 | [`20261106-131535_realidream-composition-journey/`](date/202611/00/20261106-131535_realidream-composition-journey/README.md) | Realidream Composition Journey -- From Proven Pieces to One Living Surface | Active |
 | [`20261106-204953_bloom-onboarding-journey/`](date/202611/00/20261106-204953_bloom-onboarding-journey/README.md) | Bloom Onboarding Journey -- 15 open movements remain | Active |
 | [`20261107-090000_blaze-slc-comlink-realidream/`](date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md) | Blaze SLC -- Comlink Realidream Content Network | Active -- TOP of Calfive stack |
-| [`20261115-032000_geode-yonder-blazepod-renaissance/`](date/202611/00/20261115-032000_geode-yonder-blazepod-renaissance/README.md) | Grain Geode, Yonder, Languages/Modules Ring, and Blazepod Renaissance | **Phases 1-3 Complete (`56.519`)** -- Ready for Phase 4 Handoff to Glow Mill |
+| [`20261115-032000_geode-yonder-blazepod-renaissance/`](date/202611/00/20261115-032000_geode-yonder-blazepod-renaissance/README.md) | Grain Geode, Yonder, Languages/Modules Ring, and Blazepod Renaissance | **Phases 1-3 Complete** -- Handed off to Glow Mill (`56.520`) |
 | [`20261114-234523_essential-grain-distillation/`](date/202611/00/20261114-234523_essential-grain-distillation/README.md) | Essential Grain Distillation -- 96 Rooms & 27,862 Files -> ~30 Rooms | **Merged & Closed at Orbit 5** (`+0.005` Myofascia preserved; absorbed into `20261115-032000`) |
-| [`20261114-224402_glow-mill-and-ring-rearchitecture/`](date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md) | Glow Mill & Citizen Ring -- Sheaf, Pith, Mill, Brix-Modular Self-Hosting, and 5-Ring Module Rearchitecture | Proposed RFC -- 25 orbits (follows Renaissance Phase 2-3) |
+| [`20261114-224402_glow-mill-and-ring-rearchitecture/`](date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md) | Glow Mill & Citizen Ring -- Sheaf, Pith, Mill, Brix-Modular Self-Hosting, and 5-Ring Module Rearchitecture | **Active -- TOP** (Orbit 1 `rune_book.rye` GREEN at `56.520`; 24 orbits ahead) |
 
 ## Folding convention
 

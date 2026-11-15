@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/grain_logos/iosevka/gen1_card_lockup_on_evergreen.svg" />
-    <img src="assets/grain_logos/iosevka/gen1_card_lockup_on_oat.svg" width="380" alt="psi-grain -- sovereign deterministic computing" />
+    <source media="(prefers-color-scheme: dark)" srcset="assets/grain_logos/cavalhatriz/gen1_card_psi_cavalhatriz_duotone_on_purple.svg" />
+    <img src="assets/grain_logos/cavalhatriz/gen1_card_psi_cavalhatriz_duotone_on_oat.svg" width="400" alt="psi-grain -- sovereign deterministic computing" />
   </picture>
 </p>
 
@@ -40,9 +40,9 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.519** / 100.000 |
-| **Glow rune digraphs** verified live in `languages/glow/tokens.rye` | **30** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.042000** |
+| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.520** / 100.000 |
+| **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **30** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.045000** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->
@@ -75,7 +75,7 @@ Every runtime faculty inside [`modules/`](modules/README.md) co-locates its pure
 | **Surface, Studio, AI & Apps** | [`modules/brushstroke/`](modules/brushstroke/README.md), [`modules/resonance/`](modules/resonance/README.md), [`modules/flare/`](modules/flare/README.md), [`modules/apps/`](modules/apps/README.md) | Immediate-mode `FrameGrid` UI (`skate/` + `image/`), 48 kHz creative audio studio (`mikrophone/` + `composition/`), license-clean local AI, and citizen apps (`linengrow`, `bloom`, `mycelium`, `colloquium`) |
 | **Truth, Plans & Vaults** | [`docs-geode/`](docs-geode/README.md), [`active-tablecloth/`](active-tablecloth/README.md), [`mitra-shed/`](mitra-shed/README.md), [`yonder/`](yonder/README.md) | Unified crystal documentation, active RFC boards, Anuradha/Mitra *accrete-never-break* fossil prep (`shed-prep.md`), and the single bottom-sorted `yonder/` archive vault |
 
-Brand marks across four open monospace families (`Iosevka`, `JetBrains Mono`, `Fira Code`, `Noto Sans Mono`) in our vegan **Oat / Evergreen / Amber** palette live in [`assets/`](assets/README.md).
+Brand marks -- featuring **Cavalhatriz** + **Noto Sans Mono** (alongside `Iosevka`, `JetBrains Mono`, and `Fira Code`) in our vegan **Oat / Material Purple / Material Red** palette -- live in [`assets/`](assets/README.md).
 
 ---
 

@@ -25,6 +25,7 @@ A conventional `docs/` or `manual/` folder quietly implies a finished, shrink-wr
 | **[`lessons/`](lessons/README.md)** | Curious learner (8th grade to collegiate) | Eight short first-principles lessons from silicon boot (`aurora`) and static memory pockets (`tally`) to immediate-mode pixels (`brushstroke`) |
 | **[`architecture/module-ring-and-root-audit.md`](architecture/module-ring-and-root-audit.md)** | Explorer or systems auditor | Plain-English guide to every faculty in `languages/` and `modules/` plus every root file |
 | **[`architecture/realidream-agentic-weave.md`](architecture/realidream-agentic-weave.md)** | AI & UI/UX architect | How **Brushstroke / Skate** surfaces and **Blaze / Flare** weaves expose callable **Glow / Rishi / Rye** functions for parallel **Gemini 4 Carbon** + **Flare** subagents |
+| **[`api/glow-runes.md`](api/glow-runes.md)** | Citizen & compiler builder | Generated zero-drift reference for all 13 Hoon glyph families, 30 live Glow runes, and 18 planned Glow Mill runes |
 | **[`api/chronological-versioning.md`](api/chronological-versioning.md)** | Release & compliance lead | Monotonic `YYYYMMDD.HHMMSS` chronological stamps (zero semver) and Comlink sprigs |
 | **[`operations/`](operations/README.md)** | Pier & security steward | Declared **NixOS** piers, cold/bench OpenPGP signing custody, `context/templates/` cards, and fast-forward sends |
 

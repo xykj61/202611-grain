@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.042000
-myofascia 56.519
+version 20261115.045000
+myofascia 56.520
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -59,6 +59,7 @@ file tools/l/launch-choir-synthesis-chapter.rish
 # Five-language spine (languages/)
 file languages/rye/src/main.rye
 file languages/rishi/src/main.rye
+file languages/glow/front/rune_book.rye
 file languages/glow/tokens.rye
 file languages/brix/infuse.rye
 file languages/kyri/scribe/reader.rye

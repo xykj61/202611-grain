@@ -34,6 +34,7 @@
 const std = @import("std");
 const assert = std.debug.assert;
 const refusal = @import("refusal.rye");
+const rune_book = @import("rune_book.rye");
 
 /// Desk token budget -- one fixed array; overflow is TooManyTokens.
 pub const max_tokens: u32 = 128;
@@ -130,19 +131,16 @@ fn starts_with(src: []const u8, i: u32, lit: []const u8) bool {
     return std.mem.eql(u8, src[i_usz .. i_usz + lit.len], lit);
 }
 
-/// Two-byte Glow rune heads (longest-match before bare `=` / `%`).
+/// Two-byte Glow rune heads (longest-match before bare `=` / `%`),
+/// sourced directly from `front/rune_book.rye` so lexer and book never drift.
 fn match_rune2(src: []const u8, i: u32) ?u32 {
-    const pairs = [_][]const u8{
-        "+$", "$%", "$:", "^-", "=/", "=.", "=*", "|+", "|-", "|%", "|=", "|^", "++", "--",
-        "/+", "?:", "?>", "?<", "?-", "?~", "?&", "?|", ":-", ":+", ":^", ":~", "%-", "%+", "%^", "%*",
-    };
-    for (pairs) |p| {
-        if (starts_with(src, i, p)) {
-            // invariant: the match width returned below is the constant 2, so a table entry of
-            // any other length would hand back a span that does not fit it
-            assert(p.len == 2);
-            return 2;
-        }
+    const i_usz: usize = @as(usize, @intCast(i));
+    if (i_usz + 2 > src.len) return null;
+    const cand = src[i_usz .. i_usz + 2];
+    if (rune_book.is_live_digraph(cand)) {
+        // invariant: every live digraph in rune_book is exactly 2 bytes wide.
+        assert(cand.len == 2);
+        return 2;
     }
     return null;
 }

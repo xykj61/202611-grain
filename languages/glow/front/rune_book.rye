@@ -1,0 +1,413 @@
+//! languages/glow/front/rune_book.rye -- single truth table for Glow runes.
+//!
+//! Glow Mill Quest 1, Orbit 1 (`20261115.044500`).
+//! Closes drift between `tokens.rye`, `glow_digraph_table.txt`, and
+//! `docs-geode/api/glow-runes.md` via one static table of:
+//!   1. All 13 Hoon glyph families (`carried`, `module_mapped`, `dissolved`),
+//!   2. All 30 live Glow digraphs (`.live`) + 18 Mill additions (`.planned`).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const rune_book_version = "20261115.044500";
+pub const expected_live_count: u32 = 30;
+pub const expected_family_count: u32 = 13;
+
+pub const Disposition = enum {
+    carried,
+    module_mapped,
+    dissolved,
+};
+
+pub const Status = enum {
+    live,
+    planned,
+};
+
+pub const FamilySpec = struct {
+    glyph: u8,
+    spoken: []const u8,
+    domain: []const u8,
+    disposition: Disposition,
+    note: []const u8,
+};
+
+pub const RuneSpec = struct {
+    family: u8,
+    digraph: []const u8,
+    spoken: []const u8,
+    status: Status,
+    arity: []const u8,
+    summary: []const u8,
+};
+
+fn fam(
+    g: u8,
+    s: []const u8,
+    dom: []const u8,
+    disp: Disposition,
+    note: []const u8,
+) FamilySpec {
+    return .{
+        .glyph = g,
+        .spoken = s,
+        .domain = dom,
+        .disposition = disp,
+        .note = note,
+    };
+}
+
+fn rn(
+    g: u8,
+    d: []const u8,
+    s: []const u8,
+    st: Status,
+    ar: []const u8,
+    sum: []const u8,
+) RuneSpec {
+    return .{
+        .family = g,
+        .digraph = d,
+        .spoken = s,
+        .status = st,
+        .arity = ar,
+        .summary = sum,
+    };
+}
+
+pub const families = [_]FamilySpec{
+    fam('|', "bar", "cores, gates, doors, loops", .carried, "Core code blocks"),
+    fam('$', "buc", "structural shapes & unions", .carried, "Static layouts"),
+    fam('%', "cen", "calls & functional updates", .carried, "Gate calls/recur"),
+    fam(':', "col", "tuple / cell constructors", .carried, "Fixed-arity cells"),
+    fam('^', "ket", "explicit type casts", .carried, "Compile-time cast"),
+    fam('=', "tis", "subject bindings & state", .carried, "Pure state-thread"),
+    fam('?', "wut", "conditionals & guards", .carried, "Tags & assertions"),
+    fam('/', "fas", "Sheaf imports & pins", .module_mapped, "Sheaf + Brix"),
+    fam('+', "lus", "chapter arms & shape defs", .carried, "++ arms, +$ molds"),
+    fam(';', "mic", "wire combinators", .module_mapped, "Wire ;~ parsers"),
+    fam('~', "sig", "pure traces & intrinsics", .carried, "Basin ~& & ~%"),
+    fam('!', "zap", "refusal & span trails", .carried, "Refusal breadcrumbs"),
+    fam('.', "dot", "Nock untyped operators", .dissolved, "Replaced by Pith"),
+};
+
+// First 30 entries are `.live` in exact `glow_digraph_table.txt` order.
+pub const runes = [_]RuneSpec{
+    rn('+', "+$", "lusbuk", .live, "name mold", "Define named shape arm"),
+    rn('$', "$%", "buccen", .live, "arm+ ==", "Tagged union shape"),
+    rn('$', "$:", "buccol", .live, "field+ ==", "Positional record shape"),
+    rn('^', "^-", "kethep", .live, "mold expr", "Checked type cast"),
+    rn('=', "=/", "tisfas", .live, "bind val body", "Typed lexical binding"),
+    rn('=', "=.", "tisdot", .live, "wing val body", "Rebind subject purely"),
+    rn('=', "=*", "tistar", .live, "name expr body", "Deferred expr alias"),
+    rn('|', "|+", "barlus", .live, "sample body", "Bounded loop gate"),
+    rn('|', "|-", "barhep", .live, "body", "Bounded loop / trap entry"),
+    rn('|', "|%", "barcen", .live, "++arm+ --", "Multi-arm module core"),
+    rn('|', "|=", "bartis", .live, "sample body", "Pure single-entry gate"),
+    rn('|', "|^", "barket", .live, "head ++arm+ --", "Core with default arm"),
+    rn('+', "++", "luslus", .live, "name expr", "Named computation arm"),
+    rn('|', "--", "hephep", .live, "(terminator)", "Close |%, |^, or |_ core"),
+    rn('/', "/+", "faslus", .live, "gate-name+", "Import pure gate or fold"),
+    rn('?', "?:", "wutcol", .live, "cond yes no", "Two-branch conditional"),
+    rn('?', "?>", "wutgar", .live, "cond body", "Positive assertion guard"),
+    rn('?', "?<", "wutgal", .live, "cond body", "Negative assertion guard"),
+    rn('?', "?-", "wuthep", .live, "subj arm+ ==", "Exhaustive tag switch"),
+    rn('?', "?~", "wutsig", .live, "subj null non", "Unit / optional branch"),
+    rn('?', "?&", "wutpam", .live, "expr+ ==", "Short-circuit logical AND"),
+    rn('?', "?|", "wutbar", .live, "expr+ ==", "Short-circuit logical OR"),
+    rn(':', ":-", "colhep", .live, "a b", "Construct 2-tuple (pair)"),
+    rn(':', ":+", "collus", .live, "a b c", "Construct 3-tuple (triple)"),
+    rn(':', ":^", "colket", .live, "a b c d", "Construct 4-tuple (quad)"),
+    rn(':', ":~", "colsig", .live, "elem+ ==", "Null-terminated tuple list"),
+    rn('%', "%-", "cenhep", .live, "gate arg", "Call gate with 1 sample"),
+    rn('%', "%+", "cenlus", .live, "gate a b", "Call gate with 2-tuple"),
+    rn('%', "%^", "cenket", .live, "gate a b c", "Call gate with 3-tuple"),
+    rn('%', "%*", "centar", .live, "mold init upd+", "Update record fields"),
+
+    // Planned Glow Mill additions (Orbits 2-10)
+    rn('/', "/-", "fashep", .planned, "shape-name+", "Import shape via Sheaf"),
+    rn('/', "/=", "fastis", .planned, "alias target", "Brix infuse override"),
+    rn('/', "/*", "fastar", .planned, "name %aura sha3", "SHA3-verified asset"),
+    rn('/', "/$", "fasbuk", .planned, "conv-name", "Import wire converter"),
+    rn('/', "/%", "fascen", .planned, "course-name", "Pin .brix course"),
+    rn('/', "/~", "fassig", .planned, "name nib-hex", "Pin immutable SHA3 nib"),
+    rn('|', "|_", "barcab", .planned, "state ++arm+ --", "Stateful pure door"),
+    rn('=', "=^", "tisket", .planned, "p st step b", "Thread [prod next_st]"),
+    rn('%', "%=", "centis", .planned, "wing upd+", "Functional update/recur"),
+    rn('=', "=~", "tissig", .planned, "stage+ ==", "Linear subject pipeline"),
+    rn('?', "?!", "wutzap", .planned, "expr", "Logical boolean NOT"),
+    rn(';', ";~", "micsig", .planned, "glue rule+", "Bounded wire combinator"),
+    rn(';', ";;", "micmic", .planned, "mold bytes", "Validate wire slice"),
+    rn('~', "~&", "sigpam", .planned, "label expr", "Pure Basin debug trace"),
+    rn('~', "~|", "sigbar", .planned, "cord expr", "Static refusal trail"),
+    rn('~', "~%", "sigcen", .planned, "%jet core", "Verified Rye intrinsic"),
+    rn('!', "!:", "zapcol", .planned, "expr", "Enable line:col trail"),
+    rn('!', "!!", "zapzap", .planned, "(crash)", "Unreachable refusal"),
+};
+
+pub fn count_live() u32 {
+    var n: u32 = 0;
+    var i: u32 = 0;
+    const total: u32 = @intCast(runes.len);
+    // invariant: rune table stays well inside static ceiling.
+    assert(total >= expected_live_count and total <= 256);
+    while (i < total) : (i += 1) {
+        if (runes[i].status == .live) n += 1;
+    }
+    // invariant: live count equals expected_live_count (30).
+    assert(n == expected_live_count);
+    return n;
+}
+
+pub fn is_live_digraph(two: []const u8) bool {
+    // invariant: caller passes short slices; only length 2 can match.
+    assert(two.len <= 64);
+    if (two.len != 2) return false;
+    var i: u32 = 0;
+    const total: u32 = @intCast(runes.len);
+    assert(total >= expected_live_count);
+    while (i < total) : (i += 1) {
+        const r = runes[i];
+        if (r.status == .live) {
+            assert(r.digraph.len == 2);
+            if (r.digraph[0] == two[0] and r.digraph[1] == two[1]) return true;
+        }
+    }
+    return false;
+}
+
+pub fn lookup(two: []const u8) ?RuneSpec {
+    if (two.len != 2) return null;
+    var i: u32 = 0;
+    const total: u32 = @intCast(runes.len);
+    // invariant: static rune book is non-empty and bounded.
+    assert(total >= expected_live_count and total <= 256);
+    while (i < total) : (i += 1) {
+        const r = runes[i];
+        assert(r.digraph.len == 2);
+        if (r.digraph[0] == two[0] and r.digraph[1] == two[1]) return r;
+    }
+    return null;
+}
+
+pub const RenderError = error{BufferTooSmall};
+
+fn append_str(out: []u8, pos: *u32, s: []const u8) RenderError!void {
+    const cap: u32 = @intCast(out.len);
+    // invariant: cursor stays within buffer capacity before write.
+    assert(pos.* <= cap);
+    const n: u32 = @intCast(s.len);
+    if (n > cap - pos.*) return error.BufferTooSmall;
+    var i: u32 = 0;
+    while (i < n) : (i += 1) {
+        out[pos.* + i] = s[i];
+    }
+    pos.* += n;
+    // invariant: cursor stays within buffer capacity after write.
+    assert(pos.* <= cap);
+}
+
+fn disp_str(d: Disposition) []const u8 {
+    return switch (d) {
+        .carried => "carried",
+        .module_mapped => "module-mapped",
+        .dissolved => "dissolved",
+    };
+}
+
+fn status_str(s: Status) []const u8 {
+    return switch (s) {
+        .live => "live",
+        .planned => "planned (Mill)",
+    };
+}
+
+pub fn render_markdown(out: []u8) RenderError!u32 {
+    var pos: u32 = 0;
+    // invariant: output cursor starts at zero.
+    assert(pos == 0);
+    try append_str(out, &pos, "# Glow Rune Book -- Canonical Reference\n\n");
+    try append_str(out, &pos, "**Language:** EN\n**Voice:** Kyri\n");
+    try append_str(out, &pos, "**Style:** Teacher & Gauge at Field\n");
+    try append_str(
+        out,
+        &pos,
+        "**Status:** Living (`Room: checkable` -- generated)\n\n",
+    );
+    try append_str(out, &pos, "## 1. Thirteen Hoon Glyph Families in Glow\n\n");
+    try append_str(
+        out,
+        &pos,
+        "| Glyph | Spoken | Domain | Disposition | Note |\n",
+    );
+    try append_str(out, &pos, "|---|---|---|---|---|\n");
+
+    var fi: u32 = 0;
+    const ftotal: u32 = @intCast(families.len);
+    assert(ftotal == expected_family_count);
+    while (fi < ftotal) : (fi += 1) {
+        const f = families[fi];
+        var gbuf: [1]u8 = .{f.glyph};
+        try append_str(out, &pos, "| `");
+        try append_str(out, &pos, &gbuf);
+        try append_str(out, &pos, "` | `");
+        try append_str(out, &pos, f.spoken);
+        try append_str(out, &pos, "` | ");
+        try append_str(out, &pos, f.domain);
+        try append_str(out, &pos, " | **");
+        try append_str(out, &pos, disp_str(f.disposition));
+        try append_str(out, &pos, "** | ");
+        try append_str(out, &pos, f.note);
+        try append_str(out, &pos, " |\n");
+    }
+
+    try append_str(
+        out,
+        &pos,
+        "\n## 2. All Glow Rune Digraphs (30 Live + 18 Planned Mill Runes)\n\n",
+    );
+    try append_str(
+        out,
+        &pos,
+        "| Digraph | Spoken | Status | Arity / Shape | Summary |\n",
+    );
+    try append_str(out, &pos, "|---|---|---|---|---|\n");
+
+    var ri: u32 = 0;
+    const rtotal: u32 = @intCast(runes.len);
+    while (ri < rtotal) : (ri += 1) {
+        const r = runes[ri];
+        try append_str(out, &pos, "| `");
+        try append_str(out, &pos, r.digraph);
+        try append_str(out, &pos, "` | `");
+        try append_str(out, &pos, r.spoken);
+        try append_str(out, &pos, "` | ");
+        try append_str(out, &pos, status_str(r.status));
+        try append_str(out, &pos, " | `");
+        try append_str(out, &pos, r.arity);
+        try append_str(out, &pos, "` | ");
+        try append_str(out, &pos, r.summary);
+        try append_str(out, &pos, " |\n");
+    }
+
+    // invariant: rendered markdown is non-empty and bounded.
+    assert(pos > 256 and pos <= @as(u32, @intCast(out.len)));
+    return pos;
+}
+
+pub const CheckError = error{
+    DigraphCountDrift,
+    DigraphRowDrift,
+    MarkdownDrift,
+};
+
+pub fn verify_fixture_body(body: []const u8) CheckError!void {
+    var seen: u32 = 0;
+    var it = std.mem.splitScalar(u8, body, '\n');
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, " \t\r");
+        if (line.len == 0) continue;
+        if (seen >= expected_live_count) return error.DigraphCountDrift;
+        if (!std.mem.eql(u8, line, runes[seen].digraph)) {
+            return error.DigraphRowDrift;
+        }
+        if (runes[seen].status != .live) return error.DigraphRowDrift;
+        seen += 1;
+    }
+    if (seen != expected_live_count) return error.DigraphCountDrift;
+    // invariant: exact 30/30 live row count proven.
+    assert(seen == expected_live_count);
+}
+
+fn run_selftest() !u8 {
+    if (count_live() != expected_live_count) return error.BadLiveCount;
+    if (families.len != expected_family_count) return error.BadFamilyCount;
+
+    const rtotal: u32 = @intCast(runes.len);
+    var i: u32 = 0;
+    while (i < rtotal) : (i += 1) {
+        assert(runes[i].digraph.len == 2);
+        var j: u32 = i + 1;
+        while (j < rtotal) : (j += 1) {
+            if (std.mem.eql(u8, runes[i].digraph, runes[j].digraph)) {
+                return error.DuplicateDigraph;
+            }
+        }
+    }
+
+    if (!is_live_digraph("|=")) return error.MissingBartis;
+    if (!is_live_digraph("%^")) return error.MissingCenket;
+    if (is_live_digraph("/~")) return error.PlannedMarkedLive;
+    if (lookup("/~") == null) return error.MissingPlannedFassig;
+    if (lookup("??") != null) return error.UnknownAccepted;
+
+    var tiny: [32]u8 = undefined;
+    if (render_markdown(&tiny)) |_| {
+        return error.TinyBufferAccepted;
+    } else |err| {
+        if (err != error.BufferTooSmall) return err;
+    }
+
+    if (verify_fixture_body("$$\n")) |_| {
+        return error.DriftAccepted;
+    } else |_| {}
+
+    print("rune_book: 13 families, {d} live + 18 planned runes.\n", .{
+        count_live(),
+    });
+    print("GREEN: rune_book -- zero-drift Glow rune table proven.\n", .{});
+    return 0;
+}
+
+fn run_emit_md(io: std.Io, out_path: []const u8) !u8 {
+    var buf: [16384]u8 = undefined;
+    const n = try render_markdown(&buf);
+    assert(n <= buf.len);
+    try std.Io.Dir.cwd().writeFile(io, .{
+        .sub_path = out_path,
+        .data = buf[0..n],
+    });
+    print("WROTE {s} ({d} bytes)\n", .{ out_path, n });
+    return 0;
+}
+
+fn run_check(
+    init: std.process.Init,
+    tbl_path: []const u8,
+    md_path: []const u8,
+) !u8 {
+    const a = init.arena.allocator();
+    const cwd = std.Io.Dir.cwd();
+    const tbl = try cwd.readFileAlloc(init.io, tbl_path, a, .limited(8192));
+    verify_fixture_body(tbl) catch |err| {
+        print("FAIL DigraphDrift in {s}: {s}\n", .{
+            tbl_path,
+            @errorName(err),
+        });
+        return 1;
+    };
+
+    const got_md = try cwd.readFileAlloc(init.io, md_path, a, .limited(32768));
+    var want_buf: [16384]u8 = undefined;
+    const n = try render_markdown(&want_buf);
+    if (!std.mem.eql(u8, got_md, want_buf[0..n])) {
+        print("FAIL MarkdownDrift in {s}\n", .{md_path});
+        return 1;
+    }
+    print("GREEN: rune_book check -- {d}/30 live heads & md agree.\n", .{
+        count_live(),
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const args = try init.minimal.args.toSlice(init.arena.allocator());
+    if (args.len >= 3 and std.mem.eql(u8, args[1], "emit-md")) {
+        return run_emit_md(init.io, args[2]);
+    }
+    if (args.len >= 4 and std.mem.eql(u8, args[1], "check")) {
+        return run_check(init, args[2], args[3]);
+    }
+    return run_selftest();
+}
