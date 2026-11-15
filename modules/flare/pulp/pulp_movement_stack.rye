@@ -1,0 +1,148 @@
+//! modules/flare/pulp/pulp_movement_stack.rye -- Calfive Prepend-to-Front!
+//!
+//! Stamp: `20261115.133500` -- Unifies `Pulp` (Markdown prose & checklists as
+//! typed values) with strict Movement-based Calfive planning:
+//!   - `[15, 75, 375, 1875, 9375] : [orbit, quest, journey, section, chapter]`,
+//!   - `1 Orbit` strictly means **completion of 15 Movements**,
+//!   - Adaptable **prepend-to-front** stack (`prepend_front` inserts urgent
+//!     reds or new discoveries at index 0 without renumbering any item!).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.133500";
+pub const orbit_movements: u32 = 15;
+pub const quest_movements: u32 = 75;
+pub const journey_movements: u32 = 375;
+pub const section_movements: u32 = 1875;
+pub const chapter_movements: u32 = 9375;
+pub const max_stack_items: u32 = 128;
+const nl: u8 = 10;
+const cr: u8 = 13;
+
+pub const StackError = error{
+    StackFull,
+    StackEmpty,
+    EmptyTitleRefused,
+};
+
+pub const MovementCard = struct {
+    title: [56]u8,
+    title_len: u8,
+    done: bool,
+};
+
+pub const CalfiveProgress = struct {
+    completed_movements: u32,
+    completed_orbits: u32, // strictly completed_movements / 15!
+    orbit_step: u32,       // 0..14 within current orbit
+    quest_step: u32,       // 0..74 within current quest
+};
+
+pub const PulpMovementStack = struct {
+    cards: [max_stack_items]MovementCard,
+    count: u32,
+    completed_total: u32,
+
+    pub fn init() PulpMovementStack {
+        // invariant: x5 elemental ring ratios [15, 75, 375, 1875, 9375] hold.
+        assert(orbit_movements * 5 == quest_movements);
+        assert(section_movements * 5 == chapter_movements);
+        return std.mem.zeroes(PulpMovementStack);
+    }
+
+    /// Prepends a new or urgent movement directly to the front (`cards[0]`),
+    /// shifting active items down with zero serial-number renumbering!
+    pub fn prepend_front(
+        self: *PulpMovementStack,
+        title: []const u8,
+    ) StackError!void {
+        if (title.len == 0) return error.EmptyTitleRefused;
+        if (self.count >= max_stack_items) return error.StackFull;
+
+        var i: u32 = self.count;
+        while (i > 0) : (i -= 1) {
+            self.cards[i] = self.cards[i - 1];
+        }
+        var c = std.mem.zeroes(MovementCard);
+        const n = @min(title.len, 56);
+        @memcpy(c.title[0..n], title[0..n]);
+        c.title_len = @intCast(n);
+        self.cards[0] = c;
+        self.count += 1;
+        // invariant: prepended movement stands at index 0 and count <= cap.
+        assert(self.count <= max_stack_items and !self.cards[0].done);
+    }
+
+    pub fn complete_front(self: *PulpMovementStack) StackError!void {
+        var idx: u32 = 0;
+        while (idx < self.count and self.cards[idx].done) : (idx += 1) {}
+        if (idx >= self.count) return error.StackEmpty;
+        self.cards[idx].done = true;
+        self.completed_total += 1;
+        assert(self.completed_total >= 1);
+    }
+
+    pub fn progress(self: *const PulpMovementStack) CalfiveProgress {
+        const m = self.completed_total;
+        const p = CalfiveProgress{
+            .completed_movements = m,
+            .completed_orbits = m / orbit_movements,
+            .orbit_step = m % orbit_movements,
+            .quest_step = m % quest_movements,
+        };
+        // invariant: an orbit is counted ONLY when 15 full movements complete!
+        assert(p.completed_orbits * orbit_movements + p.orbit_step == m);
+        return p;
+    }
+
+    /// Parses `- [ ]` and `- [x]` Markdown lines directly into the Pulp stack!
+    pub fn ingest_markdown(
+        self: *PulpMovementStack,
+        md: []const u8,
+    ) StackError!void {
+        var it = std.mem.splitScalar(u8, md, nl);
+        while (it.next()) |raw| {
+            const line = std.mem.trim(u8, raw, &[_]u8{ ' ', cr });
+            if (std.mem.startsWith(u8, line, "- [ ] ")) {
+                try self.prepend_front(line[6..]);
+            } else if (std.mem.startsWith(u8, line, "- [x] ")) {
+                try self.prepend_front(line[6..]);
+                self.cards[0].done = true;
+                self.completed_total += 1;
+            }
+        }
+    }
+};
+
+fn run_selftest() !u8 {
+    var st = PulpMovementStack.init();
+    // 1. 14 completed movements = 0 completed orbits; 15th completes Orbit 1!
+    var k: u32 = 0;
+    while (k < 14) : (k += 1) {
+        try st.prepend_front("Planned craft step");
+        try st.complete_front();
+    }
+    if (st.progress().completed_orbits != 0) return error.PrematureOrbit;
+
+    // Prepend an urgent Standfast red to the front and complete it (15th!)
+    try st.prepend_front("Urgent Standfast red fix");
+    const top = st.cards[0].title[0..st.cards[0].title_len];
+    if (!std.mem.startsWith(u8, top, "Urgent")) {
+        return error.PrependNotAtFront;
+    }
+    try st.complete_front();
+    if (st.progress().completed_orbits != 1 or st.progress().orbit_step != 0) {
+        return error.Orbit15NotCompleted;
+    }
+
+    print("GREEN: pulp_movement_stack -- [15..9375] & prepend proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

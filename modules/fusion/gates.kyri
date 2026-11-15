@@ -87,3 +87,9 @@ max_cols 80 modules/apps/linengrow/linengrow_commons.rye
 max_cols 80 modules/fusion/manifest_cover.rye
 ascii_7bit MAP.md
 ascii_7bit llms.txt
+max_cols 80 modules/flare/pulp/pulp_movement_stack.rye
+max_cols 80 modules/tablecloth/relational_table.rye
+max_cols 80 modules/comlink/council_405.rye
+max_cols 80 modules/pond/puddle/puddle_remote.rye
+max_cols 80 modules/sundial/one_clock.rye
+ascii_7bit active-development/date/20261115/20261115-134000-est_glasswall-pulp-tablecloth-405-council-puddle-and-one-clock.md

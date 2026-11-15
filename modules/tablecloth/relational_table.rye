@@ -1,0 +1,165 @@
+//! modules/tablecloth/relational_table.rye -- TAME Relational & KV Engine!
+//!
+//! Stamp: `20261115.133500` -- Separates `Tablecloth` cleanly from `Pulp`:
+//!   - `Pulp` owns Markdown prose, movement stacks, & vector/document recall;
+//!   - `Tablecloth` owns deterministic, zero-allocation **typed relational
+//!     tables** (inspired by TigerBeetle's bounded state & SQLite's clarity),
+//!   - Subsumes Key:Value storage as a 2-column `(pk, label)` table so Grain
+//!     needs ONE TAME table engine instead of separate SQL + KV silos!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.133500";
+pub const max_rows: u32 = 256;
+pub const max_text_col: u32 = 32;
+const nl: u8 = 10;
+
+pub const TableError = error{
+    TableFull,
+    DuplicatePrimaryKey,
+    PrimaryKeyNotFound,
+    EmptyKeyRefused,
+};
+
+pub const TypedRow = struct {
+    pk_id: u64,
+    group_code: u32,
+    amount_i64: i64,
+    label: [max_text_col]u8,
+    label_len: u8,
+
+    pub fn label_slice(self: *const TypedRow) []const u8 {
+        return self.label[0..self.label_len];
+    }
+};
+
+pub const RelationalTable = struct {
+    rows: [max_rows]TypedRow,
+    count: u32,
+
+    pub fn init() RelationalTable {
+        return std.mem.zeroes(RelationalTable);
+    }
+
+    /// Inserts a typed row kept sorted by `pk_id` for `O(log n)` binary search!
+    pub fn insert_row(
+        self: *RelationalTable,
+        pk_id: u64,
+        group_code: u32,
+        amount_i64: i64,
+        label_text: []const u8,
+    ) TableError!void {
+        if (pk_id == 0) return error.EmptyKeyRefused;
+        if (self.count >= max_rows) return error.TableFull;
+
+        // Binary search for exact primary-key position
+        var lo: u32 = 0;
+        var hi: u32 = self.count;
+        while (lo < hi) {
+            const mid = lo + (hi - lo) / 2;
+            if (self.rows[mid].pk_id == pk_id) {
+                return error.DuplicatePrimaryKey;
+            }
+            if (self.rows[mid].pk_id < pk_id) lo = mid + 1 else hi = mid;
+        }
+
+        var idx: u32 = self.count;
+        while (idx > lo) : (idx -= 1) {
+            self.rows[idx] = self.rows[idx - 1];
+        }
+        var r = std.mem.zeroes(TypedRow);
+        r.pk_id = pk_id;
+        r.group_code = group_code;
+        r.amount_i64 = amount_i64;
+        const n = @min(label_text.len, max_text_col);
+        @memcpy(r.label[0..n], label_text[0..n]);
+        r.label_len = @intCast(n);
+        self.rows[lo] = r;
+        self.count += 1;
+
+        // invariant: primary keys stay strictly ascending after insert.
+        assert(self.count <= max_rows);
+        if (lo > 0) assert(self.rows[lo - 1].pk_id < self.rows[lo].pk_id);
+    }
+
+    pub fn get_by_pk(self: *const RelationalTable, pk_id: u64) ?TypedRow {
+        var lo: u32 = 0;
+        var hi: u32 = self.count;
+        while (lo < hi) {
+            const mid = lo + (hi - lo) / 2;
+            if (self.rows[mid].pk_id == pk_id) return self.rows[mid];
+            if (self.rows[mid].pk_id < pk_id) lo = mid + 1 else hi = mid;
+        }
+        return null;
+    }
+
+    /// Relational `SELECT SUM(amount_i64) WHERE group_code = ?`
+    pub fn sum_where_group(
+        self: *const RelationalTable,
+        group_code: u32,
+    ) i64 {
+        var acc: i64 = 0;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (self.rows[i].group_code == group_code) {
+                acc += self.rows[i].amount_i64;
+            }
+        }
+        assert(i == self.count);
+        return acc;
+    }
+
+    /// Key:Value projection over the same table (zero separate KV engine!).
+    pub fn kv_upsert(
+        self: *RelationalTable,
+        key_id: u64,
+        val: []const u8,
+    ) TableError!void {
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (self.rows[i].pk_id == key_id) {
+                const n = @min(val.len, max_text_col);
+                @memcpy(self.rows[i].label[0..n], val[0..n]);
+                self.rows[i].label_len = @intCast(n);
+                return;
+            }
+        }
+        try self.insert_row(key_id, 0, 0, val);
+    }
+};
+
+fn run_selftest() !u8 {
+    var tbl = RelationalTable.init();
+    try tbl.insert_row(30, 7, 400, "Oat Sack");
+    try tbl.insert_row(10, 7, 600, "Flax Bale");
+    try tbl.insert_row(20, 9, 250, "Herb Jar");
+
+    // 1. Sorted PK invariant + duplicate PK refusal
+    if (tbl.rows[0].pk_id != 10 or tbl.rows[2].pk_id != 30) {
+        return error.UnsortedPk;
+    }
+    if (tbl.insert_row(20, 9, 100, "Dup")) |_| {
+        return error.DuplicatePkAccepted;
+    } else |err| {
+        if (err != error.DuplicatePrimaryKey) return err;
+    }
+
+    // 2. Relational `SELECT SUM WHERE group = 7` -> 1000
+    if (tbl.sum_where_group(7) != 1000) return error.BadGroupSum;
+
+    // 3. KV upsert & lookup on the exact same engine
+    try tbl.kv_upsert(99, "est-auto-dst");
+    const got = tbl.get_by_pk(99) orelse return error.MissingKvRow;
+    if (!std.mem.eql(u8, got.label_slice(), "est-auto-dst")) {
+        return error.BadKvValue;
+    }
+
+    print("GREEN: relational_table -- TAME SQL table + KV unified.{c}", .{nl});
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

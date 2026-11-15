@@ -1,34 +1,41 @@
-# Earth -- Rooms, Calfive Panchanga, Molt, & Seed
+# Elemental Rule Card: Earth -- Rooms, Mitra Molt, Calfive, & Seed Gate
 
-**Element & Goal:** Earth / Law (*"What already stands true?"*)
-**Stamp:** `20261115.125000`
+**Element:** Earth (Form, Roots, Durable Custody)
+**Stamp:** `20261115.134000`
 
 ---
 
-## 1. Flat Root Trinity & Room Bounds
+## 1. Flat Root Trinity (`languages/`, `modules/`, `libraries/`, `yonder/`)
+- **`languages/`:** `rye/`, `glow/`, `rishi/`, `brix/`, and `kyri/`.
+- **`modules/`:** System-critical TAME faculties (`aurora`, `tally`, `caravan`,
+  `pond` + `puddle`, `crypto`, `kumara`, `comlink` + `vantage` + `council_405`,
+  `amphora`, `blaze`, `tablecloth`, `harness`, `flare` + `pulp`, `brushstroke`,
+  `resonance`, `market`, `sundial`, `fusion`, and `apps`), each co-locating
+  `.glow` desks in `glow/`.
+- **`libraries/`:** Four-year *Bloom & Shastra* curriculum (`shastra/`),
+  `risala/`, Vedic/Cubist astrology, `books/`, and incubating citizen parcels.
+- **`yonder/`:** Single cold archive vault (`0` scattered archive closets).
 
-- **Living code & study trinity:** `languages/` (5-language spine), `modules/`
-  (system-critical TAME faculties), and `libraries/` (Shastra, Risala,
-  astrology, books, and incubating parcels).
-- **Single cold archive:** `yonder/` holds all retired/historical shelves (`0`
-  scattered archive closets outside `yonder/`). `mitra-shed/` holds fossils
-  awaiting friend-safe retirement cuts.
-- **256 / 768 Fold Law:** Living rooms fold past `256` flat entries (`date/` by
-  day `YYYYMMDD/` when found by *when*; `<letter>/` when found by *what*).
-  Closed terminal day shelves hold up to `768` entries before hour-folding.
+## 2. Mitra Shed (Accrete-Never-Break) & Two Rooms
+- **Molt First, Shed on Word:** Grow plain-named replacements beside elders,
+  prove parity on metal, log elders in `mitra-shed/shed-prep.md`, and remove
+  only on Keaton's explicit door approval.
+- **Two Rooms:** `Room: checkable` claims must hold today under a witness;
+  unbuilt horizons stay marked `Room: vision`.
 
-## 2. Calfive Panchanga (`15 - 75 - 375 - 1,875 - 9,375`)
+## 3. Calfive Movement Stack (`[15 75 375 1875 9375]`) & `324/405` Council
+- **Strict Movement Capacities (`[15 75 375 1875 9375]`):**
+  `[orbit, quest, journey, section, chapter]` strictly counts completed
+  **Movements** (`round -> movement` molt; **`1 Orbit == 15 completed
+  Movements`**, expanding `x5` by the 5 elements: `15 -> 75 -> 375 -> 1,875 ->
+  9,375`), backed by `Pulp`'s adaptable **prepend-to-front** stack
+  (`modules/flare/pulp/pulp_movement_stack.rye`).
+- **`d15 -> 3 -> 9 -> 405` Council & `324/405` (`80.000%`) Supermajority:**
+  15 Galaxies (`Aries..Siya`) x 3 Modal Pillars (`45` Stars) x 9 Navamsa Seats
+  = `405` Council Seats (`modules/comlink/council_405.rye`), enacting civic
+  proposals at exact **`324 / 405` (`80.000%`, 80/20 Pareto consensus)**.
 
-- **Capacities:** `1 Orbit = 15 rounds`, `1 Quest = 75`, `1 Journey = 375`,
-  `1 Equinox = 1,875`, `1 Chapter = 9,375` (`grain-ww round-load`).
-- **15 Signs:** `1..12` (`Aries`..`Pisces`) + `13..15` (`sky`, `sky`,
-  `sky (Siya)` -- Dual Aether / Heart).
-
-## 3. Signed Commits & Incremental Public Seed
-
-- GPG-sign commits (`git commit -S`) and push fast-forward to
-  `xy/gemini-4-carbon`.
-- Run `languages/rishi/bin/rishi run publish-seed.rish --push` once at the close
-  of a work wave (`MANIFEST_COVER_OK`, `IDENT_CLEAN`, `NO_PERSONAL`, warm Fusion
-  closure delta -> `grain-ww/202611-grain`). Never leak `REDS %244` PEM/identity
-  markers into public seed files.
+## 4. Single Incremental Public Seed Release
+- Push signed work commits to `xy/gemini-4-carbon`, and run
+  `languages/rishi/bin/rishi run publish-seed.rish --push` **once** at the
+  end of a work wave to publish the clean closure to `grain-ww/202611-grain`.

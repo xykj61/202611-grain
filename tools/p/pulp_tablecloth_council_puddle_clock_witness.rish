@@ -1,0 +1,48 @@
+# tools/p/pulp_tablecloth_council_puddle_clock_witness.rish -- Unified Witness!
+#
+# Proves on real metal (`20261115.134000`):
+#   1. `modules/flare/pulp/pulp_movement_stack.rye` (`[15 75 375 1875 9375]`
+#      strict `1 orbit == 15 movements` & prepend-to-front stack),
+#   2. `modules/tablecloth/relational_table.rye` (TAME relational table + KV),
+#   3. `modules/comlink/council_405.rye` + `glow/gate-council-405.glow`
+#      (`d15 -> 3 -> 9 -> 405` & exact `324/405 = 80.000%` supermajority),
+#   4. `modules/pond/puddle/puddle_remote.rye` (Kumara key enrollment, Wi-Fi ->
+#      LTE roaming session, & traversal-safe SHA3+Ed25519 parcel copy),
+#   5. `modules/sundial/one_clock.rye` (`UTC` template default + set-and-forget
+#      `America/New_York` 2026/2027 `est` <-> `edt` auto-DST)!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Pulp prepend-to-front Movement stack ([15 75 375 1875 9375])
+let b_pm = run ["sh" rb "modules/flare/pulp/pulp_movement_stack.rye" "-femit-bin=tools/.build/pulp_movement_stack"]
+assert b_pm.ok else "pulp_movement_stack.rye build failed"
+let r_pm = run ["tools/.build/pulp_movement_stack"]
+assert r_pm.ok else "pulp_movement_stack selftest failed"
+
+# 2. Tablecloth TAME relational + KV table engine
+let b_rt = run ["sh" rb "modules/tablecloth/relational_table.rye" "-femit-bin=tools/.build/relational_table"]
+assert b_rt.ok else "relational_table.rye build failed"
+let r_rt = run ["tools/.build/relational_table"]
+assert r_rt.ok else "relational_table selftest failed"
+
+# 3. 405 Council & exact 324/405 (80%) direct-democracy supermajority
+let b_c4 = run ["sh" rb "modules/comlink/council_405.rye" "-femit-bin=tools/.build/council_405"]
+assert b_c4.ok else "council_405.rye build failed"
+let r_c4 = run ["tools/.build/council_405"]
+assert r_c4.ok else "council_405 selftest failed"
+
+# 4. Pond Puddle roaming session & TAME scp parcel verifier
+let b_pr = run ["sh" rb "modules/pond/puddle/puddle_remote.rye" "-femit-bin=tools/.build/puddle_remote"]
+assert b_pr.ok else "puddle_remote.rye build failed"
+let r_pr = run ["tools/.build/puddle_remote"]
+assert r_pr.ok else "puddle_remote selftest failed"
+
+# 5. Set-and-forget UTC / America/New_York auto-DST One-Clock
+let b_oc = run ["sh" rb "modules/sundial/one_clock.rye" "-femit-bin=tools/.build/one_clock"]
+assert b_oc.ok else "one_clock.rye build failed"
+let r_oc = run ["tools/.build/one_clock"]
+assert r_oc.ok else "one_clock selftest failed"
+
+say "GREEN: pulp_tablecloth_council_puddle_clock_witness -- Pulp [15..9375] stack, Tablecloth SQL/KV, 324/405 Council, Pond Puddle, & Auto-DST One-Clock proven."

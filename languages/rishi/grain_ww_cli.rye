@@ -23,8 +23,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.131000";
-pub const myofascia_reading = "56.745";
+pub const grain_ww_version = "20261115.134000";
+pub const myofascia_reading = "56.760";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {

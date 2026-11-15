@@ -1,0 +1,10 @@
+::  modules/comlink/glow/gate-council-405.glow -- 324/405 (80%) consensus!
+/!  16384
+|%
+++  gate-council-supermajority
+  |=  yes-votes=@ud                                     ::  0..405 verified
+  ^-  @ud                                               ::  0=enacted,1=short
+  ~|  'council-votes-above-405'                         ::  d15 * 3 * 9 = 405
+  ?>  (lte yes-votes 405)                               ::  bounded seat cap
+  ?:  (gte yes-votes 324)  0  1                         ::  324/405 == 80.00%
+--
