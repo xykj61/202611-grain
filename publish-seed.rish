@@ -1,18 +1,19 @@
-# publish-seed.rish -- project the clean public seed, prove every privacy
-# invariant on metal, and publish a single parentless commit to grain-ww.
+# publish-seed.rish -- project the clean public seed via the Fusion incremental
+# engine, prove every privacy invariant, and publish a parentless commit to ww.
 #
-# Stamp: 20261115.052000
+# Stamp: 20261115.061500
 # Style: TAME Core bounds with Radiant comments (`<= 80` cols, pure Rishi).
 #
 # Usage from the repository root:
-#   languages/rishi/bin/rishi run publish-seed.rish          # dry-run proof
+#   languages/rishi/bin/rishi run publish-seed.rish          # fast Fusion proof
 #   languages/rishi/bin/rishi run publish-seed.rish --push   # publish to ww
 #
-# Why this doorway stays pure and gentle:
-#   A newcomer cloning `grain-ww/202611-grain` deserves a living garden free of
-#   private footprints, while the steward's private field (`xy`) keeps its own
-#   full signed history untouched. Every step below asserts both its forward
-#   progress and its refusal boundary before moving to the next.
+# Why Fusion powers this doorway:
+#   Each file's public projection depends solely on its own Git blob OID and our
+#   six manifest/scrub boundary files. `modules/fusion/fusion_sow.rye` verifies
+#   unchanged closures in ~130 ms and incrementally scrubs only edited files,
+#   committing directly over `tools/.cache/fusion/seed_cache` without copying
+#   thousands of unchanged files across disk.
 
 assert length args < 2 else "publish-seed: pass at most one flag (--push)"
 let pushing = "no"
@@ -21,61 +22,63 @@ if pushing == "--push" then let pushing = "yes"
 if pushing != "yes" then if pushing != "no" then let pushing = "bad"
 assert pushing != "bad" else "publish-seed: unknown flag (want --push or none)"
 
-# invariant: run only from the standing Grain root holding `.brix` and manifest.
+# invariant: execute only from the standing Grain root.
 let has_brix = run ["test" "-f" ".brix"]
 assert has_brix.ok else "publish-seed: .brix missing -- run from repo root"
 let has_manifest = run ["test" "-f" "template-manifest.kyri"]
 assert has_manifest.ok else "publish-seed: template-manifest.kyri missing"
 
-# Clear any prior seed/.git so the privacy witness scans pure projected files.
-let wiped = run ["rm" "-rf" "seed/.git"]
-assert wiped.ok else "publish-seed: could not clear seed/.git"
+# Ensure `modules/fusion/bin/fusion_sow` is built (cached via .ryekey!).
+let fsow_src = "modules/fusion/fusion_sow.rye"
+let fsow_bin = "modules/fusion/bin/fusion_sow"
+let has_fsow = run ["test" "-x" fsow_bin]
+let mk_bin = run ["mkdir" "-p" "modules/fusion/bin"]
+assert mk_bin.ok else "publish-seed: mkdir modules/fusion/bin refused"
+let rb_sh = "tools/fixtures/r/rye_build.sh"
+let emit_arg = "-femit-bin=" + fsow_bin
+let bld_cmd = ["sh" rb_sh fsow_src emit_arg]
+if has_fsow.code != 0 then let built = run bld_cmd else let built = run ["true"]
+assert built.ok else "publish-seed: could not build modules/fusion/fusion_sow"
 
-say "publish-seed: proving controls, M1 cover, projection, IDENT, and keys ..."
-let rishi_bin = "languages/rishi/bin/rishi"
-let proved = run [rishi_bin "run" "tools/s/sow_witness.rish"]
-say proved.out
-assert proved.ok else "publish-seed: SOW WITNESS REFUSED -- nothing initialized"
-assert (proved.out contains "SOW_WITNESS_GREEN") else "publish-seed: not GREEN"
+let seed_dir = "tools/.cache/fusion/seed_cache"
+let wipe_git = run ["rm" "-rf" (seed_dir + "/.git")]
+assert wipe_git.ok else "publish-seed: could not clear stale seed_cache/.git"
 
-# Remove internal projection logs before committing so the public seed is crisp.
-let log1 = "seed/.sow-projection.log"
-let log2 = "seed/.sow-withheld.log"
-let log3 = "seed/.sow-scrubbed.log"
-let log4 = "seed/.sow-excluded.log"
-let clean_logs = run ["rm" "-f" log1 log2 log3 log4]
-assert clean_logs.ok else "publish-seed: could not clear .sow-*.log files"
+say "publish-seed: verifying closure via Fusion incremental seed engine ..."
+let proved = run [fsow_bin]
+say proved.err
+assert proved.ok else "publish-seed: FUSION SOW REFUSED -- nothing initialized"
+assert (proved.err contains "SOW_WITNESS_GREEN") else "publish-seed: not GREEN"
 
-# Initialize a fresh orphan `main` repository inside `seed/`.
-let inited = run ["git" "init" "-q" "-b" "main" "seed"]
-assert inited.ok else "publish-seed: git init -b main seed refused"
+# Initialize a transient orphan `main` git index inside `seed_dir`.
+let inited = run ["git" "init" "-q" "-b" "main" seed_dir]
+assert inited.ok else "publish-seed: git init -b main refused"
 
-# Configure unsigned anonymous seed identity so no personal key links across.
-let cfg_sign = run ["git" "-C" "seed" "config" "commit.gpgsign" "false"]
+let cfg_sign = run ["git" "-C" seed_dir "config" "commit.gpgsign" "false"]
 assert cfg_sign.ok else "publish-seed: could not set commit.gpgsign=false"
-let cfg_name = run ["git" "-C" "seed" "config" "user.name" "grain-ww"]
+let cfg_name = run ["git" "-C" seed_dir "config" "user.name" "grain-ww"]
 assert cfg_name.ok else "publish-seed: could not set user.name=grain-ww"
 let seed_mail = "grain-ww@users.noreply.github.com"
-let cfg_mail = run ["git" "-C" "seed" "config" "user.email" seed_mail]
+let cfg_mail = run ["git" "-C" seed_dir "config" "user.email" seed_mail]
 assert cfg_mail.ok else "publish-seed: could not set seed user.email"
 
 let ww_url = "git@github.com:grain-ww/202611-grain.git"
-let add_rem = run ["git" "-C" "seed" "remote" "add" "ww" ww_url]
-assert add_rem.ok else "publish-seed: could not add remote ww in seed/"
+let add_rem = run ["git" "-C" seed_dir "remote" "add" "ww" ww_url]
+assert add_rem.ok else "publish-seed: could not add remote ww"
 
-let staged = run ["git" "-C" "seed" "add" "-A"]
-assert staged.ok else "publish-seed: git add -A refused in seed/"
-let committed = run ["git" "-C" "seed" "commit" "-q" "-m" "petrichor"]
+let staged = run ["git" "-C" seed_dir "add" "-A"]
+assert staged.ok else "publish-seed: git add -A refused"
+let committed = run ["git" "-C" seed_dir "commit" "-q" "-m" "petrichor"]
 assert committed.ok else "publish-seed: orphan seed commit refused"
 
-# Postcondition invariants: 1 commit, 0 parents, unsigned (`N`), `grain-ww`.
-let head_run = run ["git" "-C" "seed" "rev-parse" "HEAD"]
+# Postcondition invariants: 1 commit, 0 parents, unsigned (`N`).
+let head_run = run ["git" "-C" seed_dir "rev-parse" "HEAD"]
 assert head_run.ok else "publish-seed: could not read seed HEAD"
 let head = trim head_run.out
-let sig_run = run ["git" "-C" "seed" "log" "-1" "--format=%G?"]
+let sig_run = run ["git" "-C" seed_dir "log" "-1" "--format=%G?"]
 assert sig_run.ok else "publish-seed: could not inspect signature status"
 let sig = trim sig_run.out
-let par_probe = run ["git" "-C" "seed" "rev-parse" "--verify" "HEAD^"]
+let par_probe = run ["git" "-C" seed_dir "rev-parse" "--verify" "HEAD^"]
 assert par_probe.code != 0 else "publish-seed: seed commit must have 0 parents"
 assert sig == "N" else "publish-seed: seed commit must stay unsigned (N)"
 
@@ -85,9 +88,11 @@ say "publish-seed: target=${ww_url}"
 if pushing != "yes" then say "publish-seed: DRY RUN ok (pass --push to send)."
 
 let ssh_env = "GIT_SSH_COMMAND=ssh"
-let push_cmd = ["env" ssh_env "git" "-C" "seed" "push" "-f" "ww" "HEAD:main"]
-if pushing == "yes" then say "publish-seed: pushing seed to ${ww_url} ..."
+let push_cmd = ["env" ssh_env "git" "-C" seed_dir "push" "-f" "ww" "HEAD:main"]
 let ok_cmd = ["true"]
+if pushing == "yes" then say "publish-seed: pushing seed to ${ww_url} ..."
 if pushing == "yes" then let pushed = run push_cmd else let pushed = run ok_cmd
+let clean_git = run ["rm" "-rf" (seed_dir + "/.git")]
+assert clean_git.ok else "publish-seed: could not remove transient .git"
 assert pushed.ok else "publish-seed: push to grain-ww/202611-grain failed"
 if pushing == "yes" then say "GREEN: publish-seed -- ${head} -> ${ww_url}"

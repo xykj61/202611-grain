@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.045000
-myofascia 56.520
+version 20261115.064000
+myofascia 56.544
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -75,29 +75,42 @@ file modules/caravan/bounded.rye
 file modules/caravan/twin.rye
 file modules/caravan/chain.rye
 
-# Blaze version control
+# Blaze version control and Scion/Manyana virtual RAM weaves
 file modules/blaze/src/main.rye
+file modules/blaze/virtual_weave.rye
+
+# Fusion content-addressed DAG, seed engine, and declarative gate runner
+file modules/fusion/fusion.brix
+file modules/fusion/fusion_dag.rye
+file modules/fusion/fusion_sow.rye
+file modules/fusion/gate_runner.rye
 
 # Gate witness runner
 file tools/p/parity.rish
 
-# Flare inference faculties (Lattice - Pulp - Lantern - Kiln)
+# Flare inference faculties & Agentic Harness
 file modules/flare/lattice/lattice_core.rye
 file modules/flare/pulp/pulp_core.rye
 file modules/flare/lantern/lantern_core.rye
 file modules/flare/flare_core.rye
+file modules/harness/harness_core.rye
 
-# Identity and topology (Kumara - Comlink)
+# Identity, topology, Comlink Parcel, and Gemini TAME Airlock
 file modules/kumara/kumara.rye
 file modules/comlink/topology.rye
+file modules/comlink/parcel/parcel_core.rye
+file modules/comlink/parcel/gemini/gemini_airlock.rye
 
 # Sundial -- health percent and myofascia indicator
 file modules/sundial/sundial.rye
 
-# Living front doors, geode, shed ledger, and model roster
+# Living front doors, geode, shed ledger, catalog, and model roster
 file GEMINI.md
 file README.md
 file SOURCE.md
+file tasks.rish
 file docs-geode/README.md
+file modules/apps/bloom/art-of-programming/README.md
 file mitra-shed/README.md
+file context/SYSTEM_CATALOG.kyri
 file context/MODEL_ROSTER.kyri

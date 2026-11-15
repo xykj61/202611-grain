@@ -57,6 +57,7 @@ allow modules
 allow nixos
 allow open
 allow study
+allow tasks.rish
 allow terrarium
 allow tools
 
@@ -109,12 +110,12 @@ scrub     modules
 template  nixos
 scrub     open
 scrub     study
+template  tasks.rish
 template  terrarium
 scrub     tools
 
 # -- Personal, operator-local, & archived rooms (NEVER SHIPPED) --
 personal  vendor
-personal  Makefile
 personal  PUBKEYS.md
 personal  SAFE.md
 personal  SKILL.md

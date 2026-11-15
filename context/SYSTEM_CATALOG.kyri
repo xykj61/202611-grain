@@ -1,0 +1,52 @@
+format system-catalog-v1
+stamp 20261115.062500
+voice Kyri
+status living
+# context/SYSTEM_CATALOG.kyri -- declarative machine- and beginner-readable
+# catalog of Grain's 5 languages, Linengrow vegan design tokens, Pond capability
+# classes, and core modules (`<= 80` cols, validated by `scribe` & `gate_runner`).
+
+# -- Five Languages --
+language glow .glow languages/glow pure-citizen-runes
+language rye .rye languages/rye bounded-systems-metal
+language rishi .rish languages/rishi structured-shell-witnesses
+language brix .brix languages/brix declarative-composition
+language kyri .kyri languages/kyri boundary-receipts
+
+# -- Vegan Linengrow + Material Design Brand Tokens --
+color purple #4A148C material-purple-900-primary-ink
+color deep_purple #311B92 material-deep-purple-900-dark-card
+color red #D32F2F material-red-700-primary-accent
+color red_light #FF5252 material-red-a200-dark-accent
+color oat #F5F3EE linengrow-vegan-warm-ground
+color white #FFFFFF crisp-highlight
+color ink #0A0A0A carbon-monochrome-ink
+font_display cavalhatriz pixel-script-readme-hero
+font_mono noto-sans-mono primary-monospace-psi
+
+# -- Pond Citizen Capability Classes --
+capability cap_pure_compute memory-only-zero-io
+capability cap_skate_surface framegrid-and-qoi-display
+capability cap_resonance_audio pcm-ring-48khz-privacy-wipe
+capability cap_comlink_peer authenticated-112b-1200b-udp
+capability cap_vault_gemini_key sealed-gemini-api-airlock
+
+# -- Core Modules in modules/ --
+module aurora modules/aurora ring0-riscv-boot
+module tally modules/tally ring0-static-memory-gardens
+module caravan modules/caravan ring1-capability-supervision-and-custody
+module pond modules/pond ring1-citizen-app-sandboxes
+module crypto modules/crypto ring1-sha3-chacha20-ed25519
+module kumara modules/kumara ring2-sovereign-identity-and-vault
+module comlink modules/comlink ring2-encrypted-p2p-wire-and-parcel
+module amphora modules/amphora ring2-sealed-vessels-and-cellar
+module blaze modules/blaze ring3-content-addressed-weaves
+module tablecloth modules/tablecloth ring3-vector-and-bead-search
+module fusion modules/fusion ring3-incremental-dag-and-seed-engine
+module flare modules/flare ring3-local-ai-inference-faculties
+module harness modules/harness ring3-agent-tool-airlock-and-superfans
+module brushstroke modules/brushstroke ring4-immediate-mode-skate-ui
+module resonance modules/resonance ring4-48khz-audio-studio
+module market modules/market ring4-dimeroll-double-entry-and-mandi
+module sundial modules/sundial ring4-myofascia-health-and-nakshatra
+module apps modules/apps ring4-bloom-colloquium-mycelium

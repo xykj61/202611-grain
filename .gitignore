@@ -165,6 +165,7 @@
 !/publish-seed.sh
 !/publish-seed.rish
 !/publish-redirect.rish
+!/tasks.rish
 !/publish-seed.template.sh
 !/publish-redirect.sh
 !/.claude/
@@ -297,6 +298,8 @@ tools/glow/
 zig-cache/
 **/bin/
 /languages/glow/.cache/
+/tools/.cache/
+/tools/.build/
 /modules/caravan/.*/
 /modules/resonance/.sing.lock/
 

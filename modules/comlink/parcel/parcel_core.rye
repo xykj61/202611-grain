@@ -1,0 +1,232 @@
+//! modules/comlink/parcel/parcel_core.rye -- Chronological MVS & vessels.
+//!
+//! Orbits 15-17 of `20261115-053000` (`20261115.063000`).
+//! Proves:
+//!   1. `O(N)` Chronological Minimal Version Selection over `YYYYMMDDHHMMSS`
+//!      `u64` stamps (zero SemVer SAT solver, zero lockfile drift),
+//!   2. SHA3-256 nib + Ed25519 signature verification on parcel vessels,
+//!   3. Hard refusal of install scripts, tampered bytes, & forged signatures.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const Ed25519 = std.crypto.sign.Ed25519;
+
+pub const version = "20261115.063000";
+pub const max_reqs: u32 = 64;
+pub const max_candidates: u32 = 128;
+const nl: u8 = 10;
+
+pub const ParcelError = error{
+    TooManyRequirements,
+    UnsatisfiedStamp,
+    InstallScriptForbidden,
+    FrameBudgetZero,
+    NibMismatch,
+    BadSignature,
+};
+
+pub const Requirement = struct {
+    name: []const u8,
+    min_stamp: u64,
+};
+
+pub const AvailableParcel = struct {
+    name: []const u8,
+    stamp: u64,
+    sha3_nib: [32]u8,
+};
+
+/// Selects the minimum available stamp `>= max(required min_stamps)`
+/// (Go-style Minimal Version Selection adapted to monotonic `YYYYMMDDHHMMSS`).
+pub fn resolve_mvs_chrono(
+    pkg_name: []const u8,
+    reqs: []const Requirement,
+    avail: []const AvailableParcel,
+) ParcelError!AvailableParcel {
+    // invariant: requirement slice is bounded by max_reqs.
+    if (reqs.len > max_reqs) return error.TooManyRequirements;
+    assert(avail.len <= max_candidates);
+
+    var floor_stamp: u64 = 0;
+    for (reqs) |r| {
+        if (std.mem.eql(u8, r.name, pkg_name) and r.min_stamp > floor_stamp) {
+            floor_stamp = r.min_stamp;
+        }
+    }
+
+    var best: ?AvailableParcel = null;
+    for (avail) |cand| {
+        if (!std.mem.eql(u8, cand.name, pkg_name)) continue;
+        if (cand.stamp < floor_stamp) continue;
+        if (best == null or cand.stamp < best.?.stamp) {
+            best = cand;
+        }
+    }
+    const chosen = best orelse return error.UnsatisfiedStamp;
+    // invariant: chosen parcel satisfies every requirement's minimum stamp.
+    assert(chosen.stamp >= floor_stamp);
+    return chosen;
+}
+
+pub const ParcelHeader = struct {
+    name: []const u8,
+    stamp: u64,
+    sha3_nib: [32]u8,
+    frame_budget_bytes: u32,
+    cap_mask: u32,
+    has_install_script: bool,
+};
+
+fn signable_digest(hdr: ParcelHeader) [32]u8 {
+    var h = Sha3_256.init(.{});
+    h.update("comlink-parcel-v1:");
+    h.update(hdr.name);
+    var b8: [8]u8 = undefined;
+    std.mem.writeInt(u64, &b8, hdr.stamp, .little);
+    h.update(&b8);
+    h.update(&hdr.sha3_nib);
+    var b4: [4]u8 = undefined;
+    std.mem.writeInt(u32, &b4, hdr.frame_budget_bytes, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, hdr.cap_mask, .little);
+    h.update(&b4);
+    var out: [32]u8 = undefined;
+    h.final(&out);
+    return out;
+}
+
+pub fn seal_parcel(
+    name: []const u8,
+    stamp: u64,
+    payload: []const u8,
+    frame_budget_bytes: u32,
+    cap_mask: u32,
+    kp: Ed25519.KeyPair,
+) !struct { hdr: ParcelHeader, sig: Ed25519.Signature } {
+    assert(frame_budget_bytes > 0);
+    var nib: [32]u8 = undefined;
+    Sha3_256.hash(payload, &nib, .{});
+    const hdr = ParcelHeader{
+        .name = name,
+        .stamp = stamp,
+        .sha3_nib = nib,
+        .frame_budget_bytes = frame_budget_bytes,
+        .cap_mask = cap_mask,
+        .has_install_script = false,
+    };
+    const msg = signable_digest(hdr);
+    const sig = try kp.sign(&msg, null);
+    assert(hdr.sha3_nib.len == 32);
+    return .{ .hdr = hdr, .sig = sig };
+}
+
+pub fn verify_parcel_vessel(
+    hdr: ParcelHeader,
+    payload: []const u8,
+    sig: Ed25519.Signature,
+    trusted_pk: Ed25519.PublicKey,
+) ParcelError!void {
+    // invariant: arbitrary install scripts are permanently forbidden in Grain.
+    if (hdr.has_install_script) return error.InstallScriptForbidden;
+    if (hdr.frame_budget_bytes == 0) return error.FrameBudgetZero;
+
+    var actual_nib: [32]u8 = undefined;
+    Sha3_256.hash(payload, &actual_nib, .{});
+    if (!std.mem.eql(u8, &actual_nib, &hdr.sha3_nib)) {
+        return error.NibMismatch;
+    }
+
+    const msg = signable_digest(hdr);
+    sig.verify(&msg, trusted_pk) catch return error.BadSignature;
+    // invariant: verified payload matches header SHA3-256 nib byte-for-byte.
+    assert(std.mem.eql(u8, &actual_nib, &hdr.sha3_nib));
+}
+
+fn run_selftest() !u8 {
+    // 1. Chronological MVS selects minimum satisfying version (20261110120000)
+    //    even when a newer unrequested version (20261115090000) exists!
+    const z_nib = std.mem.zeroes([32]u8);
+    const pkg = "comlink-gemini";
+    const avail = [_]AvailableParcel{
+        .{ .name = pkg, .stamp = 20261101000000, .sha3_nib = z_nib },
+        .{ .name = pkg, .stamp = 20261110120000, .sha3_nib = z_nib },
+        .{ .name = pkg, .stamp = 20261115090000, .sha3_nib = z_nib },
+    };
+    const r_list = [_]Requirement{
+        .{ .name = "comlink-gemini", .min_stamp = 20261102000000 },
+        .{ .name = "comlink-gemini", .min_stamp = 20261109000000 },
+    };
+    const picked = try resolve_mvs_chrono("comlink-gemini", &r_list, &avail);
+    if (picked.stamp != 20261110120000) return error.MvsPickedWrongVersion;
+
+    // Unsatisfied requirement refuses cleanly
+    const impossible = [_]Requirement{
+        .{ .name = "comlink-gemini", .min_stamp = 20270101000000 },
+    };
+    if (resolve_mvs_chrono("comlink-gemini", &impossible, &avail)) |_| {
+        return error.ImpossibleStampAccepted;
+    } else |err| {
+        if (err != error.UnsatisfiedStamp) return err;
+    }
+
+    // 2. Signed vessel happy path + 3 negative refusals
+    const seed: [32]u8 = @splat(0x42);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    const payload = "name comlink-gemini; frame_budget_bytes 65536;";
+    const sealed = try seal_parcel(
+        "comlink-gemini",
+        20261115063000,
+        payload,
+        65536,
+        0x10,
+        kp,
+    );
+    try verify_parcel_vessel(sealed.hdr, payload, sealed.sig, kp.public_key);
+
+    // Refusal A: tampered payload byte
+    const bad_payload = "name comlink-gemini; frame_budget_bytes 99999;";
+    if (verify_parcel_vessel(
+        sealed.hdr,
+        bad_payload,
+        sealed.sig,
+        kp.public_key,
+    )) |_| {
+        return error.TamperedPayloadAccepted;
+    } else |err| {
+        if (err != error.NibMismatch) return err;
+    }
+
+    // Refusal B: untrusted signer key
+    const rogue_seed: [32]u8 = @splat(0x99);
+    const rogue_kp = try Ed25519.KeyPair.generateDeterministic(rogue_seed);
+    if (verify_parcel_vessel(
+        sealed.hdr,
+        payload,
+        sealed.sig,
+        rogue_kp.public_key,
+    )) |_| {
+        return error.RogueKeyAccepted;
+    } else |err| {
+        if (err != error.BadSignature) return err;
+    }
+
+    // Refusal C: install script forbidden
+    var bad_hdr = sealed.hdr;
+    bad_hdr.has_install_script = true;
+    if (verify_parcel_vessel(bad_hdr, payload, sealed.sig, kp.public_key)) |_| {
+        return error.InstallScriptAccepted;
+    } else |err| {
+        if (err != error.InstallScriptForbidden) return err;
+    }
+
+    print("GREEN: parcel_core -- MVS & Ed25519 vessels proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

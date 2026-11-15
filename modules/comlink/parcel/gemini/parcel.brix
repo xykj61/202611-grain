@@ -1,0 +1,12 @@
+# modules/comlink/parcel/gemini/parcel.brix -- Inaugural Comlink Parcel #1.
+# TAME-guided Grain <-> Google Gemini API airlock descriptor (`<= 80` cols).
+
+name comlink-gemini
+version 20261115.063000
+format parcel-v1
+default_model gemini-4-carbon
+frame_budget_bytes 65536
+max_prompt_bytes 16384
+capability cap_vault_gemini_key
+install_scripts none
+entry modules/comlink/parcel/gemini/gemini_airlock.rye

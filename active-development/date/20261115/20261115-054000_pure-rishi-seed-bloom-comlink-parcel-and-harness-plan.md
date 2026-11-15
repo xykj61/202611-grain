@@ -78,14 +78,15 @@ Seated today at **[`modules/apps/bloom/README.md`](../../../modules/apps/bloom/R
 
 ---
 
-## 5. Rough Plan & Confirmation Questions for the Proposed `active-tablecloth/` Project
+## 5. Rough Plan & Confirmation Questions for the Proposed `active-tablecloth/` Project (Upgraded With `Fusion`)
 
-Glow Mill is paused cleanly at Orbit 1 (`Myofascia: 56.520`), and **[`20261115-053000_native-grain-bloom-comlink-pkg-and-harness`](../../../active-tablecloth/date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/README.md)** proposes **4 Quests / 20 Orbits (`56.520 -> 56.540`)**:
+Glow Mill is paused cleanly at Orbit 1 (`Myofascia: 56.520`), and **[`20261115-053000_native-grain-bloom-comlink-pkg-and-harness`](../../../active-tablecloth/date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/README.md)** now places our revamped **`Fusion` Build & Seed Engine** (`active-designing/date/20260825/20260825-173153_reprove-only-what-moved.md` + `.ryekey` v7 + CA-Nix early cutoff) right at **Quest 1** across **5 Quests / 24 Orbits (`56.520 -> 56.544`)**:
 
-- **Quest 1 (Orbits 1-5):** Port the `2` `.py` files, `1` `.js` file, `Makefile`, `26` `.c` shims, `sow_*.sh` seed engine, and ~1,200 `tools/fixtures/**/*.sh` grep scripts into native Rye/Glow/Rishi + declarative `.kyri`/`.brix` tables (keeping only the 4 cold-start POSIX bridges).
-- **Quest 2 (Orbits 6-10):** Build `bloom/art-of-programming/01..12` macOS SLCs + `comlink-prelude.glow` + `docs-geode/` operator reference polish.
-- **Quest 3 (Orbits 11-15):** Build **`Comlink Parcel`** (`modules/comlink/parcel/`, Chronological MVS + SHA3/Kumara vessels + zero install scripts) and ship **`comlink-gemini`** as Parcel #1.
-- **Quest 4 (Orbits 16-20):** Seat **`modules/harness/`**, virtualized in-RAM **Blaze** agent branches, **OmniDiff**-style 3-Tier structural diffs, and **"Superfan"** sentinel harnesses.
+- **Quest 1 -- Revamped `Fusion` Build, Witness & Incremental `publish-seed` Engine (Orbits 1-5):** Seat `modules/fusion/` (`fusion_dag.rye`, `fusion_prove.rye`, `fusion_sow.rye`) keying builds, witnesses, and per-blob seed projections on `git ls-files -s` OIDs + `SHA3_256` closures (with mandatory MISS-side falsifiers and `1-in-16` `verify-ich` cold audits), cutting incremental `publish-seed.rish` from ~30s (`939` `sed` spawns + full `seed/` wipe) to **`< 50 ms`** and ensuring `publish-seed` runs **at most once** at movement close.
+- **Quest 2 -- Polyglot-to-Native-5 Conversion & Declarative `.brix`/`.kyri` Definitions (Orbits 6-9):** Port the `2` `.py` files, `1` `.js` file, `Makefile`, `26` `.c` shims, and ~1,200 `tools/fixtures/**/*.sh` grep scripts into native Rye/Glow/Rishi + declarative `.kyri`/`.brix` tables (keeping only the 4 cold-start POSIX bridges).
+- **Quest 3 -- `bloom/art-of-programming/01..12` Wing-Beside-You macOS SLCs & `docs-geode/` Reference Split (Orbits 10-14):** Build Chapters `01..12` + `comlink-prelude.glow` + `docs-geode/` operator reference polish.
+- **Quest 4 -- `Comlink Parcel` TAME Package Manager & `comlink-gemini` Package (Orbits 15-19):** Build `modules/comlink/parcel/` (Chronological MVS + SHA3/Kumara vessels + zero install scripts, backed directly by Fusion's content-addressed cache) and ship **`comlink-gemini`** as Parcel #1.
+- **Quest 5 -- `modules/harness/` Agentic Harness & Scion/OmniDiff-Inspired `Blaze Weave` (Orbits 20-24):** Seat **`modules/harness/`**, virtualized in-RAM **Blaze** agent branches, **OmniDiff**-style 3-Tier structural diffs (feeding Tier-0 cosmetic early-cutoff straight back into Fusion!), and Fusion-keyed **"Superfan"** sentinel harnesses.
 
 ### Five Quick Questions to Confirm Before We `kg` Into Orbit 1
 

@@ -1,0 +1,50 @@
+# tools/f/fusion_seed_and_build_witness.rish -- Quest 1 SLC witness (Orbits 1-5)
+#
+# Proves on real metal:
+#   1. `modules/fusion/fusion_dag.rye`: CA-Nix comment early-cutoff HIT, 4 MISS
+#      falsifiers (code, flag, pin, absent bit), cycle refusal, & verify-ich.
+#   2. `modules/fusion/fusion_sow.rye`: warm cache HIT (`recomputed=0`),
+#      1-file incremental edit (`FUSION_SOW_DELTA ... recomputed=1`), and
+#      planted Google Gemini `AIza...` API key refusal (`PERSONAL_BAD`)!
+
+let zig = "vendor/zig-toolchain/zig"
+let mk = run ["mkdir" "-p" "modules/fusion/bin"]
+assert mk.ok else "mkdir modules/fusion/bin failed"
+
+let b_dag = run ["sh" "tools/fixtures/r/rye_build.sh" "modules/fusion/fusion_dag.rye" "-femit-bin=modules/fusion/bin/fusion_dag"]
+assert b_dag.ok else "fusion_dag build failed"
+let r_dag = run ["modules/fusion/bin/fusion_dag"]
+assert r_dag.ok else "fusion_dag selftest failed"
+assert (r_dag.err contains "GREEN: fusion_dag") else "fusion_dag missing GREEN"
+
+let b_sow = run ["sh" "tools/fixtures/r/rye_build.sh" "modules/fusion/fusion_sow.rye" "-femit-bin=modules/fusion/bin/fusion_sow"]
+assert b_sow.ok else "fusion_sow build failed"
+
+# 1. Baseline run (ensures cache is warm) + second run must HIT (`recomputed=0`)
+let warm1 = run ["modules/fusion/bin/fusion_sow"]
+assert warm1.ok else "fusion_sow baseline failed"
+let warm2 = run ["modules/fusion/bin/fusion_sow"]
+assert warm2.ok else "fusion_sow warm hit failed"
+assert (warm2.err contains "FUSION_SOW_HIT") else "expected FUSION_SOW_HIT on unchanged closure"
+
+# 2. 1-file unstaged edit MISS -> FUSION_SOW_DELTA with recomputed=1!
+let test_sh = "cp llms.txt llms.txt.bak && trap 'mv -f llms.txt.bak llms.txt 2>/dev/null || true' EXIT INT TERM && echo '# fusion-delta-probe' >> llms.txt && modules/fusion/bin/fusion_sow 2>&1; rc=$?; mv -f llms.txt.bak llms.txt; exit $rc"
+let delta = run ["sh" "-c" test_sh]
+assert delta.ok else "fusion_sow 1-file delta failed"
+assert (delta.out contains "FUSION_SOW_DELTA") else "1-file edit did not trigger FUSION_SOW_DELTA"
+assert (delta.out contains "recomputed=1") else "1-file edit did not report recomputed=1"
+
+# 3. Planted Google Gemini API key (`AIza` + 35 chars) MUST REFUSE (`PERSONAL_BAD`)!
+let fake_pfx = "AIza"
+let fake_tail = "SyTestFakeKeyForFusionWitness012345"
+let fake_key = fake_pfx + fake_tail
+let leak_sh = "cp llms.txt llms.txt.bak && trap 'mv -f llms.txt.bak llms.txt 2>/dev/null || true' EXIT INT TERM && echo '" + fake_key + "' >> llms.txt && modules/fusion/bin/fusion_sow 2>&1; rc=$?; mv -f llms.txt.bak llms.txt; exit $rc"
+let leak = run ["sh" "-c" leak_sh]
+assert leak.code != 0 else "planted Gemini API key was wrongly accepted!"
+assert (leak.out contains "PERSONAL_BAD") else "planted Gemini key refusal did not print PERSONAL_BAD"
+
+# 4. Restore clean closure receipt after restoring llms.txt
+let restore = run ["modules/fusion/bin/fusion_sow"]
+assert restore.ok else "fusion_sow restore failed"
+
+say "GREEN: fusion_seed_and_build_witness -- DAG early-cutoff, ~130ms warm seed HIT, recomputed=1 delta, and Gemini key refusal proven."

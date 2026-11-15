@@ -1,10 +1,10 @@
 # The Art of Programming (`00`..`12`) -- Wing-Beside-You macOS Series
 
 **Language:** EN
-**Stamp:** `20261115.052500` (EST)
+**Stamp:** `20261115.063500` (EST)
 **Voice:** Kyri
 **Style:** Teacher & Radiant at Door
-**Status:** Living (`Room: mixed` -- Chapter `00` live; Chapters `01..12` planned as full-scoped SLCs)
+**Status:** Living (`Room: checkable` -- all 13 chapters `00..12` seated and verified by `tools/h/harness_parcel_bloom_witness.rish`)
 
 ---
 
@@ -12,24 +12,24 @@
 
 Imagine a wise, friendly guardian dragon walking patiently beside your desk: strong enough that nothing you type can accidentally break your computer, and gentle enough to explain every single symbol in everyday English before asking you to type it.
 
-**Prerequisites:** None at all -- only curiosity, a **macOS computer**, and a **macOS keyboard**.
+**Prerequisites:** None at all -- only curiosity, a **macOS computer**, and a **macOS keyboard**. (Seasoned operators looking for concise reference manuals can jump straight to [`../../../../docs-geode/README.md`](../../../../docs-geode/README.md).)
 
 ---
 
-## Numerically Ordered Series Map
+## Numerically Ordered Series Map (`00`..`12`)
 
-| Chapter | Title | What You Build From Scratch (SLC) |
+| Chapter | Title | What You Build & Prove From Scratch |
 |---|---|---|
-| **[`00`](00-your-mac-your-keys-and-the-lantern-dragon.md)** | **Your Mac, Your Keyboard, and Your First Green Light** | Find `Command` + `Space`, open `Terminal.app`, meet folders as rooms, clone `grain-ww/202611-grain`, and watch your Mac verify its first `GREEN` proof |
-| `01` | **Numbers, Words, and Boxes With Honest Sizes** | Meet bits, bytes, `@u32` numbers, and `@t` text cords in interactive `rishi` Glow mode |
-| `02` | **Your First Pure Glow Gate (`\|=`)** | Write a real `.glow` function that turns inputs into outputs the exact same way every time |
-| `03` | **Decisions, Guards, and Shapes (`?:`, `?>`, `$:`)** | Teach a Glow program to make safe choices and refuse nonsensical inputs politely |
-| `04` | **Plain Names for Powerful Rooms (The Comlink Way)** | Call Grain's existing modules (`tally`, `sundial`, `kumara`, `blaze`) through clean, friendly wrapper gates without touching low-level wiring |
-| `05` | **Your Sovereign Name Card (`kumara` Profile SLC)** | Generate an Ed25519 keypair on your Mac, sign a personal profile card, and verify a friend's signature |
-| `06` | **Two Macs Talking Across the Room (`comlink` P2P Chat SLC)** | Send a 112-byte encrypted turn from one terminal window (or Mac) to another over local UDP |
-| `07` | **Installing Tools Over the Wire (`comlink parcel` SLC)** | Fetch and SHA3-verify your first signed Grain package over Comlink with zero install scripts |
-| `08` | **Painting Pixels & Sprites (`brushstroke` Art Canvas SLC)** | Draw crisp pixel art and vegan **Oat / Purple / Red** badges into a live QOI/SVG frame |
-| `09` | **A Tiny Garden Game (`skate` Interactive SLC)** | Build a playable keyboard-driven seed-planting & falling-rain game as a pure `\|_` Glow state fold |
-| `10` | **Singing in Pure Math (`resonance` Music Sketchpad SLC)** | Compose a four-bar melody and drum pattern at 48 kHz using plain text notes |
-| `11` | **Meeting Gemini Safely (`comlink-gemini` TAME Package SLC)** | Seal a Google Gemini API key inside `vault`/`pond` and ask Gemini a structured question from Glow/Rishi |
-| `12` | **Conducting a Helpful Agent Choir (`harness` Capstone SLC)** | Combine `blaze`, `skate`, `comlink-gemini`, and `harness` so parallel Gemini subagents help co-design art, music, or code weaves |
+| **[`00`](00-your-mac-your-keys-and-the-lantern-dragon.md)** | **Your Mac, Your Keyboard, and Your First Green Light** | Summon `Terminal.app` (`Command + Space`), clone `grain-ww/202611-grain`, build Rye & Rishi, and watch your first `GREEN` proof |
+| **[`01`](01-numbers-words-and-honest-boxes.md)** | **Numbers, Words, and Boxes With Honest Sizes** | Meet `@ud` (`u32`), `@t` cords, `@f` booleans, and interactive `rishi glow` |
+| **[`02`](02-your-first-pure-glow-gate.md)** | **Your First Pure Glow Gate (`\|=`)** | Read and verify pure `\|=` functions and all 30 Glow runes |
+| **[`03`](03-decisions-guards-and-shapes.md)** | **Decisions, Guards, and Shapes (`?:`, `?>`, `$:`)** | Branch safely, enforce guards, and inspect `comlink-prelude.glow` |
+| **[`04`](04-plain-names-for-powerful-rooms.md)** | **Plain Names for Powerful Rooms (The Comlink Way)** | Run `tasks.rish sundial` and explore `SYSTEM_CATALOG.kyri` |
+| **[`05`](05-your-sovereign-name-card.md)** | **Your Sovereign Name Card (`kumara` Profile SLC)** | Prove Ed25519 signing and tampered-byte refusal on your Mac |
+| **[`06`](06-two-macs-talking-over-comlink.md)** | **Two Macs Talking Across the Room (`comlink` P2P Chat SLC)** | Meet 112-byte encrypted UDP turns and vowel-free `constel` test piers |
+| **[`07`](07-installing-tools-with-comlink-parcel.md)** | **Installing Tools Over the Wire (`comlink parcel` SLC)** | Prove Chronological MVS and script-free Ed25519 package vessels |
+| **[`08`](08-painting-pixels-and-sprites.md)** | **Painting Pixels & Sprites (`brushstroke` Art Canvas SLC)** | Explore pixel grids and our vegan **Oat / Purple / Red** palette |
+| **[`09`](09-a-tiny-garden-game-in-skate.md)** | **A Tiny Garden Game (`skate` Interactive SLC)** | Understand 60 fps pure `\|_` game state folds |
+| **[`10`](10-singing-in-pure-math-with-resonance.md)** | **Singing in Pure Math (`resonance` Music Sketchpad SLC)** | Meet 48 kHz synthesis and privacy-wiping `mikrophone` rings |
+| **[`11`](11-meeting-gemini-safely.md)** | **Meeting Gemini Safely (`comlink-gemini` TAME Package SLC)** | Seal a Gemini API key inside `VaultedGeminiKey` & 10-stage input normalization |
+| **[`12`](12-conducting-a-helpful-agent-choir.md)** | **Conducting a Helpful Agent Choir (`harness` Capstone SLC)** | Combine virtual in-RAM **Blaze** branches, 3-Tier review, and **Harness** |
