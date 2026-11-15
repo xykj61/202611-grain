@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.152000";
-pub const myofascia_reading = "56.850";
+pub const grain_ww_version = "20261115.153500";
+pub const myofascia_reading = "56.865";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -263,6 +263,15 @@ pub fn main(init: std.process.Init) !u8 {
             "libraries/shastra/champu/bin/gopala_champu_weave",
             "show",
             &.{},
+        );
+    }
+    if (std.mem.eql(u8, sub, "shastra-wheel")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/panchanga_shastra_bridge",
+            null,
+            args[2..],
         );
     }
     if (std.mem.eql(u8, sub, "glow")) {

@@ -1,0 +1,25 @@
+# tools/s/shastra_panchanga_and_geode_tutorial_witness.rish -- Movement 9/15
+# (`Sagittarius`): `Shastra` 405 Bridge & `docs-geode` Power-User Guide Witness!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Build & prove `panchanga_shastra_bridge.rye` (`15 x 27 = 405` + 4-yr Shastra)
+let b_ps = run ["sh" rb "libraries/shastra/panchanga_shastra_bridge.rye" "-femit-bin=tools/.build/panchanga_shastra_bridge"]
+assert b_ps.ok else "panchanga_shastra_bridge build failed"
+let r_ps = run ["tools/.build/panchanga_shastra_bridge" "selftest"]
+assert r_ps.ok else "panchanga_shastra_bridge selftest failed"
+
+# 2. Rebuild `grain-ww` CLI & test `grain-ww shastra-wheel 205` (Scorpio/Anuradha)
+let b_gw = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_gw.ok else "grain_ww_cli build failed"
+let r_sw = run ["languages/rishi/bin/grain-ww" "shastra-wheel" "205"]
+assert r_sw.ok else "grain-ww shastra-wheel 205 failed"
+assert (r_sw.err contains "Anuradha") else "seat 205 did not resolve to Anuradha!"
+
+# 3. Verify `docs-geode/` tutorial & `README.md` link hygiene (`0` numbered `00-` links!)
+let doc_chk = run ["sh" "-c" "test -s docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md && ! grep -q '00-your-mac' docs-geode/README.md"]
+assert doc_chk.ok else "docs-geode tutorial missing or stale 00- link in docs-geode/README.md!"
+
+say "GREEN: shastra_panchanga_and_geode_tutorial_witness -- 405 Shastra/Nakshatra wheel & docs-geode power-user tutorial proven."

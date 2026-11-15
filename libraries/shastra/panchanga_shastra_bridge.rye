@@ -1,0 +1,163 @@
+//! libraries/shastra/panchanga_shastra_bridge.rye -- 405 Sky & Shastra Wheel!
+//!
+//! Stamp: `20261115.153500` -- `Movement 9/15 : Sagittarius` (*Aim toward
+//! wisdom: connect proven code to Bloom & Shastra*), powering
+//! `grain-ww shastra-wheel [<seat 0..404>]`!
+//!   1. Maps any `d15 -> 3 -> 9 -> 405` Council Seat (`0..404`) bijectively to:
+//!      - Its **Calfive Galaxy (`0..14`: `Aries`..`Siya`)**,
+//!      - Its **Vedic Nakshatra (`0..26`: `Ashwini`..`Revati`)**, AND
+//!      - Its paired **4-Year *Shastra* Curriculum Anchor** (*Year 1
+//!        Tiruppavai*, *Year 2 Rasamrita*, *Year 3 Sikshastakam*, *Year 4
+//!        Gopala-champu*) + living **Grain Engineering Faculty**!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.153500";
+pub const galaxy_count: u32 = 15;
+pub const nakshatra_count: u32 = 27;
+pub const council_seats: u32 = galaxy_count * nakshatra_count; // 405!
+const nl: u8 = 10;
+
+pub const calfive_signs = [galaxy_count][]const u8{
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces",
+    "sky (Cardinal)",
+    "sky (Fixed)",
+    "sky (Siya)",
+};
+
+pub const nakshatras = [nakshatra_count][]const u8{
+    "Ashwini",
+    "Bharani",
+    "Krittika",
+    "Rohini",
+    "Mrigashira",
+    "Ardra",
+    "Punarvasu",
+    "Pushya",
+    "Ashlesha",
+    "Magha",
+    "Purva Phalguni",
+    "Uttara Phalguni",
+    "Hasta",
+    "Chitra",
+    "Swati",
+    "Vishakha",
+    "Anuradha",
+    "Jyeshtha",
+    "Mula",
+    "Purva Ashadha",
+    "Uttara Ashadha",
+    "Shravana",
+    "Dhanishta",
+    "Shatabhisha",
+    "Purva Bhadrapada",
+    "Uttara Bhadrapada",
+    "Revati",
+};
+
+pub const shastra_anchors = [4][]const u8{
+    "Year 1 Tiruppavai (30 Dawn Songs -> Aurora & Sundial)",
+    "Year 2 Rasamrita-sindhu (5 Waves -> Resonance & Brushstroke)",
+    "Year 3 Sikshastakam (8 Verses -> Glow Mill & Blaze)",
+    "Year 4 Gopala-champu (Gadya/Padya -> Pulp, Scribe, & Council 405)",
+};
+
+pub const SeatReading = struct {
+    seat_id: u32,
+    galaxy_idx: u8,
+    nakshatra_idx: u8,
+    sign_name: []const u8,
+    nakshatra_name: []const u8,
+    shastra_anchor: []const u8,
+};
+
+pub fn inspect_seat(seat_id: u32) !SeatReading {
+    if (seat_id >= council_seats) return error.SeatOutOfRange;
+    const gal: u8 = @intCast(seat_id / nakshatra_count);
+    const nak: u8 = @intCast(seat_id % nakshatra_count);
+    const yr: usize = seat_id % 4;
+    // invariant: galaxy in 0..14, nakshatra in 0..26, bijective to 0..404.
+    assert(gal < 15 and nak < 27);
+    assert(@as(u32, gal) * 27 + nak == seat_id);
+    return .{
+        .seat_id = seat_id,
+        .galaxy_idx = gal,
+        .nakshatra_idx = nak,
+        .sign_name = calfive_signs[gal],
+        .nakshatra_name = nakshatras[nak],
+        .shastra_anchor = shastra_anchors[yr],
+    };
+}
+
+fn run_selftest() !u8 {
+    // 1. All 405 seats decode bijectively; seat 405 refuses!
+    var s: u32 = 0;
+    while (s < council_seats) : (s += 1) _ = try inspect_seat(s);
+    if (inspect_seat(405)) |_| {
+        return error.Seat405Accepted;
+    } else |err| {
+        if (err != error.SeatOutOfRange) return err;
+    }
+
+    // 2. Scorpio (gal 7) + Anuradha (nakshatra 16) == seat `7*27 + 16 = 205`!
+    const anuradha_seat = try inspect_seat(7 * 27 + 16);
+    if (!std.mem.eql(u8, anuradha_seat.sign_name, "Scorpio") or
+        !std.mem.eql(u8, anuradha_seat.nakshatra_name, "Anuradha"))
+    {
+        return error.AnuradhaMappingBroken;
+    }
+
+    // 3. Final seat 404 == `sky (Siya)` + `Revati`!
+    const siya_revati = try inspect_seat(404);
+    if (!std.mem.eql(u8, siya_revati.sign_name, "sky (Siya)") or
+        !std.mem.eql(u8, siya_revati.nakshatra_name, "Revati"))
+    {
+        return error.SiyaRevatiBroken;
+    }
+
+    print(
+        "GREEN: panchanga_shastra_bridge -- 15x27=405 & 4-yr Shastra.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    const target: u32 = if (args.len >= 2)
+        std.fmt.parseInt(u32, args[1], 10) catch 205
+    else
+        205;
+    const rd = try inspect_seat(target);
+    print("Shastra Council Seat {d}/404:{c}", .{ rd.seat_id, nl });
+    print("  Galaxy    : {s} (#{d}/15){c}", .{
+        rd.sign_name,
+        rd.galaxy_idx + 1,
+        nl,
+    });
+    print("  Nakshatra : {s} (#{d}/27){c}", .{
+        rd.nakshatra_name,
+        rd.nakshatra_idx + 1,
+        nl,
+    });
+    print("  Shastra   : {s}{c}", .{ rd.shastra_anchor, nl });
+    return 0;
+}
