@@ -164,6 +164,7 @@
 # the `personal` verdict in template-manifest.kyri, which is a decision rather than an accident.
 !/publish-seed.sh
 !/publish-seed.rish
+!/publish-redirect.rish
 !/publish-seed.template.sh
 !/publish-redirect.sh
 !/.claude/

@@ -14,6 +14,7 @@ A conventional `docs/` or `manual/` folder quietly implies a finished, shrink-wr
 
 - **Rough volcanic stone outside:** Grain is actively forging its 6-pass **Glow Mill** compiler and **Blazepod** RISC-V enclaves in public daylight.
 - **Pure crystal inside:** every command, path, and chronological stamp inside `docs-geode/` has been verified on real metal against our consolidated [`../languages/`](../languages/README.md) and [`../modules/`](../modules/README.md) tree.
+- **New to coding or sitting down at a Mac for the first time?** Start in **[`../modules/apps/bloom/art-of-programming/00-your-mac-your-keys-and-the-lantern-dragon.md`](../modules/apps/bloom/art-of-programming/00-your-mac-your-keys-and-the-lantern-dragon.md)** -- our gentle, zero-prerequisite *Wing-Beside-You* numbered series (`00`..`12`), while using `docs-geode/` here as your concise operator and architecture reference manual!
 
 ---
 
