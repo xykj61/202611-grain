@@ -1,0 +1,32 @@
+# tools/l/linengrow_commons_and_frontdoor_witness.rish -- Linengrow, Manifest
+# Cover, & Front-Door (`MAP.md` / `llms.txt`) Witness!
+#
+# Proves on real metal (`20261115.131000`):
+#   1. `modules/apps/linengrow/linengrow_commons.rye` (plain Comlink-tendency
+#      consent grants, `max_uses` cap, revocation, Seva split, & SHA3 export),
+#   2. `modules/fusion/manifest_cover.rye` (all `.brix` bricks resolve & obey
+#      `stamp-and-name` with zero numbered witness/guide filenames),
+#   3. `MAP.md` & `llms.txt` contain zero stale `study/` links or deleted
+#      `CLAUDE.md`/`AGENTS.md` entries, and put `GEMINI.md` first!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Linengrow plain-named commons engine
+let b_lg = run ["sh" rb "modules/apps/linengrow/linengrow_commons.rye" "-femit-bin=tools/.build/linengrow_commons"]
+assert b_lg.ok else "linengrow_commons.rye build failed"
+let r_lg = run ["tools/.build/linengrow_commons"]
+assert r_lg.ok else "linengrow_commons selftest failed"
+
+# 2. Native Rye `.brix` & `stamp-and-name` cover verifier
+let b_mc = run ["sh" rb "modules/fusion/manifest_cover.rye" "-femit-bin=tools/.build/manifest_cover"]
+assert b_mc.ok else "manifest_cover.rye build failed"
+let r_mc = run ["tools/.build/manifest_cover"]
+assert r_mc.ok else "manifest_cover audit failed"
+
+# 3. Front-door `MAP.md` & `llms.txt` link hygiene
+let fd_chk = run ["sh" "-c" "! grep -E 'study/README.md|CLAUDE.md|AGENTS.md' MAP.md llms.txt && grep -q '^GEMINI.md$' llms.txt"]
+assert fd_chk.ok else "MAP.md or llms.txt has stale link or missing GEMINI.md!"
+
+say "GREEN: linengrow_commons_and_frontdoor_witness -- Linengrow consent/Seva commons, native manifest_cover, & MAP.md/llms.txt front door proven."

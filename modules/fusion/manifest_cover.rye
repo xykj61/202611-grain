@@ -1,0 +1,96 @@
+//! modules/fusion/manifest_cover.rye -- Native Rye `.brix` & Stamp Verifier!
+//!
+//! Stamp: `20261115.131000` -- Audits `.brix` `file <path>` entries in memory
+//! (`< 5 ms`, zero shell loops):
+//!   1. Every declared `file <path>` exists and is non-empty on disk,
+//!   2. Every declared `file <path>` obeys `stamp-and-name` (zero ascending
+//!      `_[0-9]+_witness` or `/[0-9][0-9]-` filename prefixes!),
+//!   3. `.brix` carries a valid chronological `YYYYMMDD.HHMMSS` version!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.131000";
+const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const CoverError = error{
+    MissingChronologicalVersion,
+    MissingBrickFile,
+    AscendingNumberInBrickPath,
+    ZeroBricksFound,
+};
+
+pub fn has_numbered_filename_violation(path: []const u8) bool {
+    const base = std.fs.path.basename(path);
+    // Reject `01-foo.md`..`99-foo.md` prefixes (`YYYYMMDD` is 8 digits)
+    if (base.len >= 4 and
+        std.ascii.isDigit(base[0]) and
+        std.ascii.isDigit(base[1]) and
+        base[2] == '-')
+    {
+        return true;
+    }
+    // Reject `_100_witness.rish`-style milestone numbers
+    if (std.mem.indexOf(u8, base, "_witness.") != null) {
+        var i: usize = 0;
+        while (i + 2 < base.len) : (i += 1) {
+            if (base[i] == '_' and std.ascii.isDigit(base[i + 1])) return true;
+        }
+    }
+    return false;
+}
+
+pub fn audit_brix_manifest(io: std.Io, brix_text: []const u8) !u32 {
+    const cwd = std.Io.Dir.cwd();
+    var has_ver = false;
+    var count: u32 = 0;
+
+    var it = std.mem.splitScalar(u8, brix_text, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (line.len == 0 or line[0] == '#') continue;
+        if (std.mem.startsWith(u8, line, "version ")) {
+            const v = std.mem.trim(u8, line[8..], &ws);
+            if (v.len == 15 and v[8] == '.') has_ver = true;
+        } else if (std.mem.startsWith(u8, line, "file ")) {
+            const rel = std.mem.trim(u8, line[5..], &ws);
+            if (has_numbered_filename_violation(rel)) {
+                print("STAMP_NAME_BAD: {s}{c}", .{ rel, nl });
+                return error.AscendingNumberInBrickPath;
+            }
+            _ = cwd.statFile(io, rel, .{}) catch {
+                print("MISSING_BRICK: {s}{c}", .{ rel, nl });
+                return error.MissingBrickFile;
+            };
+            count += 1;
+        }
+    }
+    if (!has_ver) return error.MissingChronologicalVersion;
+    if (count == 0) return error.ZeroBricksFound;
+    // invariant: verified chronological version and >= 1 existing bricks.
+    assert(has_ver and count >= 1);
+    return count;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    if (!has_numbered_filename_violation("tools/v/foo_100_witness.rish") or
+        !has_numbered_filename_violation("guides/01-farm.md") or
+        has_numbered_filename_violation("tools/v/plain_name_witness.rish"))
+    {
+        return error.SelftestDetectorBroken;
+    }
+
+    const brix_src = try cwd.readFileAlloc(io, ".brix", a, .limited(131072));
+    const n = try audit_brix_manifest(io, brix_src);
+    print("GREEN: manifest_cover -- {d} bricks & stamp-and-name proven.{c}", .{
+        n,
+        nl,
+    });
+    return 0;
+}

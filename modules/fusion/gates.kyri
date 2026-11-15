@@ -83,3 +83,7 @@ ascii_7bit GEMINI.md
 ascii_7bit languages/GEMINI.md
 ascii_7bit modules/GEMINI.md
 ascii_7bit libraries/GEMINI.md
+max_cols 80 modules/apps/linengrow/linengrow_commons.rye
+max_cols 80 modules/fusion/manifest_cover.rye
+ascii_7bit MAP.md
+ascii_7bit llms.txt
