@@ -2,6 +2,9 @@
 
 | Stamp | Title | Notes |
 |---|---|---|
+| 20261114.200951 | [Glow from first principles -- language, transpiler, and rooms](20261114/20261114-200951_glow-first-principles-design.kyri.md) | Design essay: rune vocabulary, transpiler architecture, directory organization, SLC gap |
+| 20261114.181500 | [Glow SLC exploration -- no full SLC built yet](20261114/20261114-181500_glow-slc-exploration.kyri.md) | 505 .glow files surveyed, all generators and placards, no complete application |
+| 20261114.180200 | [Seventh Sense Software (7s.software) review](20261114/20261114-180200_seventh-sense-software-review.kyri.md) | Seven principles closely parallel Grain disciplines, no DJINN mention found |
 | 20261114.175422 | [founding-commit deep debride -- five renames into history](20261114/20261114-175422_founding-commit-deep-debride.kyri.md) | Four filter-repo passes, 10 commits re-signed, force-pushed to xy |
 | 20261114.170305 | [module retirement -- module rename landed and sent](20261114/20261114-170305_module-retirement-module-rename.kyri.md) | Rename 2 of 5 complete -- 39 files, 78 symmetric module-to-module replacements |
 | 20261114.153540 | [Pulp and Blaze renames executed](20261114/20261114-153540_pulp-and-blaze-renames-executed.kyri.md) | Four of five approved renames sent -- Tiles, Flare, Pulp, Blaze complete |
