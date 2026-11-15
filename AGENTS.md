@@ -11,8 +11,10 @@
 ## What this file is
 
 This is the project-instructions file opencode reads automatically, the same way Claude Code reads
-`CLAUDE.md`. It is the open-weight companion's door into the same bench, not a second set of rules.
-The rules themselves live once, in `.claude/rules/` and `context/`, and every editor reads them.
+`CLAUDE.md` and Gemini CLI reads `GEMINI.md`. It is the open-weight companion's door into the same
+bench, not a second set of rules. The rules themselves live once, in `.claude/rules/` and
+`context/`, multi-provider model and branch defaults live in `context/MODEL_ROSTER.kyri` and
+`.brix`, and every editor reads them.
 
 ## The voice, and the harmony
 

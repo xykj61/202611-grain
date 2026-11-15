@@ -43,6 +43,12 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
+### ESSENTIAL GRAIN DISTILLATION -> GLOW MILL (`20261114.234523`, carbon bench `xy/gemini-4-carbon`)
+
+- **Distillation board (active, 12 orbits):** [`../active-tablecloth/date/202611/00/20261114-234523_essential-grain-distillation/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261114-234523_essential-grain-distillation/CHECKLIST.md)
+- **Glow Mill & Citizen Ring board (queued next, 25 orbits):** [`../active-tablecloth/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/CHECKLIST.md)
+- **Archive-custody walk-back checkpoint (Orbit 1 seated `20261114`):** Pre-reroot history stands permanently archived and signed at `xykj61/20260618-grain`; `202611-grain` founding commit is `c2614369` and full 27,852-file post-debride baseline nib is `d98bbaac` (`xy/main`, `xy/claude-opus-4-6`, `xy/gemini-4-carbon`). Every pre-reroot file shed during Orbits 2-8 remains retrievable via `git show d98bbaac:<path>` (or from `xykj61/20260618-grain`).
+
 ### RESONANCE -- The Working Studio (Equinox 1, active from `20261103.010404`)
 
 **Calfive schedule:** [`../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md`](../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md)

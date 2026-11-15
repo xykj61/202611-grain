@@ -32,6 +32,7 @@ Write in **Radiant Style** -- see `context/RADIANT_STYLE.md` and `.claude/rules/
 ## Editor
 
 - **Zed + Claude Agent, and Claude Code** (this thread) reads this file and `.claude/rules/*.md` -- including `gratitude-licenses.md` and `collaboration.md`.
+- **Gemini CLI (`gemini-4-carbon`) and OpenCode** enter through [`GEMINI.md`](GEMINI.md) (`.gemini/settings.json`, `.geminiignore`, pushing to `xy/gemini-4-carbon`) and [`AGENTS.md`](AGENTS.md); multi-provider defaults live in [`context/MODEL_ROSTER.kyri`](context/MODEL_ROSTER.kyri) and [`.brix`](.brix).
 - **Cursor returned** `20261002.115106` on Keaton's word. The mirrored `.cursor/rules/*.mdc` family lives again at the path Cursor reads, beside the CLI adapter rules. The `20260920.135100` retirement held that family at `.cursor-archive/rules/` in the interval; that room is now a pointer.
 - **Counsel cell** -- every counsel printout is one cell: prose head - one codeblock - recommend on the tail. Rule: [`.claude/rules/cell.md`](.claude/rules/cell.md).
 - **Canonical license table:** `external-research/date/20260620/20260620-014412_system.md` -> Gratitude Licenses and the Clean Room.

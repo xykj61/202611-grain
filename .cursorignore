@@ -34,4 +34,7 @@ external-research/yonder/strengthening-compiler/
 loops/
 .cursor-state/
 .zed-state/
+.gemini-state/
+.gemini/tmp/
+.gemini/memory/
 squashfs-root/

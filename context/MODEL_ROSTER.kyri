@@ -1,0 +1,95 @@
+# context/MODEL_ROSTER.kyri -- multi-provider model and branch defaults.
+#
+# Single checkable ledger for the providers, CLIs, default models, doors,
+# settings files, and upstream push branches used across 202611-grain.
+# Every line stays within 80 columns and plain 7-bit ASCII.
+
+format model-roster-v1
+stamp 20261114.203000
+voice Kyri
+
+# --- Upstream repository and branch defaults ---------------------------------
+remote xy
+remote_forge git@github.com:xykj61/202611-grain.git
+branch_main main
+branch_push_default gemini-4-carbon
+
+# --- Google Gemini CLI (active Gemini-class bench default) -------------------
+bench gemini
+provider Google
+product Gemini CLI
+binary gemini
+model_class gemini
+model_default gemini-4-carbon
+checkout 202611-grain-gemini-4-carbon
+branch gemini-4-carbon
+push_remote xy
+push_branch gemini-4-carbon
+door GEMINI.md
+ignore_file .geminiignore
+settings .gemini/settings.json
+local_settings .gemini/settings.local.json
+rule .claude/rules/gemini-bench.md
+frontier_doc frontier/GEMINI.md
+status active
+
+# --- Anthropic Claude Code ---------------------------------------------------
+bench claude
+provider Anthropic
+product Claude Code
+binary claude
+model_class claude
+model_default claude-opus-4-6
+model_tracked_settings claude-sonnet-4-6
+branch claude-opus-4-6
+push_remote xy
+push_branch claude-opus-4-6
+door CLAUDE.md
+settings .claude/settings.json
+local_settings .claude/settings.local.json
+status active
+
+# --- OpenAI Codex CLI --------------------------------------------------------
+bench codex
+provider OpenAI
+product Codex CLI
+binary codex
+model_class gpt
+model_default gpt-6-sol
+model_fleet_loop gpt-5.6-luna
+loop_script tools/f/fleet-loop-codex.sh
+status active
+
+# --- Cursor Agent CLI --------------------------------------------------------
+bench cursor
+provider Cursor
+product Cursor Agent CLI
+binary cursor-agent
+model_class grok
+model_default grok-4.7-high
+model_fallback cursor-grok-4.6-high
+ignore_file .cursorignore
+settings .cursor/cli.json
+frontier_doc frontier/cursor-cli/README.md
+status active
+
+# --- OpenCode on Together AI (open-weight companion) -------------------------
+bench opencode
+provider Together AI
+product OpenCode
+binary opencode
+model_class open-weight
+model_default together/deepseek-ai/DeepSeek-V4-Pro-0813
+door AGENTS.md
+loop_script tools/f/fleet-loop-opencode.sh
+guide open/HARNESS_SETUP.md
+status active
+
+# --- Google Antigravity CLI (separate from Gemini CLI) -----------------------
+bench antigravity
+provider Google
+product Antigravity CLI
+binary agy
+model_class account-selected
+frontier_doc frontier/ANTIGRAVITY.md
+status active

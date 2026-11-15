@@ -123,7 +123,7 @@ The count stays exact. The bound stays exact. The question takes the size of the
 
 ## fleet
 
-A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
+A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, `gemini`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
 
 Run an interactive line in that ship's checkout, inside its tmux window. `FLEET_BARE=1` is the pier. `FLEET_CAPTAIN=1` belongs to incense. The captain's gates stay manual: keys, funds, provisioning, identity, and the public seed.
 
@@ -154,7 +154,15 @@ Codex forwards these flags to the interactive CLI. `codex exec` is its one-lap d
 
 Antigravity's command is `agy`. It reads `--dangerously-skip-permissions` and `--prompt-interactive`. The paste leaves the model to the signed-in account. Home: [`../frontier/ANTIGRAVITY.md`](../frontier/ANTIGRAVITY.md).
 
+Gemini CLI's command is `gemini`. It reads `-y` (`--yolo`), `-m gemini-4-carbon`, and `-i` (`--prompt-interactive`). [`.gemini/settings.json`](../.gemini/settings.json), [`../.brix`](../.brix), and [`../context/MODEL_ROSTER.kyri`](../context/MODEL_ROSTER.kyri) declare `gemini-4-carbon` as the Gemini-class default for model usage and `xy/gemini-4-carbon` branch pushing; [`../GEMINI.md`](../GEMINI.md) loads automatically. Home: [`../frontier/GEMINI.md`](../frontier/GEMINI.md).
+
 OpenCode on Together is the interactive open door. The model is the one proven in [`../open/HARNESS_SETUP.md`](../open/HARNESS_SETUP.md) and named in [`../tools/f/fleet-loop-opencode.sh`](../tools/f/fleet-loop-opencode.sh). `opencode run --interactive` keeps the session open after the first message. OpenRouter and Hugging Face remain the request APIs in [`../open/PROVIDER_SETUP.md`](../open/PROVIDER_SETUP.md). This pier's OpenCode config seats Together only, so those two wait for their own model line before they earn a paste.
+
+### fleet interactive carbon gemini
+
+```sh
+gemini -y -m gemini-4-carbon -i "Read GEMINI.md and construction/ITINERARY.md whole before acting. You are on the 202611-grain-gemini-4-carbon bench pushing to xy/gemini-4-carbon. Begin an interactive session."
+```
 
 ### fleet interactive incense cursor
 
@@ -178,6 +186,12 @@ FLEET_BARE=1 FLEET_CAPTAIN=1 codex -m gpt-6-sol --sandbox danger-full-access --d
 
 ```sh
 FLEET_BARE=1 FLEET_CAPTAIN=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Antigravity. Begin an interactive session."
+```
+
+### fleet interactive incense gemini
+
+```sh
+FLEET_BARE=1 FLEET_CAPTAIN=1 gemini -y -m gemini-4-carbon -i "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Gemini CLI. Begin an interactive session."
 ```
 
 ### fleet interactive incense opencode

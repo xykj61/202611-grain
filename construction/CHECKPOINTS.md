@@ -1,5 +1,10 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261114.235800` -- Essential Grain Distillation Quest 1: pre-reroot testimony, cold archive, and mirror-stub prune.**
+- **Walk-back nib:** `d98bbaac` (`xy/main`, `xy/claude-opus-4-6`, and pre-prune `xy/gemini-4-carbon` parent) plus frozen archive remote `xykj61/20260618-grain` -- `git show d98bbaac:<path>` restores any pruned pre-reroot file byte-for-byte.
+- **Swept:** Orbits 2b, 3, and 4 of `active-tablecloth/date/202611/00/20261114-234523_essential-grain-distillation/CHECKLIST.md`: `1,358` unreferenced pre-`202611` scratch/cold files in `active-designing/` and `external-research/` isolated by `tools/fixtures/d/distillation_curation_scan.sh` (keeping all `557` canon, living-cited, and `202611` essays); `14,012` pre-`20261114` `session-logs/` files; `1,537` `construction/archive/` files; closed `counsel/`, retired `waymarks/`, pre-reroot `expanding-prompts/` and `recursion-prompts/`, fossil `arbor/`, `.cursor-archive/`, `upstream/`, and 1-file redirect/mirror stubs (`mandate/`, `dexter/`, `mitra/`, `biochemistry/`, `flare-voices/`, `spellbook/`) after lifting `20261114` artifacts into `active-designing/` and `fleet/`.
+- **What waits there, worth recalling:** the complete day-by-day workshop chronicle from June through early November 2026, preserved whole and GPG-signed in `xykj61/20260618-grain` and at `d98bbaac`.
+
 **Checkpoint `20261114.172138` -- founding-commit deep debride: five renames into history.**
 - **Walk-back nib:** `e1b042b27d` -- `git show e1b042b27d` restores the tree before the deep debride. After the history rewrite, this nib resolves only in a pre-debride backup or local `refs/original/`.
 - **Swept:** All 10 commits rewritten via `git filter-repo` so the five working-tree renames (Tiles, Flare, Pulp, Blaze, module) appear already present in the founding commit. Content replacement via letter-boundary regex across every blob; filename replacement via Python callback. Rename-only commits pruned. All surviving commits re-signed and force-pushed to `xy`.

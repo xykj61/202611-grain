@@ -1,0 +1,43 @@
+# Gemini CLI indexing -- leave git truth whole; skip heavy / closed shelves.
+# Twin of .cursorignore for Gemini CLI (.gemini/settings.json respects both
+# .gitignore and .geminiignore). Syntax: gitignore-shaped.
+
+# --- Closed archive shelves (every module's archive/ is cold storage) ---
+**/archive/
+.cursor-archive/
+
+# --- Build caches and emitted binaries ---
+tools/.cache/
+tools/.build/
+glow/.cache/
+glow/bin/
+**/.zig-cache/
+**/zig-cache/
+**/bin/
+rye/bin/
+rishi/bin/
+
+# --- Heavy vendored / elder reference trees (still on disk; open by path) ---
+vendor/
+old/
+vere/
+gratitude/nix/
+gratitude/s6/
+gratitude/skalibs/
+gratitude/zon/
+external-research/yonder/strengthening-compiler/
+
+# --- Editor / agent / enclosure local state ---
+loops/
+.cursor-state/
+.zed-state/
+.gemini-state/
+.gemini/tmp/
+.gemini/logs/
+.gemini/sessions/
+.gemini/transcripts/
+.gemini/checkpoints/
+.gemini/memory/
+.gemini/.inbox/
+.gemini/browser-profile/
+squashfs-root/

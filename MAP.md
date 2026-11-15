@@ -22,7 +22,7 @@ Welcome, traveler. Something over a hundred doors face you at this root -- `ls -
 
 | Room | What lives there | The doors |
 |------|------------------|-----------|
-| **1 - The Front Door** | What orients a newcomer before they dive | `README` - `MAP` - `SOURCE` - `CLAUDE` - `CONTRIBUTING` - `ORGANIZING` - licenses - `.template` files - `llms.txt` - `template-manifest.kyri` |
+| **1 - The Front Door** | What orients a newcomer before they dive | `README` - `MAP` - `SOURCE` - `CLAUDE` - `AGENTS` - `GEMINI` - `CONTRIBUTING` - `ORGANIZING` - licenses - `.template` files - `llms.txt` - `template-manifest.kyri` |
 | **2 - The Law** | The disciplines we keep on purpose | `context/` - `.claude/rules/` |
 | **3 - The Why** | The reasons beneath the work | `foundations/` - `saga/` |
 | **4 - The Language & the Machines** | Glow and the module ring | `glow/` - `src/` - the ring |

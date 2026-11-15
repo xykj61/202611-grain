@@ -1,7 +1,7 @@
 # Remote roster -- canonical count
 
 **Language:** EN  
-**Seated:** `20260724.222620` - living refresh `20261102.213500`  
+**Seated:** `20260724.222620` - living refresh `20261114.203000`  
 **Voice:** Kyri  
 **Status:** Living pin -- single home for the pier's remote count  
 **Bound:** keep thin  
@@ -11,13 +11,14 @@
 
 ## Count (living -- Grain)
 
-**Primary push target** (`20261102` -- Keaton's word: `xy` moves from `xykj61/grain` to `xykj61/20260618-grain`):
+**Primary push target** (`20261114` -- Keaton's word: `xy` reroots from `xykj61/20260618-grain` to `xykj61/202611-grain`):
 
 | Remote | Forge |
 |--------|-------|
-| `xy` | GitHub `xykj61/20260618-grain` -- the **anointed ordering remote**; the dated name carries an immutable birthday so the project can grow into multiple versions |
+| `xy` | GitHub `xykj61/202611-grain` -- the **anointed ordering remote**; `main` holds the shared spine, `claude-opus-4-6` holds the Claude Opus bench branch, and `gemini-4-carbon` holds the Gemini bench's default upstream push branch (`context/MODEL_ROSTER.kyri`) |
+| *(archive)* | GitHub `xykj61/20260618-grain` (plus `202611-grain` baseline nib `d98bbaac` / founding commit `c2614369`) -- **frozen historical archive custody** holding all pre-`20261114` session logs, closed counsel, waymarks, and summer drafts whole and signed |
 
-**Molt-breach `20261102`:** `xy` pointed at `xykj61/grain` from `20261003` until `20261102`. On Keaton's word, `xykj61/grain` was force-pushed to a single-commit redirect README pointing at `xykj61/20260618-grain`, and `xy` was repointed. The dated-repo pattern gives flexibility for multiple versions rather than a single `grain` name. `publish-redirect.sh` maintains the redirect, the same way `publish-seed.sh` maintains the public seed.
+**Reroot `20261114` and molt-breach `20261102`:** on `20261114`, `202611-grain` was founded from `xykj61/20260618-grain` as a clean root, with `xykj61/20260618-grain` frozen as archive. Earlier, `xy` pointed at `xykj61/grain` from `20261003` until `20261102`, when `xykj61/grain` became a single-commit redirect README (`publish-redirect.sh`). The dated-repo and model-branch pattern (`claude-opus-4-6`, `gemini-4-carbon`) keeps each provider bench's pushes clean and attributable on `xy`.
 
 **Correction `20261003.153853`:** earlier rows of this page named a GitHub account `debrided` and told a ship to keep a remote by that name. That account is not ours. No ship configures it. Dated logs keep the sentences they already wrote. The personal remote is `xy`.
 
@@ -46,7 +47,7 @@
 | `gp36-codeberg` | Codeberg groupproject36 (retired with Codeberg living push) |
 | `gp36-github` | GitHub groupproject36 (when configured) |
 
-**Push law:** every send pushes **`xy`** (now `xykj61/20260618-grain`). Its fast-forward-only rule stands as the round's compare-and-set. There is no second personal remote. [`.claude/rules/git-signing.md`](../.claude/rules/git-signing.md).
+**Push law:** every send pushes **`xy`** (`xykj61/202611-grain`), with Gemini bench pushes defaulting to `xy/gemini-4-carbon`, Claude bench pushes on `xy/claude-opus-4-6`, and `"send"` fast-forwarding verified commits into `xy/main`. Its fast-forward-only rule stands as the round's compare-and-set. There is no second personal remote. [`.claude/rules/git-signing.md`](../.claude/rules/git-signing.md).
 
 ---
 

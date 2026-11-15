@@ -66,15 +66,20 @@ timezone_label Eastern (EDT in summer · EST in winter)
 # These fields describe configuration, not the active identity of a running
 # session. A new log copies them as configured_* fields, then records `model`
 # from runtime evidence or writes `model unverified`. See the paired
-# session-log-provenance rules. Update these values when this clone's defaults
-# change. Keep model, reasoning/effort, service tier id, and display name in
-# separate fields; leave a field blank when the product does not expose it.
+# session-log-provenance rules and context/MODEL_ROSTER.kyri. Update these
+# values when this clone's defaults change (e.g. on the Gemini carbon bench:
+# editor Gemini CLI, provider Google, product Gemini CLI, model
+# gemini-4-carbon, configuration_evidence .gemini/settings.json). Keep model,
+# reasoning/effort, service tier id, and display name in separate fields;
+# leave a field blank when the product does not expose it.
 editor Claude Code
 provider Anthropic
 product Claude Code
 role repository agent
 modality text
 model claude-sonnet-5
+# Tracked Claude settings currently declare claude-sonnet-4-6; Gemini bench
+# checkouts declare gemini-4-carbon in .gemini/settings.json and .brix.
 effort max
 service_tier
 service_name

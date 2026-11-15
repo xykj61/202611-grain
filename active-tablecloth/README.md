@@ -35,7 +35,9 @@ All boards now live under `date/YYYYMM/NN/` (folded `20261107`).
 | [`20261105-085747_blazepod-rv64g-journey/`](date/202611/00/20261105-085747_blazepod-rv64g-journey/README.md) | Blazepod RV64G Journey -- From a Working Hart to a Living Server | Active |
 | [`20261106-131535_realidream-composition-journey/`](date/202611/00/20261106-131535_realidream-composition-journey/README.md) | Realidream Composition Journey -- From Proven Pieces to One Living Surface | Active |
 | [`20261106-204953_bloom-onboarding-journey/`](date/202611/00/20261106-204953_bloom-onboarding-journey/README.md) | Bloom Onboarding Journey -- 15 open movements remain | Active |
-| [`20261107-090000_blaze-slc-comlink-realidream/`](date/202611/00/20261107-090000_blaze-slc-comlink-realidream/README.md) | Blaze SLC -- Comlink Realidream Content Network | Active -- TOP of Calfive stack |
+| [`20261107-090000_blaze-slc-comlink-realidream/`](date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md) | Blaze SLC -- Comlink Realidream Content Network | Active -- TOP of Calfive stack |
+| [`20261114-234523_essential-grain-distillation/`](date/202611/00/20261114-234523_essential-grain-distillation/README.md) | Essential Grain Distillation -- 96 Rooms & 27,862 Files -> ~30 Rooms, ~3,800 Living Files, & Zero-Red Gates | Active RFC -- 12 orbits (prerequisite to Glow Mill) |
+| [`20261114-224402_glow-mill-and-ring-rearchitecture/`](date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md) | Glow Mill & Citizen Ring -- Sheaf, Pith, Mill, Brix-Modular Self-Hosting, and 5-Ring Module Rearchitecture | Proposed RFC -- 25 orbits (follows Distillation) |
 
 ## Folding convention
 

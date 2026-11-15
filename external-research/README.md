@@ -49,6 +49,7 @@ Dated explorations carry `YYYYMMDD-HHMMSS_short-sprig.md`; living documents (`RE
 
 | Stamp | Note | Meaning |
 |-------|------|---------|
+| `20261114.214200` | [Glow from First Principles -- Hoon's Thirteen Rune Families, Ford Unbraided, and a Six-Pass Compiler](date/20261114/20261114-214200_glow-first-principles-hoon-runes-and-compiler.md) | Mixed -- measured census of `glow/`, `src/`, and `terrarium/` beside a clean-sheet 13-family rune audit, Sheaf/Brix `/` header, `CoreIR` compiler, and directory proposal |
 | *(living)* | [TAME Guidance](TAME_GUIDANCE.md) | Living -- voiced TAME style canon (philosophy and full why) |
 
 ## How To Add an Exploration

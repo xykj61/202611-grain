@@ -135,6 +135,7 @@ allow context/SIMPLE_LOVABLE_COMPLETE.md
 allow context/THREATS.md
 allow context/equinox_map.brix
 allow context/equinox_foundations.brix
+allow context/MODEL_ROSTER.kyri
 allow context/specs   # the project's own technical specs; identity/provenance sub_excluded
 allow gratitude    # the thanks room, SCRUBBED -- Keaton's word 20260906; see the two sub-exclude
                    # classes below (a saved third-party article, and every gitlink submodule)
@@ -151,6 +152,7 @@ allow CODE_OF_CONDUCT.md
 allow CHANGELOG.md
 allow CLAUDE.md
 allow AGENTS.md
+allow GEMINI.md
 allow CONTRIBUTING.md
 allow ORGANIZING.md
 allow bibliography.md
@@ -164,7 +166,9 @@ allow .gitignore
 allow .gitattributes
 allow .gitmodules
 allow .cursorignore
+allow .geminiignore
 allow .claude
+allow .gemini
 allow GLOW_HOST.template.kyri
 allow GLOW_PROFILE.template.kyri
 allow publish-seed.template.sh   # the publisher a seed user inherits; the field's own stays personal
@@ -172,11 +176,13 @@ allow PUBKEYS.template.md
 # ---- dotfiles and root config ----
 template  .brix                          # root Brix descriptor
 template  .cursorignore                  # editor ignore posture
+template  .geminiignore                  # Gemini CLI ignore posture
 template  .gitattributes                 # attribute rules
 template  .gitignore                     # allowlist posture -- exactly what a template wants
 template  .gitmodules                    # gratitude/ and vendor/ submodule pins only
 template  template-manifest.kyri         # this file -- the boundary's own definition (withheld anyway: lists keys_xykj61_* names)
 scrub     .claude                        # rules name the maintainer as decision authority (session-logs, collaboration, riyo)
+template  .gemini                        # tracked Gemini CLI workspace settings; no credentials
 personal  .cursor-archive                 # pointer room after the 20261002.115106 restore; the twins live under .cursor/rules
 scrub     .cursor                         # living CLI rules and the tracked permission surface; no credentials
 scrub     frontier                        # pier CLI door; names the maintainer as decision authority, scrubbed like open/
@@ -194,6 +200,7 @@ scrub     CODE_OF_CONDUCT.md              # civic conduct; reporting points to t
 scrub     CHANGELOG.md                    # points to git log + the private session-log record (no link into withheld dirs)
 scrub     CLAUDE.md                       # project instructions; heavy identity + voice
 scrub     AGENTS.md                       # project instructions; opencode twin of CLAUDE.md, same identity + voice
+scrub     GEMINI.md                       # project instructions; Gemini CLI door, same identity + voice
 scrub     CONTRIBUTING.md                 # may name; commit-shape guidance
 scrub     ORGANIZING.md                   # names the keeper throughout
 scrub     bibliography.md                 # source gathering; scrub any naming

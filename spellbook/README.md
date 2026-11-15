@@ -73,12 +73,12 @@ The five-row council rota stays the lap's deep read. This table is the orbit rou
 | Round | Sign | Mode | Element | Goal | The round's verb |
 |---|---|---|---|---|---|
 | 1 | Aries | cardinal | fire | talent | Commence. Finish one to-do. |
-| 2 | Taurus | fixed | earth | law | What must stop. One repeat, named, left in place. |
+| 2 | Taurus | fixed | earth | law | What must stop, found the way Venus finds a thing already worth keeping: one repeat, named plainly, and left standing -- fertile ground kept whole rather than torn up in haste. |
 | 3 | Gemini | dual | air | fun | Say the work aloud, in one sentence. |
-| 4 | Cancer | cardinal | water | aesthetics | The picture a newcomer can see. |
+| 4 | Cancer | cardinal | water | aesthetics | The picture a newcomer can see, offered the way the Moon offers care: held gently, easy to feel at home in, so the first look already feels welcomed. |
 | 5 | Leo | fixed | fire | talent | The economics check. Products, services, infrastructure. The check reads. |
 | 6 | Virgo | dual | earth | law | What must stop. The untidiness across the whole run. |
-| 7 | Libra | cardinal | air | fun | The two checks, and one green line. |
+| 7 | Libra | cardinal | air | fun | The two checks meet the way Venus meets a partner, each answering the other in balance, and settle into one green line. |
 | 8 | Scorpio | fixed | water | aesthetics | The picture held whole. The fold page, once its links resolve. |
 | 9 | Sagittarius | dual | fire | talent | The mission, in Bhakta, Gauge, Radiant, and Twilight. |
 | 10 | Capricorn | cardinal | earth | law | What must stop. The bound. Fascia's face moves by at most 1.0000. |
@@ -90,6 +90,29 @@ The five-row council rota stays the lap's deep read. This table is the orbit rou
 
 The plan that seated this table is [`../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md`](../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md).
 
+**Taurus, Libra, and Cancer carry their ruling planet's own weather, read from our own silo
+rather than invented fresh.** Venus is "the soft power of the sky -- the principle of love,
+harmony, valuing, and the sweet pull that draws two things toward each other," cool and
+receptive, flourishing "where there is grace, ease, and mutual delight"
+([`../classical-vedic-astrology/studies/planets-in-signs/20260705-172312_venus-in-aries.md`](../classical-vedic-astrology/studies/planets-in-signs/20260705-172312_venus-in-aries.md)).
+The Moon, exalted in Taurus's own ground, is studied as "our inner weather, our sense of being
+held, our capacity to give care and to receive it," a mind that "feels loved, stable, secure,
+and at home"
+([`../classical-vedic-astrology/studies/planets-in-signs/moon-in-taurus-exalted.md`](../classical-vedic-astrology/studies/planets-in-signs/moon-in-taurus-exalted.md)).
+Taurus and Libra's verbs below carry Venus's balance and steadiness; Cancer's carries the
+Moon's own gentleness. The round's operational job -- what actually must be done -- is
+unchanged; only the register warmed.
+
+**A round that writes `round load`'s own numbers down may run the check beside it.** A planning
+page in `expanding-prompts/` often states both a commit count and the orbit round it claims for
+that count, by hand, and a hand that mistypes the count or the round leaves a conflict no reader
+catches without re-deriving fifteen numbers. `sh tools/fixtures/c/calfive_schedule_scan.sh`
+recomputes the round from the stated count on every such page and from the round-load table
+above, and names every disagreement by path. Rostered as the `calfive_schedule` guard in
+[`../fleet/standing-equipment.kyri`](../fleet/standing-equipment.kyri), `tier lap`,
+seated `20261009.114234`; proven on metal both ways, the live tree clean and a planted conflict
+caught, by `rishi/bin/rishi run tools/ca/calfive_schedule_witness.rish`.
+
 ## same brain
 
 The words are `same brain`.
@@ -100,7 +123,7 @@ The count stays exact. The bound stays exact. The question takes the size of the
 
 ## fleet
 
-A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
+A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, `gemini`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
 
 Run an interactive line in that ship's checkout, inside its tmux window. `FLEET_BARE=1` is the pier. `FLEET_CAPTAIN=1` belongs to incense. The captain's gates stay manual: keys, funds, provisioning, identity, and the public seed.
 
@@ -131,7 +154,15 @@ Codex forwards these flags to the interactive CLI. `codex exec` is its one-lap d
 
 Antigravity's command is `agy`. It reads `--dangerously-skip-permissions` and `--prompt-interactive`. The paste leaves the model to the signed-in account. Home: [`../frontier/ANTIGRAVITY.md`](../frontier/ANTIGRAVITY.md).
 
+Gemini CLI's command is `gemini`. It reads `-y` (`--yolo`), `-m gemini-4-carbon`, and `-i` (`--prompt-interactive`). [`.gemini/settings.json`](../.gemini/settings.json), [`../.brix`](../.brix), and [`../context/MODEL_ROSTER.kyri`](../context/MODEL_ROSTER.kyri) declare `gemini-4-carbon` as the Gemini-class default for model usage and `xy/gemini-4-carbon` branch pushing; [`../GEMINI.md`](../GEMINI.md) loads automatically. Home: [`../frontier/GEMINI.md`](../frontier/GEMINI.md).
+
 OpenCode on Together is the interactive open door. The model is the one proven in [`../open/HARNESS_SETUP.md`](../open/HARNESS_SETUP.md) and named in [`../tools/f/fleet-loop-opencode.sh`](../tools/f/fleet-loop-opencode.sh). `opencode run --interactive` keeps the session open after the first message. OpenRouter and Hugging Face remain the request APIs in [`../open/PROVIDER_SETUP.md`](../open/PROVIDER_SETUP.md). This pier's OpenCode config seats Together only, so those two wait for their own model line before they earn a paste.
+
+### fleet interactive carbon gemini
+
+```sh
+gemini -y -m gemini-4-carbon -i "Read GEMINI.md and construction/ITINERARY.md whole before acting. You are on the 202611-grain-gemini-4-carbon bench pushing to xy/gemini-4-carbon. Begin an interactive session."
+```
 
 ### fleet interactive incense cursor
 
@@ -155,6 +186,12 @@ FLEET_BARE=1 FLEET_CAPTAIN=1 codex -m gpt-6-sol --sandbox danger-full-access --d
 
 ```sh
 FLEET_BARE=1 FLEET_CAPTAIN=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Antigravity. Begin an interactive session."
+```
+
+### fleet interactive incense gemini
+
+```sh
+FLEET_BARE=1 FLEET_CAPTAIN=1 gemini -y -m gemini-4-carbon -i "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Gemini CLI. Begin an interactive session."
 ```
 
 ### fleet interactive incense opencode

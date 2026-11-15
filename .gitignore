@@ -10,6 +10,7 @@
 # --- The project ------------------------------------------------------------
 !/.gitignore
 !/.cursorignore
+!/.geminiignore
 !/.gitmodules
 !/.gitattributes
 !/README.md
@@ -145,6 +146,7 @@
 !/.cursor-archive/
 !/CLAUDE.md
 !/AGENTS.md
+!/GEMINI.md
 !/ORGANIZING.md
 !/STEWARDS.md
 !/llms.txt
@@ -160,15 +162,27 @@
 !/publish-seed.template.sh
 !/publish-redirect.sh
 !/.claude/
+!/.gemini/
 # glow-language elder trees vere/ · old/ — untracked `20260725` (Framework ritual).
 # Root /* already ignores them; do not re-allow. Files stay on disk + in history.
-
 # Claude Code grows this file when you approve shell commands in Zed; machine-local.
 /.claude/settings.local.json
 # A MANY HANDS dependent works in its own git worktree under here (granted 20260828). The room is
 # the dependent's checkout, never tree content, and an unignored worktree room is one `git add -A`
 # from committing a whole second copy of the tree.
 /.claude/worktrees/
+# Gemini CLI local overrides, session logs, private memory, and worktrees stay off git.
+/.gemini/settings.local.json
+/.gemini/tmp/
+/.gemini/logs/
+/.gemini/sessions/
+/.gemini/transcripts/
+/.gemini/checkpoints/
+/.gemini/memory/
+/.gemini/.inbox/
+/.gemini/tool-log.txt
+/.gemini/browser-profile/
+/.gemini/worktrees/
 
 # --- Re-ignore fetched dependencies and build artifacts inside the project --
 # The Zig toolchain is large and fetched, not authored (the binary alone is
