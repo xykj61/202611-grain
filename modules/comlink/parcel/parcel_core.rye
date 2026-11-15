@@ -77,9 +77,17 @@ pub fn resolve_immutable_pin(
     return error.PinNotFound;
 }
 
-/// Proves Rich Hickey's *Spec-ulation* law before stepping forward inside an
-/// enduring name: `newer` must be strictly later in UTC time, offer at least
-/// every export `older` offered, and require no extra capabilities or memory!
+/// Proves Grain's **Evergrow** law (`evergrow`: "offer more, require less",
+/// distilled via Silo Technique with thanks to Rich Hickey's *Spec-ulation*):
+/// `newer` must be strictly later in UTC time, keep every export `older`
+/// offered, and demand zero extra `Pond` capabilities or memory!
+pub fn verify_evergrow(
+    older: ParcelHeader,
+    newer: ParcelHeader,
+) ParcelError!void {
+    return verify_speculation_accretion(older, newer);
+}
+
 pub fn verify_speculation_accretion(
     older: ParcelHeader,
     newer: ParcelHeader,

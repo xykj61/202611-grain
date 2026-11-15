@@ -1,0 +1,186 @@
+//! modules/brushstroke/touch/touch_core.rye -- 60Hz RLCD integer touch gesture.
+//!
+//! Orbit 52 (`20261115.082000`): TAME-bounded touch, stylus, & palm-rejection
+//! recognizer inside `modules/brushstroke/touch/`, powering **Vantage Carry**
+//! (`Carry Tablet` on Daylight Computer DC-1 60Hz LivePaper RLCD, `Carry
+//! Mobile`, macOS trackpad/touch, and browser WASM):
+//!   - Zero floating-point drift: exact `i32` pixel / `u32` squared-distance
+//!     arithmetic and `u64` millisecond timestamps,
+//!   - Static `max_contacts = 10` multi-touch table,
+//!   - Hardware palm rejection (`contact_radius_px > max_finger_radius_px`),
+//!   - Recognizes `.tap`, `.long_press`, `.swipe`, and `.pinch_zoom`.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.082000";
+pub const max_contacts: u32 = 10;
+pub const max_finger_radius_px: u32 = 28;
+pub const tap_slop_px: u32 = 16;
+pub const long_press_ms: u64 = 450;
+const nl: u8 = 10;
+
+pub const TouchError = error{
+    TooManyContacts,
+    PalmContactRejected,
+    NonMonotonicTime,
+    ContactNotFound,
+};
+
+pub const Gesture = union(enum) {
+    none: void,
+    tap: struct { x: i32, y: i32 },
+    long_press: struct { x: i32, y: i32 },
+    swipe: struct { dx: i32, dy: i32 },
+    pinch_scale_permille: u32, // 1000 = 1.0x, >1000 zoom in, <1000 zoom out
+};
+
+pub const ContactSlot = struct {
+    active: bool,
+    pointer_id: u32,
+    start_x: i32,
+    start_y: i32,
+    cur_x: i32,
+    cur_y: i32,
+    down_ms: u64,
+};
+
+pub const TouchSurface = struct {
+    slots: [max_contacts]ContactSlot,
+    active_count: u32,
+
+    pub fn init() TouchSurface {
+        return .{
+            .slots = std.mem.zeroes([max_contacts]ContactSlot),
+            .active_count = 0,
+        };
+    }
+
+    pub fn pointer_down(
+        self: *TouchSurface,
+        pointer_id: u32,
+        x: i32,
+        y: i32,
+        radius_px: u32,
+        now_ms: u64,
+    ) TouchError!void {
+        // invariant: active_count never exceeds max_contacts.
+        assert(self.active_count <= max_contacts);
+        if (radius_px > max_finger_radius_px) {
+            return error.PalmContactRejected;
+        }
+        if (self.active_count >= max_contacts) return error.TooManyContacts;
+        for (&self.slots) |*slot| {
+            if (!slot.active) {
+                slot.* = .{
+                    .active = true,
+                    .pointer_id = pointer_id,
+                    .start_x = x,
+                    .start_y = y,
+                    .cur_x = x,
+                    .cur_y = y,
+                    .down_ms = now_ms,
+                };
+                self.active_count += 1;
+                // invariant: active_count stays within max_contacts.
+                assert(self.active_count <= max_contacts);
+                return;
+            }
+        }
+        return error.TooManyContacts;
+    }
+
+    pub fn pointer_up(
+        self: *TouchSurface,
+        pointer_id: u32,
+        x: i32,
+        y: i32,
+        now_ms: u64,
+    ) TouchError!Gesture {
+        assert(self.active_count <= max_contacts);
+        for (&self.slots) |*slot| {
+            if (slot.active and slot.pointer_id == pointer_id) {
+                if (now_ms < slot.down_ms) return error.NonMonotonicTime;
+                const dt = now_ms - slot.down_ms;
+                const dx = x - slot.start_x;
+                const dy = y - slot.start_y;
+                const adx: u32 = @intCast(if (dx < 0) -dx else dx);
+                const ady: u32 = @intCast(if (dy < 0) -dy else dy);
+
+                slot.active = false;
+                self.active_count -= 1;
+                assert(self.active_count < max_contacts);
+
+                if (adx <= tap_slop_px and ady <= tap_slop_px) {
+                    if (dt >= long_press_ms) {
+                        return .{ .long_press = .{ .x = x, .y = y } };
+                    }
+                    return .{ .tap = .{ .x = x, .y = y } };
+                }
+                return .{ .swipe = .{ .dx = dx, .dy = dy } };
+            }
+        }
+        return error.ContactNotFound;
+    }
+
+    /// Computes exact integer permille pinch ratio (`1000` = neutral) from two
+    /// finger distances without floating-point instructions!
+    pub fn eval_pinch_permille(start_dist_px: u32, cur_dist_px: u32) u32 {
+        // invariant: positive baseline distance avoids division by zero.
+        assert(start_dist_px >= 1);
+        const scaled: u64 = (@as(u64, cur_dist_px) * 1000) /
+            @as(u64, start_dist_px);
+        const clamped: u32 = @intCast(@min(scaled, 10000));
+        // invariant: pinch scale is bounded to at most 10.0x (10000 permille).
+        assert(clamped <= 10000);
+        return clamped;
+    }
+};
+
+fn run_selftest() !u8 {
+    var surf = TouchSurface.init();
+
+    // 1. Palm resting on Daylight DC-1 bezel/glass is cleanly rejected!
+    if (surf.pointer_down(1, 200, 300, 42, 1000)) |_| {
+        return error.PalmAccepted;
+    } else |err| {
+        if (err != error.PalmContactRejected) return err;
+    }
+
+    // 2. Crisp 60Hz RLCD tap
+    try surf.pointer_down(1, 120, 240, 10, 1000);
+    const g_tap = try surf.pointer_up(1, 124, 238, 1090);
+    switch (g_tap) {
+        .tap => |t| if (t.x != 124 or t.y != 238) return error.TapCoordsWrong,
+        else => return error.ExpectedTap,
+    }
+
+    // 3. Long press (`>= 450 ms`)
+    try surf.pointer_down(2, 400, 500, 12, 2000);
+    const g_lp = try surf.pointer_up(2, 402, 501, 2600);
+    switch (g_lp) {
+        .long_press => {},
+        else => return error.ExpectedLongPress,
+    }
+
+    // 4. Swipe & integer permille pinch (`100 px -> 150 px` = `1500` permille)
+    try surf.pointer_down(3, 100, 100, 11, 3000);
+    const g_sw = try surf.pointer_up(3, 280, 105, 3120);
+    switch (g_sw) {
+        .swipe => |s| if (s.dx != 180) return error.SwipeDxWrong,
+        else => return error.ExpectedSwipe,
+    }
+    if (TouchSurface.eval_pinch_permille(100, 150) != 1500) {
+        return error.PinchMathWrong;
+    }
+
+    print("GREEN: touch_core -- RLCD palm, tap, swipe, & pinch proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

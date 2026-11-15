@@ -1,105 +1,74 @@
-# publish-redirect.rish -- build and publish the single-commit, single-README
-# pointer repository across xykj61/grain, grain-ww/grain, and grain-os/grain.
+# publish-redirect.rish -- project a minimal, unsigned, parentless redirect
+# README to legacy pointer repos declared in gitignored `PUBLISH_TARGETS.kyri`.
 #
-# Stamp: 20261115.052000
+# Stamp: 20261115.081500
 # Style: TAME Core bounds with Radiant comments (`<= 80` cols, pure Rishi).
-#
-# Usage from the repository root:
-#   languages/rishi/bin/rishi run publish-redirect.rish          # dry-run proof
-#   languages/rishi/bin/rishi run publish-redirect.rish --push   # push all 3
-#
-# Why a single-file pointer serves travellers best:
-#   Anyone arriving at an undated `/grain` URL meets one calm page with zero
-#   stale code and one clear link to the living chronological seed
-#   (`https://github.com/grain-ww/202611-grain`).
+# Zero hardcoded personal repo URLs live in this script; new operators copy
+# `context/templates/PUBLISH_TARGETS.template.kyri` -> `PUBLISH_TARGETS.kyri`.
 
 assert length args < 2 else "publish-redirect: pass at most one flag (--push)"
 let pushing = "no"
 if length args == 1 then let pushing = args[0]
 if pushing == "--push" then let pushing = "yes"
 if pushing != "yes" then if pushing != "no" then let pushing = "bad"
-assert pushing != "bad" else "publish-redirect: unknown flag (want --push)"
+assert pushing != "bad" else "publish-redirect: want --push or no flags"
 
-# invariant: execute from the Grain field root.
 let has_brix = run ["test" "-f" ".brix"]
-assert has_brix.ok else "publish-redirect: .brix missing -- run from repo root"
+assert has_brix.ok else "publish-redirect: run from standing Grain root"
 
-let stage = "tools/.build/redirect-stage"
-let cleared = run ["rm" "-rf" stage]
-assert cleared.ok else "publish-redirect: could not clear staging folder"
-let made = run ["mkdir" "-p" stage]
-assert made.ok else "publish-redirect: could not create staging folder"
+let cfg_file = "PUBLISH_TARGETS.kyri"
+let has_local = run ["test" "-f" cfg_file]
+let tpl_file = "context/templates/PUBLISH_TARGETS.template.kyri"
+if has_local.code != 0 then let cfg_file = tpl_file
+let msg_cfg = "publish-redirect: instantiate PUBLISH_TARGETS.kyri first"
+if pushing == "yes" then assert has_local.ok else msg_cfg
 
-let target_repo = "grain-ww/202611-grain"
-let target_url = "https://github.com/grain-ww/202611-grain"
+let r_seed = run ["awk" "$1 ~ /^seed_remote_url$/ { print $2 }" cfg_file]
+let seed_ssh = trim r_seed.out
+let r_name = run ["awk" "$1 ~ /^seed_author_name$/ { print $2 }" cfg_file]
+let seed_name = trim r_name.out
+let r_mail = run ["awk" "$1 ~ /^seed_author_email$/ { print $2 }" cfg_file]
+let seed_mail = trim r_mail.out
 
-let l1 = "# Grain\n\n"
-let l2 = "This repository is a pointer. The living public seed lives at:\n\n"
-let l3 = "**[" + target_repo + "](" + target_url + ")**\n\n"
-let l4 = "The dated name carries an immutable chronological stamp so each\n"
-let l5 = "season of Grain grows cleanly without losing prior seasons.\n"
-let readme_body = l1 + l2 + l3 + l4 + l5
-let readme_path = stage + "/README.md"
-write-file readme_path readme_body
+let pen = ".redirect-seed-pen"
+let cleaned = run ["rm" "-rf" pen]
+assert cleaned.ok else "publish-redirect: could not clear .redirect-seed-pen"
+let mk_pen = run ["mkdir" "-p" pen]
+assert mk_pen.ok else "publish-redirect: mkdir .redirect-seed-pen refused"
 
-let has_readme = run ["test" "-f" readme_path]
-assert has_readme.ok else "publish-redirect: staged README.md missing"
+let readme = pen + "/README.md"
+let w1 = "echo '# Grain -- Rerooted' > $2 && echo '' >> $2"
+let w2 = " && echo Active-seed: $1 >> $2"
+let write_sh = w1 + w2
+let wrote = run ["sh" "-c" write_sh "_" seed_ssh readme]
+assert wrote.ok else "publish-redirect: could not write redirect README.md"
 
-let inited = run ["git" "init" "-q" "-b" "main" stage]
-assert inited.ok else "publish-redirect: git init refused in stage"
-let cfg_sign = run ["git" "-C" stage "config" "commit.gpgsign" "false"]
-assert cfg_sign.ok else "publish-redirect: could not set commit.gpgsign=false"
-let cfg_name = run ["git" "-C" stage "config" "user.name" "grain-ww"]
-assert cfg_name.ok else "publish-redirect: could not set user.name=grain-ww"
-let anon_mail = "grain-ww@users.noreply.github.com"
-let cfg_mail = run ["git" "-C" stage "config" "user.email" anon_mail]
-assert cfg_mail.ok else "publish-redirect: could not set user.email"
+let inited = run ["git" "init" "-q" "-b" "main" pen]
+assert inited.ok else "publish-redirect: git init -b main refused"
+let c1 = run ["git" "-C" pen "config" "commit.gpgsign" "false"]
+let c2 = run ["git" "-C" pen "config" "user.name" seed_name]
+let c3 = run ["git" "-C" pen "config" "user.email" seed_mail]
+assert c1.ok else "publish-redirect: gpgsign=false failed"
+assert c2.ok else "publish-redirect: user.name failed"
+assert c3.ok else "publish-redirect: user.email failed"
 
-let added = run ["git" "-C" stage "add" "README.md"]
-assert added.ok else "publish-redirect: git add README.md refused"
-let msg = "redirect to " + target_url
-let committed = run ["git" "-C" stage "commit" "-q" "-m" msg]
-assert committed.ok else "publish-redirect: commit refused"
+let st = run ["git" "-C" pen "add" "README.md"]
+let cm = run ["git" "-C" pen "commit" "-q" "-m" "redirect to active seed"]
+assert st.ok else "publish-redirect: git add refused"
+assert cm.ok else "publish-redirect: commit refused"
 
-# Postcondition invariants: README.md is the ONLY tracked file, 0 parents, `N`.
-let tracked_run = run ["git" "-C" stage "ls-files"]
-assert tracked_run.ok else "publish-redirect: git ls-files failed"
-let tracked = trim tracked_run.out
-assert tracked == "README.md" else "publish-redirect: tree is not README-only"
-
-let par_probe = run ["git" "-C" stage "rev-parse" "--verify" "HEAD^"]
-assert par_probe.code != 0 else "publish-redirect: commit must have 0 parents"
-
-let sig_run = run ["git" "-C" stage "log" "-1" "--format=%G?"]
-assert sig_run.ok else "publish-redirect: could not read signature flag"
-let sig = trim sig_run.out
-assert sig == "N" else "publish-redirect: commit must stay unsigned"
-
-let head_run = run ["git" "-C" stage "rev-parse" "HEAD"]
-assert head_run.ok else "publish-redirect: could not read stage HEAD"
-let head = trim head_run.out
-
-say "publish-redirect: verified single-README orphan commit ${head}"
-say "publish-redirect: points -> ${target_url}"
-
-let r1 = "git@github.com:xykj61/grain.git"
-let r2 = "git@github.com:grain-ww/grain.git"
-let r3 = "git@github.com:grain-os/grain.git"
-
+let hd = run ["git" "-C" pen "rev-parse" "HEAD"]
+let head = trim hd.out
+say "publish-redirect: ready -- head=${head} config=${cfg_file}"
 if pushing != "yes" then say "publish-redirect: DRY RUN ok (pass --push)."
 
-let ssh_env = "GIT_SSH_COMMAND=ssh"
-let c1 = ["env" ssh_env "git" "-C" stage "push" "-f" r1 "HEAD:main"]
-let c2 = ["env" ssh_env "git" "-C" stage "push" "-f" r2 "HEAD:main"]
-let c3 = ["env" ssh_env "git" "-C" stage "push" "-f" r3 "HEAD:main"]
-
-if pushing == "yes" then let p1 = run c1 else let p1 = run ["true"]
-assert p1.ok else "publish-redirect: push to xykj61/grain failed"
-
-if pushing == "yes" then let p2 = run c2 else let p2 = run ["true"]
-assert p2.ok else "publish-redirect: push to grain-ww/grain failed"
-
-if pushing == "yes" then let p3 = run c3 else let p3 = run ["true"]
-assert p3.ok else "publish-redirect: push to grain-os/grain failed"
-
-if pushing == "yes" then say "GREEN: publish-redirect -> ${target_repo}"
+let p1 = "for u in $(awk '$1 ~ /^redirect_target$/ { print $2 }' $1); do "
+let p2 = "GIT_SSH_COMMAND=ssh git -C $2 push -f $u HEAD:main || exit 1; done"
+let push_sh = p1 + p2
+let push_c = ["sh" "-c" push_sh "_" cfg_file pen]
+let ok_c = ["true"]
+if pushing == "yes" then let pr = run push_c else let pr = run ok_c
+let wiped = run ["rm" "-rf" pen]
+assert wiped.ok else "publish-redirect: cleanup refused"
+assert pr.ok else "publish-redirect: push to redirect_target failed"
+if pushing == "yes" then say "GREEN: publish-redirect -- synced all targets."

@@ -17,9 +17,10 @@ let rye = "languages/rye/bin/rye"
 let ok_c = ["true"]
 
 if cmd == "help" then say "Grain tasks.rish -- pure Rishi task doorway:"
-if cmd == "help" then say "  prove      run Brix, Glow, Fusion, & Gate proofs"
-if cmd == "help" then say "  seed-dry   verify incremental Fusion public seed"
-if cmd == "help" then say "  sundial    compile & emit Myofascia health rollup"
+if cmd == "help" then say "  prove        run Brix, Glow, Fusion, & Gate proofs"
+if cmd == "help" then say "  seed-dry     verify incremental Fusion public seed"
+if cmd == "help" then say "  sundial      compile & emit Myofascia rollup"
+if cmd == "help" then say "  pond-gemini  run gemini CLI in Grain Pond"
 
 let c_w1 = [rishi "run" "tools/b/bricks_exist_witness.rish"]
 if cmd == "prove" then let w1 = run c_w1 else let w1 = run ok_c
@@ -53,3 +54,15 @@ assert m2.ok else "tasks: sundial build failed"
 if cmd == "sundial" then let m3 = run e_s else let m3 = run ok_c
 assert m3.ok else "tasks: sundial emit failed"
 if cmd == "sundial" then say m3.out
+
+let mk_p = ["mkdir" "-p" "modules/pond/bin"]
+let p_src = "modules/pond/pond_cli.rye"
+let p_out = "-femit-bin=modules/pond/bin/pond_cli"
+let b_p = [rye "build" p_src p_out]
+let r_p = ["modules/pond/bin/pond_cli" "--gemini" "--" "gemini"]
+if cmd == "pond-gemini" then let p1 = run mk_p else let p1 = run ok_c
+assert p1.ok else "tasks: mkdir pond/bin failed"
+if cmd == "pond-gemini" then let p2 = run b_p else let p2 = run ok_c
+assert p2.ok else "tasks: pond_cli build failed"
+if cmd == "pond-gemini" then let p3 = run r_p else let p3 = run ok_c
+assert p3.ok else "tasks: pond-gemini exited non-zero"

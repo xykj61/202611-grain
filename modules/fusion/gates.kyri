@@ -17,16 +17,23 @@ max_cols 80 modules/sundial/sundial.rye
 max_cols 80 languages/glow/front/rune_book.rye
 max_cols 80 languages/glow/front/cord_interp.rye
 max_cols 80 modules/comlink/parcel/parcel_core.rye
+max_cols 80 modules/resonance/earpiece/earpiece_core.rye
+max_cols 80 modules/brushstroke/touch/touch_core.rye
+max_cols 80 modules/pond/pond_cli.rye
 max_cols 80 modules/fusion/fusion_dag.rye
 max_cols 80 modules/fusion/fusion_sow.rye
 
-# 7-bit ASCII invariant on root doors, Geode, Bloom, & system catalogs
+# 7-bit ASCII invariant on root doors, Geode, Bloom, Libraries, & Blazepod BOM
 ascii_7bit README.md
 ascii_7bit SOURCE.md
 ascii_7bit GEMINI.md
 ascii_7bit MAP.md
+ascii_7bit libraries/README.md
+ascii_7bit libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md
+ascii_7bit blazepod/BOM_AND_ASSEMBLY.md
 ascii_7bit docs-geode/README.md
 ascii_7bit docs-geode/architecture/tame-and-civic-ring-audit.md
+ascii_7bit docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md
 ascii_7bit modules/apps/bloom/README.md
 ascii_7bit context/SYSTEM_CATALOG.kyri
 

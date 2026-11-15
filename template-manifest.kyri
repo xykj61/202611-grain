@@ -51,6 +51,7 @@ allow foundations
 allow frontier
 allow gratitude
 allow languages
+allow libraries
 allow llms.txt
 allow mitra-shed
 allow modules
@@ -105,6 +106,7 @@ scrub     foundations
 scrub     frontier
 scrub     gratitude
 scrub     languages
+scrub     libraries
 scrub     mitra-shed
 scrub     modules
 template  nixos
@@ -116,6 +118,7 @@ scrub     tools
 
 # -- Personal, operator-local, & archived rooms (NEVER SHIPPED) --
 personal  vendor
+personal  PUBLISH_TARGETS.kyri
 personal  PUBKEYS.md
 personal  SAFE.md
 personal  SKILL.md

@@ -12,11 +12,11 @@
 <p align="center">
   <a href="modules/apps/bloom/art-of-programming/00-your-mac-your-keys-and-the-lantern-dragon.md">New to Coding? (Bloom 00..12)</a> -
   <a href="docs-geode/tutorials/the-first-hour.md">The First Hour</a> -
-  <a href="SOURCE.md">Stand Up a Bench</a> -
   <a href="docs-geode/README.md">Operator Geode</a> -
   <a href="languages/README.md">5 Languages</a> -
   <a href="modules/README.md">Modules</a> -
-  <a href="blazepod/README.md">Blazepod</a>
+  <a href="libraries/README.md">Libraries &amp; Shastra</a> -
+  <a href="blazepod/BOM_AND_ASSEMBLY.md">Blazepod BOM</a>
 </p>
 
 ---
@@ -41,9 +41,9 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.549** / 100.000 |
+| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.555** / 100.000 |
 | **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **30** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.073000** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.083000** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->

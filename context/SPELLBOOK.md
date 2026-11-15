@@ -22,6 +22,9 @@ A spell is a single word that names a whole, repeatable gesture. Where ordinary 
 | Spell | What it does | Home |
 |---|---|---|
 | **send** | commit (signed, CONTRIBUTING style), push `origin` + `xykj61`, merge to `main` | `.claude/rules/send-word.md` |
+| **reroot** | preserve the current signed lineage in an immutable `YYYYMMDD-grain` archive remote, then plant a fresh `YYYYMM-grain` trunk carrying every living room forward | `context/LEXICON.md` - `publish-redirect.rish` |
+| **evergrow** | check that a newer chronological parcel keeps every prior export and adds zero capability or memory demands (*offer more, require less*) | `modules/comlink/parcel/parcel_core.rye` |
+| **pond** | run a CLI agent (`gemini`) or tool inside Grain's inspectable Seatbelt/bubblewrap capability fence (`modules/pond/bin/pond_cli --gemini -- gemini`) | `modules/pond/pond_cli.rye` |
 | **kg** | keep going -- the next mechanical lap (not a send by itself) | `.claude/rules/collaboration.md` |
 | **seat** | make a proposal live -- write it as the standing thing, on Keaton's word | `.claude/rules/cell.md` |
 | **cast** | assign a point its attributes -- a galaxy's element and mode, a chart's longitudes | astrology cast - council topology |

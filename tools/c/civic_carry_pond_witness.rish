@@ -1,0 +1,52 @@
+# tools/c/civic_carry_pond_witness.rish -- Witness for Journey I Orbits 1-6
+#
+# Proves on real metal:
+#   1. Zero hardcoded personal orgs in `publish-seed.rish` & `publish-redirect.rish`,
+#      plus `context/templates/PUBLISH_TARGETS.template.kyri` exists,
+#   2. `modules/resonance/earpiece/earpiece_core.rye` (hardware shutter,
+#      bystander lamp, & `secureZero` PCM wipe),
+#   3. `modules/brushstroke/touch/touch_core.rye` (60Hz RLCD palm rejection,
+#      tap, long-press, swipe, & permille pinch) + `CarryTabletMain.kt`,
+#   4. `modules/pond/pond_cli.rye` (`grain pond` Seatbelt fence, `~/.ssh` block,
+#      & `--gemini`),
+#   5. Root `libraries/`, `blazepod/BOM_AND_ASSEMBLY.md`, and 15-sign Calfive!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Verify publish scripts carry zero hardcoded personal GitHub handles
+let no_hc = run ["sh" "-c" "! grep -E 'xykj61|grain-ww' publish-seed.rish publish-redirect.rish"]
+assert no_hc.ok else "hardcoded personal org found in publish-seed.rish or publish-redirect.rish"
+let has_tpl = run ["test" "-f" "context/templates/PUBLISH_TARGETS.template.kyri"]
+assert has_tpl.ok else "PUBLISH_TARGETS.template.kyri missing"
+
+# 2. Civic RISC-V Earpiece voice capture
+let b_ep = run ["sh" rb "modules/resonance/earpiece/earpiece_core.rye" "-femit-bin=tools/.build/earpiece_core"]
+assert b_ep.ok else "earpiece_core build failed"
+let r_ep = run ["tools/.build/earpiece_core"]
+assert r_ep.ok else "earpiece_core selftest failed"
+
+# 3. 60Hz RLCD Touch recognizer & Daylight DC-1 Kotlin host
+let b_tc = run ["sh" rb "modules/brushstroke/touch/touch_core.rye" "-femit-bin=tools/.build/touch_core"]
+assert b_tc.ok else "touch_core build failed"
+let r_tc = run ["tools/.build/touch_core"]
+assert r_tc.ok else "touch_core selftest failed"
+let has_kt = run ["test" "-f" "terrarium/carry-tablet/CarryTabletMain.kt"]
+assert has_kt.ok else "CarryTabletMain.kt missing"
+
+# 4. Grain Pond CLI (`pond_cli`)
+let b_pd = run ["sh" rb "modules/pond/pond_cli.rye" "-femit-bin=tools/.build/pond_cli"]
+assert b_pd.ok else "pond_cli build failed"
+let r_pd = run ["tools/.build/pond_cli" "selftest"]
+assert r_pd.ok else "pond_cli selftest failed"
+
+# 5. Libraries, Shastra curriculum, Blazepod BOM, & Calfive 15-signs
+let has_lib = run ["test" "-f" "libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md"]
+assert has_lib.ok else "MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md missing"
+let has_bom = run ["test" "-f" "blazepod/BOM_AND_ASSEMBLY.md"]
+assert has_bom.ok else "blazepod/BOM_AND_ASSEMBLY.md missing"
+let has_cf = run ["test" "-f" "docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md"]
+assert has_cf.ok else "calfive-fifteen-signs-and-torus-synthesis.md missing"
+
+say "GREEN: civic_carry_pond_witness -- templated publishers, earpiece, touch + Carry Tablet, grain pond, libraries/shastra, Blazepod BOM, and 15-sign Calfive proven."

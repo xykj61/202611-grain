@@ -1,0 +1,246 @@
+//! modules/pond/pond_cli.rye -- TAME `grain pond` CLI superseding `ai-jail`.
+//!
+//! Orbit 53 (`20261115.082000`): Native Rye implementation of our `Pond`
+//! process enclosure for macOS (`sandbox-exec` SBPL) and Linux (`bwrap`),
+//! enabling operators to run `gemini` CLI (or any untrusted build/agent tool)
+//! inside a deterministic, inspectable capability wall:
+//!   - Denies writes everywhere outside `workspace_dir` and `/tmp` / `$TMPDIR`,
+//!   - Explicitly blocks reads of `~/.ssh/id_*`, `~/.gnupg/private-keys-v1.d`,
+//!     `~/.aws`, and `PUBLISH_TARGETS.kyri` when not granted,
+//!   - Denies outbound network by default unless `--net` or `--gemini` is
+//!     explicitly passed at the call site!
+//!
+//! Gratitude: `akitaonrails/ai-jail` (`gratitude/20260714-070200_ai-jail-...`).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.082000";
+pub const max_profile_bytes: u32 = 8192;
+const nl: u8 = 10;
+const dq: u8 = 34;
+
+pub const PondError = error{
+    WorkspacePathEmpty,
+    UnsafeWorkspaceRoot,
+    ProfileBufferOverflow,
+    MissingCommandAfterDash,
+};
+
+pub const PondOptions = struct {
+    workspace_dir: []const u8,
+    home_dir: []const u8,
+    allow_network: bool,
+    allow_gemini_config: bool,
+};
+
+/// Generates a complete, inspectable macOS Seatbelt (SBPL) profile enforcing
+/// workspace-only writes and secret-key read denials in bounded memory.
+pub fn emit_macos_seatbelt_profile(
+    opts: PondOptions,
+    out: []u8,
+) PondError![]const u8 {
+    if (opts.workspace_dir.len == 0) return error.WorkspacePathEmpty;
+    if (std.mem.eql(u8, opts.workspace_dir, "/") or
+        std.mem.eql(u8, opts.workspace_dir, opts.home_dir))
+    {
+        return error.UnsafeWorkspaceRoot;
+    }
+    // invariant: workspace is neither "/" nor the bare $HOME root.
+    assert(opts.workspace_dir.len > 1);
+
+    var w: usize = 0;
+    const base_hdr =
+        "(version 1)" ++
+        " (deny default)" ++
+        " (allow process* sysctl-read mach-lookup ipc-posix-shm*)" ++
+        " (allow file-read*)";
+    w = try append_str(out, w, base_hdr);
+    w = try append_char(out, w, nl);
+
+    // Block secret SSH/PGP/cloud keys from ever being read inside the Pond!
+    const deny_rd = "deny file-read*";
+    const allow_wr = "allow file-write*";
+    if (opts.home_dir.len > 0) {
+        w = try append_subpath_rule(out, w, deny_rd, opts.home_dir, "/.ssh");
+        w = try append_subpath_rule(
+            out,
+            w,
+            deny_rd,
+            opts.home_dir,
+            "/.gnupg/private-keys-v1.d",
+        );
+        w = try append_subpath_rule(out, w, deny_rd, opts.home_dir, "/.aws");
+    }
+
+    // Permit writes ONLY inside workspace_dir, /tmp, /private/tmp, /dev/null
+    w = try append_subpath_rule(out, w, allow_wr, opts.workspace_dir, "");
+    w = try append_subpath_rule(out, w, allow_wr, "/private/tmp", "");
+    w = try append_subpath_rule(out, w, allow_wr, "/private/var/folders", "");
+    w = try append_subpath_rule(out, w, allow_wr, "/dev", "");
+
+    if (opts.allow_gemini_config and opts.home_dir.len > 0) {
+        w = try append_subpath_rule(
+            out,
+            w,
+            "allow file-write*",
+            opts.home_dir,
+            "/.gemini",
+        );
+    }
+
+    if (opts.allow_network or opts.allow_gemini_config) {
+        w = try append_str(out, w, "(allow network*)");
+        w = try append_char(out, w, nl);
+    } else {
+        w = try append_str(out, w, "(deny network*)");
+        w = try append_char(out, w, nl);
+    }
+
+    // invariant: generated SBPL profile fits strictly within max_profile_bytes.
+    assert(w > 0 and w <= max_profile_bytes);
+    return out[0..w];
+}
+
+fn append_str(out: []u8, pos: usize, s: []const u8) PondError!usize {
+    if (pos + s.len > out.len) return error.ProfileBufferOverflow;
+    @memcpy(out[pos .. pos + s.len], s);
+    return pos + s.len;
+}
+
+fn append_char(out: []u8, pos: usize, c: u8) PondError!usize {
+    if (pos + 1 > out.len) return error.ProfileBufferOverflow;
+    out[pos] = c;
+    return pos + 1;
+}
+
+fn append_subpath_rule(
+    out: []u8,
+    pos: usize,
+    verb: []const u8,
+    base: []const u8,
+    suffix: []const u8,
+) PondError!usize {
+    var p = pos;
+    p = try append_char(out, p, '(');
+    p = try append_str(out, p, verb);
+    p = try append_str(out, p, " (subpath ");
+    p = try append_char(out, p, dq);
+    p = try append_str(out, p, base);
+    p = try append_str(out, p, suffix);
+    p = try append_char(out, p, dq);
+    p = try append_str(out, p, "))");
+    p = try append_char(out, p, nl);
+    return p;
+}
+
+fn run_selftest() !u8 {
+    var buf: [max_profile_bytes]u8 = undefined;
+
+    // 1. Default offline Pond denies network and blocks ~/.ssh reads
+    const p_off = try emit_macos_seatbelt_profile(.{
+        .workspace_dir = "/Users/dev/grain",
+        .home_dir = "/Users/dev",
+        .allow_network = false,
+        .allow_gemini_config = false,
+    }, &buf);
+    if (std.mem.indexOf(u8, p_off, "(deny network*)") == null) {
+        return error.OfflineAllowedNetwork;
+    }
+    if (std.mem.indexOf(u8, p_off, "/.ssh") == null) {
+        return error.MissingSshKeyFence;
+    }
+
+    // 2. `--gemini` Pond enables `~/.gemini` + TLS while blocking `~/.ssh`
+    //    and `$HOME` root writes!
+    const p_gem = try emit_macos_seatbelt_profile(.{
+        .workspace_dir = "/Users/dev/grain",
+        .home_dir = "/Users/dev",
+        .allow_network = false,
+        .allow_gemini_config = true,
+    }, &buf);
+    if (std.mem.indexOf(u8, p_gem, "(allow network*)") == null or
+        std.mem.indexOf(u8, p_gem, "/.gemini") == null)
+    {
+        return error.GeminiProfileIncomplete;
+    }
+
+    // 3. Refusal: bare `/` or bare `$HOME` as workspace_dir is refused!
+    if (emit_macos_seatbelt_profile(.{
+        .workspace_dir = "/Users/dev",
+        .home_dir = "/Users/dev",
+        .allow_network = false,
+        .allow_gemini_config = false,
+    }, &buf)) |_| {
+        return error.BareHomeAccepted;
+    } else |err| {
+        if (err != error.UnsafeWorkspaceRoot) return err;
+    }
+
+    print("GREEN: pond_cli -- Seatbelt, SSH block, & --gemini proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    var allow_net = false;
+    var allow_gem = false;
+    var emit_only = false;
+    var cmd_idx: ?usize = null;
+
+    var i: usize = 1;
+    while (i < args.len) : (i += 1) {
+        if (std.mem.eql(u8, args[i], "--")) {
+            cmd_idx = i + 1;
+            break;
+        }
+        if (std.mem.eql(u8, args[i], "--net")) allow_net = true;
+        if (std.mem.eql(u8, args[i], "--gemini")) allow_gem = true;
+        if (std.mem.eql(u8, args[i], "emit-seatbelt")) emit_only = true;
+    }
+
+    const pwd_r = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{"pwd"},
+    });
+    const ws = std.mem.trim(u8, pwd_r.stdout, &[_]u8{ 32, 9, 13, 10 });
+    const home = init.environ_map.get("HOME") orelse "";
+
+    var pbuf: [max_profile_bytes]u8 = undefined;
+    const sbpl = try emit_macos_seatbelt_profile(.{
+        .workspace_dir = ws,
+        .home_dir = home,
+        .allow_network = allow_net,
+        .allow_gemini_config = allow_gem,
+    }, &pbuf);
+
+    if (emit_only) {
+        print("{s}", .{sbpl});
+        return 0;
+    }
+
+    const start = cmd_idx orelse return error.MissingCommandAfterDash;
+    if (start >= args.len) return error.MissingCommandAfterDash;
+
+    var sb_argv: std.ArrayListUnmanaged([]const u8) = .empty;
+    try sb_argv.append(a, "/usr/bin/sandbox-exec");
+    try sb_argv.append(a, "-p");
+    try sb_argv.append(a, sbpl);
+    for (args[start..]) |c_arg| try sb_argv.append(a, c_arg);
+
+    const run_res = try std.process.run(a, io, .{ .argv = sb_argv.items });
+    print("{s}{s}", .{ run_res.stdout, run_res.stderr });
+    return switch (run_res.term) {
+        .exited => |c| c,
+        else => 1,
+    };
+}

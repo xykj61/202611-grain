@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.073000
-myofascia 56.549
+version 20261115.083000
+myofascia 56.555
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -96,22 +96,28 @@ file modules/flare/lantern/lantern_core.rye
 file modules/flare/flare_core.rye
 file modules/harness/harness_core.rye
 
-# Identity, topology, Comlink Parcel, and Gemini TAME Airlock
+# Identity, topology, Comlink Parcel, Pond CLI, Touch, and Earpiece
 file modules/kumara/kumara.rye
 file modules/comlink/topology.rye
 file modules/comlink/parcel/parcel_core.rye
 file modules/comlink/parcel/gemini/gemini_airlock.rye
+file modules/pond/pond_cli.rye
+file modules/brushstroke/touch/touch_core.rye
+file modules/resonance/earpiece/earpiece_core.rye
 
 # Sundial -- health percent and myofascia indicator
 file modules/sundial/sundial.rye
 
-# Living front doors, geode, shed ledger, catalog, and model roster
+# Living front doors, libraries, geode, blazepod BOM, shed ledger, & catalog
 file GEMINI.md
 file README.md
 file SOURCE.md
 file tasks.rish
+file libraries/README.md
+file blazepod/BOM_AND_ASSEMBLY.md
 file docs-geode/README.md
 file docs-geode/architecture/tame-and-civic-ring-audit.md
+file docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md
 file modules/apps/bloom/art-of-programming/README.md
 file mitra-shed/README.md
 file context/SYSTEM_CATALOG.kyri

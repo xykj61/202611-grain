@@ -29,7 +29,7 @@ Every technical word earns a plain-English explanation the moment it appears. A 
 Open a macOS or Linux terminal with `git`, `curl`, and `tar` installed, then clone the repository:
 
 ```sh
-git clone https://github.com/xykj61/202611-grain.git grain
+git clone https://github.com/grain-ww/202611-grain.git grain
 cd grain
 ```
 
@@ -107,11 +107,29 @@ Seeing `OK digraph_twin_check 30` confirms your Glow toolchain is live and ready
 
 ---
 
+## Step 6 -- Personalize Your Remotes & Launch Gemini Inside `grain pond`
+
+Grain never hardcodes any maintainer's personal repository URLs into its tracked publish scripts. Instead, copy the generalized template into your own gitignored `PUBLISH_TARGETS.kyri` (or ask your **Gemini CLI** agent to fill in your GitHub handle for you!):
+
+```sh
+cp context/templates/PUBLISH_TARGETS.template.kyri PUBLISH_TARGETS.kyri
+```
+
+And whenever you run **Gemini CLI** (`gemini`) on your Mac, you can run it inside **Grain Pond** (`modules/pond/pond_cli.rye` -- our native TAME Seatbelt capability wall that fences file writes strictly to this workspace while keeping `~/.ssh` and private GPG keys unreadable!):
+
+```sh
+languages/rishi/bin/rishi run tasks.rish pond-gemini
+```
+
+---
+
 ## Where to Walk Next
 
+- **Beginner zero-prerequisite macOS course (`00..12`):** [`../../modules/apps/bloom/art-of-programming/README.md`](../../modules/apps/bloom/art-of-programming/README.md)
+- **Multi-year *Bloom & Shastra* curriculum (Andal, Rupa Goswami, Jiva Goswami):** [`../../libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md`](../../libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md)
 - **Set up GPG signing, Gemini CLI (`gemini-4-carbon`), and your own bench:** [`../../SOURCE.md`](../../SOURCE.md)
 - **Understand every module and root file in plain words:** [`../architecture/module-ring-and-root-audit.md`](../architecture/module-ring-and-root-audit.md)
-- **Explore the two-mode RAM-only + NVMe/Cellular hardware target:** [`../../blazepod/README.md`](../../blazepod/README.md)
+- **Assemble a RAM-only RISC-V + 60Hz RLCD Blazepod / Blazetablet:** [`../../blazepod/BOM_AND_ASSEMBLY.md`](../../blazepod/BOM_AND_ASSEMBLY.md)
 
 ---
 

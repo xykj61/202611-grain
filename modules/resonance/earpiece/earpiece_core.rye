@@ -1,0 +1,131 @@
+//! modules/resonance/earpiece/earpiece_core.rye -- Civic RISC-V voice capture.
+//!
+//! Orbit 51 (`20261115.081500`): Civic + TAME external microphone / voice
+//! capture module for Terrarium RISC-V & Blazepod, grounded in our EFF
+//! bystander-privacy & Flock hardware-shutter findings:
+//!   1. Hardware shutter gate (`hw_mic_vdd_closed`): refuses capture when the
+//!      physical power-cut switch is open (`error.HardwareShutterOpen`),
+//!   2. Bystander-consent indicator gate (`bystander_lamp_lit`): refuses
+//!      capture unless the visible bystander LED/RLCD tally is lit
+//!      (`error.BystanderBeaconOff` -- privacy protects everyone in the room!),
+//!   3. Bounded volatile PCM ring (`max_samples = 4096`) with cryptographic
+//!      zeroization (`std.crypto.secureZero`) the instant a session ends!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.081500";
+pub const max_samples: u32 = 4096;
+const nl: u8 = 10;
+
+pub const EarpieceError = error{
+    HardwareShutterOpen,
+    BystanderBeaconOff,
+    TwoPartyConsentMissing,
+    ChunkTooLarge,
+};
+
+pub const CaptureGate = struct {
+    hw_mic_vdd_closed: bool,
+    bystander_lamp_lit: bool,
+    two_party_acknowledged: bool,
+};
+
+pub const EarpieceRing = struct {
+    pcm: [max_samples]i16,
+    write_pos: u32,
+    frames_captured: u64,
+
+    pub fn init() EarpieceRing {
+        return .{
+            .pcm = std.mem.zeroes([max_samples]i16),
+            .write_pos = 0,
+            .frames_captured = 0,
+        };
+    }
+
+    pub fn capture_chunk(
+        self: *EarpieceRing,
+        gate: CaptureGate,
+        samples: []const i16,
+    ) EarpieceError!void {
+        // invariant: ring cursor always lies strictly below max_samples.
+        assert(self.write_pos < max_samples);
+        if (!gate.hw_mic_vdd_closed) return error.HardwareShutterOpen;
+        if (!gate.bystander_lamp_lit) return error.BystanderBeaconOff;
+        if (!gate.two_party_acknowledged) return error.TwoPartyConsentMissing;
+        if (samples.len > max_samples) return error.ChunkTooLarge;
+
+        for (samples) |s| {
+            self.pcm[self.write_pos] = s;
+            self.write_pos = (self.write_pos + 1) % max_samples;
+            self.frames_captured += 1;
+        }
+        // invariant: ring cursor remains strictly bounded after wrap.
+        assert(self.write_pos < max_samples);
+    }
+
+    /// "The Device That Forgets": cryptographically wipes every PCM sample so
+    /// unkept conversation never lingers in RAM after the shutter opens.
+    pub fn release_and_forget(self: *EarpieceRing) void {
+        assert(self.write_pos < max_samples);
+        std.crypto.secureZero(i16, &self.pcm);
+        self.write_pos = 0;
+        self.frames_captured = 0;
+        // invariant: post-wipe cursor and frame count reset identically to 0.
+        assert(self.write_pos == 0 and self.frames_captured == 0);
+    }
+};
+
+fn run_selftest() !u8 {
+    var ring = EarpieceRing.init();
+    const wave = [_]i16{ 320, -320, 640, -640 };
+
+    // 1. Refusal A: physical hardware shutter open
+    if (ring.capture_chunk(.{
+        .hw_mic_vdd_closed = false,
+        .bystander_lamp_lit = true,
+        .two_party_acknowledged = true,
+    }, &wave)) |_| {
+        return error.ShutterOpenAccepted;
+    } else |err| {
+        if (err != error.HardwareShutterOpen) return err;
+    }
+
+    // 2. Refusal B: bystander tally lamp dark (EFF ambient-recording guard!)
+    if (ring.capture_chunk(.{
+        .hw_mic_vdd_closed = true,
+        .bystander_lamp_lit = false,
+        .two_party_acknowledged = true,
+    }, &wave)) |_| {
+        return error.DarkBeaconAccepted;
+    } else |err| {
+        if (err != error.BystanderBeaconOff) return err;
+    }
+
+    // 3. Welcome capture when shutter, bystander lamp, & consent all hold
+    try ring.capture_chunk(.{
+        .hw_mic_vdd_closed = true,
+        .bystander_lamp_lit = true,
+        .two_party_acknowledged = true,
+    }, &wave);
+    if (ring.frames_captured != 4 or ring.pcm[0] != 320) {
+        return error.CaptureFailed;
+    }
+
+    // 4. Cryptographic zeroization ("what forgets, protects")
+    ring.release_and_forget();
+    for (ring.pcm) |sample| {
+        if (sample != 0) return error.ResidueLeftInRam;
+    }
+
+    print("GREEN: earpiece_core -- shutter, beacon, & wipe proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

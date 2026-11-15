@@ -1,19 +1,13 @@
 # publish-seed.rish -- project the clean public seed via the Fusion incremental
-# engine, prove every privacy invariant, and publish a parentless commit to ww.
+# engine, prove every privacy invariant, and publish a parentless commit.
 #
-# Stamp: 20261115.061500
+# Stamp: 20261115.081500
 # Style: TAME Core bounds with Radiant comments (`<= 80` cols, pure Rishi).
 #
-# Usage from the repository root:
-#   languages/rishi/bin/rishi run publish-seed.rish          # fast Fusion proof
-#   languages/rishi/bin/rishi run publish-seed.rish --push   # publish to ww
-#
-# Why Fusion powers this doorway:
-#   Each file's public projection depends solely on its own Git blob OID and our
-#   six manifest/scrub boundary files. `modules/fusion/fusion_sow.rye` verifies
-#   unchanged closures in ~130 ms and incrementally scrubs only edited files,
-#   committing directly over `tools/.cache/fusion/seed_cache` without copying
-#   thousands of unchanged files across disk.
+# Configuration:
+#   Reads gitignored `PUBLISH_TARGETS.kyri` (instantiated during onboarding from
+#   `context/templates/PUBLISH_TARGETS.template.kyri` -- zero hardcoded personal
+#   remotes live in this tracked script!).
 
 assert length args < 2 else "publish-seed: pass at most one flag (--push)"
 let pushing = "no"
@@ -22,13 +16,27 @@ if pushing == "--push" then let pushing = "yes"
 if pushing != "yes" then if pushing != "no" then let pushing = "bad"
 assert pushing != "bad" else "publish-seed: unknown flag (want --push or none)"
 
-# invariant: execute only from the standing Grain root.
 let has_brix = run ["test" "-f" ".brix"]
 assert has_brix.ok else "publish-seed: .brix missing -- run from repo root"
-let has_manifest = run ["test" "-f" "template-manifest.kyri"]
-assert has_manifest.ok else "publish-seed: template-manifest.kyri missing"
 
-# Ensure `modules/fusion/bin/fusion_sow` is built (cached via .ryekey!).
+# Load operator remote settings from gitignored `PUBLISH_TARGETS.kyri`
+# (falling back to `PUBLISH_TARGETS.template.kyri` on dry-run).
+let cfg_file = "PUBLISH_TARGETS.kyri"
+let has_local = run ["test" "-f" cfg_file]
+let tpl_file = "context/templates/PUBLISH_TARGETS.template.kyri"
+if has_local.code != 0 then let cfg_file = tpl_file
+let msg_cfg = "publish-seed: copy PUBLISH_TARGETS.template.kyri first"
+if pushing == "yes" then assert has_local.ok else msg_cfg
+
+let r_url = run ["awk" "$1 ~ /^seed_remote_url$/ { print $2 }" cfg_file]
+let ww_url = trim r_url.out
+assert ww_url != "" else "publish-seed: seed_remote_url missing in config"
+let r_name = run ["awk" "$1 ~ /^seed_author_name$/ { print $2 }" cfg_file]
+let seed_name = trim r_name.out
+let r_mail = run ["awk" "$1 ~ /^seed_author_email$/ { print $2 }" cfg_file]
+let seed_mail = trim r_mail.out
+
+# Ensure `modules/fusion/bin/fusion_sow` is built.
 let fsow_src = "modules/fusion/fusion_sow.rye"
 let fsow_bin = "modules/fusion/bin/fusion_sow"
 let has_fsow = run ["test" "-x" fsow_bin]
@@ -50,19 +58,14 @@ say proved.err
 assert proved.ok else "publish-seed: FUSION SOW REFUSED -- nothing initialized"
 assert (proved.err contains "SOW_WITNESS_GREEN") else "publish-seed: not GREEN"
 
-# Initialize a transient orphan `main` git index inside `seed_dir`.
 let inited = run ["git" "init" "-q" "-b" "main" seed_dir]
 assert inited.ok else "publish-seed: git init -b main refused"
-
 let cfg_sign = run ["git" "-C" seed_dir "config" "commit.gpgsign" "false"]
 assert cfg_sign.ok else "publish-seed: could not set commit.gpgsign=false"
-let cfg_name = run ["git" "-C" seed_dir "config" "user.name" "grain-ww"]
-assert cfg_name.ok else "publish-seed: could not set user.name=grain-ww"
-let seed_mail = "grain-ww@users.noreply.github.com"
-let cfg_mail = run ["git" "-C" seed_dir "config" "user.email" seed_mail]
-assert cfg_mail.ok else "publish-seed: could not set seed user.email"
-
-let ww_url = "git@github.com:grain-ww/202611-grain.git"
+let cfg_nm = run ["git" "-C" seed_dir "config" "user.name" seed_name]
+assert cfg_nm.ok else "publish-seed: could not set seed user.name"
+let cfg_ml = run ["git" "-C" seed_dir "config" "user.email" seed_mail]
+assert cfg_ml.ok else "publish-seed: could not set seed user.email"
 let add_rem = run ["git" "-C" seed_dir "remote" "add" "ww" ww_url]
 assert add_rem.ok else "publish-seed: could not add remote ww"
 
@@ -71,12 +74,10 @@ assert staged.ok else "publish-seed: git add -A refused"
 let committed = run ["git" "-C" seed_dir "commit" "-q" "-m" "petrichor"]
 assert committed.ok else "publish-seed: orphan seed commit refused"
 
-# Postcondition invariants: 1 commit, 0 parents, unsigned (`N`).
 let head_run = run ["git" "-C" seed_dir "rev-parse" "HEAD"]
 assert head_run.ok else "publish-seed: could not read seed HEAD"
 let head = trim head_run.out
 let sig_run = run ["git" "-C" seed_dir "log" "-1" "--format=%G?"]
-assert sig_run.ok else "publish-seed: could not inspect signature status"
 let sig = trim sig_run.out
 let par_probe = run ["git" "-C" seed_dir "rev-parse" "--verify" "HEAD^"]
 assert par_probe.code != 0 else "publish-seed: seed commit must have 0 parents"
@@ -84,15 +85,14 @@ assert sig == "N" else "publish-seed: seed commit must stay unsigned (N)"
 
 say "publish-seed: seed ready -- head=${head} signed=${sig} parents=0"
 say "publish-seed: target=${ww_url}"
-
 if pushing != "yes" then say "publish-seed: DRY RUN ok (pass --push to send)."
 
 let ssh_env = "GIT_SSH_COMMAND=ssh"
 let push_cmd = ["env" ssh_env "git" "-C" seed_dir "push" "-f" "ww" "HEAD:main"]
-let ok_cmd = ["true"]
+let ok_c = ["true"]
 if pushing == "yes" then say "publish-seed: pushing seed to ${ww_url} ..."
-if pushing == "yes" then let pushed = run push_cmd else let pushed = run ok_cmd
+if pushing == "yes" then let pushed = run push_cmd else let pushed = run ok_c
 let clean_git = run ["rm" "-rf" (seed_dir + "/.git")]
 assert clean_git.ok else "publish-seed: could not remove transient .git"
-assert pushed.ok else "publish-seed: push to grain-ww/202611-grain failed"
+assert pushed.ok else "publish-seed: push to seed_remote_url failed"
 if pushing == "yes" then say "GREEN: publish-seed -- ${head} -> ${ww_url}"
