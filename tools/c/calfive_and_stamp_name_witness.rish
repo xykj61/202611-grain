@@ -13,9 +13,11 @@ let rb = "tools/fixtures/r/rye_build.sh"
 let mk = run ["mkdir" "-p" "tools/.build" "languages/rishi/bin"]
 assert mk.ok else "mkdir failed"
 
-# 1. Gemini-native instruction spine
-let g_files = run ["sh" "-c" "test -f GEMINI.md && test -f languages/GEMINI.md && test -f modules/GEMINI.md && test -f libraries/GEMINI.md"]
-assert g_files.ok else "missing GEMINI.md instruction spine file"
+# 1. Gemini-native instruction spine + 5 Elemental Rule Cards
+let g_files = run ["sh" "-c" "test -f GEMINI.md && test -f languages/GEMINI.md && test -f modules/GEMINI.md && test -f libraries/GEMINI.md && test -f .gemini/rules/aether-purpose-and-sameness.md && test -f .gemini/rules/air-stamp-and-naming.md && test -f .gemini/rules/fire-tame-and-reds-first.md && test -f .gemini/rules/water-voice-and-glasswall.md && test -f .gemini/rules/earth-rooms-molt-and-seed.md"]
+assert g_files.ok else "missing GEMINI.md or one of the 5 Elemental Rule Cards"
+let g_cnt = run ["sh" "-c" "set -- .gemini/rules/*.md && test $# -eq 6"]
+assert g_cnt.ok else "expected exactly 6 .md files in .gemini/rules/ (README + 5 Elemental Cards)"
 
 # 2. Calfive 15-sign wheel & `grain-ww round-load`
 let b_cw = run ["sh" rb "modules/sundial/calfive_wheel.rye" "-femit-bin=tools/.build/calfive_wheel"]
@@ -29,9 +31,9 @@ let r_rl = run ["languages/rishi/bin/grain-ww" "round-load"]
 assert r_rl.ok else "grain-ww round-load failed"
 assert (r_rl.err contains "Calfive Round Load") else "round-load output missing header"
 
-# 3. Zero living `lotus_*` files in resonance/, vantage/include/, or terrarium/
-let no_lotus = run ["sh" "-c" "! ls modules/resonance/*lotus* modules/comlink/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* 2>/dev/null"]
-assert no_lotus.ok else "leftover lotus_* file found in resonance, vantage, or terrarium!"
+# 3. Zero living `lotus_*` files in resonance/, vantage/include/, terrarium/, or active-tablecloth/
+let no_lotus = run ["sh" "-c" "! ls -d modules/resonance/*lotus* modules/comlink/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* active-tablecloth/date/202611/00/*lotus* 2>/dev/null"]
+assert no_lotus.ok else "leftover lotus_* path found in resonance, vantage, terrarium, or active-tablecloth!"
 
 # 4. Zero ascending numbers in guide filenames or compiler/citizen .glow headers
 let no_num_guides = run ["sh" "-c" "! ls docs-geode/lessons/guides/[0-9]* 2>/dev/null"]

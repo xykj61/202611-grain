@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.123500
-myofascia 56.715
+version 20261115.125000
+myofascia 56.730
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -61,6 +61,11 @@ file GEMINI.md
 file languages/GEMINI.md
 file modules/GEMINI.md
 file libraries/GEMINI.md
+file .gemini/rules/aether-purpose-and-sameness.md
+file .gemini/rules/air-stamp-and-naming.md
+file .gemini/rules/fire-tame-and-reds-first.md
+file .gemini/rules/water-voice-and-glasswall.md
+file .gemini/rules/earth-rooms-molt-and-seed.md
 file modules/sundial/calfive_wheel.rye
 file languages/rye/src/main.rye
 file languages/rishi/src/main.rye

@@ -17,11 +17,12 @@ hidden macros, private dialects, or duplicated platform logic.
   - [`languages/GEMINI.md`](languages/GEMINI.md) -- Rye, Glow, Rishi, Brix, Kyri
   - [`modules/GEMINI.md`](modules/GEMINI.md) -- Vantage, Resonance, Pond, Ring-0
   - [`libraries/GEMINI.md`](libraries/GEMINI.md) -- Shastra, Risala, Curriculum
-- **Detailed rule cards:** [`.gemini/rules/README.md`](.gemini/rules/README.md)
-  ([`stamp-and-name.md`](.gemini/rules/stamp-and-name.md),
-  [`tame-guidance.md`](.gemini/rules/tame-guidance.md),
-  [`comlink-tendency.md`](.gemini/rules/comlink-tendency.md),
-  [`alias-sameness.md`](.gemini/rules/alias-sameness.md)).
+- **Elemental Rules** ([`.gemini/rules/README.md`](.gemini/rules/README.md)):
+  - [Aether](.gemini/rules/aether-purpose-and-sameness.md) -- Purpose & Sameness
+  - [Air](.gemini/rules/air-stamp-and-naming.md) -- Stamp-and-Name & Evergrow
+  - [Fire](.gemini/rules/fire-tame-and-reds-first.md) -- TAME & Reds First
+  - [Water](.gemini/rules/water-voice-and-glasswall.md) -- Voice & Glasswall
+  - [Earth](.gemini/rules/earth-rooms-molt-and-seed.md) -- Rooms & Calfive
 
 ---
 

@@ -1,19 +1,33 @@
-# `.gemini/rules/` -- Standing Law of the Grain Carbon Bench
+# `.gemini/rules/` -- The Five Elemental Rule Cards
 
-**Language:** EN
-**Stamp:** `20261115.025000` (EST)
-**Voice:** Kyri
-**Style:** Gauge at Door, Radiant warmth
-**Status:** Living (`Room: checkable` -- promoted from `.claude/rules/` when `.claude/` and `.cursor/` moved to [`../../yonder/`](../../yonder/README.md))
+**Stamp:** `20261115.125000`
+**Voice:** Kyri (Gauge & Teacher)
+**Entered from:** [`../../GEMINI.md`](../../GEMINI.md)
 
 ---
 
-## How Rules Live Here
+## Single-Stranded Rule Architecture (*Sameness Is the Macro*)
 
-Every standing discipline of Grain lives once in `.gemini/rules/*.md`, entered from [`../../GEMINI.md`](../../GEMINI.md) and grounded in the voiced canons under [`../../context/`](../../context/README.md):
+Every standing rule of Grain lives once across **Five Elemental Cards** matching
+the 5 Rota questions and the 5 Elemental Goals of Calfive (`67` granular
+Claude-era rulelets stand preserved in [`../../yonder/rules-claude-era/`](../../yonder/README.md)):
 
-- **Primary agent & branch:** Gemini CLI (`gemini-4-carbon`) pushing to `xy/gemini-4-carbon` on `xykj61/202611-grain` ([`gemini-bench.md`](gemini-bench.md)).
-- **Code & bounds:** [TAME Guidance](tame-guidance.md) -- bound every loop, slice, and allocation; explicit bit widths (`u32` memory, `u64` wire); 80-column hard limit in code/descriptors; two-or-more `// invariant:` assertions per function; **Glow/Rye chronological `YYYYMMDD.HHMMSS` versioning** everywhere (zero semantic versioning).
-- **Voice & prose:** [Gauge Style](gauge-style.md), [Radiant Style](radiant-style.md), and [ASCII-First](ascii-first.md) -- lead with what *is*, write for clarity from 8th-grade newcomers to enterprise architects, and keep prose in 7-bit ASCII.
-- **Naming & removal:** [The Comlink Tendency](comlink-tendency.md) (warm, collision-free names at any length; legacy 4-letter waymarks `STOA`, `TUBE`, etc. are retired), [Molt](molt.md), [`../../mitra-shed/`](../../mitra-shed/README.md) (*accrete-never-break* fossils awaiting door-approved cuts), and [`../../yonder/`](../../yonder/README.md) (the single vault for cold/retired shelves).
-- **Health metric:** **Myofascia** (`56.500` / `100.000` baseline on `20261115`, advancing `+0.001` with each completed orbit).
+1. **[Aether -- Purpose, Custody, & Sameness](aether-purpose-and-sameness.md)**
+   *("Why does the work exist?")* -- *Sameness Is the Macro*, *Aparigraha*,
+   Sovereign Custody, `Vantage` single-brain UI, and **`grain-ww`** identity.
+2. **[Air -- Stamp-and-Name, Evergrow, & Naming](air-stamp-and-naming.md)**
+   *("Where does each thing end?")* -- Chronological `YYYYMMDD.HHMMSS` stamps,
+   *Count, never number*, zero ascending serials, **Comlink Tendency**,
+   **`Resonance`** (never `Lotus`), and *Spec-ulation* **Evergrow** parcels.
+3. **[Fire -- TAME Guidance, Reds First, & Proof](fire-tame-and-reds-first.md)**
+   *("What must stop, and what must be cut?")* -- Bounded memory/loops,
+   `u32`/`u64` widths, `>= 2` invariants, `0x0001_3333` fail-stop, col-57 `::`
+   & `<= 80` cols, paired welcome/refusal witnesses, and *Standfast* on reds.
+4. **[Water -- Voice, Hospitality, & Glasswall](water-voice-and-glasswall.md)**
+   *("Is the work cared for?")* -- Gauge, Teacher, Radiant, Civic, & Twilight
+   voices, 7-bit ASCII clarity, write-only RLCD surfaces, hardware-switched +
+   bystander-lamp `Earpiece`, and zero ad/telemetry SDKs.
+5. **[Earth -- Rooms, Calfive, Molt, & Seed](earth-rooms-molt-and-seed.md)**
+   *("What already stands true?")* -- `languages/` + `modules/` + `libraries/`
+   + `yonder/`, `256`/`768` fold bounds, `15 - 75 - 375 - 1,875 - 9,375`
+   Panchanga (`sky / sky / sky (Siya)`), GPG commits, and `publish-seed.rish`.
