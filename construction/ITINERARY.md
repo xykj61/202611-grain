@@ -43,11 +43,12 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
-### ESSENTIAL GRAIN DISTILLATION -> GLOW MILL (`20261114.234523`, carbon bench `xy/gemini-4-carbon`)
+### GLOW MILL, FUSION, & RING-0 TAME AUDIT (`20261115.072500`, carbon bench `xy/gemini-4-carbon`)
 
-- **Distillation board (active, 12 orbits):** [`../active-tablecloth/date/202611/00/20261114-234523_essential-grain-distillation/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261114-234523_essential-grain-distillation/CHECKLIST.md)
-- **Glow Mill & Citizen Ring board (queued next, 25 orbits):** [`../active-tablecloth/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/CHECKLIST.md)
-- **Archive-custody walk-back checkpoint (Orbit 1 seated `20261114`):** Pre-reroot history stands permanently archived and signed at `xykj61/20260618-grain`; `202611-grain` founding commit is `c2614369` and full 27,852-file post-debride baseline nib is `d98bbaac` (`xy/main`, `xy/claude-opus-4-6`, `xy/gemini-4-carbon`). Every pre-reroot file shed during Orbits 2-8 remains retrievable via `git show d98bbaac:<path>` (or from `xykj61/20260618-grain`).
+- **Fusion, Bloom `00..12`, Comlink Parcel (*Spec-ulation* chronological pins), & Harness (24/24 Orbits COMPLETE at `56.544`):** [`../active-tablecloth/date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/CHECKLIST.md). Incremental `publish-seed.rish` (`MANIFEST_COVER_OK`) now verifies warm closures in ~130 ms via `modules/fusion/fusion_sow.rye` (closing `%642`'s scrub bottleneck for incremental work).
+- **TAME Core, *Spec-ulation*, & Civic Style Ring Audit (`56.548`):** [`../docs-geode/architecture/tame-and-civic-ring-audit.md`](../docs-geode/architecture/tame-and-civic-ring-audit.md). Fixed 11 freestanding RV32I `terrarium/src/` stages + `modules/aurora/src/seed.rye` to emit `sifive_test` fail-stop `0x0001_3333` on tripped assertions, strengthened `tally/region.rye`, `dimeroll_core.rye`, and `linengrow/disclosure_core.rye` invariants, and queued ongoing Ring-0 (`aurora/src/*.rye`, `tally/*.rye`), `terrarium/src/` 80-col/2-assert sweeps, and `linengrow/` waymark-filename molt alongside Glow Mill.
+- **Glow Mill & Citizen Ring board (ACTIVE -- TOP, 25 orbits):** [`../active-tablecloth/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/CHECKLIST.md) -- Orbit 1 (`rune_book.rye`) and Orbit 2 (`cord_interp.rye` + `?!` boolean negation at `56.549`) landed; Orbits 3-25 (`Sheaf`, `Thresh`, `Trellis`, `Assay`, `Pith`, `Mill`) next.
+- **Archive-custody walk-back checkpoint:** Pre-reroot history stands permanently archived and signed at `xykj61/20260618-grain`; `202611-grain` founding commit is `c2614369` and full 27,852-file post-debride baseline nib is `d98bbaac`.
 
 ### RESONANCE -- The Working Studio (Equinox 1, active from `20261103.010404`)
 

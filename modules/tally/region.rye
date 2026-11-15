@@ -105,7 +105,13 @@ pub const Region = struct {
     }
 
     pub fn remaining(self: *const Region) u32 {
-        return buf_len_u32(self.buf) - self.pos;
+        const cap = buf_len_u32(self.buf);
+        // invariant: cursor never exceeds region capacity.
+        assert(self.pos <= cap);
+        const rem = cap - self.pos;
+        // invariant: remaining bytes never exceed total region capacity.
+        assert(rem <= cap);
+        return rem;
     }
 };
 

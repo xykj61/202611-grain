@@ -15,6 +15,8 @@ max_cols 80 publish-redirect.rish
 max_cols 80 tasks.rish
 max_cols 80 modules/sundial/sundial.rye
 max_cols 80 languages/glow/front/rune_book.rye
+max_cols 80 languages/glow/front/cord_interp.rye
+max_cols 80 modules/comlink/parcel/parcel_core.rye
 max_cols 80 modules/fusion/fusion_dag.rye
 max_cols 80 modules/fusion/fusion_sow.rye
 
@@ -24,6 +26,7 @@ ascii_7bit SOURCE.md
 ascii_7bit GEMINI.md
 ascii_7bit MAP.md
 ascii_7bit docs-geode/README.md
+ascii_7bit docs-geode/architecture/tame-and-civic-ring-audit.md
 ascii_7bit modules/apps/bloom/README.md
 ascii_7bit context/SYSTEM_CATALOG.kyri
 

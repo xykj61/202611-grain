@@ -109,7 +109,7 @@ fn halt_pass() noreturn {
 fn assert_true(cond: bool) void {
     if (!cond) {
         uart_print("ASSERTION FAILED\n");
-        test_finisher.* = finisher_pass;
+        test_finisher.* = 0x0001_3333;
         while (true) {}
     }
 }

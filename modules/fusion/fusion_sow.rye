@@ -314,12 +314,12 @@ fn run_Incremental_delta(
     changed: []const []const u8,
     deleted: []const []const u8,
 ) !bool {
-    // 1. Verify M1 manifest coverage first (always < 40 ms).
+    // 1. Verify manifest root coverage first (always < 40 ms).
     const cover_script = "tools/fixtures/s/sow_manifest_cover.sh";
     const m1_argv = [_][]const u8{ "sh", cover_script };
     const m1 = try std.process.run(a, io, .{ .argv = &m1_argv });
     if (!run_ok(m1)) return false;
-    if (std.mem.indexOf(u8, m1.stdout, "M1_OK") == null) {
+    if (std.mem.indexOf(u8, m1.stdout, "MANIFEST_COVER_OK") == null) {
         print("{s}", .{m1.stdout});
         return error.ManifestCoverBad;
     }
@@ -517,7 +517,9 @@ pub fn main(init: std.process.Init) !u8 {
 
     if (!force_cold and cache_ready and rules_match and closure_match) {
         if (emit_seed_dir) try sync_cache_to_seed(a, io, "seed");
-        print("M1_OK{c}IDENT_CLEAN{c}NO_PERSONAL{c}", .{ nl, nl, nl });
+        print("MANIFEST_COVER_OK{c}IDENT_CLEAN{c}NO_PERSONAL{c}", .{
+            nl, nl, nl,
+        });
         print("FUSION_SOW_HIT closure={s} recomputed=0{c}", .{
             closure_hex[0..16],
             nl,
@@ -595,7 +597,7 @@ pub fn main(init: std.process.Init) !u8 {
 
     if (emit_seed_dir) try sync_cache_to_seed(a, io, "seed");
 
-    print("M1_OK{c}IDENT_CLEAN{c}NO_PERSONAL{c}", .{ nl, nl, nl });
+    print("MANIFEST_COVER_OK{c}IDENT_CLEAN{c}NO_PERSONAL{c}", .{ nl, nl, nl });
     if (did_delta) {
         print("FUSION_SOW_DELTA closure={s} recomputed={d}{c}", .{
             closure_hex[0..16],

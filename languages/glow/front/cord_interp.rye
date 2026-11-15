@@ -1,0 +1,269 @@
+//! languages/glow/front/cord_interp.rye -- `"text {(expr)}"`, `scot`, & `?!`.
+//!
+//! Glow Mill & Citizen Ring Orbit 2 (`20261115.073000`).
+//! Equips Glow with TAME-bounded cord interpolation and boolean negation:
+//!   1. `?!` (`wutzap` boolean negation): flips Loobean truth (`0` <-> `1`)
+//!      and refuses any non-boolean atom (`> 1` -> `error.NotALoobean`),
+//!   2. `scot_ud` & `scot_ux`: bounded `@ud` (dot-grouped `56.549`) and `@ux`
+//!      (`0x...`) atom formatters into caller-owned static byte slices,
+//!   3. `parse_interp` + `verify_static_ceiling`: splits `"prefix {(expr)}"`
+//!      into bounded `.literal` & `.hole_expr` segments (`max_segments = 32`)
+//!      and proves at lower time that `sum(literal + hole_max) <= ceiling`
+//!      (default `default_cord_ceiling = 256`), refusing `CordBoundExceeded`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.073000";
+pub const max_segments: u32 = 32;
+pub const default_cord_ceiling: u32 = 256;
+pub const max_cord_bytes: u32 = 4096;
+pub const max_scot_ud_bytes: u32 = 26; // u64 max with dots: 26 chars
+pub const max_scot_ux_bytes: u32 = 18; // "0x" + 16 hex digits
+const nl: u8 = 10;
+const bs: u8 = 92;
+
+pub const InterpError = error{
+    CordBoundExceeded,
+    TooManySegments,
+    UnclosedInterpolation,
+    EmptyInterpolationExpr,
+    MissingParenInsideBraces,
+    NotALoobean,
+    BufferTooSmall,
+};
+
+pub const SegmentKind = enum(u8) {
+    literal = 0,
+    hole_expr = 1,
+};
+
+pub const Segment = struct {
+    kind: SegmentKind,
+    slice: []const u8,
+    static_max_bytes: u32,
+};
+
+pub const InterpPlan = struct {
+    segments: [max_segments]Segment,
+    count: u32,
+    static_ceiling_bytes: u32,
+};
+
+/// Evaluates Glow's `?!` (`wutzap`) rune on a Loobean atom (`0` = `%.y` true,
+/// `1` = `%.n` false), refusing any non-boolean atom (`>= 2`) explicitly.
+pub fn eval_wutzap_loobean(loob: u32) InterpError!u32 {
+    if (loob > 1) return error.NotALoobean;
+    // invariant: input loobean is strictly 0 (true) or 1 (false).
+    assert(loob == 0 or loob == 1);
+    const out: u32 = 1 - loob;
+    // invariant: negated loobean stays 0 or 1 and differs from input.
+    assert((out == 0 or out == 1) and out != loob);
+    return out;
+}
+
+/// Formats a `u64` atom in Hoon/Glow `@ud` style (`0`, `42`, `56.549`).
+pub fn scot_ud(val: u64, out: []u8) InterpError![]const u8 {
+    if (val == 0) {
+        if (out.len < 1) return error.BufferTooSmall;
+        out[0] = '0';
+        return out[0..1];
+    }
+    var rev: [32]u8 = undefined;
+    var rlen: u32 = 0;
+    var digits: u32 = 0;
+    var n = val;
+    while (n > 0) {
+        if (digits > 0 and (digits % 3) == 0) {
+            rev[rlen] = '.';
+            rlen += 1;
+        }
+        rev[rlen] = @intCast((n % 10) + '0');
+        rlen += 1;
+        digits += 1;
+        n /= 10;
+    }
+    // invariant: formatted u64 with group dots fits within max_scot_ud_bytes.
+    assert(rlen >= 1 and rlen <= max_scot_ud_bytes);
+    if (out.len < rlen) return error.BufferTooSmall;
+    var i: u32 = 0;
+    while (i < rlen) : (i += 1) {
+        out[i] = rev[rlen - 1 - i];
+    }
+    assert(i == rlen);
+    return out[0..rlen];
+}
+
+/// Formats a `u64` atom in Glow `@ux` hexadecimal style (`0x0`, `0x13333`).
+pub fn scot_ux(val: u64, out: []u8) InterpError![]const u8 {
+    const lut = "0123456789abcdef";
+    if (val == 0) {
+        if (out.len < 3) return error.BufferTooSmall;
+        @memcpy(out[0..3], "0x0");
+        return out[0..3];
+    }
+    var rev: [16]u8 = undefined;
+    var rlen: u32 = 0;
+    var n = val;
+    while (n > 0) {
+        rev[rlen] = lut[@intCast(n & 0x0f)];
+        rlen += 1;
+        n >>= 4;
+    }
+    const total = 2 + rlen;
+    // invariant: 0x prefix + up to 16 nibbles <= max_scot_ux_bytes (18).
+    assert(total >= 3 and total <= max_scot_ux_bytes);
+    if (out.len < total) return error.BufferTooSmall;
+    out[0] = '0';
+    out[1] = 'x';
+    var i: u32 = 0;
+    while (i < rlen) : (i += 1) {
+        out[2 + i] = rev[rlen - 1 - i];
+    }
+    return out[0..total];
+}
+
+fn infer_hole_max_bytes(expr: []const u8) u32 {
+    if (std.mem.startsWith(u8, expr, "scot_ud ")) return max_scot_ud_bytes;
+    if (std.mem.startsWith(u8, expr, "scot_ux ")) return max_scot_ux_bytes;
+    return 64; // conservative default bounded cord hole ceiling
+}
+
+/// Parses `"prefix {(expr)} suffix"` and statically verifies its worst-case
+/// byte bound against `ceiling_bytes` (refusing `error.CordBoundExceeded`).
+pub fn parse_interp_bounded(
+    body: []const u8,
+    ceiling_bytes: u32,
+) InterpError!InterpPlan {
+    // invariant: ceiling fits inside module-wide max_cord_bytes.
+    assert(ceiling_bytes >= 1 and ceiling_bytes <= max_cord_bytes);
+    if (body.len > max_cord_bytes) return error.CordBoundExceeded;
+
+    var plan = InterpPlan{
+        .segments = undefined,
+        .count = 0,
+        .static_ceiling_bytes = 0,
+    };
+
+    var lit_start: usize = 0;
+    var i: usize = 0;
+    while (i < body.len) {
+        if (body[i] == bs and i + 1 < body.len) {
+            i += 2;
+            continue;
+        }
+        if (body[i] == '{') {
+            if (i + 1 >= body.len or body[i + 1] != '(') {
+                return error.MissingParenInsideBraces;
+            }
+            if (i > lit_start) {
+                const lit = body[lit_start..i];
+                const llen: u32 = @intCast(lit.len);
+                try push_seg(&plan, .literal, lit, llen, ceiling_bytes);
+            }
+            const expr_start = i + 2;
+            var depth: u32 = 1;
+            var j: usize = expr_start;
+            while (j < body.len and depth > 0) : (j += 1) {
+                if (body[j] == '(') depth += 1;
+                if (body[j] == ')') depth -= 1;
+            }
+            if (depth != 0 or j >= body.len or body[j] != '}') {
+                return error.UnclosedInterpolation;
+            }
+            const trimmed = std.mem.trim(u8, body[expr_start .. j - 1], " ");
+            if (trimmed.len == 0) return error.EmptyInterpolationExpr;
+            const hmax = infer_hole_max_bytes(trimmed);
+            try push_seg(&plan, .hole_expr, trimmed, hmax, ceiling_bytes);
+
+            i = j + 1;
+            lit_start = i;
+            continue;
+        }
+        i += 1;
+    }
+
+    if (lit_start < body.len) {
+        const tail = body[lit_start..body.len];
+        try push_seg(&plan, .literal, tail, @intCast(tail.len), ceiling_bytes);
+    }
+    // invariant: static worst-case byte sum never exceeds ceiling_bytes.
+    assert(plan.static_ceiling_bytes <= ceiling_bytes);
+    return plan;
+}
+
+fn push_seg(
+    plan: *InterpPlan,
+    kind: SegmentKind,
+    slice: []const u8,
+    max_b: u32,
+    ceiling: u32,
+) InterpError!void {
+    assert(slice.len > 0);
+    if (plan.count >= max_segments) return error.TooManySegments;
+    if (plan.static_ceiling_bytes + max_b > ceiling) {
+        return error.CordBoundExceeded;
+    }
+    plan.segments[plan.count] = .{
+        .kind = kind,
+        .slice = slice,
+        .static_max_bytes = max_b,
+    };
+    plan.count += 1;
+    plan.static_ceiling_bytes += max_b;
+    assert(plan.static_ceiling_bytes <= ceiling);
+}
+
+fn run_selftest() !u8 {
+    // 1. `?!` (`wutzap`) Loobean negation + nested `?!` + non-boolean refusal
+    if ((try eval_wutzap_loobean(0)) != 1) return error.WutzapTrueFailed;
+    const nested = try eval_wutzap_loobean(try eval_wutzap_loobean(0));
+    if (nested != 0) return error.NestedWutzapFailed;
+    if (eval_wutzap_loobean(2)) |_| {
+        return error.NonLoobeanAccepted;
+    } else |err| {
+        if (err != error.NotALoobean) return err;
+    }
+
+    // 2. `scot_ud` and `scot_ux` formatting
+    var sbuf: [32]u8 = undefined;
+    const ud = try scot_ud(56549, &sbuf);
+    if (!std.mem.eql(u8, ud, "56.549")) return error.ScotUdWrong;
+    const ux = try scot_ux(0x13333, &sbuf);
+    if (!std.mem.eql(u8, ux, "0x13333")) return error.ScotUxWrong;
+
+    // 3. Multi-hole `"receipt #{(scot_ud id)}: {(scot_ud amt)} MALA"`
+    const sample = "receipt #{(scot_ud id)}: {(scot_ud amt)} MALA";
+    const plan = try parse_interp_bounded(sample, default_cord_ceiling);
+    if (plan.count != 5) return error.WrongSegmentCount;
+    if (plan.static_ceiling_bytes > default_cord_ceiling) {
+        return error.CeilingBroken;
+    }
+
+    // 4. Static ceiling overflow (`CordBoundExceeded`) + syntax refusals
+    if (parse_interp_bounded(sample, 30)) |_| {
+        return error.OverCeilingAccepted;
+    } else |err| {
+        if (err != error.CordBoundExceeded) return err;
+    }
+    if (parse_interp_bounded("broken {(scot_ud x", default_cord_ceiling)) |_| {
+        return error.UnclosedAccepted;
+    } else |err| {
+        if (err != error.UnclosedInterpolation) return err;
+    }
+    if (parse_interp_bounded("empty {(  )}", default_cord_ceiling)) |_| {
+        return error.EmptyHoleAccepted;
+    } else |err| {
+        if (err != error.EmptyInterpolationExpr) return err;
+    }
+
+    print("GREEN: cord_interp -- interpolation, scot, & ?! proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

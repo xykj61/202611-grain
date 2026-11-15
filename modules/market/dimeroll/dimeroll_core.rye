@@ -97,35 +97,52 @@ pub const Exception = struct {
     draft: []const u8,
 };
 
-pub fn post_entry(tb: *TrialBalance, entry: Entry) error{Unbalanced, BadAmount, SameAccount}!void {
+pub fn post_entry(
+    tb: *TrialBalance,
+    entry: Entry,
+) error{ Unbalanced, BadAmount, SameAccount }!void {
     if (entry.amount <= 0) return error.BadAmount;
     if (entry.debit == entry.credit) return error.SameAccount;
+    const before = tb.conservation();
     // Double-entry: debit increases debit-positive net; credit decreases it.
     const di: u32 = @intFromEnum(entry.debit);
     const ci: u32 = @intFromEnum(entry.credit);
+    // invariant: distinct valid accounts lie strictly below account_count.
+    assert(di != ci and di < account_count and ci < account_count);
     tb.nets[di] += entry.amount;
     tb.nets[ci] -= entry.amount;
+    // invariant: every posted entry preserves trial-balance conservation.
+    assert(tb.conservation() == before);
 }
 
-pub fn fold_journal(entries: []const Entry) error{Unbalanced, BadAmount, SameAccount}!TrialBalance {
+pub fn fold_journal(
+    entries: []const Entry,
+) error{ Unbalanced, BadAmount, SameAccount }!TrialBalance {
+    // invariant: bounded journal batch respects max_entries ceiling.
+    assert(entries.len <= max_entries);
     var tb: TrialBalance = .{};
     for (entries) |e| {
         try post_entry(&tb, e);
     }
-    // invariant: the trial balance conserves -- debits equal credits -- which is the one
-    // property that makes a book a book rather than a list of numbers
+    // invariant: the trial balance conserves -- debits equal credits -- which is
+    // the one property that makes a book a book rather than a list of numbers.
     assert(tb.conservation() == 0);
     return tb;
 }
 
 /// Revenue is credit-normal (negative debit-positive net); expense is debit-normal.
 pub fn fold_income_statement(tb: TrialBalance) IncomeStatement {
+    // invariant: income statement projects only from a conserved trial balance.
+    assert(tb.conservation() == 0);
     const revenue = -tb.nets[@intFromEnum(Account.revenue)];
     const expense = tb.nets[@intFromEnum(Account.expense)];
+    const net = revenue - expense;
+    // invariant: net_income + expense reconstructs revenue identically.
+    assert(net + expense == revenue);
     return .{
         .revenue = revenue,
         .expense = expense,
-        .net_income = revenue - expense,
+        .net_income = net,
     };
 }
 
@@ -309,4 +326,4 @@ pub const welcome_journal =
     \\
 ;
 
-pub const fixture_path = "dimeroll/fixtures/journal.kyri";
+pub const fixture_path = "modules/market/dimeroll/fixtures/journal.kyri";

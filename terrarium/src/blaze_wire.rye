@@ -124,7 +124,7 @@ fn halt_pass() noreturn {
 
 fn halt_error(msg: []const u8) noreturn {
     uart_print(msg);
-    test_finisher.* = finisher_pass;
+    test_finisher.* = 0x0001_3333;
     while (true) {}
 }
 

@@ -39,6 +39,8 @@ fn challenge(
     nonce_point: *const [bud.point_len]u8,
     tier: u64,
 ) [bud.scalar_len]u8 {
+    // invariant: tier is positive and Fiat-Shamir domain tag is non-empty.
+    assert(tier > 0 and challenge_domain.len > 0);
     var h = Sha3_256.init(.{});
     h.update(challenge_domain);
     h.update(commitment);
@@ -53,7 +55,10 @@ fn challenge(
     }
     var digest: [Sha3_256.digest_length]u8 = undefined;
     h.final(&digest);
-    return Edwards25519.scalar.reduce(digest);
+    const out = Edwards25519.scalar.reduce(digest);
+    // invariant: reduced Edwards25519 challenge scalar is 32 bytes.
+    assert(out.len == bud.scalar_len);
+    return out;
 }
 
 /// Prove knowledge of dew for C = tier-G + r-H (tier public).
@@ -65,6 +70,8 @@ pub fn prove_tier(
     commitment_out: *[bud.point_len]u8,
     proof_out: *[proof_bytes_len]u8,
 ) !void {
+    // invariant: proof buffer holds point A (32) concatenated with scalar z (32).
+    assert(proof_bytes_len == bud.point_len + bud.scalar_len);
     if (!tier_allowed(tier)) return error.BadTier;
     const c = try bud.commit(tier, dew);
     commitment_out.* = c.toBytes();
@@ -78,6 +85,8 @@ pub fn prove_tier(
 
     tally_copy.copy_disjoint(u8, proof_out[0..bud.point_len], &a_bytes);
     tally_copy.copy_disjoint(u8, proof_out[bud.point_len..][0..bud.scalar_len], &z);
+    // invariant: tier passed allowlist gate before proof bytes were emitted.
+    assert(tier_allowed(tier));
 }
 
 pub fn verify_tier(
