@@ -4,7 +4,7 @@
 // All room state (`Bloom`, `Dimeroll`, `Resonance`, `Scribe`, `Blaze`, `Surf`),
 // posture selection, and palm/gesture math live in `modules/comlink/vantage/`!
 
-package org.grainos.vantage.carry
+package com.grainww.vantage.carry
 
 import android.app.Activity
 import android.os.Bundle

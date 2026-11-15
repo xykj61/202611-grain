@@ -29,13 +29,13 @@ assert b_s4.ok else "gopala_champu_weave build failed"
 let r_s4 = run ["libraries/shastra/champu/bin/gopala_champu_weave" "selftest"]
 assert r_s4.ok else "gopala_champu_weave selftest failed"
 
-let b_go = run ["sh" rb "languages/rishi/grainos_cli.rye" "-femit-bin=languages/rishi/bin/grainos"]
-assert b_go.ok else "grainos_cli build failed"
-let r_gs = run ["languages/rishi/bin/grainos" "sikshastakam" "3"]
-assert r_gs.ok else "grainos sikshastakam 3 failed"
+let b_go = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_go.ok else "grain_ww_cli build failed"
+let r_gs = run ["languages/rishi/bin/grain-ww" "sikshastakam" "3"]
+assert r_gs.ok else "grain-ww sikshastakam 3 failed"
 assert (r_gs.err contains "Trinad api sunichena") else "missing Verse 3"
-let r_gc = run ["languages/rishi/bin/grainos" "champu"]
-assert r_gc.ok else "grainos champu failed"
+let r_gc = run ["languages/rishi/bin/grain-ww" "champu"]
+assert r_gc.ok else "grain-ww champu failed"
 
 # 2. Unified `vantage_app.rye` host selftest + WASM + Android DC-1 arm64
 let b_va = run ["sh" rb "modules/comlink/vantage/vantage_app.rye" "-femit-bin=tools/.build/vantage_app"]

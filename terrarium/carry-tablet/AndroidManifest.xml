@@ -5,7 +5,7 @@
        - ZERO RECORD_AUDIO ambient microphone permissions,
        - Minimal display post-processing for zero-flicker 60Hz RLCD rendering! -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.grainos.vantage.carry">
+    package="com.grainww.vantage.carry">
 
     <application
         android:allowBackup="false"

@@ -14,7 +14,7 @@ max_cols 80 publish-seed.rish
 max_cols 80 publish-redirect.rish
 max_cols 80 tasks.rish
 max_cols 80 modules/sundial/sundial.rye
-max_cols 80 languages/rishi/grainos_cli.rye
+max_cols 80 languages/rishi/grain_ww_cli.rye
 max_cols 80 languages/glow/front/rune_book.rye
 max_cols 80 languages/glow/front/cord_interp.rye
 max_cols 80 languages/glow/front/trace_trail.rye

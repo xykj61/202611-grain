@@ -3,9 +3,9 @@
 //
 // Zero application state, room manifests, or gesture math live in Swift:
 //   - `--selftest`: proves Swift <-> Rye `VantageApp` FFI headlessly on metal!
-//   - No args (`grainos vantage`): opens the live Vegan Oat / Royal Purple
-//     macOS window where clicking tabs, switching postures (`Station`,
-//     `DC-1 Tablet`, `Carry Mobile`), or zooming routes 100% through Vantage!
+//   - No args (`grain-ww vantage`): opens the live Vegan Oat / Royal Purple
+//     macOS window where clicking tabs, swiping, switching postures (`Station`,
+//     `Carry Tablet`, `Carry Mobile`), or zooming routes 100% through Vantage!
 
 import AppKit
 import Foundation
@@ -105,6 +105,18 @@ final class VantageWindowController: NSObject, NSApplicationDelegate {
             action: #selector(cyclePosture(_:))
         )
         bar.addArrangedSubview(postureBtn)
+        let zoomOutBtn = NSButton(
+            title: "Zoom -",
+            target: self,
+            action: #selector(zoomOut(_:))
+        )
+        bar.addArrangedSubview(zoomOutBtn)
+        let zoomInBtn = NSButton(
+            title: "Zoom +",
+            target: self,
+            action: #selector(zoomIn(_:))
+        )
+        bar.addArrangedSubview(zoomInBtn)
         root.addArrangedSubview(bar)
 
         textView = NSTextView(frame: NSRect(x: 0, y: 0, width: 880, height: 500))
@@ -137,6 +149,16 @@ final class VantageWindowController: NSObject, NSApplicationDelegate {
         let nextDp: UInt32 = (cur == 0) ? 720 : (cur == 1 ? 420 : 1200)
         let nextPx: UInt32 = (cur == 1) ? 480 : 1600
         vantage_app_init_ffi(nextDp, nextPx)
+        refreshSurface()
+    }
+
+    @objc private func zoomOut(_ sender: NSButton) {
+        vantage_app_pinch_ffi(850)
+        refreshSurface()
+    }
+
+    @objc private func zoomIn(_ sender: NSButton) {
+        vantage_app_pinch_ffi(1200)
         refreshSurface()
     }
 

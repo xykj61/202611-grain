@@ -1,12 +1,13 @@
 /* modules/comlink/vantage/vantage_carry_jni.c -- Thin JNI forwarder to
- * `modules/comlink/vantage/carry.rye` (`include/vantage_carry.h`).
+ * `modules/comlink/vantage/carry.rye` (`include/vantage_carry.h`) under our
+ * `com.grainww.vantage.carry` (`grain-ww.com`) namespace.
  * Zero application state or posture math lives here! */
 
 #include <jni.h>
 #include "include/vantage_carry.h"
 
 JNIEXPORT void JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryInitFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryInitFfi(
     JNIEnv *env, jobject thiz, jint shortest_dp, jint viewport_px
 ) {
     (void)env; (void)thiz;
@@ -14,7 +15,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryInitFfi(
 }
 
 JNIEXPORT jint JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryPostureFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryPostureFfi(
     JNIEnv *env, jobject thiz
 ) {
     (void)env; (void)thiz;
@@ -22,7 +23,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryPostureFfi(
 }
 
 JNIEXPORT jint JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryActiveTabFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryActiveTabFfi(
     JNIEnv *env, jobject thiz
 ) {
     (void)env; (void)thiz;
@@ -30,7 +31,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryActiveTabFfi(
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryTabLabelFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryTabLabelFfi(
     JNIEnv *env, jobject thiz, jint idx
 ) {
     (void)thiz;
@@ -39,7 +40,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryTabLabelFfi(
 }
 
 JNIEXPORT jint JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryFontSizePtFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryFontSizePtFfi(
     JNIEnv *env, jobject thiz
 ) {
     (void)env; (void)thiz;
@@ -47,7 +48,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryFontSizePtFfi(
 }
 
 JNIEXPORT jint JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryStylusCountFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryStylusCountFfi(
     JNIEnv *env, jobject thiz
 ) {
     (void)env; (void)thiz;
@@ -55,7 +56,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryStylusCountFfi(
 }
 
 JNIEXPORT jboolean JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryIngestTouchFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryIngestTouchFfi(
     JNIEnv *env, jobject thiz, jint kind, jint x_px, jint y_px, jint rad
 ) {
     (void)env; (void)thiz;
@@ -65,7 +66,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryIngestTouchFfi(
 }
 
 JNIEXPORT void JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryPinchZoomFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryPinchZoomFfi(
     JNIEnv *env, jobject thiz, jint permille
 ) {
     (void)env; (void)thiz;
@@ -73,7 +74,7 @@ Java_org_grainos_vantage_carry_VantageCarryBridge_carryPinchZoomFfi(
 }
 
 JNIEXPORT jint JNICALL
-Java_org_grainos_vantage_carry_VantageCarryBridge_carryRenderBarFfi(
+Java_com_grainww_vantage_carry_VantageCarryBridge_carryRenderBarFfi(
     JNIEnv *env, jobject thiz, jbyteArray out_buf, jint out_cap
 ) {
     (void)thiz;

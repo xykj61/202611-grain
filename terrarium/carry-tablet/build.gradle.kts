@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "org.grainos.vantage.carry"
-    compileSdk = 34
+    namespace = "com.grainww.vantage.carry"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "org.grainos.vantage.carry"
+        applicationId = "com.grainww.vantage.carry"
         minSdk = 29
         targetSdk = 34
         versionCode = 20261115

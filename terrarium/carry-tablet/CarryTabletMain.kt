@@ -8,7 +8,7 @@
 //   (native Rye in `modules/comlink/vantage/carry.rye`), and the shell simply
 //   blits whatever Vantage emits!
 
-package org.grainos.vantage.carry
+package com.grainww.vantage.carry
 
 object VantageCarryBridge {
     init {

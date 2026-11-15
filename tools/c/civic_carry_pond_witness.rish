@@ -3,7 +3,7 @@
 # Proves on real metal:
 #   1. Zero hardcoded personal orgs in `publish-seed.rish` & `publish-redirect.rish`,
 #      root `study/` consolidated cleanly into `libraries/`, & `conservation-equations.md`,
-#   2. `grainos` umbrella CLI (`languages/rishi/grainos_cli.rye`),
+#   2. `grain-ww` umbrella CLI (`languages/rishi/grain_ww_cli.rye`),
 #   3. Glow Mill Orbits 3-5 (`trace_trail`, `sheaf_resolve`, `thresh_parse`),
 #   4. Civic `earpiece_core`, 60Hz RLCD `touch_core` + `carry_frame_wire` +
 #      Daylight DC-1 Kotlin `FrameGridAndMobileDeck.kt`, & `grain pond`,
@@ -21,11 +21,11 @@ assert no_st.ok else "root study/ still exists after libraries/ consolidation"
 let has_ce = run ["test" "-f" "docs-geode/architecture/conservation-equations.md"]
 assert has_ce.ok else "conservation-equations.md missing"
 
-# 2. `grainos` umbrella CLI
-let b_go = run ["sh" rb "languages/rishi/grainos_cli.rye" "-femit-bin=tools/.build/grainos"]
-assert b_go.ok else "grainos_cli build failed"
-let r_go = run ["tools/.build/grainos" "selftest"]
-assert r_go.ok else "grainos_cli selftest failed"
+# 2. `grain-ww` umbrella CLI
+let b_go = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=tools/.build/grain-ww"]
+assert b_go.ok else "grain_ww_cli build failed"
+let r_go = run ["tools/.build/grain-ww" "selftest"]
+assert r_go.ok else "grain_ww_cli selftest failed"
 
 # 3. Glow Mill Orbits 3, 4, & 5
 let b_tt = run ["sh" rb "languages/glow/front/trace_trail.rye" "-femit-bin=tools/.build/trace_trail"]
@@ -72,4 +72,4 @@ assert b_td.ok else "tiruppavai_dawn build failed"
 let r_td = run ["tools/.build/tiruppavai_dawn" "selftest"]
 assert r_td.ok else "tiruppavai_dawn selftest failed"
 
-say "GREEN: civic_carry_pond_witness -- grainos, Glow Orbits 3-5, DC-1 Carry Tablet, Pond, libraries/ consolidation, & Tiruppavai Dawn proven."
+say "GREEN: civic_carry_pond_witness -- grain-ww, Glow Orbits 3-5, Carry Tablet, Pond, libraries/ consolidation, & Tiruppavai Dawn proven."
