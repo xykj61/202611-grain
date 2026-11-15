@@ -211,6 +211,7 @@ pub fn main(init: std.process.Init) !u8 {
     const trimmed = std.mem.trim(u8, r.stdout, &ws_trim);
     const cnt = std.fmt.parseInt(u64, trimmed, 10) catch 1;
     const seat = seat_for_movement_count(cnt);
+    const next_seat = seat_for_movement_count(cnt + 1);
     const orbits_done = cnt / orbit_movements;
     const q_place = ((cnt - 1) % quest_movements) + 1;
 
@@ -227,5 +228,11 @@ pub fn main(init: std.process.Init) !u8 {
         nl,
     });
     print("  Theme          : {s}{c}", .{ seat.craft_verb, nl });
+    print("  Recommend {d}/15: {s} -- {s}{c}", .{
+        next_seat.movement,
+        next_seat.sign,
+        next_seat.craft_verb,
+        nl,
+    });
     return 0;
 }

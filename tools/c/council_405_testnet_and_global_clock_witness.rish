@@ -23,4 +23,18 @@ assert b_oc.ok else "one_clock build failed"
 let r_oc = run ["tools/.build/one_clock" "selftest"]
 assert r_oc.ok else "one_clock global selftest failed"
 
-say "GREEN: council_405_testnet_and_global_clock_witness -- [15..9375] Movement wheel, 15-galaxy 405 testnet, & global One-Clock proven."
+# 4. Tablecloth `Gleaner` Glasswall anti-tracker intake + CLI `Recommend`!
+let b_gl = run ["sh" rb "modules/tablecloth/gleaner_intake.rye" "-femit-bin=tools/.build/gleaner_intake"]
+assert b_gl.ok else "gleaner_intake build failed"
+let r_gl = run ["tools/.build/gleaner_intake"]
+assert r_gl.ok else "gleaner_intake selftest failed"
+
+let b_cli = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_cli.ok else "grain_ww_cli build failed"
+let r_mov = run ["languages/rishi/bin/grain-ww" "movement"]
+assert r_mov.ok else "grain-ww movement failed"
+assert (r_mov.err contains "Recommend ") else "grain-ww movement missing Recommend line!"
+let r_gcli = run ["languages/rishi/bin/grain-ww" "gleaner"]
+assert r_gcli.ok else "grain-ww gleaner failed"
+
+say "GREEN: council_405_testnet_and_global_clock_witness -- [15..9375] Recommend wheel, 15-galaxy 405 testnet, global One-Clock, & Gleaner proven."

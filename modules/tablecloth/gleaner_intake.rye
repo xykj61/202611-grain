@@ -1,0 +1,168 @@
+//! modules/tablecloth/gleaner_intake.rye -- Glasswall Signal Fetcher & Table!
+//!
+//! Stamp: `20261115.150500` -- Fulfills the long-awaited `Gleaner` design in
+//! `modules/tablecloth/README.md` (`Movement 7/15 : Libra -- welcome & refusal
+//! paths answer each other`):
+//!   1. **Anti-Beacon Refusal (`has_tracking_beacon`):** Rejects URLs carrying
+//!      surveillance query tags (`utm_`, `fbclid=`, `gclid=`, `mc_cid=`),
+//!   2. **SHA3-256 Deduplication:** Refuses duplicate public bulletins so feed
+//!      storms cannot flood a steward's `Tablecloth` table,
+//!   3. **Relational Table Ingestion:** Commits verified clean signals into
+//!      `RelationalTable` sorted by deterministic SHA3 primary key!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const rtable = @import("relational_table.rye");
+
+pub const version = "20261115.150500";
+pub const max_signal_bytes: usize = 4096;
+const nl: u8 = 10;
+
+pub const GleanerError = error{
+    EmptyHeadlineRefused,
+    SignalTooLargeRefused,
+    TrackerBeaconRefused,
+    InsecureSchemeRefused,
+    DuplicateSignalRefused,
+};
+
+const banned_beacons = [_][]const u8{
+    "utm_source=",
+    "utm_medium=",
+    "utm_campaign=",
+    "fbclid=",
+    "gclid=",
+    "mc_cid=",
+};
+
+pub fn has_tracking_beacon(url: []const u8) bool {
+    for (banned_beacons) |tag| {
+        if (std.mem.indexOf(u8, url, tag) != null) return true;
+    }
+    return false;
+}
+
+pub const GleanerDesk = struct {
+    signals: rtable.RelationalTable,
+    accepted_count: u32,
+    refused_count: u32,
+
+    pub fn init() GleanerDesk {
+        return .{
+            .signals = rtable.RelationalTable.init(),
+            .accepted_count = 0,
+            .refused_count = 0,
+        };
+    }
+
+    pub fn ingest_public_signal(
+        self: *GleanerDesk,
+        source_code: u32,
+        url: []const u8,
+        headline: []const u8,
+    ) !u64 {
+        errdefer self.refused_count += 1;
+
+        if (headline.len == 0) return error.EmptyHeadlineRefused;
+        if (headline.len > max_signal_bytes or url.len > max_signal_bytes) {
+            return error.SignalTooLargeRefused;
+        }
+        if (!std.mem.startsWith(u8, url, "https://") and
+            !std.mem.startsWith(u8, url, "grain://"))
+        {
+            return error.InsecureSchemeRefused;
+        }
+        if (has_tracking_beacon(url)) return error.TrackerBeaconRefused;
+
+        var sha3: [32]u8 = undefined;
+        var h = Sha3_256.init(.{});
+        h.update(url);
+        h.update("|");
+        h.update(headline);
+        h.final(&sha3);
+
+        var pk_id = std.mem.readInt(u64, sha3[0..8], .little);
+        if (pk_id == 0) pk_id = 1;
+
+        self.signals.insert_row(
+            pk_id,
+            source_code,
+            @intCast(headline.len),
+            headline,
+        ) catch |err| switch (err) {
+            error.DuplicatePrimaryKey => return error.DuplicateSignalRefused,
+            else => return err,
+        };
+
+        self.accepted_count += 1;
+        // invariant: accepted_count matches stored Tablecloth row count!
+        assert(self.accepted_count == self.signals.count);
+        return pk_id;
+    }
+};
+
+fn run_selftest() !u8 {
+    var desk = GleanerDesk.init();
+
+    // Welcome 1 & 2: clean HTTPS and sovereign grain:// bulletins!
+    const pk1 = try desk.ingest_public_signal(
+        1,
+        "https://weather.gov/est/frost-advisory",
+        "Frost advisory for Hudson Valley biocyclic beds",
+    );
+    _ = try desk.ingest_public_signal(
+        2,
+        "grain://siya/bulletins/harvest",
+        "Oat mill batch 14 sealed in Blaze",
+    );
+    if (desk.signals.get_by_pk(pk1) == null) return error.MissingStoredSignal;
+
+    // Refusal 1: surveillance tracker (`?utm_source=...`) refused!
+    if (desk.ingest_public_signal(
+        1,
+        "https://news.example/story?utm_source=adnet",
+        "Tracked link",
+    )) |_| {
+        return error.TrackerAccepted;
+    } else |err| {
+        if (err != error.TrackerBeaconRefused) return err;
+    }
+
+    // Refusal 2: cleartext `http://` refused!
+    if (desk.ingest_public_signal(
+        1,
+        "http://insecure.example/feed",
+        "Cleartext feed",
+    )) |_| {
+        return error.HttpAccepted;
+    } else |err| {
+        if (err != error.InsecureSchemeRefused) return err;
+    }
+
+    // Refusal 3: exact duplicate signal refused!
+    if (desk.ingest_public_signal(
+        2,
+        "grain://siya/bulletins/harvest",
+        "Oat mill batch 14 sealed in Blaze",
+    )) |_| {
+        return error.DuplicateAccepted;
+    } else |err| {
+        if (err != error.DuplicateSignalRefused) return err;
+    }
+
+    if (desk.accepted_count != 2 or desk.refused_count != 3) {
+        return error.LibraTallyMismatch;
+    }
+
+    print(
+        "GREEN: gleaner_intake -- 2 welcomed, 3 tracker/dup refused.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

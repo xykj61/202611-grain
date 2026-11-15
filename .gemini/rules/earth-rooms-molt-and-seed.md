@@ -30,10 +30,14 @@
   Movements`**, expanding `x5` by the 5 elements: `15 -> 75 -> 375 -> 1,875 ->
   9,375`), backed by `Pulp`'s adaptable **prepend-to-front** stack
   (`modules/flare/pulp/pulp_movement_stack.rye`).
-- **`d15 -> 3 -> 9 -> 405` Council & `324/405` (`80.000%`) Supermajority:**
+- **`d15 -> 3 -> 9 -> 405` Council & Dual `243 / 324` Consensus:**
   15 Galaxies (`Aries..Siya`) x 3 Modal Pillars (`45` Stars) x 9 Navamsa Seats
-  = `405` Council Seats (`modules/comlink/council_405.rye`), enacting civic
-  proposals at exact **`324 / 405` (`80.000%`, 80/20 Pareto consensus)**.
+  = `405` Council Seats (`modules/comlink/council_405.rye`), enacting routine
+  items at **`243/405` (`60.0%`)** and constitutional laws at **`324/405`
+  (`80.0%`)**.
+- **Print `Recommend` After Every Movement:** Every Movement closure (`grain-ww
+  movement` and agent summary) prints **`Recommend (Next Movement X/15 --
+  <Sign>):`** naming the concrete next high-leverage step.
 
 ## 4. Single Incremental Public Seed Release
 - Push signed work commits to `xy/gemini-4-carbon`, and run
