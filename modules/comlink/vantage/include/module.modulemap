@@ -27,3 +27,8 @@ module VantageSurf {
     header "vantage_surf.h"
     export *
 }
+
+module VantageCarry {
+    header "vantage_carry.h"
+    export *
+}

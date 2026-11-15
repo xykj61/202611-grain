@@ -18,8 +18,16 @@ max_cols 80 languages/rishi/grainos_cli.rye
 max_cols 80 languages/glow/front/rune_book.rye
 max_cols 80 languages/glow/front/cord_interp.rye
 max_cols 80 languages/glow/front/trace_trail.rye
+max_cols 80 languages/glow/front/glow_fmt.rye
+max_cols 80 languages/glow/front/intrinsic_bridge.rye
 max_cols 80 languages/glow/sheaf/sheaf_resolve.rye
 max_cols 80 languages/glow/thresh/thresh_parse.rye
+max_cols 80 languages/glow/trellis/trellis_ast.rye
+max_cols 80 languages/glow/assay/assay_types.rye
+max_cols 80 languages/glow/assay/assay_bounds.rye
+max_cols 80 languages/glow/pith/pith_ir.rye
+max_cols 80 languages/glow/mill/mill_emit.rye
+max_cols 80 modules/comlink/vantage/carry.rye
 max_cols 80 modules/comlink/parcel/parcel_core.rye
 max_cols 80 modules/resonance/earpiece/earpiece_core.rye
 max_cols 80 modules/brushstroke/touch/touch_core.rye

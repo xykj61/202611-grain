@@ -40,7 +40,7 @@ All boards now live under `date/YYYYMM/NN/` (folded `20261107`).
 | [`20261115-053000_native-grain-bloom-comlink-pkg-and-harness/`](date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/README.md) | **Fusion Build & Seed Engine (`~130 ms` `publish-seed`)**, Native Grain Conversion, Bloom `art-of-programming/00..12`, Comlink Parcel + `comlink-gemini`, & `modules/harness/` | **Complete -- 24/24 Orbits GREEN (`56.544`)** |
 | [`20261115-032000_geode-yonder-blazepod-renaissance/`](date/202611/00/20261115-032000_geode-yonder-blazepod-renaissance/README.md) | Grain Geode, Yonder, Languages/Modules Ring, and Blazepod Renaissance | **Phases 1-3 Complete** (`56.519`) |
 | [`20261114-234523_essential-grain-distillation/`](date/202611/00/20261114-234523_essential-grain-distillation/README.md) | Essential Grain Distillation -- 96 Rooms & 27,862 Files -> ~30 Rooms | **Merged & Closed at Orbit 5** (`+0.005` Myofascia preserved; absorbed into `20261115-032000`) |
-| [`20261114-224402_glow-mill-and-ring-rearchitecture/`](date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md) | Glow Mill & Citizen Ring -- Sheaf, Pith, Mill, Brix-Modular Self-Hosting, and 5-Ring Module Rearchitecture | **Active -- TOP** (Orbits 1-5 GREEN; ready for Orbit 6 `Trellis` at `Myofascia: 56.565`) |
+| [`20261114-224402_glow-mill-and-ring-rearchitecture/`](date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md) | Glow Mill & Citizen Ring -- Sheaf, Pith, Mill, Brix-Modular Self-Hosting, and 5-Ring Module Rearchitecture | **Active -- TOP** (Orbits 1-15 Core 6-Pass Compiler Spine GREEN at `56.575`; Citizen Ring Orbits 16-25 next) |
 
 ## Folding convention
 

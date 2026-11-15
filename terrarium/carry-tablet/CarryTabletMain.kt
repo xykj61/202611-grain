@@ -1,47 +1,38 @@
-// terrarium/carry-tablet/CarryTabletMain.kt -- Vantage Carry Tablet for
-// Daylight Computer DC-1 (60Hz monochrome LivePaper RLCD, zero PWM, 7-bit ASCII).
+// terrarium/carry-tablet/CarryTabletMain.kt -- Thin glass JNI shell over
+// `modules/comlink/vantage/carry.rye` (`include/vantage_carry.h`).
 //
-// Bridges Android/GrapheneOS MotionEvents (with palm-radius filtering matching
-// `modules/brushstroke/touch/touch_core.rye`) to Terrarium's WireProtocol
-// FrameGrid over loopback or USB-C Comlink.
+// Architectural Law ("Carry Implemented in Terms of Vantage"):
+//   This Kotlin shell for Daylight Computer DC-1 (60Hz monochrome LivePaper
+//   RLCD) contains ZERO application logic, posture thresholds, tab arrays, or
+//   palm/gesture math. Every input event goes straight into `VantageCarryBridge`
+//   (native Rye in `modules/comlink/vantage/carry.rye`), and the shell simply
+//   blits whatever Vantage emits!
 
 package org.grainos.vantage.carry
 
-data class TouchPacket(
-    val kind: Int,       // 0 = down, 1 = move, 2 = up
-    val pointerId: Int,
-    val xPx: Int,
-    val yPx: Int,
-    val radiusPx: Int,
-    val epochMs: Long,
-) {
+object VantageCarryBridge {
     init {
-        require(pointerId in 0..9) { "max_contacts = 10 exceeded" }
-        require(radiusPx >= 0) { "negative contact radius" }
+        System.loadLibrary("vantage_carry")
     }
 
-    fun isPalmRejected(maxFingerRadiusPx: Int = 28): Boolean {
-        return radiusPx > maxFingerRadiusPx
-    }
+    external fun carryInitFfi(shortestWidthDp: Int, viewportWidthPx: Int)
+    external fun carryPostureFfi(): Int
+    external fun carryActiveTabFfi(): Int
+    external fun carryTabLabelFfi(index: Int): String
+    external fun carryFontSizePtFfi(): Int
+    external fun carryStylusCountFfi(): Int
+    external fun carryIngestTouchFfi(
+        kind: Int,
+        xPx: Int,
+        yPx: Int,
+        radiusOrPressure: Int,
+    ): Boolean
+    external fun carryPinchZoomFfi(permille: Int)
+    external fun carryRenderBarFfi(outBuf: ByteArray, outCap: Int): Int
 
-    // Encodes a fixed 24-byte little-endian Comlink/Skate wire frame.
-    fun toWireBytes(): ByteArray {
-        val b = ByteArray(24)
-        writeU32Le(b, 0, kind)
-        writeU32Le(b, 4, pointerId)
-        writeU32Le(b, 8, xPx)
-        writeU32Le(b, 12, yPx)
-        writeU32Le(b, 16, radiusPx)
-        writeU32Le(b, 20, (epochMs and 0xFFFF_FFFFL).toInt())
-        return b
-    }
-
-    companion object {
-        private fun writeU32Le(dst: ByteArray, off: Int, v: Int) {
-            dst[off] = (v and 0xFF).toByte()
-            dst[off + 1] = ((v ushr 8) and 0xFF).toByte()
-            dst[off + 2] = ((v ushr 16) and 0xFF).toByte()
-            dst[off + 3] = ((v ushr 24) and 0xFF).toByte()
-        }
+    fun currentStatusBar(): String {
+        val buf = ByteArray(128)
+        val n = carryRenderBarFfi(buf, buf.size)
+        return String(buf, 0, n, Charsets.US_ASCII)
     }
 }

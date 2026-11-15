@@ -16,8 +16,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grainos_version = "20261115.084500";
-pub const myofascia_reading = "56.565";
+pub const grainos_version = "20261115.091500";
+pub const myofascia_reading = "56.575";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {

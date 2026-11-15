@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.085500
-myofascia 56.565
+version 20261115.091500
+myofascia 56.575
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -63,8 +63,15 @@ file languages/rishi/grainos_cli.rye
 file languages/glow/front/rune_book.rye
 file languages/glow/front/cord_interp.rye
 file languages/glow/front/trace_trail.rye
+file languages/glow/front/glow_fmt.rye
+file languages/glow/front/intrinsic_bridge.rye
 file languages/glow/sheaf/sheaf_resolve.rye
 file languages/glow/thresh/thresh_parse.rye
+file languages/glow/trellis/trellis_ast.rye
+file languages/glow/assay/assay_types.rye
+file languages/glow/assay/assay_bounds.rye
+file languages/glow/pith/pith_ir.rye
+file languages/glow/mill/mill_emit.rye
 file languages/glow/tokens.rye
 file languages/brix/infuse.rye
 file languages/kyri/scribe/reader.rye
@@ -103,6 +110,7 @@ file modules/harness/harness_core.rye
 # Identity, topology, Comlink Parcel, Pond CLI, Touch, and Earpiece
 file modules/kumara/kumara.rye
 file modules/comlink/topology.rye
+file modules/comlink/vantage/carry.rye
 file modules/comlink/parcel/parcel_core.rye
 file modules/comlink/parcel/gemini/gemini_airlock.rye
 file modules/pond/pond_cli.rye
