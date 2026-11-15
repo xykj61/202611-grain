@@ -40,6 +40,8 @@ max_cols 80 libraries/shastra/rasamrita/rasamrita_waves.rye
 max_cols 80 libraries/shastra/sikshastakam/sikshastakam_eight.rye
 max_cols 80 libraries/shastra/champu/gopala_champu_weave.rye
 max_cols 80 modules/comlink/vantage/vantage_app.rye
+max_cols 80 modules/comlink/vantage/surf_social_grid.rye
+max_cols 80 modules/pond/testnet/galaxy_testnet.rye
 max_cols 80 modules/brushstroke/skate/realidream_compose.rye
 max_cols 80 blazepod/rv64_pill.rye
 max_cols 80 modules/pond/pond_cli.rye
@@ -66,3 +68,5 @@ must_contain README.md Myofascia
 must_contain README.md cavalhatriz
 must_contain context/REMOTE_ROSTER.md grain-ww/202611-grain
 must_contain modules/fusion/fusion.brix cold_bridge
+ascii_7bit docs-geode/lessons/guides/README.md
+ascii_7bit docs-geode/tutorials/vantage-and-carry-interfaces.md

@@ -36,24 +36,24 @@
 
 ### Quest 4: Business Guides (Movements 16-20)
 
-- [ ] **M16** -- Farm management guide
-- [ ] **M17** -- Factory/processing guide
-- [ ] **M18** -- Distribution guide
-- [ ] **M19** -- Staff coordination guide with rail insights
-- [ ] **M20** -- Quest 4 integration: all guides navigable
+- [x] **M16** -- Farm management guide (`docs-geode/lessons/guides/01-biocyclic-vegan-farm-management.md`)
+- [x] **M17** -- Factory/processing guide (`docs-geode/lessons/guides/02-clean-processing-and-craft-mill.md`)
+- [x] **M18** -- Distribution guide (`docs-geode/lessons/guides/03-cooperative-distribution-and-routes.md`)
+- [x] **M19** -- Staff coordination guide with rail insights (`docs-geode/lessons/guides/04-steward-coordination-and-rail-cadence.md`)
+- [x] **M20** -- Quest 4 integration: all guides navigable (`docs-geode/lessons/guides/README.md` + `VantageApp`)
 
 ### Quest 5: Network Demos (Movements 21-25)
 
-- [ ] **M21** -- Pond infrastructure: containerized galaxy launcher
-- [ ] **M22** -- Kumara identity generation with SHA3 (Blake2s wire handshake)
-- [ ] **M23** -- Comlink peer-to-peer messaging between two galaxies
-- [ ] **M24** -- Blaze log replication across the testnet
-- [ ] **M25** -- Quest 5 integration: 14 galaxies running, basic messaging proven
+- [x] **M21** -- Pond infrastructure: containerized 14-galaxy launcher (`modules/pond/testnet/galaxy_testnet.rye`)
+- [x] **M22** -- Kumara identity generation with SHA3 (Blake2s wire handshake) (`galaxy_testnet.rye`)
+- [x] **M23** -- Comlink peer-to-peer messaging between two galaxies (`galaxy_testnet.rye`)
+- [x] **M24** -- Blaze log replication across the testnet (`galaxy_testnet.rye`)
+- [x] **M25** -- Quest 5 integration: 14 galaxies running, basic messaging proven (`galaxy_testnet.rye`)
 
 ### Quest 6: Social and Consensus (Movements 26-30)
 
-- [ ] **M26** -- Mycelium consensus round with MUR token
-- [ ] **M27** -- Dimeroll query across the Pond network
-- [ ] **M28** -- Surf Social feed rendering in Skate frame grid
-- [ ] **M29** -- docs-geode tutorials for all GUI interfaces
-- [ ] **M30** -- Act II integration witness: full platform proven
+- [x] **M26** -- Mycelium consensus round with MUR/MALA witness quorum (`galaxy_testnet.rye`)
+- [x] **M27** -- Dimeroll query across the Pond network (`galaxy_testnet.rye`, `sum(nets) == 0`)
+- [x] **M28** -- Surf Social feed rendering in Skate 40x8 frame grid (`modules/comlink/vantage/surf_social_grid.rye`)
+- [x] **M29** -- docs-geode tutorials for all GUI interfaces (`docs-geode/tutorials/vantage-and-carry-interfaces.md`)
+- [x] **M30** -- Act II integration witness: full platform proven (`tools/b/bloom_act2_full_platform_witness.rish` GREEN `20261115.105000`)

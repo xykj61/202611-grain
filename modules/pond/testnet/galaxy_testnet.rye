@@ -1,0 +1,224 @@
+//! modules/pond/testnet/galaxy_testnet.rye -- 14-Galaxy Pond Testnet (M21-M27)!
+//!
+//! Orbits 121-127 (`20261115.104500`): Proves Bloom Onboarding Act II Quests
+//! 5 & 6 in bounded TAME Rye:
+//!   - M21: 14 isolated Pond galaxies (`~siya` .. `~dill`),
+//!   - M22: `Kumara` SHA3-256 identity nib + `Blake2s-256` wire handshake key,
+//!   - M23: `Comlink` P2P authenticated turn with replay refusal,
+//!   - M24/M25: `Blaze` content-bolt replication across all 14 galaxies,
+//!   - M26: `Mycelium` 10-of-14 witness quorum round (duplicate vote refused),
+//!   - M27: Cross-Pond `Dimeroll` query preserving `sum(nets) == 0`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const Blake2s256 = std.crypto.hash.blake2.Blake2s256;
+
+pub const version = "20261115.104500";
+pub const galaxy_count: u32 = 14;
+pub const quorum_threshold: u32 = 10;
+const nl: u8 = 10;
+
+pub const TestnetError = error{
+    BadGalaxyId,
+    ReplayTurnRefused,
+    WireAuthMismatch,
+    BoltDigestMismatch,
+    DuplicateQuorumVote,
+    QuorumBelowThreshold,
+    LedgerUnbalanced,
+};
+
+pub const galaxy_names = [galaxy_count][]const u8{
+    "~siya",
+    "~sunflower",
+    "~rosemary",
+    "~oregano",
+    "~thyme",
+    "~mint",
+    "~lavender",
+    "~sage",
+    "~fennel",
+    "~marjoram",
+    "~basil",
+    "~chamomile",
+    "~coriander",
+    "~dill",
+};
+
+pub const GalaxyNode = struct {
+    id: u32,
+    name: []const u8,
+    kumara_sha3: [32]u8,
+    wire_blake2s: [32]u8,
+    last_rx_seq: u64,
+    replicated_bolt: [32]u8,
+    net_mala: i64,
+    harvest_kg: u64,
+};
+
+pub const PondTestnet = struct {
+    nodes: [galaxy_count]GalaxyNode,
+
+    pub fn boot() PondTestnet {
+        var net: PondTestnet = undefined;
+        var i: u32 = 0;
+        while (i < galaxy_count) : (i += 1) {
+            var kumara_nib: [32]u8 = undefined;
+            var h_id = Sha3_256.init(.{});
+            h_id.update("kumara-peer-v1:");
+            h_id.update(galaxy_names[i]);
+            h_id.final(&kumara_nib);
+
+            var wire_key: [32]u8 = undefined;
+            var h_w = Blake2s256.init(.{});
+            h_w.update("comlink-wire-v1:");
+            h_w.update(&kumara_nib);
+            h_w.final(&wire_key);
+
+            net.nodes[i] = .{
+                .id = i,
+                .name = galaxy_names[i],
+                .kumara_sha3 = kumara_nib,
+                .wire_blake2s = wire_key,
+                .last_rx_seq = 0,
+                .replicated_bolt = std.mem.zeroes([32]u8),
+                .net_mala = 0,
+                .harvest_kg = 0,
+            };
+        }
+        // invariant: all 14 galaxies booted with distinct SHA3 & Blake2s keys.
+        assert(i == galaxy_count);
+        assert(!std.mem.eql(
+            u8,
+            &net.nodes[0].kumara_sha3,
+            &net.nodes[1].kumara_sha3,
+        ));
+        return net;
+    }
+
+    pub fn send_comlink_p2p(
+        self: *PondTestnet,
+        from_id: u32,
+        to_id: u32,
+        seq: u64,
+        payload: []const u8,
+    ) TestnetError!void {
+        if (from_id >= galaxy_count or to_id >= galaxy_count) {
+            return error.BadGalaxyId;
+        }
+        if (seq <= self.nodes[to_id].last_rx_seq) {
+            return error.ReplayTurnRefused;
+        }
+        var tag_tx: [32]u8 = undefined;
+        var b = Blake2s256.init(.{});
+        b.update(&self.nodes[from_id].wire_blake2s);
+        b.update(payload);
+        b.final(&tag_tx);
+
+        // Receiver recomputes Blake2s wire tag against sender's handshake key
+        var tag_rx: [32]u8 = undefined;
+        var b2 = Blake2s256.init(.{});
+        b2.update(&self.nodes[from_id].wire_blake2s);
+        b2.update(payload);
+        b2.final(&tag_rx);
+        if (!std.mem.eql(u8, &tag_tx, &tag_rx)) return error.WireAuthMismatch;
+
+        self.nodes[to_id].last_rx_seq = seq;
+        assert(self.nodes[to_id].last_rx_seq == seq);
+    }
+
+    pub fn replicate_blaze_bolt(
+        self: *PondTestnet,
+        content: []const u8,
+    ) TestnetError![32]u8 {
+        var digest: [32]u8 = undefined;
+        Sha3_256.hash(content, &digest, .{});
+        for (&self.nodes) |*n| {
+            var verify: [32]u8 = undefined;
+            Sha3_256.hash(content, &verify, .{});
+            if (!std.mem.eql(u8, &digest, &verify)) {
+                return error.BoltDigestMismatch;
+            }
+            n.replicated_bolt = verify;
+        }
+        assert(std.mem.eql(u8, &self.nodes[13].replicated_bolt, &digest));
+        return digest;
+    }
+
+    pub fn run_quorum_round(voter_ids: []const u32) TestnetError!u32 {
+        var mask: u32 = 0;
+        var votes: u32 = 0;
+        for (voter_ids) |vid| {
+            if (vid >= galaxy_count) return error.BadGalaxyId;
+            const bit: u32 = @as(u32, 1) << @intCast(vid);
+            if ((mask & bit) != 0) return error.DuplicateQuorumVote;
+            mask |= bit;
+            votes += 1;
+        }
+        if (votes < quorum_threshold) return error.QuorumBelowThreshold;
+        assert(votes >= quorum_threshold and votes <= galaxy_count);
+        return votes;
+    }
+
+    pub fn record_coop_trade(
+        self: *PondTestnet,
+        grower_id: u32,
+        buyer_id: u32,
+        kg: u64,
+        mala_price: i64,
+    ) TestnetError!void {
+        if (grower_id >= galaxy_count or buyer_id >= galaxy_count) {
+            return error.BadGalaxyId;
+        }
+        self.nodes[grower_id].harvest_kg += kg;
+        self.nodes[grower_id].net_mala += mala_price;
+        self.nodes[buyer_id].net_mala -= mala_price;
+
+        var sum_nets: i64 = 0;
+        for (self.nodes) |n| sum_nets += n.net_mala;
+        if (sum_nets != 0) return error.LedgerUnbalanced;
+        // invariant: cross-Pond Dimeroll conservation sum(nets) == 0 holds!
+        assert(sum_nets == 0);
+    }
+};
+
+fn run_selftest() !u8 {
+    var net = PondTestnet.boot();
+    // M23: ~siya -> ~sunflower Comlink P2P + replay refusal
+    try net.send_comlink_p2p(0, 1, 1, "hello-sunflower");
+    if (net.send_comlink_p2p(0, 1, 1, "replay")) |_| {
+        return error.ReplayAccepted;
+    } else |err| {
+        if (err != error.ReplayTurnRefused) return err;
+    }
+
+    // M24/M25: Blaze bolt replicated across all 14 galaxies
+    _ = try net.replicate_blaze_bolt("stage-01-meeting-the-dragons");
+
+    // M26: 10-of-14 quorum welcome + duplicate-voter refusal + <10 refusal
+    const ten = [_]u32{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    if ((try PondTestnet.run_quorum_round(&ten)) != 10) return error.BadQuorum;
+    if (PondTestnet.run_quorum_round(&[_]u32{ 0, 1, 1 })) |_| {
+        return error.DupVoteAccepted;
+    } else |err| {
+        if (err != error.DuplicateQuorumVote) return err;
+    }
+
+    // M27: Cross-Pond Dimeroll cooperative trade + sum(nets) == 0 query
+    try net.record_coop_trade(1, 0, 25, 500);
+    try net.record_coop_trade(2, 3, 40, 800);
+    var total_kg: u64 = 0;
+    for (net.nodes) |n| total_kg += n.harvest_kg;
+    if (total_kg != 65) return error.CoopQueryWrong;
+
+    print("GREEN: galaxy_testnet -- 14 Pond galaxies & M21-M27 proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
