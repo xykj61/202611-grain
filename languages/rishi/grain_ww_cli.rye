@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.135500";
-pub const myofascia_reading = "56.775";
+pub const grain_ww_version = "20261115.141500";
+pub const myofascia_reading = "56.790";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -133,6 +133,24 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/puddle_udp_live",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "tablecloth")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/sql_workspace",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "pulp-recall")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pulp_object_recall",
             null,
             args[2..],
         );

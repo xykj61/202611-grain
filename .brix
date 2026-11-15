@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.135500
-myofascia 56.775
+version 20261115.141500
+myofascia 56.790
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -73,9 +73,15 @@ file modules/sundial/one_clock.rye
 file context/templates/CLOCK_CONFIG.template.kyri
 file context/templates/PUBKEYS.template.md
 file modules/flare/pulp/pulp_movement_stack.rye
+file modules/flare/pulp/pulp_object_recall.rye
+file modules/flare/pulp/glow/fold-pulp-recall.glow
 file modules/tablecloth/relational_table.rye
+file modules/tablecloth/sql_workspace.rye
+file modules/tablecloth/glow/gate-tablecloth-fk.glow
 file modules/comlink/council_405.rye
+file modules/comlink/council_mycelium_weave.rye
 file modules/comlink/glow/gate-council-405.glow
+file modules/comlink/vantage/vantage_council_puddle.rye
 file modules/pond/puddle/puddle_remote.rye
 file modules/pond/puddle/puddle_udp_live.rye
 file modules/fusion/manifest_cover.rye

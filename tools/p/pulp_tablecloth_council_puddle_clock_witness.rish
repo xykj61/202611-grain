@@ -49,7 +49,29 @@ assert b_oc.ok else "one_clock.rye build failed"
 let r_oc = run ["tools/.build/one_clock" "selftest"]
 assert r_oc.ok else "one_clock selftest failed"
 
-# 6. Rebuild `grain-ww` CLI & prove `grain-ww stamp`, `pulp`, & `puddle`!
+# 6. Turbopuffer-style Pulp object/vector recall + Tablecloth SQL+FK snapshot!
+let b_por = run ["sh" rb "modules/flare/pulp/pulp_object_recall.rye" "-femit-bin=tools/.build/pulp_object_recall"]
+assert b_por.ok else "pulp_object_recall.rye build failed"
+let r_por = run ["tools/.build/pulp_object_recall"]
+assert r_por.ok else "pulp_object_recall selftest failed"
+
+let b_sql = run ["sh" rb "modules/tablecloth/sql_workspace.rye" "-femit-bin=tools/.build/sql_workspace"]
+assert b_sql.ok else "sql_workspace.rye build failed"
+let r_sql = run ["tools/.build/sql_workspace"]
+assert r_sql.ok else "sql_workspace selftest failed"
+
+# 7. CRDT Mycelium + 405 Council weave & Vantage Glasswall Command Room!
+let b_cmw = run ["sh" rb "modules/comlink/council_mycelium_weave.rye" "-femit-bin=tools/.build/council_mycelium_weave"]
+assert b_cmw.ok else "council_mycelium_weave.rye build failed"
+let r_cmw = run ["tools/.build/council_mycelium_weave"]
+assert r_cmw.ok else "council_mycelium_weave selftest failed"
+
+let b_vcp = run ["sh" rb "modules/comlink/vantage/vantage_council_puddle.rye" "-femit-bin=tools/.build/vantage_council_puddle"]
+assert b_vcp.ok else "vantage_council_puddle.rye build failed"
+let r_vcp = run ["tools/.build/vantage_council_puddle"]
+assert r_vcp.ok else "vantage_council_puddle selftest failed"
+
+# 8. Rebuild `grain-ww` CLI & prove `stamp`, `pulp`, `puddle`, `tablecloth`, & `pulp-recall`!
 let b_cli = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
 assert b_cli.ok else "grain_ww_cli.rye build failed"
 
@@ -63,6 +85,12 @@ assert (r_pl.err contains "Verify DC-1 RLCD sideload") else "grain-ww pulp prepe
 
 let r_pd = run ["languages/rishi/bin/grain-ww" "puddle"]
 assert r_pd.ok else "grain-ww puddle failed"
+
+let r_tc = run ["languages/rishi/bin/grain-ww" "tablecloth"]
+assert r_tc.ok else "grain-ww tablecloth failed"
+
+let r_pr2 = run ["languages/rishi/bin/grain-ww" "pulp-recall"]
+assert r_pr2.ok else "grain-ww pulp-recall failed"
 
 let tidy = run ["sh" "-c" "test -d active-pulp && test ! -e active-tablecloth && test -f context/templates/PUBKEYS.template.md && test ! -e PUBKEYS.template.md"]
 assert tidy.ok else "active-pulp or context/templates/PUBKEYS.template.md breach incomplete!"

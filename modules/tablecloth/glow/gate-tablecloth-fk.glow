@@ -1,0 +1,12 @@
+::  modules/tablecloth/glow/gate-tablecloth-fk.glow -- Foreign-key gate!
+/!  16384
+|%
+++  gate-tablecloth-fk
+  |=  [parent-exists=@ud amount=@ud]                    ::  1=found, 0=absent
+  ^-  @ud                                               ::  committed amount
+  ~|  'tablecloth-foreign-key-missing'                  ::  referential law!
+  ?>  (eql parent-exists 1)                             ::  parent PK exists
+  ~|  'tablecloth-zero-amount-refused'                  ::  non-zero entry
+  ?>  (gte amount 1)
+  amount
+--

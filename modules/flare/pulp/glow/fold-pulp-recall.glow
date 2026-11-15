@@ -1,0 +1,10 @@
+::  modules/flare/pulp/glow/fold-pulp-recall.glow -- Hybrid score fold!
+/!  16384
+|%
+++  fold-pulp-hybrid-score
+  |=  [vec-sim=@ud lex-hits=@ud]                        ::  quantized + BM25
+  ^-  @ud                                               ::  combined rank
+  ~|  'pulp-lex-hits-past-cap'                          ::  32-bit bloom max
+  ?>  (lte lex-hits 32)                                 ::  bounded 0..32
+  (add (mul vec-sim 4) (mul lex-hits 16))               ::  4*vec + 16*lex
+--

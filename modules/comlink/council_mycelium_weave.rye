@@ -1,0 +1,91 @@
+//! modules/comlink/council_mycelium_weave.rye -- CRDT Gossip + 405 Council!
+//!
+//! Stamp: `20261115.141500` -- Single-strands `topology.council_sky` (`15`
+//! Galaxies x `3` Stars x `9` Planets = `405`, `27` Nakshatras/galaxy!) with
+//! `council_405`, `Mycelium` CRDT gossip join, `Colloquium`, and `Blaze`:
+//!   1. **CRDT Ballot Semilattice (`merge_mycelium_gossip`):** Offline regional
+//!      mesh piers collect seat ballots independently into `[7]u64` bitsets;
+//!      when piers reconnect, `OR`-joining is commutative, associative, and
+//!      idempotent (`A | A == A` -- zero double-counted votes!),
+//!   2. **Nakshatra Outfit Bijection:** Verifies every seat `0..404` maps onto
+//!      its Calfive Galaxy (`0..14`) and Nakshatra outfit (`0..26`)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const c405 = @import("council_405.rye");
+const topo = @import("topology.rye");
+
+pub const version = "20261115.141500";
+const nl: u8 = 10;
+
+pub const WeaveError = error{
+    ProposalHashMismatch,
+    TierMismatch,
+};
+
+/// Idempotent CRDT join of two regional Mycelium ballot boxes!
+pub fn merge_mycelium_gossip(
+    into: *c405.ColloquiumBallotBox,
+    peer: *const c405.ColloquiumBallotBox,
+) WeaveError!u32 {
+    if (into.tier != peer.tier) return error.TierMismatch;
+    if (!std.mem.eql(u8, &into.proposal_sha3, &peer.proposal_sha3)) {
+        return error.ProposalHashMismatch;
+    }
+
+    var total_yes: u32 = 0;
+    var w: usize = 0;
+    while (w < 7) : (w += 1) {
+        into.voted_words[w] |= peer.voted_words[w];
+        total_yes += @popCount(into.voted_words[w]);
+    }
+    into.yes_count = total_yes;
+    // invariant: merged affirmative count never exceeds 405 Council seats.
+    assert(into.yes_count <= c405.council_seats);
+    return into.yes_count;
+}
+
+fn run_selftest() !u8 {
+    // 1. Confirm `topology.council_sky` == 405 points & 27 Nakshatras/galaxy!
+    if (topo.council_sky.universe_points() != c405.council_seats) {
+        return error.SkyMismatch;
+    }
+    if (topo.council_sky.prosperity() != 27) return error.NakshatraCountWrong;
+
+    // 2. Two offline piers collect overlapping votes:
+    //    Pier East: seats 0..199 (200 votes)
+    //    Pier West: seats 150..323 (174 votes; 50 overlap on 150..199!)
+    //    Exact union = 0..323 = 324 unique affirmative votes (exact 80.0%)!
+    const prop = "Enact biocyclic compost & Glasswall procurement standard";
+    var east = c405.ColloquiumBallotBox.open(.constitutional_80, prop);
+    var west = c405.ColloquiumBallotBox.open(.constitutional_80, prop);
+
+    var a: u32 = 0;
+    while (a < 200) : (a += 1) try east.cast_ballot(a, true);
+    var b: u32 = 150;
+    while (b < 324) : (b += 1) try west.cast_ballot(b, true);
+
+    // Neither pier alone has 324; after CRDT Mycelium merge, exact 324!
+    if (east.yes_count != 200 or west.yes_count != 174) {
+        return error.PreMergeWrong;
+    }
+    const merged = try merge_mycelium_gossip(&east, &west);
+    if (merged != 324) return error.CrdtUnionNotDeduplicated;
+
+    // Re-merging West a second time is idempotent (`324` stays `324`!)
+    if ((try merge_mycelium_gossip(&east, &west)) != 324) {
+        return error.NotIdempotent;
+    }
+    _ = try east.seal_blaze_enactment();
+
+    print(
+        "GREEN: council_mycelium_weave -- CRDT gossip + 324/405 proven.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

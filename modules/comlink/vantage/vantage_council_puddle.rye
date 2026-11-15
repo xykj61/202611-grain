@@ -1,0 +1,114 @@
+//! modules/comlink/vantage/vantage_council_puddle.rye -- Civic Command Room!
+//!
+//! Stamp: `20261115.141500` -- Surfaces Keaton's `d15-3-9-405` Council
+//! (`243/405` operational & `324/405` constitutional gauges), `Pond Puddle`
+//! roaming server status, `Pulp` `[15..9375]` Movement stack, and One-Clock
+//! `-est`/`-edt`/`-utc` status inside `Vantage` (`Station` & `Carry`)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.141500";
+const nl: u8 = 10;
+const rule = "+------------------------------------------------------------+";
+
+pub const CivicCommandState = struct {
+    tz_tag: []const u8,
+    completed_movements: u32,
+    council_yes_votes: u32,
+    puddle_roam_seq: u64,
+    glasswall_mic_open: bool,
+
+    pub fn render_glasswall_frame(
+        self: *const CivicCommandState,
+        out: []u8,
+    ) ![]const u8 {
+        assert(self.council_yes_votes <= 405);
+        assert(out.len >= 512);
+
+        const orbits = self.completed_movements / 15;
+        const step = self.completed_movements % 15;
+        const op_st = if (self.council_yes_votes >= 243)
+            "ENACTED"
+        else
+            "OPEN";
+        const co_st = if (self.council_yes_votes >= 324)
+            "ENACTED"
+        else
+            "OPEN";
+        const mic_str = if (self.glasswall_mic_open)
+            "LIVE+LAMP"
+        else
+            "VDD-OFF (SAFE)";
+
+        const fmt =
+            "{s}{c}" ++
+            "| VANTAGE CIVIC | -{s} | Mic: {s:<18} |{c}" ++
+            "{s}{c}" ++
+            "| PULP [15..9375]: {d:>4} mov -> " ++
+            "{d:>2} orb + {d:>2}/15      |{c}" ++
+            "| COUNCIL 405    : {d:>3} | 60%:{s:<7} 80%:{s:<7}   |{c}" ++
+            "| POND PUDDLE    : Kumara UDP seq={d:<8}           |{c}" ++
+            "{s}{c}";
+
+        const s = try std.fmt.bufPrint(
+            out,
+            fmt,
+            .{
+                rule,
+                nl,
+                self.tz_tag,
+                mic_str,
+                nl,
+                rule,
+                nl,
+                self.completed_movements,
+                orbits,
+                step,
+                nl,
+                self.council_yes_votes,
+                op_st,
+                co_st,
+                nl,
+                self.puddle_roam_seq,
+                nl,
+                rule,
+                nl,
+            },
+        );
+        // invariant: every rendered line obeys the hard 80-column RLCD ceiling!
+        var it = std.mem.splitScalar(u8, s, nl);
+        while (it.next()) |line| {
+            assert(line.len <= 80);
+        }
+        return s;
+    }
+};
+
+fn run_selftest() !u8 {
+    const st = CivicCommandState{
+        .tz_tag = "est",
+        .completed_movements = 290,
+        .council_yes_votes = 324,
+        .puddle_roam_seq = 42,
+        .glasswall_mic_open = false,
+    };
+    var buf: [1024]u8 = undefined;
+    const frame = try st.render_glasswall_frame(&buf);
+    if (std.mem.indexOf(u8, frame, "80%:ENACTED") == null) {
+        return error.MissingEnactedBadge;
+    }
+    if (std.mem.indexOf(u8, frame, "VDD-OFF (SAFE)") == null) {
+        return error.MissingGlasswallSafe;
+    }
+    print(
+        "GREEN: vantage_council_puddle -- <=80-col Glasswall command room.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

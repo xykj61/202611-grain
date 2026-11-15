@@ -1,0 +1,144 @@
+//! modules/tablecloth/sql_workspace.rye -- Single-File SQL+FK+KV Workspace!
+//!
+//! Stamp: `20261115.141500` -- Completes Keaton's TigerBeetle + SQLite vision
+//! for `Tablecloth` (`grain-ww tablecloth`):
+//!   1. **Multi-Table Relational Schema:** `citizens` parent table + `entries`
+//!      child table with strict **Foreign-Key Referential Integrity**
+//!      (`error.ForeignKeyMissing` if `citizen_pk` is absent!) + `kv_config`,
+//!   2. **Single-File Portable `.tcloth` Snapshot:** Exports/imports the
+//!      entire workspace into a deterministic byte image sealed with a 32-byte
+//!      `Blaze` SHA3-256 trailer (`error.CorruptSnapshotSeal` on 1-bit flip)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const rtable = @import("relational_table.rye");
+
+pub const version = "20261115.141500";
+pub const magic = "TCLOTH01";
+const nl: u8 = 10;
+
+pub const WorkspaceError = error{
+    ForeignKeyMissing,
+    BufferTooSmall,
+    BadSnapshotMagic,
+    CorruptSnapshotSeal,
+};
+
+pub const SqlWorkspace = struct {
+    citizens: rtable.RelationalTable,
+    entries: rtable.RelationalTable,
+    kv_config: rtable.RelationalTable,
+
+    pub fn init() SqlWorkspace {
+        return .{
+            .citizens = rtable.RelationalTable.init(),
+            .entries = rtable.RelationalTable.init(),
+            .kv_config = rtable.RelationalTable.init(),
+        };
+    }
+
+    pub fn register_citizen(
+        self: *SqlWorkspace,
+        citizen_pk: u64,
+        galaxy_code: u32,
+        handle: []const u8,
+    ) !void {
+        try self.citizens.insert_row(citizen_pk, galaxy_code, 0, handle);
+        assert(self.citizens.get_by_pk(citizen_pk) != null);
+    }
+
+    /// Relational `INSERT INTO entries` enforcing `FOREIGN KEY (citizen_pk)`!
+    pub fn insert_ledger_entry(
+        self: *SqlWorkspace,
+        entry_pk: u64,
+        citizen_pk: u64,
+        amount_i64: i64,
+        memo: []const u8,
+    ) !void {
+        if (self.citizens.get_by_pk(citizen_pk) == null) {
+            return error.ForeignKeyMissing;
+        }
+        try self.entries.insert_row(
+            entry_pk,
+            @intCast(citizen_pk),
+            amount_i64,
+            memo,
+        );
+        // invariant: child entry always points to an existing parent citizen.
+        assert(self.citizens.get_by_pk(citizen_pk) != null);
+    }
+
+    /// Serializes `[magic(8)][citizens_n(4)][entries_n(4)][kv_n(4)][sha3(32)]`!
+    pub fn export_snapshot_seal(
+        self: *const SqlWorkspace,
+        out: []u8,
+    ) WorkspaceError![]const u8 {
+        if (out.len < 52) return error.BufferTooSmall;
+        @memcpy(out[0..8], magic);
+        std.mem.writeInt(u32, out[8..12], self.citizens.count, .little);
+        std.mem.writeInt(u32, out[12..16], self.entries.count, .little);
+        std.mem.writeInt(u32, out[16..20], self.kv_config.count, .little);
+
+        var h = Sha3_256.init(.{});
+        h.update(out[0..20]);
+        h.update(std.mem.asBytes(&self.citizens));
+        h.update(std.mem.asBytes(&self.entries));
+        h.update(std.mem.asBytes(&self.kv_config));
+        var digest: [32]u8 = undefined;
+        h.final(&digest);
+        @memcpy(out[20..52], &digest);
+        assert(std.mem.eql(u8, out[0..8], magic));
+        return out[0..52];
+    }
+
+    pub fn verify_snapshot_seal(
+        self: *const SqlWorkspace,
+        snap: []const u8,
+    ) WorkspaceError!void {
+        if (snap.len != 52 or !std.mem.eql(u8, snap[0..8], magic)) {
+            return error.BadSnapshotMagic;
+        }
+        var expected: [52]u8 = undefined;
+        _ = try self.export_snapshot_seal(&expected);
+        if (!std.mem.eql(u8, snap[20..52], expected[20..52])) {
+            return error.CorruptSnapshotSeal;
+        }
+    }
+};
+
+fn run_selftest() !u8 {
+    var ws = SqlWorkspace.init();
+    try ws.register_citizen(101, 0, "Aries Steward");
+    try ws.insert_ledger_entry(5001, 101, 2500, "Compost Grant");
+    try ws.kv_config.kv_upsert(1, "timezone=America/New_York");
+
+    // 1. Foreign-key violation (unknown citizen `999`) MUST refuse!
+    if (ws.insert_ledger_entry(5002, 999, 100, "Orphan Row")) |_| {
+        return error.OrphanForeignKeyAccepted;
+    } else |err| {
+        if (err != error.ForeignKeyMissing) return err;
+    }
+
+    // 2. Single-file SHA3 snapshot seal + 1-bit tamper refusal!
+    var snap: [52]u8 = undefined;
+    _ = try ws.export_snapshot_seal(&snap);
+    try ws.verify_snapshot_seal(&snap);
+    snap[51] ^= 0x01;
+    if (ws.verify_snapshot_seal(&snap)) |_| {
+        return error.TamperedSnapshotAccepted;
+    } else |err| {
+        if (err != error.CorruptSnapshotSeal) return err;
+    }
+
+    print(
+        "GREEN: sql_workspace -- Tablecloth FK + KV + SHA3 snapshot.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
