@@ -11,8 +11,8 @@
 //!   bar bytes via the C-ABI exports declared in `include/vantage_carry.h`.
 
 const std = @import("std");
+const builtin = @import("builtin");
 const assert = std.debug.assert;
-const print = std.debug.print;
 
 pub const carry_version = "20261115.090500";
 pub const tab_count: u32 = 6;
@@ -265,9 +265,12 @@ fn run_selftest() !u8 {
     carry_init_ffi(420, 480);
     if (carry_posture_ffi() != 2) return error.ExpectedMobilePosture;
 
-    print("GREEN: vantage/carry -- Vantage owns Carry app logic.{c}", .{
-        nl,
-    });
+    if (builtin.os.tag != .freestanding) {
+        std.debug.print(
+            "GREEN: vantage/carry -- Vantage owns Carry app logic.{c}",
+            .{nl},
+        );
+    }
     return 0;
 }
 

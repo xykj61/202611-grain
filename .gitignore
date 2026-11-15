@@ -470,3 +470,4 @@ fleet/standing-equipment-run.lock.d/
 # Build receipts -- a .ryekey stamp beside an emitted binary is local state, never content
 *.ryekey
 /session-output/
+libraries/**/bin/

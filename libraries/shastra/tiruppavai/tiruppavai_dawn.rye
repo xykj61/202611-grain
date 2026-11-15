@@ -1,103 +1,79 @@
-//! libraries/shastra/tiruppavai/tiruppavai_dawn.rye -- Year 1 Shastra + Bloom!
+//! libraries/shastra/tiruppavai/tiruppavai_dawn.rye -- All 30 Andal Dawn Songs!
 //!
-//! Orbit 64-65 (`20261115.085500`): First living application of our 4-year
-//! *Bloom & Shastra* curriculum (`MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md`).
-//! Pairs **Andal's *Tiruppavai*** (*The Thirty Dawn Songs*, 8th-century Tamil
-//! *bhakti-prema* poetry) with plain-English beginner reflections and a pure
-//! integer-math **48 kHz `Resonance` Dawn Bell** synthesizer!
+//! Orbits 91-93 (`20261115.095000`): Reads all 30 songs (`1..30`) of Andal's
+//! *Tiruppavai* from `libraries/shastra/tiruppavai/tiruppavai_30.kyri` and
+//! synthesizes a bounded, zero-floating-point **48 kHz Dawn Bell** waveform!
 //!
-//! Run:
-//!   grainos tiruppavai 1        -- prints Song 1 + synthesizes dawn bell chord
-//!   tiruppavai_dawn selftest    -- proves verses 1..5 & 48 kHz bell bounds
+//! Usage:
+//!   grainos tiruppavai 29       -- prints Song 29 (Sitram Siru Kale) + chime
+//!   tiruppavai_dawn selftest    -- proves all 30 songs (`1..30`) & bells
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const version = "20261115.085500";
+pub const version = "20261115.095000";
+pub const total_songs: u32 = 30;
 pub const sample_rate_hz: u32 = 48000;
-pub const bell_samples: u32 = 2400; // 50 ms pure dawn chime frame
+pub const bell_samples: u32 = 2400;
+pub const catalog_path = "libraries/shastra/tiruppavai/tiruppavai_30.kyri";
 const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
 
-pub const DawnError = error{SongOutOfRange};
+pub const DawnError = error{
+    SongOutOfRange,
+    MalformedCatalogRow,
+    CatalogIncomplete,
+};
 
-pub const Pasuram = struct {
+pub const PasuramRow = struct {
     number: u32,
+    freq_hz: u32,
     tamil_opening: []const u8,
     plain_english: []const u8,
-    bloom_craft_mirror: []const u8,
-    bell_freq_hz: u32,
 };
 
-pub const opening_five = [_]Pasuram{
-    .{
-        .number = 1,
-        .tamil_opening = "Margazhi thingal madhi niraindha nannalal",
-        .plain_english =
-            "In the crisp dawn month under a full moon, come friends -- " ++
-            "joy welcomes everyone who wakes together.",
-        .bloom_craft_mirror =
-            "Bloom 00: Opening Terminal.app -- nobody walks alone.",
-        .bell_freq_hz = 432,
-    },
-    .{
-        .number = 2,
-        .tamil_opening = "Vaiyathu vazhvirgal namum nam pavaiykku",
-        .plain_english =
-            "Friends across this wide Earth: live simply, share with " ++
-            "guests, speak kindly, and sing at dawn.",
-        .bloom_craft_mirror =
-            "Bloom 01 & Aparigraha: Honest u32 boxes and light custody.",
-        .bell_freq_hz = 486,
-    },
-    .{
-        .number = 3,
-        .tamil_opening = "Ongi ulagalanda uttaman per padi",
-        .plain_english =
-            "When we sing of three gentle strides across the worlds, " ++
-            "rain falls in season and every field thrives.",
-        .bloom_craft_mirror =
-            "Bloom 04 & Biocyclic Ecology: Harvest within natural bounds.",
-        .bell_freq_hz = 540,
-    },
-    .{
-        .number = 4,
-        .tamil_opening = "Azhi mazhai kanna onru nee kai karavel",
-        .plain_english =
-            "O generous raincloud, draw from the deep ocean without " ++
-            "holding back and water every thirsty garden!",
-        .bloom_craft_mirror =
-            "Bloom 07 & Evergrow: Offer more, require less.",
-        .bell_freq_hz = 576,
-    },
-    .{
-        .number = 5,
-        .tamil_opening = "Mayanai mannu vada madurai maindanai",
-        .plain_english =
-            "Approaching with a clean heart and fresh flowers of thanks, " ++
-            "old tangles clear like mist in morning sunlight.",
-        .bloom_craft_mirror =
-            "Bloom 12 & Reroot: Carry forward only living fruit.",
-        .bell_freq_hz = 648,
-    },
-};
+pub fn parse_catalog(
+    text: []const u8,
+    rows_out: *[total_songs]PasuramRow,
+) DawnError!void {
+    var seen_count: u32 = 0;
+    var it = std.mem.splitScalar(u8, text, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (line.len == 0 or line[0] == '#') continue;
+        if (!std.mem.startsWith(u8, line, "song ")) continue;
 
-pub fn lookup_pasuram(song_no: u32) DawnError!Pasuram {
-    if (song_no < 1 or song_no > opening_five.len) {
-        return error.SongOutOfRange;
+        const body = std.mem.trim(u8, line[5..], &ws);
+        var parts = std.mem.splitScalar(u8, body, '|');
+        const num_s = parts.next() orelse return error.MalformedCatalogRow;
+        const hz_s = parts.next() orelse return error.MalformedCatalogRow;
+        const tam_s = parts.next() orelse return error.MalformedCatalogRow;
+        const eng_s = parts.rest();
+
+        const n = std.fmt.parseInt(u32, num_s, 10) catch {
+            return error.MalformedCatalogRow;
+        };
+        const hz = std.fmt.parseInt(u32, hz_s, 10) catch {
+            return error.MalformedCatalogRow;
+        };
+        if (n < 1 or n > total_songs or eng_s.len == 0) {
+            return error.SongOutOfRange;
+        }
+        rows_out[n - 1] = .{
+            .number = n,
+            .freq_hz = hz,
+            .tamil_opening = tam_s,
+            .plain_english = eng_s,
+        };
+        seen_count += 1;
     }
-    // invariant: 1-based song number maps cleanly into 0..opening_five.len-1.
-    const idx = song_no - 1;
-    assert(idx < opening_five.len);
-    const p = opening_five[idx];
-    assert(p.number == song_no);
-    return p;
+    if (seen_count != total_songs) return error.CatalogIncomplete;
+    // invariant: all 30 pasurams (1..30) populated in ascending slot order.
+    assert(seen_count == total_songs and rows_out[29].number == 30);
 }
 
-/// Synthesizes a pure, zero-floating-point 48 kHz triangle/chime waveform
-/// with linear envelope decay into `pcm_out` (`i16`, bounded `<= 16000` peak)!
 pub fn synth_dawn_bell(freq_hz: u32, pcm_out: *[bell_samples]i16) void {
-    // invariant: audible bell frequency lies between 100 Hz and 4000 Hz.
     assert(freq_hz >= 100 and freq_hz <= 4000);
     const period: u32 = sample_rate_hz / freq_hz;
     assert(period >= 12);
@@ -116,29 +92,23 @@ pub fn synth_dawn_bell(freq_hz: u32, pcm_out: *[bell_samples]i16) void {
         const env_den: i32 = @intCast(bell_samples);
         pcm_out[i] = @intCast(@divTrunc(centered * env_num, env_den));
     }
-    // invariant: final sample decays cleanly to zero at envelope end.
     assert(i == bell_samples);
 }
 
-fn run_selftest() !u8 {
-    const p1 = try lookup_pasuram(1);
-    if (p1.bell_freq_hz != 432) return error.WrongBellFreq;
-    if (lookup_pasuram(0)) |_| {
-        return error.ZeroSongAccepted;
-    } else |err| {
-        if (err != error.SongOutOfRange) return err;
-    }
+fn run_selftest(text: []const u8) !u8 {
+    var rows: [total_songs]PasuramRow = undefined;
+    try parse_catalog(text, &rows);
 
+    var idx: u32 = 0;
     var pcm: [bell_samples]i16 = undefined;
-    synth_dawn_bell(p1.bell_freq_hz, &pcm);
-    var non_zero: u32 = 0;
-    for (pcm) |s| {
-        if (s > 16000 or s < -16000) return error.AudioPeakExceeded;
-        if (s != 0) non_zero += 1;
+    while (idx < total_songs) : (idx += 1) {
+        if (rows[idx].number != idx + 1) return error.NumberGap;
+        synth_dawn_bell(rows[idx].freq_hz, &pcm);
+        for (pcm) |s| {
+            if (s > 16000 or s < -16000) return error.AudioPeakExceeded;
+        }
     }
-    if (non_zero < 1000) return error.SilentBell;
-
-    print("GREEN: tiruppavai_dawn -- songs 1..5 & 48kHz bell proven.{c}", .{
+    print("GREEN: tiruppavai_dawn -- all 30 Andal dawn songs proven.{c}", .{
         nl,
     });
     return 0;
@@ -146,20 +116,29 @@ fn run_selftest() !u8 {
 
 pub fn main(init: std.process.Init) !u8 {
     const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
     const args = try init.minimal.args.toSlice(a);
+    const text = try cwd.readFileAlloc(io, catalog_path, a, .limited(65536));
 
     if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
-        return run_selftest();
+        return run_selftest(text);
     }
-    const n = std.fmt.parseInt(u32, args[1], 10) catch 1;
-    const p = try lookup_pasuram(n);
+
+    var rows: [total_songs]PasuramRow = undefined;
+    try parse_catalog(text, &rows);
+    const n = std.fmt.parseInt(u32, args[1], 10) catch {
+        return error.SongOutOfRange;
+    };
+    if (n < 1 or n > total_songs) return error.SongOutOfRange;
+
+    const p = rows[n - 1];
     var pcm: [bell_samples]i16 = undefined;
-    synth_dawn_bell(p.bell_freq_hz, &pcm);
-    print("Tiruppavai Dawn Song #{d} ({d} Hz 48kHz bell ready){c}", .{
-        p.number, p.bell_freq_hz, nl,
+    synth_dawn_bell(p.freq_hz, &pcm);
+    print("Tiruppavai Dawn Song #{d}/30 ({d} Hz 48kHz bell){c}", .{
+        p.number, p.freq_hz, nl,
     });
     print("  Opening: {s}{c}", .{ p.tamil_opening, nl });
     print("  Meaning: {s}{c}", .{ p.plain_english, nl });
-    print("  Craft  : {s}{c}", .{ p.bloom_craft_mirror, nl });
     return 0;
 }

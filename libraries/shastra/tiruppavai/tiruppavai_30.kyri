@@ -1,0 +1,38 @@
+format tiruppavai-v1
+stamp 20261115.095000
+voice Kyri
+status living
+# libraries/shastra/tiruppavai/tiruppavai_30.kyri -- All 30 Dawn Songs of Andal!
+# Format per row: `song <1..30>|<freq_hz>|<tamil_opening>|<plain_english_meaning>`
+# Pure 7-bit ASCII, readable by any newcomer on Day 1 of Year 1!
+
+song 1|432|Margazhi thingal madhi niraindha nannalal|In the crisp full-moon dawn month, come friends -- joy welcomes all who wake together.
+song 2|440|Vaiyathu vazhvirgal namum nam pavaiykku|Friends on this wide Earth: live simply, share generously, speak kindly, and sing at dawn.
+song 3|456|Ongi ulagalanda uttaman per padi|Singing of three gentle strides across the worlds, rain falls in season and fields thrive.
+song 4|480|Azhi mazhai kanna onru nee kai karavel|O generous raincloud, draw deep and pour life-giving water across every thirsty garden!
+song 5|486|Mayanai mannu vada madurai maindanai|Approaching with a clean heart and fresh flowers, old tangles clear like morning mist.
+song 6|512|Pullum silambina kan pullaraiyan koilil|Hear the morning birds calling and the temple conch sounding -- wake up, dear friend!
+song 7|528|Kisu kisu endrengum anaichathan kalandhu|Sparrows chatter and churn-staffs hum like music before sunrise -- open your door!
+song 8|540|Kizhvanam vellendru erumai siru veedu|The eastern sky brightens to silver-oat light; we paused at your porch so you walk with us.
+song 9|576|Thoomani madathu sutrum vilakkeriya|Lamps glow softly around your clean room -- wake your heart to the jewel-bright Name!
+song 10|586|Notru suwargam pugugindra ammanai|Even sleepy mornings turn auspicious when neighbors call one another with affection.
+song 11|600|Katrodu kazhal mani katti kanakkinri|Stewards who tend cattle and craft without fault: step into our courtyard chorus!
+song 12|640|Kanaitthilam katrerumai kanrukku irangi|Compassion overflows naturally wherever loving remembrance fills a household.
+song 13|648|Pullin vai keendanai polla arakkanai|Together at the assembly ground, let us set aside vanity and sing side by side.
+song 14|675|Ungal puzhakkadai thottathu vaviyul|In your backyard garden pond, red lotuses open while ascetics and singers gather!
+song 15|720|Elle ilam kiliye innam urangudhiyo|Sweet young parrot, let us drop sharp words and join voices in humble friendship!
+song 16|432|Nayaganai ninra nandagopan udaiya|Gatekeeper of the welcoming palace: open the jewelled doors for children singing at dawn!
+song 17|456|Ambarame thanneere sorre aram seyyum|Generous hosts who gift cloth, cool water, and warm grain: wake with kindness!
+song 18|486|Undhu madha kalitran odadha thol valiyan|Radiant Nappinnai, compassionate mediator of the heart, open the door with a smile!
+song 19|512|Kuthu vilakkeriya kottukkal kattil mel|Beside the steady oil lamp, let gentle mercy speak first before any judgment.
+song 20|528|Muppathu moovar amararkku mun senru|Shelter of the fearless and kind: grant our community instruments of morning service!
+song 21|540|Etra kalangal edhir pongi meedhalippa|As brimming vessels overflow, humble hearts bow at the threshold together.
+song 22|576|Angan ma gnalathu arasar abhimana|When pride melts away, one warm glance heals every old division cleanly.
+song 23|600|Mari malai muzhanjil mannikkidandhu urangum|Like a noble lion waking in the hills after rain, step forth onto the open seat!
+song 24|640|Anru ivvulagam alandhai adi potri|Blessings upon the feet that measured the worlds, healed grief, and sheltered the meek!
+song 25|648|Oruthi maganai piranthu oriravil|Born in quiet humility yet filling every home with light -- receive our simple song.
+song 26|675|Male manivanna margazhi neeraduvar|Give us clear conch-tones, bright lamps, and steady banners for shared community work.
+song 27|720|Koodarai vellum seer govinda undhannai|Joyful reunion: when estranged hearts reconcile, every meal and ornament shines!
+song 28|768|Karavaigal pin senru kanam serndhu unbom|We are simple country builders with no grand titles -- our bond with You can never be undone.
+song 29|810|Sitram siru kale vandhu unnai sevitthu|In the quietest hour before dawn we ask no fleeting prize -- only pure, lifelong loving service!
+song 30|864|Vanga kadal kadaindha madhavanai kesavanai|Andal's garland of thirty Tamil dawn songs brings lasting peace and joy everywhere!

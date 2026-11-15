@@ -36,6 +36,9 @@ max_cols 80 modules/resonance/earpiece/earpiece_core.rye
 max_cols 80 modules/brushstroke/touch/touch_core.rye
 max_cols 80 modules/brushstroke/touch/carry_frame_wire.rye
 max_cols 80 libraries/shastra/tiruppavai/tiruppavai_dawn.rye
+max_cols 80 libraries/shastra/rasamrita/rasamrita_waves.rye
+max_cols 80 modules/brushstroke/skate/realidream_compose.rye
+max_cols 80 blazepod/rv64_pill.rye
 max_cols 80 modules/pond/pond_cli.rye
 max_cols 80 modules/fusion/fusion_dag.rye
 max_cols 80 modules/fusion/fusion_sow.rye
