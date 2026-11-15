@@ -73,3 +73,8 @@ ascii_7bit docs-geode/tutorials/vantage-and-carry-interfaces.md
 max_cols 80 modules/fusion/sow_native_gates.rye
 max_cols 80 modules/resonance/studio_wav_bounce.rye
 max_cols 80 languages/glow/driver/glow_compile_cli.rye
+max_cols 80 modules/resonance/dsp_engine.rye
+max_cols 80 modules/comlink/vantage/resonance_dsp.rye
+max_cols 80 modules/comlink/vantage/resonance_station.rye
+max_cols 80 modules/comlink/vantage/vantage_mutations.rye
+ascii_7bit docs-geode/tutorials/resonance-station-daw.md

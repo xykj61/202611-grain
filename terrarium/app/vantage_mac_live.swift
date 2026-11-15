@@ -30,6 +30,15 @@ func vantage_app_active_tab_ffi() -> UInt32
 @_silgen_name("vantage_app_posture_ffi")
 func vantage_app_posture_ffi() -> UInt32
 
+@_silgen_name("vantage_app_res_toggle_expert_ffi")
+func vantage_app_res_toggle_expert_ffi()
+
+@_silgen_name("vantage_app_res_toggle_solo0_ffi")
+func vantage_app_res_toggle_solo0_ffi()
+
+@_silgen_name("vantage_app_write_active_room_ffi")
+func vantage_app_write_active_room_ffi() -> Bool
+
 @_silgen_name("vantage_app_render_screen_ffi")
 func vantage_app_render_screen_ffi(
     _ outPtr: UnsafeMutablePointer<UInt8>,
@@ -58,6 +67,14 @@ func runHeadlessSelftest() -> Int32 {
     let s1 = readVantageScreen()
     guard s1.contains("Dimeroll 5. Ledger") else { return 5 }
 
+    // Verify Vantage Station (1200dp) renders the 3-Zone Desktop Resonance DAW!
+    vantage_app_init_ffi(1200, 1600)
+    guard vantage_app_posture_ffi() == 0 else { return 6 }
+    _ = vantage_app_touch_ffi(0, 600, 24, 10)
+    _ = vantage_app_touch_ffi(2, 600, 24, 10)
+    let sStation = readVantageScreen()
+    guard sStation.contains("RESONANCE STATION DESKTOP DAW") else { return 7 }
+
     fputs("GREEN: vantage_mac_live -- Swift <-> Rye VantageApp FFI proven.\n", stderr)
     return 0
 }
@@ -67,7 +84,8 @@ final class VantageWindowController: NSObject, NSApplicationDelegate {
     private var textView: NSTextView!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        vantage_app_init_ffi(720, 1600)
+        // Desktop macOS defaults to Vantage Station posture (1200dp)!
+        vantage_app_init_ffi(1200, 1600)
 
         let rect = NSRect(x: 120, y: 120, width: 920, height: 600)
         window = NSWindow(
@@ -117,6 +135,24 @@ final class VantageWindowController: NSObject, NSApplicationDelegate {
             action: #selector(zoomIn(_:))
         )
         bar.addArrangedSubview(zoomInBtn)
+        let fxBtn = NSButton(
+            title: "Expert FX",
+            target: self,
+            action: #selector(toggleExpertFx(_:))
+        )
+        bar.addArrangedSubview(fxBtn)
+        let soloBtn = NSButton(
+            title: "Solo T1",
+            target: self,
+            action: #selector(toggleSolo0(_:))
+        )
+        bar.addArrangedSubview(soloBtn)
+        let writeBtn = NSButton(
+            title: "+ Write/Seal",
+            target: self,
+            action: #selector(writeActiveRoom(_:))
+        )
+        bar.addArrangedSubview(writeBtn)
         root.addArrangedSubview(bar)
 
         textView = NSTextView(frame: NSRect(x: 0, y: 0, width: 880, height: 500))
@@ -159,6 +195,21 @@ final class VantageWindowController: NSObject, NSApplicationDelegate {
 
     @objc private func zoomIn(_ sender: NSButton) {
         vantage_app_pinch_ffi(1200)
+        refreshSurface()
+    }
+
+    @objc private func toggleExpertFx(_ sender: NSButton) {
+        vantage_app_res_toggle_expert_ffi()
+        refreshSurface()
+    }
+
+    @objc private func toggleSolo0(_ sender: NSButton) {
+        vantage_app_res_toggle_solo0_ffi()
+        refreshSurface()
+    }
+
+    @objc private func writeActiveRoom(_ sender: NSButton) {
+        _ = vantage_app_write_active_room_ffi()
         refreshSurface()
     }
 

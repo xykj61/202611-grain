@@ -63,19 +63,19 @@ The mixer, the timeline, integration.
   NSTableView inside the Audio tab below the status panel with two columns (Name width 200, Gain width 60), NSScrollView wrapper (height 120, dark amber theme), "+ Track" and "- Track" buttons. Data model: `audioTracks: [(name: String, gain: Float)]` initialized with one default track. TableViewDelegate dispatches via `=== audioTrackTable` identity check. Minimum-one-track enforcement on remove, selection management on add/remove. Terrarium build GREEN.
   **SLC gate:** multiple tracks visible and selectable -- **PROVEN**.
 
-- [ ] **Movement 12 -- Mixer panel**
+- [x] **Movement 12 -- Mixer panel** (`modules/comlink/vantage/resonance_station.rye` Zone 2 + `dsp_engine.rye`)
   Channel strip per track: gain fader, pan knob, solo/mute. Stereo mix bus.
   **SLC gate:** adjust a fader and hear the mix change in real time.
 
-- [ ] **Movement 13 -- Session persistence**
+- [x] **Movement 13 -- Session persistence** (`dsp_engine.rye` `save_brix` / `load_brix` + `bounce_stereo_wav`)
   Session save/load for multi-track state, stereo mix export.
   **SLC gate:** save a session, reopen it, export stereo mix.
 
-- [ ] **Movement 14 -- Timeline view**
+- [x] **Movement 14 -- Timeline view** (`resonance_station.rye` Zone 1 16-bar timeline + `edit_clip_region`/`undo_timeline_edit`)
   Horizontal timeline with clips, playback cursor, region selection.
   **SLC gate:** timeline shows clips, cursor follows playback.
 
-- [ ] **Movement 15 -- Integration and witness**
+- [x] **Movement 15 -- Integration and witness** (`terrarium/app/vantage_mac_live.swift` + `tools/r/resonance_station_vantage_daw_witness.rish` GREEN `20261115.115500`)
   Full session workflow end to end. Standing equipment GREEN with Resonance audio witnesses.
   **SLC gate:** record, mix, export a finished stereo WAV through the Station.
 

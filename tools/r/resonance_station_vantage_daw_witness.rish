@@ -1,0 +1,44 @@
+# tools/r/resonance_station_vantage_daw_witness.rish -- Wave A (`56.680`)!
+#
+# Proves on real metal:
+#   1. `modules/resonance/dsp_engine.rye` (multi-track Weave, stereo mixer bus,
+#      solo-in-place, non-destructive timeline edit + Undo, 4-slot insert FX
+#      chain with Delta Solo & Simple/Expert plugin faces, `.brix` persistence,
+#      and 2-channel stereo 48 kHz 16-bit RIFF `.wav` export)!
+#   2. `modules/comlink/vantage/resonance_station.rye` + `vantage_app.rye`
+#      proving desktop-specific 3-Zone DAW in `Vantage Station` (`1200dp`) vs
+#      Field Stem Sketchpad in `Carry Tablet`/`Carry Mobile` (`720dp`/`420dp`)!
+#   3. Live macOS Swift `vantage_mac_live.swift` linked against the upgraded
+#      `libvantage_app_mac.dylib` verifying `RESONANCE STATION DESKTOP DAW`!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Core Resonance DSP & Weave DAW engine
+let b_dsp = run ["sh" rb "modules/resonance/dsp_engine.rye" "-femit-bin=tools/.build/dsp_engine"]
+assert b_dsp.ok else "dsp_engine.rye build failed"
+let r_dsp = run ["tools/.build/dsp_engine"]
+assert r_dsp.ok else "dsp_engine selftest failed"
+
+# 2. Vantage Station Desktop DAW vs Carry Sketchpad
+let b_rs = run ["sh" rb "modules/comlink/vantage/resonance_station.rye" "-femit-bin=tools/.build/resonance_station"]
+assert b_rs.ok else "resonance_station.rye build failed"
+let r_rs = run ["tools/.build/resonance_station"]
+assert r_rs.ok else "resonance_station selftest failed"
+
+let b_va = run ["sh" rb "modules/comlink/vantage/vantage_app.rye" "-femit-bin=tools/.build/vantage_app"]
+assert b_va.ok else "vantage_app.rye build failed"
+let r_va = run ["tools/.build/vantage_app"]
+assert r_va.ok else "vantage_app Station DAW selftest failed"
+
+# 3. Rebuild macOS Swift `vantage_mac_live` & verify Station Desktop DAW FFI!
+let b_vlib = run [rye "build-lib" "modules/comlink/vantage/vantage_app.rye" "-dynamic" "-femit-bin=tools/.build/libvantage_app_mac.dylib"]
+assert b_vlib.ok else "libvantage_app_mac.dylib rebuild failed"
+let b_swift = run ["swiftc" "terrarium/app/vantage_mac_live.swift" "tools/.build/libvantage_app_mac.dylib" "-Xlinker" "-rpath" "-Xlinker" "@executable_path" "-framework" "AppKit" "-o" "tools/.build/vantage_mac_live"]
+assert b_swift.ok else "swiftc vantage_mac_live rebuild failed"
+let r_mac = run ["tools/.build/vantage_mac_live" "--selftest"]
+assert r_mac.ok else "vantage_mac_live Station DAW selftest failed"
+
+say "GREEN: resonance_station_vantage_daw_witness -- Resonance 3-Zone Desktop DAW in Vantage Station + Carry Sketchpad + Orbits 4-11 & M12-M15 proven."

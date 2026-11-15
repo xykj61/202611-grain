@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.113500
-myofascia 56.665
+version 20261115.121500
+myofascia 56.700
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -118,12 +118,17 @@ file modules/kumara/kumara.rye
 file modules/comlink/topology.rye
 file modules/comlink/vantage/carry.rye
 file modules/comlink/vantage/vantage_app.rye
+file modules/comlink/vantage/resonance_dsp.rye
+file modules/comlink/vantage/resonance_station.rye
+file modules/comlink/vantage/vantage_mutations.rye
 file modules/comlink/vantage/surf_social_grid.rye
 file modules/comlink/vantage/vantage_carry_jni.c
 file modules/comlink/vantage/glow/fold-vantage-carry.glow
 file terrarium/app/vantage_mac_live.swift
 file tools/c/build_dc1_apk.rish
+file modules/resonance/dsp_engine.rye
 file modules/resonance/studio_wav_bounce.rye
+file docs-geode/tutorials/resonance-station-daw.md
 file modules/fusion/sow_native_gates.rye
 file modules/pond/testnet/galaxy_testnet.rye
 file docs-geode/lessons/guides/README.md

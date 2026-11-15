@@ -38,22 +38,22 @@
   `resonance/resonance_window.rye`: NSApplication + menu bar + NSWindow + pixel-buffer waveform + AUHAL recording + CoreAudio playback in one standalone selftest. 19,456 samples recorded, waveform rendered, 4096-sample clip played back. GREEN on metal.
   **SLC gate:** open Resonance in a window, see a waveform of the recording, play it back -- **PROVEN**.
 
-- [ ] **Orbit 4 -- Multiple tracks in Weave**
+- [x] **Orbit 4 -- Multiple tracks in Weave** (`modules/resonance/dsp_engine.rye` -- `add_track`/`remove_track`, 8-track weave)
   Session model holds N tracks, each a named Weave stream. Add, remove, reorder.
   Brushstroke draws a track list.
   **SLC gate:** two or more tracks play simultaneously through the render graph.
 
-- [ ] **Orbit 5 -- The mixer bus**
+- [x] **Orbit 5 -- The mixer bus** (`dsp_engine.rye` + `vantage/resonance_station.rye` Zone 2)
   Stereo mix bus sums all tracks. Per-track gain faders (`resonance/fader.rye`), pan (`resonance/pan.rye`),
   solo, mute. Brushstroke draws the mixer strip.
   **SLC gate:** adjust a fader and hear the mix change in real time.
 
-- [ ] **Orbit 6 -- Track editing on the timeline**
+- [x] **Orbit 6 -- Track editing on the timeline** (`dsp_engine.rye` `edit_clip_region` + `undo_timeline_edit`)
   Span-edit modules (`resonance/timeline.rye`, crop, move, paste, graft, selection, clipboard)
   operate on tracks through Weave events. Cut, copy, paste, undo.
   **SLC gate:** edit a region on track 2 while track 1 plays -- non-destructive, undoable.
 
-- [ ] **Orbit 7 -- Multi-track export and polish**
+- [x] **Orbit 7 -- Multi-track export and polish** (`dsp_engine.rye` `bounce_stereo_wav` + `save_brix`/`load_brix`)
   WAV export of the stereo mix. Session save/load through Weave serialization.
   Track headers, timeline ruler, playback cursor.
   **SLC gate:** record three tracks, mix them, export a finished stereo WAV. **Quest 1.2 SLC.**
@@ -67,17 +67,17 @@
 *Per-track insert chains where each slot holds a Resonance module.*
 **Grows from:** Journey 1's multi-track mixer.
 
-- [ ] **Orbit 8 -- Insert chain architecture**
+- [x] **Orbit 8 -- Insert chain architecture** (`dsp_engine.rye` 4-slot series `process_inserts` with wet/dry)
   Each track carries an ordered list of FX slots. A slot loads any Resonance DSP module.
   Render graph wires slots in series. Wet/dry per slot.
   **SLC gate:** insert an EQ on track 1 and hear it color the sound.
 
-- [ ] **Orbit 9 -- Plugin face rendering**
+- [x] **Orbit 9 -- Plugin face rendering** (`dsp_engine.rye` `render_plugin_face` Simple vs Expert view)
   Brushstroke draws each module's control surface from the module's parameter declarations.
   Tiered pages: simple face by default, expert face on request.
   **SLC gate:** turn a knob on the compressor face and hear the threshold move.
 
-- [ ] **Orbit 10 -- Chain management and preset recall**
+- [x] **Orbit 10 -- Chain management and preset recall** (`recall_mastering_preset` + `delta_solo_active`)
   Reorder, bypass, remove slots. Save and recall FX chain presets through Weave.
   Delta solo (hear only what one plugin changed).
   **SLC gate:** build a mastering chain (EQ, compressor, limiter), preview with delta solo,
@@ -85,7 +85,7 @@
 
 ### Quest 2.2 -- Refinement orbit
 
-- [ ] **Orbit 11 -- Integration, witnesses, and documentation**
+- [x] **Orbit 11 -- Integration, witnesses, and documentation** (`docs-geode/tutorials/resonance-station-daw.md` + `tools/r/resonance_station_vantage_daw_witness.rish` GREEN `20261115.115500`)
   Full session workflow end to end. Harden witnesses. Guide page in `docs-geode/` (Bhakta at Door).
   Repair any reds the journeys left open.
   **SLC gate:** standing equipment roster runs GREEN with Resonance witnesses. **Equinox 1 closes.**

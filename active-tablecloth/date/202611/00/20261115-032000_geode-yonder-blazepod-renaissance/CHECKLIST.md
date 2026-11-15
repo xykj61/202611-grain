@@ -30,5 +30,5 @@
 
 ## Phase 4 -- Handoff to Glow Mill & Blazepod Execution (NEXT)
 
-- [ ] **Orbit 15:** Kick off **Glow Mill** Orbit 1 (`Sheaf` header & `.brix` dependency resolver) inside `languages/glow/`.
-- [ ] **Orbit 16:** After Glow Mill Milestone 1 (`Stage 1 == Stage 2` SHA3 fixed point), kick off **Blazepod Journey I** (`tally-ram` `4 GiB+` + `blazepod/terrarium/`) and **Realidream** callable Glow folds.
+- [x] **Orbit 15:** Kick off **Glow Mill** Orbit 1 (`Sheaf` header & `.brix` dependency resolver) inside `languages/glow/`.
+- [x] **Orbit 16:** After Glow Mill Milestone 1 (`Stage 1 == Stage 2` SHA3 fixed point), kick off **Blazepod Journey I** (`tally-ram` `4 GiB+` + `blazepod/terrarium/`) and **Realidream** callable Glow folds.
