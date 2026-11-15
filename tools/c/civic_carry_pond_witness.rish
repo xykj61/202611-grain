@@ -1,52 +1,75 @@
-# tools/c/civic_carry_pond_witness.rish -- Witness for Journey I Orbits 1-6
+# tools/c/civic_carry_pond_witness.rish -- Witness for Orbits 50-65 (56.565)
 #
 # Proves on real metal:
 #   1. Zero hardcoded personal orgs in `publish-seed.rish` & `publish-redirect.rish`,
-#      plus `context/templates/PUBLISH_TARGETS.template.kyri` exists,
-#   2. `modules/resonance/earpiece/earpiece_core.rye` (hardware shutter,
-#      bystander lamp, & `secureZero` PCM wipe),
-#   3. `modules/brushstroke/touch/touch_core.rye` (60Hz RLCD palm rejection,
-#      tap, long-press, swipe, & permille pinch) + `CarryTabletMain.kt`,
-#   4. `modules/pond/pond_cli.rye` (`grain pond` Seatbelt fence, `~/.ssh` block,
-#      & `--gemini`),
-#   5. Root `libraries/`, `blazepod/BOM_AND_ASSEMBLY.md`, and 15-sign Calfive!
+#      root `study/` consolidated cleanly into `libraries/`, & `conservation-equations.md`,
+#   2. `grainos` umbrella CLI (`languages/rishi/grainos_cli.rye`),
+#   3. Glow Mill Orbits 3-5 (`trace_trail`, `sheaf_resolve`, `thresh_parse`),
+#   4. Civic `earpiece_core`, 60Hz RLCD `touch_core` + `carry_frame_wire` +
+#      Daylight DC-1 Kotlin `FrameGridAndMobileDeck.kt`, & `grain pond`,
+#   5. Year 1 *Bloom & Shastra* `tiruppavai_dawn.rye` (Andal 1..5 & 48kHz bell)!
 
 let rb = "tools/fixtures/r/rye_build.sh"
 let mk = run ["mkdir" "-p" "tools/.build"]
 assert mk.ok else "mkdir tools/.build failed"
 
-# 1. Verify publish scripts carry zero hardcoded personal GitHub handles
+# 1. Templated publishers & study/ -> libraries/ consolidation
 let no_hc = run ["sh" "-c" "! grep -E 'xykj61|grain-ww' publish-seed.rish publish-redirect.rish"]
-assert no_hc.ok else "hardcoded personal org found in publish-seed.rish or publish-redirect.rish"
-let has_tpl = run ["test" "-f" "context/templates/PUBLISH_TARGETS.template.kyri"]
-assert has_tpl.ok else "PUBLISH_TARGETS.template.kyri missing"
+assert no_hc.ok else "hardcoded personal org found in publish scripts"
+let no_st = run ["sh" "-c" "test ! -d study"]
+assert no_st.ok else "root study/ still exists after libraries/ consolidation"
+let has_ce = run ["test" "-f" "docs-geode/architecture/conservation-equations.md"]
+assert has_ce.ok else "conservation-equations.md missing"
 
-# 2. Civic RISC-V Earpiece voice capture
+# 2. `grainos` umbrella CLI
+let b_go = run ["sh" rb "languages/rishi/grainos_cli.rye" "-femit-bin=tools/.build/grainos"]
+assert b_go.ok else "grainos_cli build failed"
+let r_go = run ["tools/.build/grainos" "selftest"]
+assert r_go.ok else "grainos_cli selftest failed"
+
+# 3. Glow Mill Orbits 3, 4, & 5
+let b_tt = run ["sh" rb "languages/glow/front/trace_trail.rye" "-femit-bin=tools/.build/trace_trail"]
+assert b_tt.ok else "trace_trail build failed"
+let r_tt = run ["tools/.build/trace_trail"]
+assert r_tt.ok else "trace_trail selftest failed"
+
+let b_sr = run ["sh" rb "languages/glow/sheaf/sheaf_resolve.rye" "-femit-bin=tools/.build/sheaf_resolve"]
+assert b_sr.ok else "sheaf_resolve build failed"
+let r_sr = run ["tools/.build/sheaf_resolve"]
+assert r_sr.ok else "sheaf_resolve selftest failed"
+
+let b_tp = run ["sh" rb "languages/glow/thresh/thresh_parse.rye" "-femit-bin=tools/.build/thresh_parse"]
+assert b_tp.ok else "thresh_parse build failed"
+let r_tp = run ["tools/.build/thresh_parse"]
+assert r_tp.ok else "thresh_parse selftest failed"
+
+# 4. Earpiece, Touch + DC-1 Carry Frame Wire, & Grain Pond
 let b_ep = run ["sh" rb "modules/resonance/earpiece/earpiece_core.rye" "-femit-bin=tools/.build/earpiece_core"]
 assert b_ep.ok else "earpiece_core build failed"
 let r_ep = run ["tools/.build/earpiece_core"]
 assert r_ep.ok else "earpiece_core selftest failed"
 
-# 3. 60Hz RLCD Touch recognizer & Daylight DC-1 Kotlin host
 let b_tc = run ["sh" rb "modules/brushstroke/touch/touch_core.rye" "-femit-bin=tools/.build/touch_core"]
 assert b_tc.ok else "touch_core build failed"
 let r_tc = run ["tools/.build/touch_core"]
 assert r_tc.ok else "touch_core selftest failed"
-let has_kt = run ["test" "-f" "terrarium/carry-tablet/CarryTabletMain.kt"]
-assert has_kt.ok else "CarryTabletMain.kt missing"
 
-# 4. Grain Pond CLI (`pond_cli`)
+let b_cw = run ["sh" rb "modules/brushstroke/touch/carry_frame_wire.rye" "-femit-bin=tools/.build/carry_frame_wire"]
+assert b_cw.ok else "carry_frame_wire build failed"
+let r_cw = run ["tools/.build/carry_frame_wire"]
+assert r_cw.ok else "carry_frame_wire selftest failed"
+let has_kt = run ["test" "-f" "terrarium/carry-tablet/FrameGridAndMobileDeck.kt"]
+assert has_kt.ok else "FrameGridAndMobileDeck.kt missing"
+
 let b_pd = run ["sh" rb "modules/pond/pond_cli.rye" "-femit-bin=tools/.build/pond_cli"]
 assert b_pd.ok else "pond_cli build failed"
 let r_pd = run ["tools/.build/pond_cli" "selftest"]
 assert r_pd.ok else "pond_cli selftest failed"
 
-# 5. Libraries, Shastra curriculum, Blazepod BOM, & Calfive 15-signs
-let has_lib = run ["test" "-f" "libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md"]
-assert has_lib.ok else "MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md missing"
-let has_bom = run ["test" "-f" "blazepod/BOM_AND_ASSEMBLY.md"]
-assert has_bom.ok else "blazepod/BOM_AND_ASSEMBLY.md missing"
-let has_cf = run ["test" "-f" "docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md"]
-assert has_cf.ok else "calfive-fifteen-signs-and-torus-synthesis.md missing"
+# 5. Year 1 Andal Tiruppavai Dawn Bell & Song Reader SLC
+let b_td = run ["sh" rb "libraries/shastra/tiruppavai/tiruppavai_dawn.rye" "-femit-bin=tools/.build/tiruppavai_dawn"]
+assert b_td.ok else "tiruppavai_dawn build failed"
+let r_td = run ["tools/.build/tiruppavai_dawn" "selftest"]
+assert r_td.ok else "tiruppavai_dawn selftest failed"
 
-say "GREEN: civic_carry_pond_witness -- templated publishers, earpiece, touch + Carry Tablet, grain pond, libraries/shastra, Blazepod BOM, and 15-sign Calfive proven."
+say "GREEN: civic_carry_pond_witness -- grainos, Glow Orbits 3-5, DC-1 Carry Tablet, Pond, libraries/ consolidation, & Tiruppavai Dawn proven."

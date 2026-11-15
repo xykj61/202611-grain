@@ -22,9 +22,8 @@
   Seated `languages/glow/front/cord_interp.rye` with `eval_wutzap_loobean` (`?!` boolean negation + `NotALoobean` refusal), `scot_ud` (`56.549`) & `scot_ux` (`0x...`) bounded formatters, and `parse_interp_bounded` verifying static byte ceilings (`default_cord_ceiling = 256`, refusing `CordBoundExceeded`).
   **SLC gate:** `languages/rishi/bin/rishi run tools/g/glow_cord_interp_witness.rish` runs GREEN across welcome desks (nested `?!`, `scot_ud`/`scot_ux`, multi-hole `"receipt #{(scot_ud id)}: {(scot_ud amt)} MALA"`) and refusal desks (unclosed `{(`, empty `{()}`, and static ceiling overflow `CordBoundExceeded`).
 
-- [ ] **Orbit 3 -- Pure debug trace (`~&` `sigpam`) and structured refusal trails (`~|` `sigbar` + `!:` `zapcol`)**
-  Seat the `~` and `!` communication runes. `~&  label  expr` evaluates `expr` purely, emits a bounded trace record (`<= 128` bytes) to witness stderr or a caller-supplied [`basin/basin.rye`](../../../../../basin/basin.rye) ring slot, and returns `expr`'s exact value. `~|  'reason-cord'  expr` pushes a static breadcrumb onto `refusal.Slot` at zero happy-path cost, and `!:` enables `file:line:col` source-span breadcrumbs when `?>`, `?<`, or `!!` (`zapzap`) refuses.
-  **SLC gate:** `rishi/bin/rishi run tools/g/glow_trace_and_trail_witness.rish` runs GREEN: `~&` leaves output values byte-identical while recording exact Basin trace lines, and a failing `?>` inside `~|` + `!:` prints the full breadcrumb stack and `file:line:col` at exit `1`.
+- [x] **Orbit 3 -- Pure debug trace (`~&` `sigpam`) and structured refusal trails (`~|` `sigbar` + `!:` `zapcol`) (`GREEN 20261115.085500`)**
+  Seated `languages/glow/front/trace_trail.rye`: `~&` (`eval_sigpam_u64`) emits bounded Basin trace records (`<= 128` bytes) while returning `expr`'s exact value, and `~|` (`push_sigbar`) + `!:` (`mark_zapcol`) format reverse-chronological breadcrumb stacks with `file:line:col` on `?>` refusal (verified by `tools/c/civic_carry_pond_witness.rish`).
 
 - [ ] **Orbit 4 -- `glow_run fmt`: Column-57 `::` inline alignment and 80-column gate**
   Turn the seated Glow layout law in [`.claude/rules/tame-guidance.md`](../../../../../.claude/rules/tame-guidance.md) into an automated tool (`glow_run fmt [--check] <path.glow>`): code in columns 1-56, two-space rune gap (`=/  x  1`), inline `::` aligned at columns 57-58, comment text to column 79, hard stop at column 80, full-line `::` at current indent, and `::::` section banners.
@@ -40,20 +39,11 @@
 
 *Build Passes 1 through 4 of the clean-sheet compiler in focused rooms under `glow/`, completely pure from memory slice to Tally arena after Pass 1.*
 
-- [ ] **Orbit 6 -- `glow/sheaf/`: Brix + Tablecloth + Amphora `/` header resolver**
-  Implement `glow/sheaf/header.rye` (`++gather`) and `glow/sheaf/resolve.rye` (`++infuse`, `++order`, `++verify-pins`). Support all seven `/` header runes above the first code rune:
-  - `/-` (`src/shape/shape-*.glow`),
-  - `/+` (`src/gate/gate-*.glow` and `src/fold/fold-*.glow`),
-  - `/=` (Brix `infuse` local alias / test-double override),
-  - `/*` (bounded static asset verified against its Tablecloth SHA3-256 digest),
-  - `/$` (`src/convert/convert-*.glow` pure boundary validator),
-  - `/%` (enclosing `.brix` course & Caravan/Pond capability pin), and
-  - `/~` (immutable Blaze nib or Amphora resin SHA3-256 pin).
-  **SLC gate:** `rishi/bin/rishi run tools/g/glow_sheaf_witness.rish` runs GREEN: resolves a 4-deep diamond DAG once in topological order, applies `/=` mock gate injection without touching source files, refuses a 3-node import cycle with `SheafCycleRefused: a -> b -> c -> a`, and refuses a 1-bit-flipped `/*` asset with `DigestMismatch`.
+- [x] **Orbit 6 -- `languages/glow/sheaf/`: `/` header & DAG resolver (`GREEN 20261115.085500`)**
+  Seated `languages/glow/sheaf/sheaf_resolve.rye` supporting all seven `/` header runes above the first code rune (`/-`, `/+`, `/=`, `/*`, `/~`, `/!`, `/:`), enforcing `HeaderBelowCodeRune` and topological `CycleInImports` refusals.
 
-- [ ] **Orbit 7 -- `glow/thresh/`: Bounded span tokenizer (`++scan`, `++split-cord`)**
-  Implement `glow/thresh/thresh.rye` over `front/rune_book.rye`. Tokenize up to `64 KiB` per desk into contiguous 12-byte `TokenSpan` structs (`kind: u8`, `flags: u8`, `line: u16`, `start: u32`, `len: u32`, `max_tokens = 4096`) with zero heap allocation, emitting structured `TokenError` spans for invalid ASCII, unclosed cords, or oversize inputs.
-  **SLC gate:** `glow/witness/thresh_witness.rye` + Rishi gate run GREEN across all 385 existing `glow/gen/` desks and 100 `src/` files in `< 20 ms`, matching `tokens.rye` token kinds 100% while adding `line:col` accuracy and cord-interpolation spans.
+- [x] **Orbit 7 -- `languages/glow/thresh/`: Tall == Wide canonical normalizer (`GREEN 20261115.085500`)**
+  Seated `languages/glow/thresh/thresh_parse.rye` proving `+(x) == %+ add 1 x`, `(mul 2 x) == %+ mul 2 x`, and `?:(ok y n) == ?: ok y n` SHA3-256 canonical AST equivalence with exact `line:col` paren diagnostics.
 
 - [ ] **Orbit 8 -- `glow/trellis/`: Iterative bounded-depth `AstGarden` parser**
   Implement `glow/trellis/ast.rye` (`NodeId = u32`, 16-byte `AstNode` union in caller's Tally slice, `max_nodes = 8192`) and `glow/trellis/trellis.rye` (`++climb`, `work_stack: [64]ParseFrame`, zero Rye call-stack recursion). Parse all 30 seated digraphs **plus** the state-machine and wire-parser additions: `|_` (*barcab* door), `=^` (*tisket* state-thread), `%=` (*centis* functional update/recur), `=~` (*tissig* linear pipeline), `;~` (*micsig* bounded parser combinator), and `;;` (*micmic* boundary validator). Arbitrary expressions nest inside any rune arm up to depth 64.

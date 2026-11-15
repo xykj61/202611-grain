@@ -57,7 +57,6 @@ allow mitra-shed
 allow modules
 allow nixos
 allow open
-allow study
 allow tasks.rish
 allow terrarium
 allow tools
@@ -111,7 +110,6 @@ scrub     mitra-shed
 scrub     modules
 template  nixos
 scrub     open
-scrub     study
 template  tasks.rish
 template  terrarium
 scrub     tools

@@ -16,7 +16,7 @@ let mk = run ["mkdir" "-p" "tools/.build"]
 assert mk.ok else "mkdir tools/.build failed"
 
 # 1. Quest 2: Jyotish integer wheel & declarative gate_runner
-let b_cc = run ["sh" rb "study/classical-vedic-astrology/cast_chart.rye" "-femit-bin=tools/.build/cast_chart"]
+let b_cc = run ["sh" rb "libraries/classical-vedic-astrology/cast_chart.rye" "-femit-bin=tools/.build/cast_chart"]
 assert b_cc.ok else "cast_chart build failed"
 let r_cc = run ["tools/.build/cast_chart"]
 assert r_cc.ok else "cast_chart selftest failed"

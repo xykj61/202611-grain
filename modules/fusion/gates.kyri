@@ -14,11 +14,17 @@ max_cols 80 publish-seed.rish
 max_cols 80 publish-redirect.rish
 max_cols 80 tasks.rish
 max_cols 80 modules/sundial/sundial.rye
+max_cols 80 languages/rishi/grainos_cli.rye
 max_cols 80 languages/glow/front/rune_book.rye
 max_cols 80 languages/glow/front/cord_interp.rye
+max_cols 80 languages/glow/front/trace_trail.rye
+max_cols 80 languages/glow/sheaf/sheaf_resolve.rye
+max_cols 80 languages/glow/thresh/thresh_parse.rye
 max_cols 80 modules/comlink/parcel/parcel_core.rye
 max_cols 80 modules/resonance/earpiece/earpiece_core.rye
 max_cols 80 modules/brushstroke/touch/touch_core.rye
+max_cols 80 modules/brushstroke/touch/carry_frame_wire.rye
+max_cols 80 libraries/shastra/tiruppavai/tiruppavai_dawn.rye
 max_cols 80 modules/pond/pond_cli.rye
 max_cols 80 modules/fusion/fusion_dag.rye
 max_cols 80 modules/fusion/fusion_sow.rye
@@ -32,6 +38,7 @@ ascii_7bit libraries/README.md
 ascii_7bit libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md
 ascii_7bit blazepod/BOM_AND_ASSEMBLY.md
 ascii_7bit docs-geode/README.md
+ascii_7bit docs-geode/architecture/conservation-equations.md
 ascii_7bit docs-geode/architecture/tame-and-civic-ring-audit.md
 ascii_7bit docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md
 ascii_7bit modules/apps/bloom/README.md

@@ -1,0 +1,194 @@
+//! languages/glow/thresh/thresh_parse.rye -- Tall == Wide canonical parser.
+//!
+//! Glow Mill & Citizen Ring Orbit 5 (`20261115.085000`).
+//! Desugars wide & irregular Glow forms (`+(x)`, `=(a b)`, `(add a b)`,
+//! `?:(c t f)`) and tall two-space forms (`%+  add  a  b`, `?:  c  t  f`) into
+//! ONE canonical S-expression AST digest (`SHA3-256`), proving byte-exact
+//! `wide_ast == tall_ast` equivalence and reporting `line:col` syntax errors!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.085000";
+pub const max_tokens: u32 = 256;
+pub const max_canon_bytes: u32 = 4096;
+const nl: u8 = 10;
+const ws_all = [_]u8{ 32, 9, 13, 10 };
+
+pub const ThreshError = error{
+    EmptySource,
+    UnbalancedParens,
+    TooManyTokens,
+    MalformedConstruct,
+    CanonOverflow,
+};
+
+pub const SyntaxDiag = struct {
+    line: u32,
+    col: u32,
+    err: ThreshError,
+};
+
+/// Normalizes both wide/irregular Glow expressions and tall rune expressions
+/// into canonical prefix form (`(call op args...)` / `(if cond then else)`)
+/// so downstream `Trellis`/`Assay`/`Pith` see a single representation!
+pub fn canonicalize_glow_expr(
+    src: []const u8,
+    out: []u8,
+    diag: *SyntaxDiag,
+) ThreshError![]const u8 {
+    diag.* = .{ .line = 1, .col = 1, .err = error.EmptySource };
+    const trimmed = std.mem.trim(u8, src, &ws_all);
+    if (trimmed.len == 0) return error.EmptySource;
+
+    // Verify balanced parentheses while tracking exact `line:col`!
+    var depth: i32 = 0;
+    var ln: u32 = 1;
+    var cl: u32 = 1;
+    for (src) |c| {
+        if (c == '(') depth += 1;
+        if (c == ')') {
+            depth -= 1;
+            if (depth < 0) {
+                diag.* = .{
+                    .line = ln,
+                    .col = cl,
+                    .err = error.UnbalancedParens,
+                };
+                return error.UnbalancedParens;
+            }
+        }
+        if (c == nl) {
+            ln += 1;
+            cl = 1;
+        } else {
+            cl += 1;
+        }
+    }
+    if (depth != 0) {
+        diag.* = .{ .line = ln, .col = cl, .err = error.UnbalancedParens };
+        return error.UnbalancedParens;
+    }
+    // invariant: parenthesis depth returned to 0 across entire input slice.
+    assert(depth == 0);
+
+    // 1. Irregular increment sugar: `+(x)` == `%+  add  1  x`
+    if (std.mem.startsWith(u8, trimmed, "+(") and
+        trimmed[trimmed.len - 1] == ')')
+    {
+        const inner = std.mem.trim(u8, trimmed[2 .. trimmed.len - 1], " ");
+        if (inner.len == 0) return error.MalformedConstruct;
+        return fmt_canon(out, "(call add 1 {s})", .{inner});
+    }
+
+    // 2. Irregular equality sugar: `=(a b)` == `%+  eql  a  b`
+    if (std.mem.startsWith(u8, trimmed, "=(") and
+        trimmed[trimmed.len - 1] == ')')
+    {
+        const inner = std.mem.trim(u8, trimmed[2 .. trimmed.len - 1], " ");
+        var tok = std.mem.tokenizeScalar(u8, inner, ' ');
+        const a = tok.next() orelse return error.MalformedConstruct;
+        const b = tok.next() orelse return error.MalformedConstruct;
+        return fmt_canon(out, "(call eql {s} {s})", .{ a, b });
+    }
+
+    // 3. Wide conditional `?:(c t f)` AND tall `?:  c  t  f` -> `(if c t f)`
+    if (std.mem.startsWith(u8, trimmed, "?:")) {
+        var body = std.mem.trim(u8, trimmed[2..], &ws_all);
+        if (body.len >= 2 and body[0] == '(' and body[body.len - 1] == ')') {
+            body = std.mem.trim(u8, body[1 .. body.len - 1], " ");
+        }
+        var tok = std.mem.tokenizeAny(u8, body, &ws_all);
+        const c = tok.next() orelse return error.MalformedConstruct;
+        const t = tok.next() orelse return error.MalformedConstruct;
+        const f = tok.next() orelse return error.MalformedConstruct;
+        return fmt_canon(out, "(if {s} {s} {s})", .{ c, t, f });
+    }
+
+    // 4. Wide call `(op a b)` -> `(call op a b)`
+    if (trimmed[0] == '(' and trimmed[trimmed.len - 1] == ')') {
+        const inner = std.mem.trim(u8, trimmed[1 .. trimmed.len - 1], " ");
+        var tok = std.mem.tokenizeScalar(u8, inner, ' ');
+        const op = tok.next() orelse return error.MalformedConstruct;
+        const a = tok.next() orelse return error.MalformedConstruct;
+        const b = tok.next() orelse return error.MalformedConstruct;
+        return fmt_canon(out, "(call {s} {s} {s})", .{ op, a, b });
+    }
+
+    // 5. Tall `%+  op  a  b` -> `(call op a b)`
+    if (std.mem.startsWith(u8, trimmed, "%+")) {
+        const rest = std.mem.trim(u8, trimmed[2..], &ws_all);
+        var tok = std.mem.tokenizeAny(u8, rest, &ws_all);
+        const op = tok.next() orelse return error.MalformedConstruct;
+        const a = tok.next() orelse return error.MalformedConstruct;
+        const b = tok.next() orelse return error.MalformedConstruct;
+        return fmt_canon(out, "(call {s} {s} {s})", .{ op, a, b });
+    }
+
+    diag.* = .{ .line = 1, .col = 1, .err = error.MalformedConstruct };
+    return error.MalformedConstruct;
+}
+
+fn fmt_canon(
+    out: []u8,
+    comptime fmt: []const u8,
+    args: anytype,
+) ThreshError![]const u8 {
+    const s = std.fmt.bufPrint(out, fmt, args) catch {
+        return error.CanonOverflow;
+    };
+    // invariant: canonicalized slice is non-empty and fits inside `out`.
+    assert(s.len > 0 and s.len <= out.len);
+    return s;
+}
+
+fn sha3_of(s: []const u8) [32]u8 {
+    var d: [32]u8 = undefined;
+    Sha3_256.hash(s, &d, .{});
+    return d;
+}
+
+fn run_selftest() !u8 {
+    var b1: [256]u8 = undefined;
+    var b2: [256]u8 = undefined;
+    var diag: SyntaxDiag = undefined;
+
+    // 1. `+(steps)` == `%+  add  1  steps` (irregular == tall!)
+    const c_irr = try canonicalize_glow_expr("+(steps)", &b1, &diag);
+    const c_tall = try canonicalize_glow_expr("%+  add  1  steps", &b2, &diag);
+    if (!std.mem.eql(u8, &sha3_of(c_irr), &sha3_of(c_tall))) {
+        return error.IncSugarDigestMismatch;
+    }
+
+    // 2. `(mul 2 x)` == `%+  mul  2  x` (wide == tall!)
+    const w_mul = try canonicalize_glow_expr("(mul 2 x)", &b1, &diag);
+    const t_mul = try canonicalize_glow_expr("%+  mul  2  x", &b2, &diag);
+    if (!std.mem.eql(u8, &sha3_of(w_mul), &sha3_of(t_mul))) {
+        return error.WideCallDigestMismatch;
+    }
+
+    // 3. `?:(ok yes no)` == `?:  ok  yes  no`
+    const w_if = try canonicalize_glow_expr("?:(ok yes no)", &b1, &diag);
+    const t_if = try canonicalize_glow_expr("?:  ok  yes  no", &b2, &diag);
+    if (!std.mem.eql(u8, &sha3_of(w_if), &sha3_of(t_if))) {
+        return error.WideIfDigestMismatch;
+    }
+
+    // 4. Malformed unclosed paren reports exact `line:col`!
+    if (canonicalize_glow_expr("(mul 2 x", &b1, &diag)) |_| {
+        return error.UnclosedParenAccepted;
+    } else |err| {
+        if (err != error.UnbalancedParens or diag.line != 1) return err;
+    }
+
+    print("GREEN: thresh_parse -- wide == tall canonical AST proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

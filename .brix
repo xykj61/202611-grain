@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.083000
-myofascia 56.555
+version 20261115.085500
+myofascia 56.565
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -59,8 +59,12 @@ file tools/l/launch-choir-synthesis-chapter.rish
 # Five-language spine (languages/)
 file languages/rye/src/main.rye
 file languages/rishi/src/main.rye
+file languages/rishi/grainos_cli.rye
 file languages/glow/front/rune_book.rye
 file languages/glow/front/cord_interp.rye
+file languages/glow/front/trace_trail.rye
+file languages/glow/sheaf/sheaf_resolve.rye
+file languages/glow/thresh/thresh_parse.rye
 file languages/glow/tokens.rye
 file languages/brix/infuse.rye
 file languages/kyri/scribe/reader.rye
@@ -103,6 +107,7 @@ file modules/comlink/parcel/parcel_core.rye
 file modules/comlink/parcel/gemini/gemini_airlock.rye
 file modules/pond/pond_cli.rye
 file modules/brushstroke/touch/touch_core.rye
+file modules/brushstroke/touch/carry_frame_wire.rye
 file modules/resonance/earpiece/earpiece_core.rye
 
 # Sundial -- health percent and myofascia indicator
@@ -114,8 +119,10 @@ file README.md
 file SOURCE.md
 file tasks.rish
 file libraries/README.md
+file libraries/shastra/tiruppavai/tiruppavai_dawn.rye
 file blazepod/BOM_AND_ASSEMBLY.md
 file docs-geode/README.md
+file docs-geode/architecture/conservation-equations.md
 file docs-geode/architecture/tame-and-civic-ring-audit.md
 file docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md
 file modules/apps/bloom/art-of-programming/README.md

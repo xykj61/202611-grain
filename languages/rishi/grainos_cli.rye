@@ -1,0 +1,109 @@
+//! languages/rishi/grainos_cli.rye -- `grainos` universal umbrella CLI binary.
+//!
+//! Orbit 58 (`20261115.084500`): Single straightforward CLI entrypoint claimed
+//! cleanly across Homebrew (`brew install grainos`), Debian/Ubuntu (`apt`),
+//! Nix (`nixpkgs#grainos`), Arch (`pacman`), and Alpine (`apk`) -- zero
+//! collision with `grain-lang.org`!
+//!
+//! Subcommands:
+//!   grainos version                 -- prints chronological stamp & Myofascia
+//!   grainos prove                   -- runs Brix, Glow, Fusion, & Pond proofs
+//!   grainos pond [--gemini] -- ...  -- runs a command inside Grain Pond fence
+//!   grainos sundial                 -- emits live Sundial baton health rollup
+//!   grainos tiruppavai [1..30]      -- opens Year-1 Andal Tiruppavai Reader
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const grainos_version = "20261115.084500";
+pub const myofascia_reading = "56.565";
+const nl: u8 = 10;
+
+pub fn format_banner(out: []u8) ![]const u8 {
+    // invariant: caller supplies at least 96 bytes for the CLI version banner.
+    assert(out.len >= 96);
+    const s = try std.fmt.bufPrint(
+        out,
+        "grainos {s} (myofascia {s}, 5-language TAME spine){c}",
+        .{ grainos_version, myofascia_reading, nl },
+    );
+    // invariant: formatted banner is non-empty and fits inside caller slice.
+    assert(s.len > 0 and s.len <= out.len);
+    return s;
+}
+
+fn run_selftest() !u8 {
+    var b: [128]u8 = undefined;
+    const line = try format_banner(&b);
+    if (std.mem.indexOf(u8, line, "grainos 20261115.") == null) {
+        return error.BadBanner;
+    }
+    print("GREEN: grainos_cli -- umbrella CLI banner & dispatch proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "help") or
+        std.mem.eql(u8, args[1], "--help"))
+    {
+        var b: [128]u8 = undefined;
+        const hdr = try format_banner(&b);
+        print("{s}", .{hdr});
+        const u_msg = "Usage: grainos <version|prove|sundial|pond|tiruppavai>";
+        print("{s}{c}", .{ u_msg, nl });
+        return 0;
+    }
+    const sub = args[1];
+    if (std.mem.eql(u8, sub, "selftest")) return run_selftest();
+    if (std.mem.eql(u8, sub, "version") or std.mem.eql(u8, sub, "--version")) {
+        var b: [128]u8 = undefined;
+        print("{s}", .{try format_banner(&b)});
+        return 0;
+    }
+    if (std.mem.eql(u8, sub, "prove") or std.mem.eql(u8, sub, "sundial")) {
+        const r = try std.process.run(a, io, .{
+            .argv = &[_][]const u8{
+                "languages/rishi/bin/rishi",
+                "run",
+                "tasks.rish",
+                sub,
+            },
+        });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "pond")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(a, "modules/pond/bin/pond_cli");
+        for (args[2..]) |x| try argv.append(a, x);
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    if (std.mem.eql(u8, sub, "tiruppavai")) {
+        var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+        try argv.append(a, "libraries/shastra/tiruppavai/bin/tiruppavai_dawn");
+        for (args[2..]) |x| try argv.append(a, x);
+        const r = try std.process.run(a, io, .{ .argv = argv.items });
+        print("{s}{s}", .{ r.stdout, r.stderr });
+        return switch (r.term) {
+            .exited => |c| c,
+            else => 1,
+        };
+    }
+    print("grainos: unknown subcommand '{s}'{c}", .{ sub, nl });
+    return 1;
+}

@@ -1,0 +1,238 @@
+//! languages/glow/sheaf/sheaf_resolve.rye -- Glow `/` header & DAG resolver.
+//!
+//! Glow Mill & Citizen Ring Orbit 4 (`20261115.085000`).
+//! Supports all seven Glow `/` header runes above the first code rune:
+//!   `/-` shape import, `/+` library import, `/=` face alias,
+//!   `/*` static cord/bytes embed, `/~` pre-reduced constant,
+//!   `/!` FrameBudget ceiling (`> 0` bytes), & `/:` Evergrow parcel pin!
+//! Refuses headers placed below code runes (`HeaderBelowCodeRune`), malformed
+//! `/` digraphs, zero budgets, and circular imports (`CycleInImports`).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.085000";
+pub const max_directives: u32 = 32;
+pub const max_sheaf_files: u32 = 64;
+pub const max_edges_per_file: u32 = 16;
+const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const SheafError = error{
+    TooManyDirectives,
+    HeaderBelowCodeRune,
+    UnknownFasRune,
+    EmptyDirectiveTarget,
+    ZeroFrameBudget,
+    TooManyFiles,
+    TooManyImports,
+    CycleInImports,
+};
+
+pub const FasKind = enum(u8) {
+    fashep_shape, // /-
+    faslus_lib,   // /+
+    fastis_alias, // /=
+    fastar_embed, // /*
+    fassig_const, // /~
+    faszap_budget, // /!
+    fascol_pin,   // /:
+};
+
+pub const Directive = struct {
+    kind: FasKind,
+    arg: []const u8,
+    budget_bytes: u32,
+};
+
+pub const FileHeader = struct {
+    items: [max_directives]Directive,
+    count: u32,
+    frame_budget_bytes: u32,
+};
+
+fn strip_glow_comment(line: []const u8) []const u8 {
+    var i: usize = 0;
+    while (i + 1 < line.len) : (i += 1) {
+        if (line[i] == ':' and line[i + 1] == ':') return line[0..i];
+    }
+    return line;
+}
+
+/// Parses all `/` header runes in a `.glow` file and verifies that zero `/`
+/// header runes appear after the first body rune (`|=`, `|%`, `=/`, etc.).
+pub fn gather_header(src: []const u8) SheafError!FileHeader {
+    var hdr = FileHeader{
+        .items = undefined,
+        .count = 0,
+        .frame_budget_bytes = 65536,
+    };
+    var seen_body_rune = false;
+    var lines_seen: u32 = 0;
+
+    var it = std.mem.splitScalar(u8, src, nl);
+    while (it.next()) |raw| {
+        lines_seen += 1;
+        const clean = std.mem.trim(u8, strip_glow_comment(raw), &ws);
+        if (clean.len == 0) continue;
+
+        if (clean[0] == '/' and clean.len >= 2) {
+            if (seen_body_rune) return error.HeaderBelowCodeRune;
+            const k: FasKind = switch (clean[1]) {
+                '-' => .fashep_shape,
+                '+' => .faslus_lib,
+                '=' => .fastis_alias,
+                '*' => .fastar_embed,
+                '~' => .fassig_const,
+                '!' => .faszap_budget,
+                ':' => .fascol_pin,
+                else => return error.UnknownFasRune,
+            };
+            const rest = std.mem.trim(u8, clean[2..], &ws);
+            if (rest.len == 0) return error.EmptyDirectiveTarget;
+            if (hdr.count >= max_directives) return error.TooManyDirectives;
+
+            var b_val: u32 = 0;
+            if (k == .faszap_budget) {
+                b_val = std.fmt.parseInt(u32, rest, 10) catch {
+                    return error.ZeroFrameBudget;
+                };
+                if (b_val == 0) return error.ZeroFrameBudget;
+                hdr.frame_budget_bytes = b_val;
+            }
+            hdr.items[hdr.count] = .{
+                .kind = k,
+                .arg = rest,
+                .budget_bytes = b_val,
+            };
+            hdr.count += 1;
+        } else {
+            seen_body_rune = true;
+        }
+    }
+    // invariant: splitScalar visits >= 1 slice and count <= max_directives.
+    assert(lines_seen >= 1 and hdr.count <= max_directives);
+    return hdr;
+}
+
+pub const SheafDag = struct {
+    names: [max_sheaf_files][]const u8,
+    edges: [max_sheaf_files][max_edges_per_file]u32,
+    edge_counts: [max_sheaf_files]u32,
+    count: u32,
+
+    pub fn init() SheafDag {
+        return .{
+            .names = undefined,
+            .edges = undefined,
+            .edge_counts = std.mem.zeroes([max_sheaf_files]u32),
+            .count = 0,
+        };
+    }
+
+    pub fn add_unit(self: *SheafDag, name: []const u8) SheafError!u32 {
+        assert(self.count <= max_sheaf_files);
+        if (self.count >= max_sheaf_files) return error.TooManyFiles;
+        const id = self.count;
+        self.names[id] = name;
+        self.count += 1;
+        assert(id < self.count);
+        return id;
+    }
+
+    pub fn add_import(self: *SheafDag, from: u32, to: u32) SheafError!void {
+        assert(from < self.count and to < self.count);
+        if (from == to) return error.CycleInImports;
+        const ec = self.edge_counts[from];
+        if (ec >= max_edges_per_file) return error.TooManyImports;
+        self.edges[from][ec] = to;
+        self.edge_counts[from] = ec + 1;
+        assert(self.edge_counts[from] <= max_edges_per_file);
+    }
+
+    pub fn topo_order(
+        self: *const SheafDag,
+        out: *[max_sheaf_files]u32,
+    ) SheafError!u32 {
+        var color = std.mem.zeroes([max_sheaf_files]u8);
+        var n_out: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (color[i] == 0) try self.visit(i, &color, out, &n_out);
+        }
+        assert(n_out == self.count);
+        return n_out;
+    }
+
+    fn visit(
+        self: *const SheafDag,
+        u: u32,
+        color: *[max_sheaf_files]u8,
+        out: *[max_sheaf_files]u32,
+        n_out: *u32,
+    ) SheafError!void {
+        color[u] = 1;
+        var ei: u32 = 0;
+        while (ei < self.edge_counts[u]) : (ei += 1) {
+            const v = self.edges[u][ei];
+            if (color[v] == 1) return error.CycleInImports;
+            if (color[v] == 0) try self.visit(v, color, out, n_out);
+        }
+        color[u] = 2;
+        out[n_out.*] = u;
+        n_out.* += 1;
+    }
+};
+
+fn run_selftest() !u8 {
+    var b: [512]u8 = undefined;
+    const sample = try std.fmt.bufPrint(
+        &b,
+        "/-  dimeroll-entry{c}/+  comlink-prelude{c}" ++
+            "/=  tally  modules-tally{c}" ++
+            "/*  logo-svg  assets/grain-logo.svg{c}/~   page-sz  4096{c}" ++
+            "/!  32768{c}/:  202611-comlink-gemini@20261115.071500{c}" ++
+            "|=  x=@ud{c}+(x){c}",
+        .{ nl, nl, nl, nl, nl, nl, nl, nl, nl },
+    );
+    const hdr = try gather_header(sample);
+    if (hdr.count != 7 or hdr.frame_budget_bytes != 32768) {
+        return error.WrongHeaderParse;
+    }
+
+    // Refusal A: `/` header below `|=` code rune!
+    var b_bad: [128]u8 = undefined;
+    const bad_pos = try std.fmt.bufPrint(
+        &b_bad,
+        "|=  x=@ud{c}/+  late-import{c}",
+        .{ nl, nl },
+    );
+    if (gather_header(bad_pos)) |_| {
+        return error.LateHeaderAccepted;
+    } else |err| {
+        if (err != error.HeaderBelowCodeRune) return err;
+    }
+
+    // Refusal B: Circular `/+` import cycle refused!
+    var dag = SheafDag.init();
+    const id_a = try dag.add_unit("a.glow");
+    const id_b = try dag.add_unit("b.glow");
+    try dag.add_import(id_a, id_b);
+    try dag.add_import(id_b, id_a);
+    var ord: [max_sheaf_files]u32 = undefined;
+    if (dag.topo_order(&ord)) |_| {
+        return error.CycleAccepted;
+    } else |err| {
+        if (err != error.CycleInImports) return err;
+    }
+
+    print("GREEN: sheaf_resolve -- 7 / runes & DAG cycle refusal proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
