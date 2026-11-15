@@ -106,3 +106,4 @@ ascii_7bit mitra-shed/shed-prep.md
 max_cols 80 libraries/shastra/panchanga_shastra_bridge.rye
 ascii_7bit docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md
 max_cols 80 blazepod/rv64_glasswall_boot.rye
+max_cols 80 modules/comlink/constel_405_discovery.rye
