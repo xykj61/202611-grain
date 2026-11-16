@@ -13,6 +13,7 @@ const bloom = @import("bloom.rye");
 const res_station = @import("resonance_station.rye");
 const muts = @import("vantage_mutations.rye");
 const civic_room = @import("vantage_council_puddle.rye");
+const dusk_reader = @import("vantage_twilight_reader.rye");
 
 pub const version = "20261115.143500";
 const nl: u8 = 10;
@@ -76,6 +77,10 @@ export fn vantage_app_res_toggle_solo0_ffi() void {
 export fn vantage_app_write_active_room_ffi() bool {
     ensure_store();
     switch (app_state.active_tab) {
+        0 => {
+            write_store.step_twilight_sign();
+            return true;
+        },
         1 => {
             write_store.post_dimeroll(0, 1, 250, "Co-op Harvest Box") catch {
                 return false;
@@ -136,6 +141,11 @@ pub fn render_screen(st: *const carry.VantageCarryState, out: []u8) u32 {
                 ) catch break;
                 pos += row.len;
             }
+            const t_card = dusk_reader.render_dusk_card(
+                write_store.twilight_sign,
+                out[pos..],
+            ) catch return @intCast(pos);
+            pos += t_card.len;
         },
         1 => {
             for (dimeroll_views, 1..) |v, idx| {
@@ -221,6 +231,15 @@ fn run_selftest() !u8 {
         null)
     {
         return error.MissingBloomCurriculum;
+    }
+    if (std.mem.indexOf(u8, scr[0..n0], "Nur al-Anwar") == null) {
+        return error.MissingTab0RisalaCard;
+    }
+    if (!vantage_app_write_active_room_ffi()) return error.Tab0StepFailed;
+    if (!vantage_app_write_active_room_ffi()) return error.Tab0Step2Failed;
+    const n0_siya = vantage_app_render_screen_ffi(&scr, 2048);
+    if (std.mem.indexOf(u8, scr[0..n0_siya], "al-Wadud & Mahabbah") == null) {
+        return error.MissingSiyaMahabbah;
     }
 
     // Tab 1 (Dimeroll)

@@ -111,3 +111,4 @@ max_cols 80 libraries/risala/twilight_wheel.rye
 max_cols 80 modules/fusion/twilight_residue_audit.rye
 ascii_7bit context/TWILIGHT_STYLE.md
 ascii_7bit libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md
+max_cols 80 modules/comlink/vantage/vantage_twilight_reader.rye

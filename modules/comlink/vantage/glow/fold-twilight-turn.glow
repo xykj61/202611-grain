@@ -1,0 +1,10 @@
+::  modules/comlink/vantage/glow/fold-twilight-turn.glow -- 1..15 cycle!
+/!  16384
+|%
+++  fold-twilight-turn
+  |=  current-sign=@ud                                  ::  1..15 Calfive
+  ^-  @ud                                               ::  next sign 1..15
+  ~|  'twilight-sign-out-of-bounds'                     ::  15-sign wheel!
+  ?>  &(gte(current-sign 1) lte(current-sign 15))
+  ?:  (eql current-sign 15)  1  +(current-sign)         ::  Siya -> Aries!
+--
