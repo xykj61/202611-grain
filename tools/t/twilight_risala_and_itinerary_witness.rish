@@ -1,0 +1,34 @@
+# tools/t/twilight_risala_and_itinerary_witness.rish -- Movement 12/15 (`Pisces`):
+# Multicultural Prema-Bhakti & Risala 15-Sign Twilight, Clean-Bench Audit, &
+# Calfive Itinerary Witness!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Multicultural 15-Sign `twilight_wheel.rye` (`Shastra` + `Risala`)!
+let b_tw = run ["sh" rb "libraries/risala/twilight_wheel.rye" "-femit-bin=tools/.build/twilight_wheel"]
+assert b_tw.ok else "twilight_wheel build failed"
+let r_tw = run ["tools/.build/twilight_wheel" "selftest"]
+assert r_tw.ok else "twilight_wheel selftest failed"
+
+# 2. Pisces clean-bench tracked-file verifier (`twilight_residue_audit.rye`)!
+let b_ra = run ["sh" rb "modules/fusion/twilight_residue_audit.rye" "-femit-bin=tools/.build/twilight_residue_audit"]
+assert b_ra.ok else "twilight_residue_audit build failed"
+let r_ra = run ["tools/.build/twilight_residue_audit"]
+assert r_ra.ok else "twilight_residue_audit failed"
+
+# 3. Rebuild `grain-ww` CLI & test `twilight-wheel 15` (Siya) + `audit-clean`!
+let b_gw = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_gw.ok else "grain_ww_cli build failed"
+let r_siya = run ["languages/rishi/bin/grain-ww" "twilight-wheel" "15"]
+assert r_siya.ok else "grain-ww twilight-wheel 15 failed"
+assert (r_siya.err contains "al-Wadud & Mahabbah") else "missing Risala Mahabbah on Seat 15!"
+let r_ac = run ["languages/rishi/bin/grain-ww" "audit-clean"]
+assert r_ac.ok else "grain-ww audit-clean failed"
+
+# 4. Verify `ITINERARY.md` stays strictly within its 40,960-byte pin ceiling!
+let it_chk = run ["sh" "-c" "test $(wc -c < construction/ITINERARY.md) -le 40960 && grep -q '56.910' construction/ITINERARY.md"]
+assert it_chk.ok else "construction/ITINERARY.md exceeded 40960B or missing 56.910!"
+
+say "GREEN: twilight_risala_and_itinerary_witness -- 15-sign Prema-Bhakti/Risala Twilight, clean-bench audit, & Calfive ITINERARY proven."

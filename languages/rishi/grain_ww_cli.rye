@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.160500";
-pub const myofascia_reading = "56.895";
+pub const grain_ww_version = "20261115.162500";
+pub const myofascia_reading = "56.910";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -279,6 +279,24 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/panchanga_shastra_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "twilight-wheel")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_wheel",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "audit-clean")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_residue_audit",
             null,
             args[2..],
         );

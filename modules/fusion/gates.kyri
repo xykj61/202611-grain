@@ -107,3 +107,7 @@ max_cols 80 libraries/shastra/panchanga_shastra_bridge.rye
 ascii_7bit docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md
 max_cols 80 blazepod/rv64_glasswall_boot.rye
 max_cols 80 modules/comlink/constel_405_discovery.rye
+max_cols 80 libraries/risala/twilight_wheel.rye
+max_cols 80 modules/fusion/twilight_residue_audit.rye
+ascii_7bit context/TWILIGHT_STYLE.md
+ascii_7bit libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md

@@ -1,0 +1,67 @@
+//! modules/fusion/twilight_residue_audit.rye -- Pisces Clean-Bench Verifier!
+//!
+//! Stamp: `20261115.162500` -- `Movement 12/15 : Pisces` (*Twilight close:
+//! clear residue & offer one clean seed*), powering `grain-ww audit-clean`!
+//!   1. Verifies `git ls-files` tracks **zero** `.ryekey`, `.o`, `.zig-cache`,
+//!      or `tools/.build/` binary residue,
+//!   2. Verifies **zero** stale `active-tablecloth/` paths remain tracked!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.162500";
+const nl: u8 = 10;
+
+pub const AuditError = error{
+    ResidueArtifactTracked,
+    StaleActiveTableclothTracked,
+    EmptyTrackedTree,
+};
+
+pub fn is_residue_path(path: []const u8) bool {
+    if (std.mem.endsWith(u8, path, ".ryekey")) return true;
+    if (std.mem.endsWith(u8, path, ".o")) return true;
+    if (std.mem.indexOf(u8, path, ".zig-cache/") != null) return true;
+    if (std.mem.startsWith(u8, path, "tools/.build/")) return true;
+    return false;
+}
+
+pub fn audit_tracked_list(ls_text: []const u8) AuditError!u32 {
+    var count: u32 = 0;
+    var it = std.mem.splitScalar(u8, ls_text, nl);
+    while (it.next()) |line| {
+        if (line.len == 0) continue;
+        if (is_residue_path(line)) return error.ResidueArtifactTracked;
+        if (std.mem.startsWith(u8, line, "active-tablecloth/")) {
+            return error.StaleActiveTableclothTracked;
+        }
+        count += 1;
+    }
+    if (count == 0) return error.EmptyTrackedTree;
+    // invariant: >= 1 clean tracked files and zero residue!
+    assert(count >= 1);
+    return count;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    if (!is_residue_path("foo/bar.ryekey") or
+        !is_residue_path("tools/.build/tmp") or
+        is_residue_path("modules/sundial/one_clock.rye"))
+    {
+        return error.DetectorBroken;
+    }
+
+    const r = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{ "git", "ls-files" },
+    });
+    const n = try audit_tracked_list(r.stdout);
+    print(
+        "GREEN: twilight_residue_audit -- {d} tracked files residue-free.{c}",
+        .{ n, nl },
+    );
+    return 0;
+}
