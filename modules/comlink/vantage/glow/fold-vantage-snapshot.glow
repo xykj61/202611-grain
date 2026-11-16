@@ -1,0 +1,12 @@
+::  modules/comlink/vantage/glow/fold-vantage-snapshot.glow -- Macro!
+/!  16384
+|%
+++  fold-vantage-snapshot
+  |=  [twilight-sign=@ud council-yes=@ud]               ::  UI + Civic macro
+  ^-  @ud                                               ::  packed state word
+  ~|  'vantage-snapshot-twilight-bounds'                ::  1..15 Calfive
+  ?>  &(gte(twilight-sign 1) lte(twilight-sign 15))
+  ~|  'vantage-snapshot-council-bounds'                 ::  0..405 seats
+  ?>  (lte council-yes 405)
+  (add (mul twilight-sign 1.000) council-yes)
+--

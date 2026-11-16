@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.164000";
-pub const myofascia_reading = "56.925";
+pub const grain_ww_version = "20261115.165500";
+pub const myofascia_reading = "56.940";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -326,6 +326,24 @@ pub fn main(init: std.process.Init) !u8 {
             "tools/.build/vantage_mac_live",
             null,
             args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "vantage-save")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_tablecloth_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "witness-all")) {
+        return dispatch_exec(
+            a,
+            io,
+            "languages/rishi/bin/rishi",
+            "run",
+            &[_][]const u8{"tools/w/witness_all.rish"},
         );
     }
     if (std.mem.eql(u8, sub, "carry-apk")) {
