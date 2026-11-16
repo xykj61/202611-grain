@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.171000";
-pub const myofascia_reading = "56.955";
+pub const grain_ww_version = "20261115.172500";
+pub const myofascia_reading = "56.970";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -142,6 +142,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/puddle_scp_cli",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "puddle-exec")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/puddle_cli_session",
             null,
             args[2..],
         );

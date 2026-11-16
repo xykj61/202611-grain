@@ -87,11 +87,12 @@ say "publish-seed: seed ready -- head=${head} signed=${sig} parents=0"
 say "publish-seed: target=${ww_url}"
 if pushing != "yes" then say "publish-seed: DRY RUN ok (pass --push to send)."
 
-let ssh_env = "GIT_SSH_COMMAND=ssh"
-let push_cmd = ["env" ssh_env "git" "-C" seed_dir "push" "-f" "ww" "HEAD:main"]
+let ssh_cfg = "core.sshCommand=ssh -o ControlMaster=no -o ConnectTimeout=60"
+let push_cmd = ["git" "-C" seed_dir "-c" ssh_cfg "push" "-f" "ww" "HEAD:main"]
 let ok_c = ["true"]
 if pushing == "yes" then say "publish-seed: pushing seed to ${ww_url} ..."
 if pushing == "yes" then let pushed = run push_cmd else let pushed = run ok_c
+if pushed.code != 0 then say pushed.err
 let clean_git = run ["rm" "-rf" (seed_dir + "/.git")]
 assert clean_git.ok else "publish-seed: could not remove transient .git"
 assert pushed.ok else "publish-seed: push to seed_remote_url failed"

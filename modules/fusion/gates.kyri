@@ -115,3 +115,4 @@ max_cols 80 modules/comlink/vantage/vantage_twilight_reader.rye
 max_cols 80 modules/vantage_tablecloth_bridge.rye
 max_cols 80 modules/sundial/siya_orbit_harvest.rye
 ascii_7bit modules/sundial/siya_orbit_harvest.rye
+max_cols 80 modules/pond/puddle/puddle_cli_session.rye

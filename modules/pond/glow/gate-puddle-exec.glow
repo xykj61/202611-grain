@@ -1,0 +1,12 @@
+::  modules/pond/glow/gate-puddle-exec.glow -- Capability verb gate!
+/!  16384
+|%
+++  gate-puddle-exec
+  |=  [has-metachar=@ud verb-code=@ud]                  ::  0=clean, 1..4=ok
+  ^-  @ud                                               ::  approved verb
+  ~|  'puddle-shell-metachar-refused'                   ::  zero /bin/sh -c!
+  ?>  (eql has-metachar 0)                              ::  no ; | & $ `
+  ~|  'puddle-verb-not-allowlisted'                     ::  1..4 capability
+  ?>  &(gte(verb-code 1) lte(verb-code 4))
+  verb-code
+--
