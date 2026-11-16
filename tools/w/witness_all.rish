@@ -11,6 +11,11 @@ assert b_vt.ok else "vantage_tablecloth_bridge build failed"
 let r_vt = run ["tools/.build/vantage_tablecloth_bridge"]
 assert r_vt.ok else "vantage_tablecloth_bridge selftest failed"
 
+let b_sh = run ["sh" rb "modules/sundial/siya_orbit_harvest.rye" "-femit-bin=tools/.build/siya_orbit_harvest"]
+assert b_sh.ok else "siya_orbit_harvest build failed"
+let r_sh = run ["tools/.build/siya_orbit_harvest"]
+assert r_sh.ok else "siya_orbit_harvest selftest failed"
+
 assert (run [rishi "run" "tools/b/bricks_exist_witness.rish"]).ok else "bricks_exist failed"
 assert (run [rishi "run" "tools/g/glow_rune_book_witness.rish"]).ok else "glow_rune_book failed"
 assert (run [rishi "run" "tools/g/glow_cord_interp_witness.rish"]).ok else "glow_cord_interp failed"
@@ -36,4 +41,4 @@ assert (run [rishi "run" "tools/h/harness_parcel_bloom_witness.rish"]).ok else "
 assert (run [rishi "run" "tools/f/fusion_seed_and_build_witness.rish"]).ok else "fusion_seed_and_build failed"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial failed"
 
-say "GREEN: witness_all -- Vantage<->Tablecloth macro + all 25 metal witnesses proven."
+say "GREEN: witness_all -- Siya Orbit Harvest + Vantage<->Tablecloth + all 26 metal witnesses proven."

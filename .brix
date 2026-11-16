@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.165500
-myofascia 56.940
+version 20261115.171000
+myofascia 56.955
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -76,6 +76,8 @@ file .gemini/rules/water-voice-and-glasswall.md
 file .gemini/rules/earth-rooms-molt-and-seed.md
 file modules/sundial/calfive_wheel.rye
 file modules/sundial/one_clock.rye
+file modules/sundial/siya_orbit_harvest.rye
+file modules/sundial/glow/fold-siya-orbit.glow
 file context/templates/CLOCK_CONFIG.template.kyri
 file context/templates/PUBKEYS.template.md
 file modules/flare/pulp/pulp_movement_stack.rye

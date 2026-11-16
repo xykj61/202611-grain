@@ -1,0 +1,12 @@
+::  modules/sundial/glow/fold-siya-orbit.glow -- 15-Movement Siya seal!
+/!  16384
+|%
+++  fold-siya-orbit
+  |=  [movements-done=@ud green-witnesses=@ud]          ::  strict 15-mov law
+  ^-  @ud                                               ::  completed orbits
+  ~|  'siya-orbit-incomplete-movements'                 ::  divisible by 15!
+  ?>  &((gte movements-done 15) (eql (mod movements-done 15) 0))
+  ~|  'siya-orbit-witness-shortfall'                    ::  >= 25 witnesses
+  ?>  (gte green-witnesses 25)
+  (div movements-done 15)
+--
