@@ -2,6 +2,8 @@
 
 | Stamp | Title | Notes |
 |---|---|---|
+| 20261114.222433 | [Cross-bench reply -- Gemini 4 Carbon corrections and design proposals](20261114/20261114-222433_cross-bench-reply-gemini-glow-runes.kyri.md) | Counsel reply: four corrections accepted, five horizon proposals, half-wrong wutpam/wutbar caught by grep |
+| 20261114.214130 | [Hoon rune families and Glow coverage -- external research](20261114/20261114-214130_hoon-rune-families-external-research.kyri.md) | External research: all twelve families mapped with attribution, Ford/fas insight, two practical gaps named |
 | 20261114.205447 | [Glow missing rune families -- the full Hoon map and the fas/Ford insight](20261114/20261114-205447_glow-missing-rune-families.kyri.md) | All twelve Hoon families mapped, fas/Ford insight: Brix for structure, Blaze for data, Flare for inference |
 | 20261114.205447 | [Glow missing rune families -- the full Hoon map and the fas/Ford insight](20261114/20261114-205447_glow-missing-rune-families.kyri.md) | All twelve Hoon families mapped, fas/Ford runes distributed across Brix/Blaze/Flare, four gaps named |
 | 20261114.200951 | [Glow from first principles -- language, transpiler, and rooms](20261114/20261114-200951_glow-first-principles-design.kyri.md) | Design essay: rune vocabulary, transpiler architecture, directory organization, SLC gap |
