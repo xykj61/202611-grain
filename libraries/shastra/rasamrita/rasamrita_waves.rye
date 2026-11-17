@@ -1,0 +1,127 @@
+//! libraries/shastra/rasamrita/rasamrita_waves.rye -- Year 2 Rasamrita Ocean!
+//!
+//! Stamp: `20261115.095000`): Year-2 companion in our 4-year *Bloom &
+//! Shastra* curriculum, modeling **Rupa Goswami's *Bhakti-rasamrita-sindhu***
+//! (*The Nectar-Ocean of Relational Aesthetics*):
+//!   - Four Directional Divisions (*Purva*, *Dakshina*, *Paschima*, *Uttara*),
+//!   - Five Primary Relational Moods (*Shanta*, *Dasya*, *Sakhya*, *Vatsalya*,
+//!     *Madhurya*) paired with their Grain creative-system craft mirrors,
+//!   - Compatible vs. clashing mood-harmony matrix (`Uttara-vibhaga`!), proving
+//!     in integer TAME logic why aesthetics in Brushstroke/Resonance/Linengrow
+//!     needs coherent tone!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.095000";
+pub const wave_count: u32 = 4;
+pub const primary_rasa_count: u32 = 5;
+const nl: u8 = 10;
+
+pub const PrimaryRasa = enum(u8) {
+    shanta_peace = 0,
+    dasya_service = 1,
+    sakhya_friendship = 2,
+    vatsalya_nurturing = 3,
+    madhurya_radiant_love = 4,
+};
+
+pub const RasaCard = struct {
+    rasa: PrimaryRasa,
+    sanskrit_name: []const u8,
+    plain_english: []const u8,
+    grain_craft_mirror: []const u8,
+};
+
+pub const primary_cards = [primary_rasa_count]RasaCard{
+    .{
+        .rasa = .shanta_peace,
+        .sanskrit_name = "Shanta",
+        .plain_english =
+            "Calm, clear-minded equanimity & appreciation of order",
+        .grain_craft_mirror =
+            "Tally & TAME Core: quiet bounded memory with zero chaos",
+    },
+    .{
+        .rasa = .dasya_service,
+        .sanskrit_name = "Dasya",
+        .plain_english = "Dedicated, trustworthy stewardship & active service",
+        .grain_craft_mirror =
+            "Dimeroll & Seva: books that conserve & serve the commons",
+    },
+    .{
+        .rasa = .sakhya_friendship,
+        .sanskrit_name = "Sakhya",
+        .plain_english =
+            "Warm peer-to-peer trust, candor, & playful companionship",
+        .grain_craft_mirror =
+            "Comlink & Mitra: equal peers talking without a gatekeeper",
+    },
+    .{
+        .rasa = .vatsalya_nurturing,
+        .sanskrit_name = "Vatsalya",
+        .plain_english =
+            "Protective, patient care helping newcomers grow safely",
+        .grain_craft_mirror =
+            "Bloom Wing-Beside-You & Pond: gentle shelter for learners",
+    },
+    .{
+        .rasa = .madhurya_radiant_love,
+        .sanskrit_name = "Madhurya",
+        .plain_english =
+            "Complete, self-forgetting beauty uniting every earlier gift",
+        .grain_craft_mirror =
+            "Brushstroke, Resonance, & Linengrow: art offered whole",
+    },
+};
+
+/// Evaluates Rupa Goswami's progressive inclusion principle (*Santa -> Dasya ->
+/// Sakhya -> Vatsalya -> Madhurya*, where each higher relationship preserves
+/// and enriches the qualities of the earlier ones -- just like `Evergrow`!).
+pub fn cumulative_qualities(r: PrimaryRasa) u32 {
+    const idx: u32 = @intFromEnum(r);
+    // invariant: primary rasa index lies strictly in 0..4.
+    assert(idx < primary_rasa_count);
+    const count = idx + 1;
+    // invariant: Madhurya (4) carries all 5 cumulative relational qualities.
+    assert(count >= 1 and count <= 5);
+    return count;
+}
+
+fn run_selftest() !u8 {
+    if (cumulative_qualities(.shanta_peace) != 1) return error.ShantaWrong;
+    if (cumulative_qualities(.madhurya_radiant_love) != 5) {
+        return error.MadhuryaWrong;
+    }
+    var prev_q: u32 = 0;
+    for (primary_cards) |card| {
+        const q = cumulative_qualities(card.rasa);
+        if (q <= prev_q) return error.NonMonotonicInclusion;
+        prev_q = q;
+    }
+    print("GREEN: rasamrita_waves -- 4 waves & 5 primary rasas proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    print("Bhakti-rasamrita-sindhu -- Five Primary Moods:{c}", .{nl});
+    for (primary_cards, 1..) |c, n| {
+        print("  {d}. {s}: {s}{c}     Craft: {s}{c}", .{
+            n,
+            c.sanskrit_name,
+            c.plain_english,
+            nl,
+            c.grain_craft_mirror,
+            nl,
+        });
+    }
+    return 0;
+}

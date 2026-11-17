@@ -1,0 +1,21 @@
+::  languages/glow/compiler/shapes.glow -- compiler shapes
+/!  16384
+|%
++$  token-span
+  $:  kind=@ud                                          ::  token tag 0..63
+      line=@ud                                          ::  1-based line
+      start=@ud                                         ::  byte offset
+      len=@ud                                           ::  slice length
+  ==
++$  frame-budget
+  $:  max-arena-bytes=@ud                               ::  Tally ceiling
+      max-loop-ticks=@ud                                ::  |- bound ceiling
+      max-stack-slots=@ud                               ::  frame slot cap
+  ==
++$  pith-inst
+  $:  op=@ud                                            ::  1..16 narrow op
+      a=@ud                                             ::  src reg a
+      b=@ud                                             ::  src reg b
+      imm=@ud                                           ::  u64 immediate
+  ==
+--

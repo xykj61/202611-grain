@@ -1,0 +1,31 @@
+# tools/v/vantage_civic_and_puddle_cp_witness.rish -- 6-Tab Vantage Civic
+# Command (macOS + WASM) & `grain-ww puddle-cp` Witness!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. `puddle_scp_cli.rye` selftest + `grain-ww puddle-cp` CLI integration!
+let b_scp = run ["sh" rb "modules/pond/puddle/puddle_scp_cli.rye" "-femit-bin=tools/.build/puddle_scp_cli"]
+assert b_scp.ok else "puddle_scp_cli.rye build failed"
+let r_scp = run ["tools/.build/puddle_scp_cli" "selftest"]
+assert r_scp.ok else "puddle_scp_cli selftest failed"
+
+# 2. Rebuild `grain-ww` CLI & run real `grain-ww puddle-cp` copy!
+let b_gw = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_gw.ok else "grain_ww_cli build failed"
+let r_cp = run ["languages/rishi/bin/grain-ww" "puddle-cp" ".brix" "tools/.build/puddle_box" "manifests/seed.brix"]
+assert r_cp.ok else "grain-ww puddle-cp failed"
+let chk_blaze = run ["test" "-s" "tools/.build/puddle_box/manifests/seed.brix.blaze"]
+assert chk_blaze.ok else "missing .blaze SHA3 receipt after puddle-cp!"
+
+# 3. 6-tab `VantageApp` native + wasm32-wasi + Swift AppKit FFI with Tab 4 Civic!
+let b_va = run ["sh" rb "modules/comlink/vantage/vantage_app.rye" "-femit-bin=tools/.build/vantage_app"]
+assert b_va.ok else "vantage_app native build failed"
+let r_va = run ["tools/.build/vantage_app"]
+assert r_va.ok else "vantage_app 6-tab selftest failed"
+
+let b_wasm = run ["languages/rye/bin/rye" "build-lib" "modules/comlink/vantage/vantage_app.rye" "-target" "wasm32-wasi" "-fno-entry" "-rdynamic" "-O" "ReleaseSmall" "-femit-bin=tools/.build/vantage_app_civic.wasm"]
+assert b_wasm.ok else "vantage_app wasm32-wasi build failed"
+
+say "GREEN: vantage_civic_and_puddle_cp_witness -- 6-tab Vantage Civic (macOS/WASM) & grain-ww puddle-cp proven."

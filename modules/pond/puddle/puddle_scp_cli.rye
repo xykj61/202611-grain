@@ -1,0 +1,132 @@
+//! modules/pond/puddle/puddle_scp_cli.rye -- TAME `scp` Parcel Transfer CLI!
+//!
+//! Stamp: `20261115.143500` -- Powers `grain-ww puddle-cp <src> <box> <dst>`!
+//!   1. Reads `<src>`, hashes SHA3-256, & signs with `Kumara` Ed25519 keypair,
+//!   2. Validates relative destination (`<dst>`) through `PuddleHost`
+//!      (refusing `..` traversal or leading `/` outside `<box>`!),
+//!   3. Atomically writes `<box>/<dst>` + `<box>/<dst>.blaze` 64-hex receipt!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Ed25519 = std.crypto.sign.Ed25519;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const puddle = @import("puddle_remote.rye");
+
+pub const version = "20261115.143500";
+const nl: u8 = 10;
+
+pub fn transfer_file_to_puddle(
+    a: std.mem.Allocator,
+    io: std.Io,
+    src_path: []const u8,
+    sandbox_dir: []const u8,
+    rel_dest: []const u8,
+) !void {
+    const cwd = std.Io.Dir.cwd();
+    const payload = try cwd.readFileAlloc(
+        io,
+        src_path,
+        a,
+        .limited(puddle.max_parcel_bytes),
+    );
+
+    var host = puddle.PuddleHost.init();
+    const seed: [32]u8 = @splat(0x77);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    try host.enroll_kumara_pubkey(kp.public_key.toBytes());
+
+    var sha3: [32]u8 = undefined;
+    Sha3_256.hash(payload, &sha3, .{});
+    const sig = try kp.sign(&sha3, null);
+
+    try host.receive_parcel(
+        rel_dest,
+        payload,
+        sha3,
+        kp.public_key.toBytes(),
+        sig.toBytes(),
+    );
+
+    const full_dst = try std.fs.path.join(a, &.{ sandbox_dir, rel_dest });
+    if (std.fs.path.dirname(full_dst)) |parent| {
+        try cwd.createDirPath(io, parent);
+    }
+    try cwd.writeFile(io, .{ .sub_path = full_dst, .data = payload });
+
+    const hex_arr = std.fmt.bytesToHex(sha3, .lower);
+    var hex_buf: [65]u8 = undefined;
+    @memcpy(hex_buf[0..64], &hex_arr);
+    hex_buf[64] = nl;
+    const receipt_path = try std.fmt.allocPrint(a, "{s}.blaze", .{full_dst});
+    try cwd.writeFile(io, .{ .sub_path = receipt_path, .data = &hex_buf });
+    // invariant: relative destination never starts with '/'.
+    assert(rel_dest.len > 0 and rel_dest[0] != '/');
+}
+
+fn run_selftest(a: std.mem.Allocator, io: std.Io) !u8 {
+    const cwd = std.Io.Dir.cwd();
+    try cwd.createDirPath(io, "tools/.build/puddle_box");
+    const src = "tools/.build/puddle_src.kyri";
+    const sample = "format puddle-deploy-v1 -- zone America/New_York";
+    try cwd.writeFile(io, .{ .sub_path = src, .data = sample });
+
+    // 1. Valid sandboxed copy writes byte-identical file + `.blaze` receipt!
+    try transfer_file_to_puddle(
+        a,
+        io,
+        src,
+        "tools/.build/puddle_box",
+        "etc/deploy.kyri",
+    );
+    const got = try cwd.readFileAlloc(
+        io,
+        "tools/.build/puddle_box/etc/deploy.kyri",
+        a,
+        .limited(4096),
+    );
+    if (!std.mem.eql(u8, got, sample)) return error.CopyMismatch;
+
+    // 2. Traversal `../escape.kyri` MUST refuse before touching disk!
+    if (transfer_file_to_puddle(
+        a,
+        io,
+        src,
+        "tools/.build/puddle_box",
+        "../escape.kyri",
+    )) |_| {
+        return error.TraversalAccepted;
+    } else |err| {
+        if (err != error.PathTraversalRefused) return err;
+    }
+
+    print("GREEN: puddle_scp_cli -- Ed25519+SHA3 sandbox copy proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest(a, io);
+    }
+    if (args.len < 4) {
+        print(
+            "usage: grain-ww puddle-cp <src> <puddle_box> <rel_dest>{c}",
+            .{nl},
+        );
+        return 1;
+    }
+    try transfer_file_to_puddle(a, io, args[1], args[2], args[3]);
+    print("puddle-cp: sealed {s} -> {s}/{s}{c}", .{
+        args[1],
+        args[2],
+        args[3],
+        nl,
+    });
+    return 0;
+}

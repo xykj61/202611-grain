@@ -1,0 +1,14 @@
+# modules/comlink/parcel/gemini/parcel.brix -- Inaugural Comlink Parcel #1.
+# Named by immutable epoch (`202611-comlink-gemini`) and chronological stamp
+# (`20261115.071500`) in harmony with Spec-ulation & TAME Core (`<= 80` cols).
+
+name 202611-comlink-gemini
+version 20261115.071500
+format parcel-v1
+accretion_rule offer-more-require-less
+default_model gemini-4-carbon
+frame_budget_bytes 65536
+max_prompt_bytes 16384
+capability cap_vault_gemini_key
+install_scripts none
+entry modules/comlink/parcel/gemini/gemini_airlock.rye

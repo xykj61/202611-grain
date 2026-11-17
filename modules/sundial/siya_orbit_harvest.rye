@@ -1,0 +1,123 @@
+//! modules/sundial/siya_orbit_harvest.rye -- 15-Movement Siya Orbit Seal!
+//!
+//! Stamp: `20261115.171000` -- `Movement 15/15 : sky (Siya -- Dual Aether)`
+//! (*Bhagavan & Prema-Bhakti -- al-Wadud & Mahabbah: carry the harvest whole
+//! into the next Dawn*), powering `grain-ww orbit-harvest`!
+//!   1. Enforces strict Calfive Orbit completion: an Orbit Harvest Certificate
+//!      seals ONLY when `total_movements >= 15` and `total_movements % 15 == 0`
+//!      (`error.IncompleteOrbitMovements` on `1..14`!),
+//!   2. Binds `.brix` brick count, Citizen Ring `.glow` desk count (`>= 20`),
+//!      and witness count (`>= 25`) into an Ed25519 + SHA3-256 `Blaze` seal!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Ed25519 = std.crypto.sign.Ed25519;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.171000";
+pub const orbit_movements: u32 = 15;
+const nl: u8 = 10;
+
+pub const HarvestError = error{
+    IncompleteOrbitMovements,
+    InsufficientGlowDesks,
+    InsufficientGreenWitnesses,
+    InvalidSignature,
+};
+
+pub const OrbitHarvestCert = struct {
+    orbit_number: u32,
+    total_movements: u32,
+    brix_bricks: u32,
+    glow_desks: u32,
+    green_witnesses: u32,
+    blaze_sha3: [32]u8,
+    kumara_pk: [32]u8,
+    kumara_sig: [64]u8,
+
+    pub fn verify(self: *const OrbitHarvestCert) HarvestError!void {
+        if (self.total_movements < orbit_movements or
+            (self.total_movements % orbit_movements) != 0)
+        {
+            return error.IncompleteOrbitMovements;
+        }
+        const pk = Ed25519.PublicKey.fromBytes(self.kumara_pk) catch {
+            return error.InvalidSignature;
+        };
+        const sig = Ed25519.Signature.fromBytes(self.kumara_sig);
+        sig.verify(&self.blaze_sha3, pk) catch return error.InvalidSignature;
+        assert(self.orbit_number * orbit_movements == self.total_movements);
+    }
+};
+
+pub fn seal_siya_harvest(
+    total_movements: u32,
+    brix_bricks: u32,
+    glow_desks: u32,
+    green_witnesses: u32,
+    kp: Ed25519.KeyPair,
+) HarvestError!OrbitHarvestCert {
+    if (total_movements < orbit_movements or
+        (total_movements % orbit_movements) != 0)
+    {
+        return error.IncompleteOrbitMovements;
+    }
+    if (glow_desks < 20) return error.InsufficientGlowDesks;
+    if (green_witnesses < 25) return error.InsufficientGreenWitnesses;
+
+    const orb = total_movements / orbit_movements;
+    var payload: [20]u8 = undefined;
+    std.mem.writeInt(u32, payload[0..4], orb, .little);
+    std.mem.writeInt(u32, payload[4..8], total_movements, .little);
+    std.mem.writeInt(u32, payload[8..12], brix_bricks, .little);
+    std.mem.writeInt(u32, payload[12..16], glow_desks, .little);
+    std.mem.writeInt(u32, payload[16..20], green_witnesses, .little);
+
+    var sha3: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("siya-orbit-harvest-v1:");
+    h.update(&payload);
+    h.final(&sha3);
+
+    const sig = kp.sign(&sha3, null) catch return error.InvalidSignature;
+    // invariant: completed orbit count is exact quotient total_movements / 15.
+    assert(orb * orbit_movements == total_movements);
+    return .{
+        .orbit_number = orb,
+        .total_movements = total_movements,
+        .brix_bricks = brix_bricks,
+        .glow_desks = glow_desks,
+        .green_witnesses = green_witnesses,
+        .blaze_sha3 = sha3,
+        .kumara_pk = kp.public_key.toBytes(),
+        .kumara_sig = sig.toBytes(),
+    };
+}
+
+fn run_selftest() !u8 {
+    const seed: [32]u8 = @splat(0x15);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+
+    // 1. Movement 44 (not divisible by 15!) MUST refuse premature harvest!
+    if (seal_siya_harvest(44, 155, 20, 26, kp)) |_| {
+        return error.PrematureOrbitSealed;
+    } else |err| {
+        if (err != error.IncompleteOrbitMovements) return err;
+    }
+
+    // 2. Movement 45 (`3 * 15 == 45` -> Orbit 3!) seals & verifies cleanly!
+    const cert = try seal_siya_harvest(45, 155, 20, 26, kp);
+    try cert.verify();
+    if (cert.orbit_number != 3) return error.WrongOrbitNumber;
+
+    print(
+        "GREEN: siya_orbit_harvest -- Orbit {d} ({d} mov, {d} desks).{c}",
+        .{ cert.orbit_number, cert.total_movements, cert.glow_desks, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

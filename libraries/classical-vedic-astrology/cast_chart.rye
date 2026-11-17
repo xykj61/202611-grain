@@ -1,0 +1,116 @@
+//! study/classical-vedic-astrology/cast_chart.rye -- integer Jyotish wheel.
+//!
+//! Orbit 6 of `20261115-053000`: replaces `cast_a_chart.py` with exact `u32`
+//! arcsecond arithmetic (`1,296,000"` = 360 deg; `108,000"` = 1 sign;
+//! `48,000"` = 1 nakshatra; `12,000"` = 1 pada -- zero floating-point drift).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.062500";
+pub const circle_arcsec: u32 = 1296000;
+pub const sign_arcsec: u32 = 108000;
+pub const nakshatra_arcsec: u32 = 48000;
+pub const pada_arcsec: u32 = 12000;
+const nl: u8 = 10;
+
+pub const ChartError = error{LongitudeOutOfBounds};
+
+pub const signs = [_][]const u8{
+    "Aries",     "Taurus",      "Gemini",   "Cancer",
+    "Leo",       "Virgo",       "Libra",    "Scorpio",
+    "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+};
+
+pub const nakshatras = [_][]const u8{
+    "Ashvini",          "Bharani",           "Krittika",
+    "Rohini",           "Mrigashirsha",      "Ardra",
+    "Punarvasu",        "Pushya",            "Ashlesha",
+    "Magha",            "Purva Phalguni",    "Uttara Phalguni",
+    "Hasta",            "Chitra",            "Swati",
+    "Vishakha",         "Anuradha",          "Jyeshtha",
+    "Mula",             "Purva Ashadha",     "Uttara Ashadha",
+    "Shravana",         "Dhanishtha",        "Shatabhisha",
+    "Purva Bhadrapada", "Uttara Bhadrapada", "Revati",
+};
+
+pub const Placement = struct {
+    sign_idx: u32,
+    deg_in_sign: u32,
+    min_in_deg: u32,
+    nakshatra_idx: u32,
+    pada: u32,
+    house: u32,
+};
+
+pub fn describe_arcsec(
+    trop_arcsec: u32,
+    sid_arcsec: u32,
+    asc_sign_idx: u32,
+) ChartError!Placement {
+    // invariant: zodiac wheel contains 12 signs (0..11).
+    assert(asc_sign_idx < 12);
+    if (trop_arcsec >= circle_arcsec or sid_arcsec >= circle_arcsec) {
+        return error.LongitudeOutOfBounds;
+    }
+    const sign_idx = trop_arcsec / sign_arcsec;
+    const rem_sign = trop_arcsec % sign_arcsec;
+    const deg_in_sign = rem_sign / 3600;
+    const min_in_deg = (rem_sign % 3600) / 60;
+
+    const nak_idx = sid_arcsec / nakshatra_arcsec;
+    const pada = ((sid_arcsec % nakshatra_arcsec) / pada_arcsec) + 1;
+    const house = ((sign_idx + 12 - asc_sign_idx) % 12) + 1;
+
+    // invariant: nakshatra index is 0..26, pada is 1..4, house is 1..12.
+    assert(nak_idx < 27 and pada >= 1 and pada <= 4);
+    assert(house >= 1 and house <= 12);
+    return .{
+        .sign_idx = sign_idx,
+        .deg_in_sign = deg_in_sign,
+        .min_in_deg = min_in_deg,
+        .nakshatra_idx = nak_idx,
+        .pada = pada,
+        .house = house,
+    };
+}
+
+pub fn opposite_ketu(rahu_arcsec: u32) ChartError!u32 {
+    if (rahu_arcsec >= circle_arcsec) return error.LongitudeOutOfBounds;
+    const ketu = (rahu_arcsec + (circle_arcsec / 2)) % circle_arcsec;
+    // invariant: Ketu is strictly within 0..circle_arcsec-1 and 180 deg away.
+    assert(ketu < circle_arcsec and ketu != rahu_arcsec);
+    return ketu;
+}
+
+fn run_selftest() !u8 {
+    // 1. Anuradha Nakshatra opens at 3 deg 20' sidereal Scorpio = 213 deg 20'
+    //    = (213 * 3600) + (20 * 60) = 768,000 arcsec (nakshatra_idx = 16, pada 1).
+    const anuradha_open: u32 = 768000;
+    const p = try describe_arcsec(anuradha_open, anuradha_open, 0);
+    if (!std.mem.eql(u8, signs[p.sign_idx], "Scorpio")) return error.WrongSign;
+    if (!std.mem.eql(u8, nakshatras[p.nakshatra_idx], "Anuradha")) {
+        return error.WrongNakshatra;
+    }
+    if (p.pada != 1 or p.house != 8) return error.WrongPadaOrHouse;
+
+    // 2. Ketu stands 180 deg opposite Rahu.
+    const rahu: u32 = 90 * 3600;
+    const ketu = try opposite_ketu(rahu);
+    if (ketu != 270 * 3600) return error.KetuWrong;
+
+    // 3. Out-of-bounds refusal.
+    if (describe_arcsec(circle_arcsec, 0, 0)) |_| {
+        return error.OutOfBoundsAccepted;
+    } else |err| {
+        if (err != error.LongitudeOutOfBounds) return err;
+    }
+
+    print("GREEN: cast_chart -- integer arcsec Jyotish wheel proven.{c}", .{nl});
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,145 @@
+//! modules/brushstroke/touch/carry_frame_wire.rye -- Carry Tablet/Mobile wire.
+//!
+//! Orbit 62 (`20261115.085500`): Byte-exact 24-byte Touch/Stylus wire packet
+//! & 16-byte monochrome 60Hz RLCD `FrameGrid` header shared between Rye metal
+//! and `terrarium/carry-tablet/` (`CarryTabletMain` & `FrameGridAndMobileDeck`)
+//! for Keaton's Daylight Computer DC-1 & Carry Mobile!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.085500";
+pub const touch_packet_bytes: u32 = 24;
+pub const frame_header_bytes: u32 = 16;
+pub const rlcd_magic: u32 = 0x524C_4344; // "RLCD"
+pub const max_rlcd_width: u32 = 2560;
+pub const max_rlcd_height: u32 = 2560;
+const nl: u8 = 10;
+
+pub const WireError = error{
+    PacketWrongLength,
+    BadMagic,
+    DimensionsOutOfBounds,
+    ContactIdOutOfBounds,
+};
+
+pub const TouchWirePacket = struct {
+    kind: u32,       // 0 = down, 1 = move, 2 = up, 3 = wacom_stylus
+    pointer_id: u32, // 0..9
+    x_px: i32,
+    y_px: i32,
+    radius_or_pressure: u32,
+    epoch_low_ms: u32,
+
+    pub fn encode(self: TouchWirePacket, out: *[24]u8) WireError!void {
+        if (self.pointer_id >= 10) return error.ContactIdOutOfBounds;
+        // invariant: fixed 24-byte wire frame matches CarryTabletMain.kt.
+        assert(out.len == touch_packet_bytes);
+        std.mem.writeInt(u32, out[0..4], self.kind, .little);
+        std.mem.writeInt(u32, out[4..8], self.pointer_id, .little);
+        std.mem.writeInt(i32, out[8..12], self.x_px, .little);
+        std.mem.writeInt(i32, out[12..16], self.y_px, .little);
+        std.mem.writeInt(u32, out[16..20], self.radius_or_pressure, .little);
+        std.mem.writeInt(u32, out[20..24], self.epoch_low_ms, .little);
+        assert(self.pointer_id < 10);
+    }
+
+    pub fn decode(raw: []const u8) WireError!TouchWirePacket {
+        if (raw.len != touch_packet_bytes) return error.PacketWrongLength;
+        const pid = std.mem.readInt(u32, raw[4..8], .little);
+        if (pid >= 10) return error.ContactIdOutOfBounds;
+        assert(raw.len == 24 and pid < 10);
+        return .{
+            .kind = std.mem.readInt(u32, raw[0..4], .little),
+            .pointer_id = pid,
+            .x_px = std.mem.readInt(i32, raw[8..12], .little),
+            .y_px = std.mem.readInt(i32, raw[12..16], .little),
+            .radius_or_pressure = std.mem.readInt(u32, raw[16..20], .little),
+            .epoch_low_ms = std.mem.readInt(u32, raw[20..24], .little),
+        };
+    }
+};
+
+pub const RlcdFrameHeader = struct {
+    width_px: u32,
+    height_px: u32,
+    frame_seq: u32,
+
+    pub fn encode(self: RlcdFrameHeader, out: *[16]u8) WireError!void {
+        if (self.width_px == 0 or self.width_px > max_rlcd_width or
+            self.height_px == 0 or self.height_px > max_rlcd_height)
+        {
+            return error.DimensionsOutOfBounds;
+        }
+        assert(out.len == frame_header_bytes);
+        std.mem.writeInt(u32, out[0..4], rlcd_magic, .little);
+        std.mem.writeInt(u32, out[4..8], self.width_px, .little);
+        std.mem.writeInt(u32, out[8..12], self.height_px, .little);
+        std.mem.writeInt(u32, out[12..16], self.frame_seq, .little);
+    }
+
+    pub fn decode(raw: []const u8) WireError!RlcdFrameHeader {
+        if (raw.len != frame_header_bytes) return error.PacketWrongLength;
+        const m = std.mem.readInt(u32, raw[0..4], .little);
+        if (m != rlcd_magic) return error.BadMagic;
+        const w = std.mem.readInt(u32, raw[4..8], .little);
+        const h = std.mem.readInt(u32, raw[8..12], .little);
+        if (w == 0 or w > max_rlcd_width or h == 0 or h > max_rlcd_height) {
+            return error.DimensionsOutOfBounds;
+        }
+        assert(w <= max_rlcd_width and h <= max_rlcd_height);
+        return .{
+            .width_px = w,
+            .height_px = h,
+            .frame_seq = std.mem.readInt(u32, raw[12..16], .little),
+        };
+    }
+};
+
+fn run_selftest() !u8 {
+    // 1. Daylight DC-1 (1600x1200 60Hz LivePaper) FrameHeader round-trip
+    var fbuf: [16]u8 = undefined;
+    const fhdr = RlcdFrameHeader{
+        .width_px = 1600,
+        .height_px = 1200,
+        .frame_seq = 60,
+    };
+    try fhdr.encode(&fbuf);
+    const fdec = try RlcdFrameHeader.decode(&fbuf);
+    if (fdec.width_px != 1600 or fdec.height_px != 1200) {
+        return error.FrameDecodeMismatch;
+    }
+
+    // 2. Wacom EMR stylus / finger 24-byte packet round-trip + refusal
+    var tbuf: [24]u8 = undefined;
+    const pkt = TouchWirePacket{
+        .kind = 3,
+        .pointer_id = 0,
+        .x_px = 800,
+        .y_px = 600,
+        .radius_or_pressure = 2048,
+        .epoch_low_ms = 123456,
+    };
+    try pkt.encode(&tbuf);
+    const tdec = try TouchWirePacket.decode(&tbuf);
+    if (tdec.x_px != 800 or tdec.radius_or_pressure != 2048) {
+        return error.TouchDecodeMismatch;
+    }
+
+    fbuf[0] = 0x00;
+    if (RlcdFrameHeader.decode(&fbuf)) |_| {
+        return error.CorruptMagicAccepted;
+    } else |err| {
+        if (err != error.BadMagic) return err;
+    }
+
+    print("GREEN: carry_frame_wire -- DC-1 RLCD & stylus wire proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,387 @@
+//! modules/fusion/fusion_dag.rye -- bounded DAG, early-cutoff, & receipts.
+//!
+//! Orbits 1-2 of `20261115-053000` (`20261115.060000`).
+//! Unifies `.ryekey` build caching with multi-module dependency graphs,
+//! CA-Nix semantic comment-stripping early cutoff, `verify-ich` cold audit
+//! cadence, and mandatory MISS-side falsifier proofs.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const fusion_version = "20261115.060000";
+pub const max_nodes: u32 = 256;
+pub const max_deps: u32 = 16;
+pub const verify_ich_modulus: u32 = 16;
+pub const Digest = [32]u8;
+
+const nl_byte: u8 = 10;
+const bs_byte: u8 = 92;
+const ws_chars = [_]u8{ 32, 9, 13 };
+
+pub const GraphError = error{
+    TooManyNodes,
+    TooManyDeps,
+    BadNodeId,
+    SelfDependency,
+    CycleDetected,
+};
+
+pub const TargetNode = struct {
+    name: []const u8,
+    flags: []const u8,
+    toolchain_pin: []const u8,
+    raw_sha3: Digest,
+    semantic_sha3: Digest,
+    absent_mask: u32,
+    deps: [max_deps]u32,
+    dep_count: u32,
+};
+
+pub const FusionGraph = struct {
+    nodes: [max_nodes]TargetNode,
+    count: u32,
+
+    pub fn init() FusionGraph {
+        return .{
+            .nodes = undefined,
+            .count = 0,
+        };
+    }
+
+    pub fn add_target(
+        self: *FusionGraph,
+        name: []const u8,
+        source: []const u8,
+        flags: []const u8,
+        toolchain_pin: []const u8,
+        absent_mask: u32,
+    ) GraphError!u32 {
+        // invariant: node count stays below max_nodes before insertion.
+        assert(self.count <= max_nodes);
+        if (self.count >= max_nodes) return error.TooManyNodes;
+        const id = self.count;
+        self.nodes[id] = .{
+            .name = name,
+            .flags = flags,
+            .toolchain_pin = toolchain_pin,
+            .raw_sha3 = sha3_bytes(source),
+            .semantic_sha3 = semantic_digest_sha3(source),
+            .absent_mask = absent_mask,
+            .deps = std.mem.zeroes([max_deps]u32),
+            .dep_count = 0,
+        };
+        self.count += 1;
+        // invariant: returned id is strictly less than updated count.
+        assert(id < self.count and self.count <= max_nodes);
+        return id;
+    }
+
+    pub fn add_dep(
+        self: *FusionGraph,
+        from_id: u32,
+        dep_id: u32,
+    ) GraphError!void {
+        // invariant: graph count stays bounded by max_nodes.
+        assert(self.count <= max_nodes);
+        if (from_id >= self.count or dep_id >= self.count) {
+            return error.BadNodeId;
+        }
+        if (from_id == dep_id) return error.SelfDependency;
+        const n = &self.nodes[from_id];
+        if (n.dep_count >= max_deps) return error.TooManyDeps;
+        n.deps[n.dep_count] = dep_id;
+        n.dep_count += 1;
+        // invariant: dep_count never exceeds max_deps.
+        assert(n.dep_count <= max_deps);
+    }
+
+    pub fn topo_sort(
+        self: *const FusionGraph,
+        order_out: *[max_nodes]u32,
+    ) GraphError!u32 {
+        var color = std.mem.zeroes([max_nodes]u8);
+        var out_len: u32 = 0;
+        var i: u32 = 0;
+        // invariant: node count fits inside fixed color/output arrays.
+        assert(self.count <= max_nodes);
+        while (i < self.count) : (i += 1) {
+            if (color[i] == 0) {
+                try self.dfs_visit(i, &color, order_out, &out_len);
+            }
+        }
+        // invariant: topological order visits every node exactly once.
+        assert(out_len == self.count);
+        return out_len;
+    }
+
+    fn dfs_visit(
+        self: *const FusionGraph,
+        u: u32,
+        color: *[max_nodes]u8,
+        order_out: *[max_nodes]u32,
+        out_len: *u32,
+    ) GraphError!void {
+        assert(u < self.count);
+        color[u] = 1;
+        const node = &self.nodes[u];
+        var di: u32 = 0;
+        while (di < node.dep_count) : (di += 1) {
+            const v = node.deps[di];
+            if (color[v] == 1) return error.CycleDetected;
+            if (color[v] == 0) {
+                try self.dfs_visit(v, color, order_out, out_len);
+            }
+        }
+        color[u] = 2;
+        assert(out_len.* < max_nodes);
+        order_out[out_len.*] = u;
+        out_len.* += 1;
+    }
+
+    pub fn compute_receipts(
+        self: *const FusionGraph,
+        receipts_out: *[max_nodes]Digest,
+    ) GraphError!void {
+        var order: [max_nodes]u32 = undefined;
+        const n = try self.topo_sort(&order);
+        assert(n == self.count);
+        var idx: u32 = 0;
+        while (idx < n) : (idx += 1) {
+            const id = order[idx];
+            const node = &self.nodes[id];
+            var h = Sha3_256.init(.{});
+            h.update("fusion-v1:");
+            h.update(node.name);
+            h.update(&[_]u8{0});
+            h.update(node.flags);
+            h.update(&[_]u8{0});
+            h.update(node.toolchain_pin);
+            h.update(&[_]u8{0});
+            h.update(&node.semantic_sha3);
+            var mask_bytes: [4]u8 = undefined;
+            std.mem.writeInt(u32, &mask_bytes, node.absent_mask, .little);
+            h.update(&mask_bytes);
+            var di: u32 = 0;
+            while (di < node.dep_count) : (di += 1) {
+                const dep_id = node.deps[di];
+                h.update(&receipts_out[dep_id]);
+            }
+            h.final(&receipts_out[id]);
+        }
+        // invariant: every node up to count has been visited in topo order.
+        assert(idx == self.count);
+    }
+};
+
+pub fn sha3_bytes(data: []const u8) Digest {
+    var out: Digest = undefined;
+    Sha3_256.hash(data, &out, .{});
+    return out;
+}
+
+pub fn semantic_digest_sha3(src: []const u8) Digest {
+    var h = Sha3_256.init(.{});
+    h.update("semantic-v1:");
+    var it = std.mem.splitScalar(u8, src, nl_byte);
+    var lines_seen: u32 = 0;
+    while (it.next()) |raw_line| {
+        lines_seen += 1;
+        const code_part = strip_line_comment(raw_line);
+        const trimmed = std.mem.trim(u8, code_part, &ws_chars);
+        if (trimmed.len == 0) continue;
+        h.update(trimmed);
+        h.update(&[_]u8{nl_byte});
+    }
+    var out: Digest = undefined;
+    h.final(&out);
+    // invariant: splitScalar yields at least one segment even for empty input.
+    assert(lines_seen >= 1);
+    // invariant: SHA3-256 digest length is fixed at 32 bytes.
+    assert(out.len == 32);
+    return out;
+}
+
+fn strip_line_comment(line: []const u8) []const u8 {
+    var in_str = false;
+    var i: usize = 0;
+    while (i < line.len) : (i += 1) {
+        const c = line[i];
+        if (c == '"' and (i == 0 or line[i - 1] != bs_byte)) {
+            in_str = !in_str;
+            continue;
+        }
+        if (!in_str) {
+            if (c == '#') return line[0..i];
+            if (i + 1 < line.len) {
+                if (c == '/' and line[i + 1] == '/') return line[0..i];
+                if (c == ':' and line[i + 1] == ':') return line[0..i];
+            }
+        }
+    }
+    return line;
+}
+
+pub fn should_verify_ich(lap: u64, target_id: u32, modulus: u32) bool {
+    // invariant: modulus must be non-zero to avoid division by zero.
+    assert(modulus >= 1);
+    const mixed: u64 = lap +% (@as(u64, target_id) *% 1103515245);
+    const fire = (mixed % @as(u64, modulus)) == 0;
+    // invariant: modulus == 1 always forces cold verification.
+    assert(modulus != 1 or fire);
+    return fire;
+}
+
+fn build_demo_graph(
+    tally_src: []const u8,
+    blaze_flags: []const u8,
+    zig_pin: []const u8,
+    absent_mask: u32,
+) GraphError!FusionGraph {
+    var g = FusionGraph.init();
+    const t_tally = try g.add_target(
+        "modules/tally",
+        tally_src,
+        "-O ReleaseSafe",
+        zig_pin,
+        absent_mask,
+    );
+    const t_caravan = try g.add_target(
+        "modules/caravan",
+        "pub const max_div: u32 = 16;",
+        "-O ReleaseSafe",
+        zig_pin,
+        absent_mask,
+    );
+    const t_blaze = try g.add_target(
+        "modules/blaze",
+        "pub const max_beads: u32 = 4096;",
+        blaze_flags,
+        zig_pin,
+        absent_mask,
+    );
+    try g.add_dep(t_caravan, t_tally);
+    try g.add_dep(t_blaze, t_caravan);
+    return g;
+}
+
+fn run_selftest() !u8 {
+    var b_a: [96]u8 = undefined;
+    const src_a = try std.fmt.bufPrint(
+        &b_a,
+        "// tally garden{c}pub const cap: u32 = 1024;{c}",
+        .{ nl_byte, nl_byte },
+    );
+    var b_b: [128]u8 = undefined;
+    const src_b = try std.fmt.bufPrint(
+        &b_b,
+        "// Radiant comment!{c}// extra line{c}pub const cap: u32 = 1024;{c}",
+        .{ nl_byte, nl_byte, nl_byte },
+    );
+    const g_base = try build_demo_graph(
+        src_a,
+        "-O ReleaseSafe",
+        "zig-0.17.0",
+        0,
+    );
+    var r_base: [max_nodes]Digest = undefined;
+    try g_base.compute_receipts(&r_base);
+
+    const g_comment = try build_demo_graph(
+        src_b,
+        "-O ReleaseSafe",
+        "zig-0.17.0",
+        0,
+    );
+    const raw_eq = std.mem.eql(
+        u8,
+        &g_base.nodes[0].raw_sha3,
+        &g_comment.nodes[0].raw_sha3,
+    );
+    if (raw_eq) return error.RawDigestShouldDiffer;
+    var r_comment: [max_nodes]Digest = undefined;
+    try g_comment.compute_receipts(&r_comment);
+    if (!std.mem.eql(u8, &r_base[2], &r_comment[2])) {
+        return error.EarlyCutoffMissedOnCommentEdit;
+    }
+
+    const g_code = try build_demo_graph(
+        "pub const cap: u32 = 2048;",
+        "-O ReleaseSafe",
+        "zig-0.17.0",
+        0,
+    );
+    var r_code: [max_nodes]Digest = undefined;
+    try g_code.compute_receipts(&r_code);
+    if (std.mem.eql(u8, &r_base[2], &r_code[2])) {
+        return error.CodeFlipDidNotMiss;
+    }
+
+    const g_flag = try build_demo_graph(
+        src_a,
+        "-O Debug",
+        "zig-0.17.0",
+        0,
+    );
+    var r_flag: [max_nodes]Digest = undefined;
+    try g_flag.compute_receipts(&r_flag);
+    if (std.mem.eql(u8, &r_base[2], &r_flag[2])) {
+        return error.FlagFlipDidNotMiss;
+    }
+
+    const g_pin = try build_demo_graph(
+        src_a,
+        "-O ReleaseSafe",
+        "zig-0.18.0",
+        0,
+    );
+    var r_pin: [max_nodes]Digest = undefined;
+    try g_pin.compute_receipts(&r_pin);
+    if (std.mem.eql(u8, &r_base[2], &r_pin[2])) {
+        return error.PinFlipDidNotMiss;
+    }
+
+    const g_abs = try build_demo_graph(
+        src_a,
+        "-O ReleaseSafe",
+        "zig-0.17.0",
+        1,
+    );
+    var r_abs: [max_nodes]Digest = undefined;
+    try g_abs.compute_receipts(&r_abs);
+    if (std.mem.eql(u8, &r_base[2], &r_abs[2])) {
+        return error.AbsentFlipDidNotMiss;
+    }
+
+    var g_cyc = FusionGraph.init();
+    const a = try g_cyc.add_target("a", "x", "", "0.17.0", 0);
+    const b = try g_cyc.add_target("b", "y", "", "0.17.0", 0);
+    try g_cyc.add_dep(a, b);
+    try g_cyc.add_dep(b, a);
+    var dummy: [max_nodes]Digest = undefined;
+    if (g_cyc.compute_receipts(&dummy)) |_| {
+        return error.CycleAccepted;
+    } else |err| {
+        if (err != error.CycleDetected) return err;
+    }
+
+    var fires: u32 = 0;
+    var lap: u64 = 0;
+    while (lap < 16) : (lap += 1) {
+        if (should_verify_ich(lap, 3, verify_ich_modulus)) fires += 1;
+    }
+    if (fires != 1) return error.VerifyIchCadenceWrong;
+
+    const line1 = "fusion_dag: early-cutoff HIT + 4 MISS + cycle refusal.";
+    print("{s}{c}", .{ line1, nl_byte });
+    print("GREEN: fusion_dag -- version {s} proven.{c}", .{
+        fusion_version,
+        nl_byte,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

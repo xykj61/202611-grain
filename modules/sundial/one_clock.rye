@@ -1,0 +1,284 @@
+//! modules/sundial/one_clock.rye -- Global Bare-Metal Auto-DST One-Clock!
+//!
+//! Stamp: `20261115.145000` -- Zero-tzdata bare-metal civil clock (`grain-ww
+//! stamp`) for global engineering teams, enterprises, & government agencies:
+//!   - `UTC` (`-utc` -- committed `CLOCK_CONFIG.template.kyri` default!),
+//!   - `America/New_York` (`-est` / `-edt` US Mar/Nov auto-DST),
+//!   - `America/Chicago` (`-cst` / `-cdt` US Mar/Nov auto-DST),
+//!   - `America/Denver` (`-mst` / `-mdt` US Mar/Nov auto-DST),
+//!   - `America/Los_Angeles` (`-pst` / `-pdt` US Mar/Nov auto-DST),
+//!   - `Europe/London` (`-gmt` / `-bst` EU last-Sun Mar/Oct auto-DST!),
+//!   - `Asia/Kolkata` (`-ist` `+05:30` exact half-hour Vedic offset!),
+//!   - `Asia/Tokyo` (`-jst` `+09:00`)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.145000";
+const nl: u8 = 10;
+
+pub const ZonePolicy = enum(u8) {
+    utc_universal = 0,
+    america_new_york = 1,
+    america_chicago = 2,
+    america_denver = 3,
+    america_los_angeles = 4,
+    europe_london = 5,
+    asia_kolkata = 6,
+    asia_tokyo = 7,
+};
+
+pub const CivilStamp = struct {
+    year: u32,
+    month: u32,
+    day: u32,
+    hour: u32,
+    minute: u32,
+    second: u32,
+    abbr: []const u8,
+};
+
+fn civil_from_days(z_in: i64) struct { y: u32, m: u32, d: u32 } {
+    const z = z_in + 719468;
+    const era: i64 = @divFloor(if (z >= 0) z else z - 146096, 146097);
+    const doe: u64 = @intCast(z - era * 146097);
+    const yoe: u64 = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    const y_raw: i64 = @as(i64, @intCast(yoe)) + era * 400;
+    const doy: u64 = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    const mp: u64 = (5 * doy + 2) / 153;
+    const d: u32 = @intCast(doy - (153 * mp + 2) / 5 + 1);
+    const m: u32 = @intCast(if (mp < 10) mp + 3 else mp - 9);
+    const y: u32 = @intCast(if (m <= 2) y_raw + 1 else y_raw);
+    return .{ .y = y, .m = m, .d = d };
+}
+
+fn days_from_civil(y_in: u32, m_in: u32, d_in: u32) i64 {
+    const y: i64 = @as(i64, y_in) - (if (m_in <= 2) @as(i64, 1) else 0);
+    const era: i64 = @divFloor(if (y >= 0) y else y - 399, 400);
+    const yoe: u64 = @intCast(y - era * 400);
+    const m: u64 = m_in;
+    const doy: u64 = (153 * (if (m > 2) m - 3 else m + 9) + 2) / 5 + d_in - 1;
+    const doe: u64 = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    return era * 146097 + @as(i64, @intCast(doe)) - 719468;
+}
+
+fn weekday_sun0(days: i64) u32 {
+    return @intCast(@mod(days + 4, 7));
+}
+
+/// US DST: 2nd Sunday in March 02:00 local -> 1st Sunday in November 02:00!
+pub fn is_us_dst_utc(unix_sec: i64, std_west_hours: i64) bool {
+    const days = @divFloor(unix_sec, 86400);
+    const y = civil_from_days(days).y;
+
+    const mar1 = days_from_civil(y, 3, 1);
+    const mar_dow = weekday_sun0(mar1);
+    const second_sun_mar = mar1 + @mod(7 - @as(i64, mar_dow), 7) + 7;
+    const start_utc = second_sun_mar * 86400 + (2 + std_west_hours) * 3600;
+
+    const nov1 = days_from_civil(y, 11, 1);
+    const nov_dow = weekday_sun0(nov1);
+    const first_sun_nov = nov1 + @mod(7 - @as(i64, nov_dow), 7);
+    const end_utc = first_sun_nov * 86400 + (1 + std_west_hours) * 3600;
+
+    assert(end_utc > start_utc);
+    return unix_sec >= start_utc and unix_sec < end_utc;
+}
+
+/// UK/EU DST: Last Sunday in March 01:00 UTC -> Last Sunday in Oct 01:00 UTC!
+pub fn is_eu_london_dst_utc(unix_sec: i64) bool {
+    const days = @divFloor(unix_sec, 86400);
+    const y = civil_from_days(days).y;
+
+    const mar31 = days_from_civil(y, 3, 31);
+    const last_sun_mar = mar31 - @as(i64, weekday_sun0(mar31));
+    const start_utc = last_sun_mar * 86400 + 3600;
+
+    const oct31 = days_from_civil(y, 10, 31);
+    const last_sun_oct = oct31 - @as(i64, weekday_sun0(oct31));
+    const end_utc = last_sun_oct * 86400 + 3600;
+
+    assert(end_utc > start_utc);
+    return unix_sec >= start_utc and unix_sec < end_utc;
+}
+
+pub fn resolve_stamp(unix_sec: i64, policy: ZonePolicy) CivilStamp {
+    var offset_sec: i64 = 0;
+    var abbr: []const u8 = "utc";
+
+    switch (policy) {
+        .utc_universal => {},
+        .america_new_york => {
+            const dst = is_us_dst_utc(unix_sec, 5);
+            offset_sec = if (dst) -4 * 3600 else -5 * 3600;
+            abbr = if (dst) "edt" else "est";
+        },
+        .america_chicago => {
+            const dst = is_us_dst_utc(unix_sec, 6);
+            offset_sec = if (dst) -5 * 3600 else -6 * 3600;
+            abbr = if (dst) "cdt" else "cst";
+        },
+        .america_denver => {
+            const dst = is_us_dst_utc(unix_sec, 7);
+            offset_sec = if (dst) -6 * 3600 else -7 * 3600;
+            abbr = if (dst) "mdt" else "mst";
+        },
+        .america_los_angeles => {
+            const dst = is_us_dst_utc(unix_sec, 8);
+            offset_sec = if (dst) -7 * 3600 else -8 * 3600;
+            abbr = if (dst) "pdt" else "pst";
+        },
+        .europe_london => {
+            const dst = is_eu_london_dst_utc(unix_sec);
+            offset_sec = if (dst) 3600 else 0;
+            abbr = if (dst) "bst" else "gmt";
+        },
+        .asia_kolkata => {
+            offset_sec = 5 * 3600 + 30 * 60;
+            abbr = "ist";
+        },
+        .asia_tokyo => {
+            offset_sec = 9 * 3600;
+            abbr = "jst";
+        },
+    }
+
+    const adj_sec = unix_sec + offset_sec;
+    const days = @divFloor(adj_sec, 86400);
+    const rem: u64 = @intCast(@mod(adj_sec, 86400));
+    const ymd = civil_from_days(days);
+    assert(ymd.m >= 1 and ymd.m <= 12 and ymd.d >= 1 and ymd.d <= 31);
+    return .{
+        .year = ymd.y,
+        .month = ymd.m,
+        .day = ymd.d,
+        .hour = @intCast(rem / 3600),
+        .minute = @intCast((rem % 3600) / 60),
+        .second = @intCast(rem % 60),
+        .abbr = abbr,
+    };
+}
+
+pub fn format_filename_stamp(
+    cs: CivilStamp,
+    sprig_ext: []const u8,
+    out: []u8,
+) ![]const u8 {
+    assert(sprig_ext.len > 0);
+    return std.fmt.bufPrint(
+        out,
+        "{d:0>4}{d:0>2}{d:0>2}-{d:0>2}{d:0>2}{d:0>2}-{s}_{s}",
+        .{
+            cs.year,
+            cs.month,
+            cs.day,
+            cs.hour,
+            cs.minute,
+            cs.second,
+            cs.abbr,
+            sprig_ext,
+        },
+    );
+}
+
+fn load_policy(a: std.mem.Allocator, io: std.Io) ZonePolicy {
+    const cwd = std.Io.Dir.cwd();
+    const txt = cwd.readFileAlloc(
+        io,
+        "CLOCK_CONFIG.kyri",
+        a,
+        .limited(4096),
+    ) catch {
+        return .utc_universal;
+    };
+    if (std.mem.indexOf(u8, txt, "America/New_York") != null)
+        return .america_new_york;
+    if (std.mem.indexOf(u8, txt, "America/Chicago") != null)
+        return .america_chicago;
+    if (std.mem.indexOf(u8, txt, "America/Denver") != null)
+        return .america_denver;
+    if (std.mem.indexOf(u8, txt, "America/Los_Angeles") != null)
+        return .america_los_angeles;
+    if (std.mem.indexOf(u8, txt, "Europe/London") != null)
+        return .europe_london;
+    if (std.mem.indexOf(u8, txt, "Asia/Kolkata") != null)
+        return .asia_kolkata;
+    if (std.mem.indexOf(u8, txt, "Asia/Tokyo") != null)
+        return .asia_tokyo;
+    return .utc_universal;
+}
+
+fn run_selftest() !u8 {
+    const nov_2026_utc: i64 = days_from_civil(2026, 11, 15) * 86400 + 18 * 3600;
+    const s_nov = resolve_stamp(nov_2026_utc, .america_new_york);
+    if (!std.mem.eql(u8, s_nov.abbr, "est") or s_nov.hour != 13) {
+        return error.Nov2026NotEst;
+    }
+
+    const mar_2027_utc: i64 = days_from_civil(2027, 3, 15) * 86400 + 18 * 3600;
+    const s_mar = resolve_stamp(mar_2027_utc, .america_new_york);
+    if (!std.mem.eql(u8, s_mar.abbr, "edt") or s_mar.hour != 14) {
+        return error.Mar2027AutoSwitchFailed;
+    }
+
+    // UK BST in July 2027 (`18:00 UTC` -> `19:00 BST`) & IST (`23:30 IST`)!
+    const jul_2027_utc: i64 = days_from_civil(2027, 7, 1) * 86400 + 18 * 3600;
+    const s_lon = resolve_stamp(jul_2027_utc, .europe_london);
+    if (!std.mem.eql(u8, s_lon.abbr, "bst") or s_lon.hour != 19) {
+        return error.LondonBstFailed;
+    }
+    const s_ist = resolve_stamp(jul_2027_utc, .asia_kolkata);
+    if (!std.mem.eql(u8, s_ist.abbr, "ist") or
+        s_ist.hour != 23 or
+        s_ist.minute != 30)
+    {
+        return error.KolkataIstFailed;
+    }
+
+    const s_utc = resolve_stamp(nov_2026_utc, .utc_universal);
+    var fbuf: [128]u8 = undefined;
+    const fname = try format_filename_stamp(s_utc, "report.md", &fbuf);
+    if (!std.mem.eql(u8, fname, "20261115-180000-utc_report.md")) {
+        return error.BadUtcFilename;
+    }
+    print("GREEN: one_clock -- global US/EU/IST/JST/UTC auto-DST.{c}", .{nl});
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    const pol = load_policy(a, io);
+    const now_ts = std.Io.Clock.real.now(io);
+    const ns_per_s: i96 = 1_000_000_000;
+    const unix_sec: i64 = @intCast(@divFloor(now_ts.nanoseconds, ns_per_s));
+    const cs = resolve_stamp(unix_sec, pol);
+
+    if (args.len >= 2) {
+        var fbuf: [192]u8 = undefined;
+        const fname = try format_filename_stamp(cs, args[1], &fbuf);
+        print("{s}{c}", .{ fname, nl });
+    } else {
+        print(
+            "{d:0>4}{d:0>2}{d:0>2}.{d:0>2}{d:0>2}{d:0>2} ({s}){c}",
+            .{
+                cs.year,
+                cs.month,
+                cs.day,
+                cs.hour,
+                cs.minute,
+                cs.second,
+                cs.abbr,
+                nl,
+            },
+        );
+    }
+    return 0;
+}

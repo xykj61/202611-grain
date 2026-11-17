@@ -1,0 +1,12 @@
+::  modules/tablecloth/glow/gate-gleaner-balance.glow -- Signal gate!
+/!  16384
+|%
+++  gate-gleaner-balance
+  |=  [has-tracker=@ud byte-len=@ud]                    ::  0=clean, 1=beacon
+  ^-  @ud                                               ::  accepted bytes
+  ~|  'gleaner-tracker-beacon-refused'                  ::  Glasswall law!
+  ?>  (eql has-tracker 0)                               ::  zero ad trackers
+  ~|  'gleaner-signal-bounds-refused'                   ::  1..4096 bytes
+  ?>  &(gte(byte-len 1) lte(byte-len 4096))
+  byte-len
+--

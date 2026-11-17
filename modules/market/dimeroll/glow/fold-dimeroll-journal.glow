@@ -1,0 +1,12 @@
+::  modules/market/dimeroll/glow/fold-dimeroll-journal.glow -- ledger
+/!  16384
+|%
+++  fold-dimeroll-entry
+  |=  [debit-acct=@ud credit-acct=@ud amount=@ud]       ::  double-entry leg
+  ^-  @ud                                               ::  conserved delta 0
+  ~|  'dimeroll-zero-amount-refused'                    ::  positive units
+  ?>  (gte amount 1)                                    ::  amount >= 1 MALA
+  ~|  'dimeroll-same-account-refused'                   ::  distinct accounts
+  ?<  =(debit-acct credit-acct)                         ::  debit != credit
+  0
+--

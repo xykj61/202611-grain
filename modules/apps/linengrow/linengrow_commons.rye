@@ -1,0 +1,168 @@
+//! modules/apps/linengrow/linengrow_commons.rye -- Plain-Named Linengrow Core!
+//!
+//! Stamp: `20261115.131000` -- Plain Comlink-tendency replacement superseding
+//! the legacy waymark-named `hearth_lulu*` / `setu*` / `seva_jabs*` / `tube*`
+//! prototypes cataloged in `mitra-shed/shed-prep.md`:
+//!   1. `HearthGrant`: citizen offers a bounded data/craft bundle with an
+//!      explicit `max_uses` ceiling and promised `MALA` return,
+//!   2. `AudienceSplit`: transparent integer basis-point split between creator
+//!      and `Seva` commons (`creator_mala + seva_mala == total_mala`!),
+//!   3. `PortableReceipt`: SHA3-256 export seal so a citizen can carry their
+//!      complete record away at any time!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.131000";
+pub const max_grants: u32 = 64;
+const nl: u8 = 10;
+
+pub const LinengrowError = error{
+    GrantsFull,
+    ZeroMaxUsesRefused,
+    ZeroReturnRefused,
+    ConsentRevoked,
+    ConsentUseCapExhausted,
+    SevaBpsOutOfRange,
+    BadGrantId,
+};
+
+pub const HearthGrant = struct {
+    title: [32]u8,
+    title_len: u8,
+    max_uses: u32,
+    uses_recorded: u32,
+    promised_mala_per_use: u64,
+    earned_mala: u64,
+    revoked: bool,
+};
+
+pub const AudienceSplit = struct {
+    creator_mala: u64,
+    seva_mala: u64,
+};
+
+pub const LinengrowBook = struct {
+    grants: [max_grants]HearthGrant,
+    count: u32,
+
+    pub fn init() LinengrowBook {
+        return std.mem.zeroes(LinengrowBook);
+    }
+
+    pub fn offer_grant(
+        self: *LinengrowBook,
+        title: []const u8,
+        max_uses: u32,
+        mala_per_use: u64,
+    ) LinengrowError!u32 {
+        if (self.count >= max_grants) return error.GrantsFull;
+        if (max_uses == 0) return error.ZeroMaxUsesRefused;
+        if (mala_per_use == 0) return error.ZeroReturnRefused;
+
+        const id = self.count;
+        var g = std.mem.zeroes(HearthGrant);
+        const n = @min(title.len, 32);
+        @memcpy(g.title[0..n], title[0..n]);
+        g.title_len = @intCast(n);
+        g.max_uses = max_uses;
+        g.promised_mala_per_use = mala_per_use;
+        self.grants[id] = g;
+        self.count += 1;
+        // invariant: every accepted grant has positive max_uses & return.
+        assert(g.max_uses >= 1 and g.promised_mala_per_use >= 1);
+        return id;
+    }
+
+    pub fn record_permitted_use(
+        self: *LinengrowBook,
+        id: u32,
+    ) LinengrowError!u64 {
+        if (id >= self.count) return error.BadGrantId;
+        var g = &self.grants[id];
+        if (g.revoked) return error.ConsentRevoked;
+        if (g.uses_recorded >= g.max_uses) {
+            return error.ConsentUseCapExhausted;
+        }
+        g.uses_recorded += 1;
+        g.earned_mala += g.promised_mala_per_use;
+        // invariant: recorded uses never exceed citizen's max_uses cap.
+        assert(g.uses_recorded <= g.max_uses);
+        return g.earned_mala;
+    }
+
+    pub fn revoke_grant(self: *LinengrowBook, id: u32) LinengrowError!void {
+        if (id >= self.count) return error.BadGrantId;
+        self.grants[id].revoked = true;
+        assert(self.grants[id].revoked);
+    }
+
+    pub fn compute_audience_split(
+        gross_mala: u64,
+        seva_bps: u32,
+    ) LinengrowError!AudienceSplit {
+        if (seva_bps > 10000) return error.SevaBpsOutOfRange;
+        const seva: u64 = (gross_mala * @as(u64, seva_bps)) / 10000;
+        const creator: u64 = gross_mala - seva;
+        // invariant: exact conservation creator_mala + seva_mala == gross_mala!
+        assert(creator + seva == gross_mala);
+        return .{ .creator_mala = creator, .seva_mala = seva };
+    }
+
+    pub fn portable_export_sha3(self: *const LinengrowBook) [32]u8 {
+        var h = Sha3_256.init(.{});
+        h.update("linengrow-portable-record-v1:");
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const g = self.grants[i];
+            h.update(g.title[0..g.title_len]);
+            var b8: [8]u8 = undefined;
+            std.mem.writeInt(u64, &b8, g.earned_mala, .little);
+            h.update(&b8);
+        }
+        var out: [32]u8 = undefined;
+        h.final(&out);
+        assert(out.len == 32);
+        return out;
+    }
+};
+
+fn run_selftest() !u8 {
+    var book = LinengrowBook.init();
+    // 1. Offer bounded 2-use grant at 150 MALA/use; 3rd use refused!
+    const gid = try book.offer_grant("Soil Compost Dataset", 2, 150);
+    if ((try book.record_permitted_use(gid)) != 150) return error.Use1Wrong;
+    if ((try book.record_permitted_use(gid)) != 300) return error.Use2Wrong;
+    if (book.record_permitted_use(gid)) |_| {
+        return error.OverCapUseAccepted;
+    } else |err| {
+        if (err != error.ConsentUseCapExhausted) return err;
+    }
+
+    // 2. Revocation immediately stops further uses!
+    const gid2 = try book.offer_grant("Oat Mill Notes", 5, 100);
+    try book.revoke_grant(gid2);
+    if (book.record_permitted_use(gid2)) |_| {
+        return error.RevokedUseAccepted;
+    } else |err| {
+        if (err != error.ConsentRevoked) return err;
+    }
+
+    // 3. Conserved Audience Seva split (10% = 1000 bps of 300 -> 270 + 30)
+    const sp = try LinengrowBook.compute_audience_split(300, 1000);
+    if (sp.creator_mala != 270 or sp.seva_mala != 30) return error.SplitWrong;
+
+    const seal = book.portable_export_sha3();
+    if (seal[0] == 0 and seal[1] == 0 and seal[2] == 0) return error.BadSeal;
+
+    print("GREEN: linengrow_commons -- consent cap & Seva split proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

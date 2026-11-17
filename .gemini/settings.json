@@ -1,0 +1,46 @@
+{
+  "model": {
+    "name": "gemini-4-carbon"
+  },
+  "context": {
+    "fileName": [
+      "GEMINI.md"
+    ],
+    "fileFiltering": {
+      "respectGitIgnore": true,
+      "respectGeminiIgnore": true
+    }
+  },
+  "tools": {
+    "useRipgrep": true,
+    "shell": {
+      "pager": "cat"
+    }
+  },
+  "security": {
+    "environmentVariableRedaction": {
+      "allowed": [
+        "GIT_SSH_COMMAND",
+        "SSH_AUTH_SOCK"
+      ]
+    }
+  },
+  "hooksConfig": {
+    "enabled": true
+  },
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "name": "enable-git-ssh",
+            "type": "command",
+            "command": "sh .gemini/hooks/enable-git-ssh.sh",
+            "description": "Set GIT_SSH_COMMAND=ssh and clear empty SSH_ASKPASS so git push/fetch work over SSH by default"
+          }
+        ]
+      }
+    ]
+  }
+}

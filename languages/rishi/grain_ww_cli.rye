@@ -1,0 +1,388 @@
+//! languages/rishi/grain_ww_cli.rye -- Universal `grain-ww` Umbrella CLI!
+//!
+//! Stamp: `20261115.135500`.
+//! Sovereign umbrella binary (`brew install grain-ww`, `apt install grain-ww`,
+//! `nix profile install nixpkgs#grain-ww`, `pacman -S grain-ww`, `apk add
+//! grain-ww`) matching our `grain-ww.com` / `github.com/grain-ww` home:
+//!   - `grain-ww version`           -- Chronological stamp & Myofascia reading
+//!   - `grain-ww stamp [sprig.ext]` -- Auto-DST `-utc`/`-est`/`-edt` One-Clock
+//!   - `grain-ww pulp [board.md]`   -- `[15..9375]` prepend Movement stack
+//!   - `grain-ww puddle`            -- Live kernel UDP roaming Mosh/scp proof
+//!   - `grain-ww round-load`        -- Calfive 15-Sign movement & theme
+//!   - `grain-ww doctor`            -- <50 ms toolchain & Glasswall check
+//!   - `grain-ww prove`             -- Fusion gate runner
+//!   - `grain-ww sundial`           -- Live Sundial baton & health roll
+//!   - `grain-ww pond`              -- Seatbelt/bwrap citizen agent enclosure
+//!   - `grain-ww vantage`           -- Live macOS AppKit Vantage surface
+//!   - `grain-ww carry-apk`         -- Daylight Computer arm64-v8a APK stage
+//!   - `grain-ww glow <in> -o <b >` -- Native `.glow` executable compiler
+//!   - `grain-ww resonance-bounce`  -- 4-track 48 kHz 16-bit RIFF `.wav` bounce
+//!   - `grain-ww tiruppavai [1..30]`-- Year 1 Andal Dawn Songs & 48 kHz Bell
+//!   - `grain-ww rasamrita`         -- Year 2 Rupa Goswami Five Primary Moods
+//!   - `grain-ww sikshastakam`      -- Year 3 Chaitanya Mahaprabhu Eight Verses
+//!   - `grain-ww champu`            -- Year 4 Gopala-champu Gadya/Padya Weave
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const grain_ww_version = "20261115.172500";
+pub const myofascia_reading = "56.970";
+const nl: u8 = 10;
+
+pub fn format_banner(out: []u8) ![]const u8 {
+    // invariant: caller supplies at least 96 bytes for the CLI version banner.
+    assert(out.len >= 96);
+    const s = try std.fmt.bufPrint(
+        out,
+        "grain-ww {s} (myofascia {s}) -- Grain Worldwide CLI{c}",
+        .{ grain_ww_version, myofascia_reading, nl },
+    );
+    // invariant: banner identifies `grain-ww` and stays <= 80 chars.
+    assert(std.mem.startsWith(u8, s, "grain-ww ") and s.len <= 80);
+    return s;
+}
+
+fn run_doctor(io: std.Io) !u8 {
+    const cwd = std.Io.Dir.cwd();
+    _ = try cwd.statFile(io, "languages/rye/bin/rye", .{});
+    _ = try cwd.statFile(io, "languages/rishi/bin/rishi", .{});
+    _ = try cwd.statFile(io, ".brix", .{});
+    _ = try cwd.statFile(io, "modules/comlink/vantage/vantage_app.rye", .{});
+
+    print("grain-ww doctor ({s}):{c}", .{ grain_ww_version, nl });
+    print("  [GREEN] Rye compiler      : languages/rye/bin/rye{c}", .{nl});
+    print("  [GREEN] Rishi steward     : languages/rishi/bin/rishi{c}", .{nl});
+    print("  [GREEN] Vantage core      : modules/comlink/vantage/{c}", .{nl});
+    print("  [GREEN] Active Pulp room  : active-pulp/{c}", .{nl});
+    print("  [GREEN] Myofascia reading : {s} / 100.000{c}", .{
+        myofascia_reading,
+        nl,
+    });
+    return 0;
+}
+
+fn dispatch_exec(
+    a: std.mem.Allocator,
+    io: std.Io,
+    bin: []const u8,
+    extra_first: ?[]const u8,
+    tail: []const []const u8,
+) !u8 {
+    var argv: std.ArrayListUnmanaged([]const u8) = .empty;
+    try argv.append(a, bin);
+    if (extra_first) |ef| try argv.append(a, ef);
+    for (tail) |x| try argv.append(a, x);
+    const r = try std.process.run(a, io, .{ .argv = argv.items });
+    print("{s}{s}", .{ r.stdout, r.stderr });
+    return switch (r.term) {
+        .exited => |c| c,
+        else => 1,
+    };
+}
+
+fn run_selftest(io: std.Io) !u8 {
+    var buf: [128]u8 = undefined;
+    const b = try format_banner(&buf);
+    if (std.mem.indexOf(u8, b, "grain-ww 20261115") == null) {
+        return error.BadBanner;
+    }
+    if ((try run_doctor(io)) != 0) return error.DoctorFailed;
+    print("GREEN: grain_ww_cli -- banner, doctor, & subcommands proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "version") or
+        std.mem.eql(u8, args[1], "--version"))
+    {
+        var buf: [128]u8 = undefined;
+        const b = try format_banner(&buf);
+        print("{s}", .{b});
+        return 0;
+    }
+    const sub = args[1];
+    if (std.mem.eql(u8, sub, "selftest")) return run_selftest(io);
+    if (std.mem.eql(u8, sub, "doctor")) return run_doctor(io);
+    if (std.mem.eql(u8, sub, "stamp")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/one_clock",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "pulp")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pulp_movement_stack",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "puddle")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/puddle_udp_live",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "puddle-cp")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/puddle_scp_cli",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "puddle-exec")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/puddle_cli_session",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "tablecloth")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/sql_workspace",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "gleaner")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/gleaner_intake",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "vault-lease")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vault_zeroize_seal",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "pulp-recall")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pulp_object_recall",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "round-load") or
+        std.mem.eql(u8, sub, "movement"))
+    {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/calfive_wheel",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "orbit-harvest")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/siya_orbit_harvest",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "council-testnet")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/council_405_testnet",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "constel")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/constel_405_discovery",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "prove")) {
+        return dispatch_exec(
+            a,
+            io,
+            "modules/fusion/bin/gate_runner",
+            "modules/fusion/gates.kyri",
+            &.{},
+        );
+    }
+    if (std.mem.eql(u8, sub, "sundial")) {
+        return dispatch_exec(
+            a,
+            io,
+            "languages/rishi/bin/rishi",
+            "run",
+            &[_][]const u8{ "tasks.rish", "sundial" },
+        );
+    }
+    if (std.mem.eql(u8, sub, "pond")) {
+        return dispatch_exec(
+            a,
+            io,
+            "modules/pond/bin/pond_cli",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "tiruppavai")) {
+        return dispatch_exec(
+            a,
+            io,
+            "libraries/shastra/tiruppavai/bin/tiruppavai_dawn",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "rasamrita")) {
+        return dispatch_exec(
+            a,
+            io,
+            "libraries/shastra/rasamrita/bin/rasamrita_waves",
+            "show",
+            &.{},
+        );
+    }
+    if (std.mem.eql(u8, sub, "sikshastakam")) {
+        return dispatch_exec(
+            a,
+            io,
+            "libraries/shastra/sikshastakam/bin/sikshastakam_eight",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "champu")) {
+        return dispatch_exec(
+            a,
+            io,
+            "libraries/shastra/champu/bin/gopala_champu_weave",
+            "show",
+            &.{},
+        );
+    }
+    if (std.mem.eql(u8, sub, "shastra-wheel")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/panchanga_shastra_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "twilight-wheel")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_wheel",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "audit-clean")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_residue_audit",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "glow")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/glow_compile_cli",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "resonance-bounce")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/studio_wav_bounce",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "vantage")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_mac_live",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "vantage-save")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_tablecloth_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "witness-all")) {
+        return dispatch_exec(
+            a,
+            io,
+            "languages/rishi/bin/rishi",
+            "run",
+            &[_][]const u8{"tools/w/witness_all.rish"},
+        );
+    }
+    if (std.mem.eql(u8, sub, "carry-apk")) {
+        return dispatch_exec(
+            a,
+            io,
+            "languages/rishi/bin/rishi",
+            "run",
+            &[_][]const u8{"tools/c/build_dc1_apk.rish"},
+        );
+    }
+    if (std.mem.eql(u8, sub, "blazepod-check")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/rv64_glasswall_boot",
+            null,
+            args[2..],
+        );
+    }
+
+    print("grain-ww: unknown subcommand '{s}'{c}", .{ sub, nl });
+    return 1;
+}

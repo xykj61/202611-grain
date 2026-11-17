@@ -1,0 +1,128 @@
+//! modules/fusion/sow_native_gates.rye -- Native Rye `sow` secret & key gate!
+//!
+//! Stamp: `20261115.110500`): Pure TAME Rye companion to `fusion_sow`
+//! scanning seed files in memory for API keys (`AIza...`, `sk-ant-...`,
+//! `sk-proj-...`, `sk-or-v1-...`, `ghp_...`, `github_pat_...`, `AKIA...`) and
+//! SSH/PGP private key headers without spawning external grep processes!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.110500";
+const nl: u8 = 10;
+
+pub const SecretKind = enum(u8) {
+    clean = 0,
+    google_aiza_key = 1,
+    openai_or_openrouter_key = 2,
+    anthropic_key = 3,
+    github_pat_key = 4,
+    aws_akia_key = 5,
+    pem_private_key = 6,
+};
+
+fn is_token_char(b: u8) bool {
+    return (b >= 'a' and b <= 'z') or
+        (b >= 'A' and b <= 'Z') or
+        (b >= '0' and b <= '9') or
+        b == '_' or b == '-';
+}
+
+fn token_run_len(buf: []const u8) usize {
+    var k: usize = 0;
+    while (k < buf.len and is_token_char(buf[k])) : (k += 1) {}
+    return k;
+}
+
+fn has_split_marker(text: []const u8, a: []const u8, b: []const u8) bool {
+    const idx = std.mem.indexOf(u8, text, a) orelse return false;
+    const after = idx + a.len;
+    if (after + b.len > text.len) return false;
+    return std.mem.eql(u8, text[after .. after + b.len], b);
+}
+
+/// Scans `text` in a single bounded linear pass (`O(n)`, zero regex backtrack)
+/// for real API bearer tokens while ignoring `<placeholder>` examples like
+/// `sk-or-v1-...` (3 dots -> `token_run_len < 20`)!
+pub fn scan_bytes_for_secrets(text: []const u8) SecretKind {
+    if (has_split_marker(text, "BEGIN OPENSSH ", "PRIVATE KEY") or
+        has_split_marker(text, "BEGIN PGP ", "PRIVATE KEY") or
+        has_split_marker(text, "BEGIN RSA ", "PRIVATE KEY"))
+    {
+        return .pem_private_key;
+    }
+
+    var i: usize = 0;
+    while (i + 8 < text.len) : (i += 1) {
+        const rem = text[i..];
+        if (std.mem.startsWith(u8, rem, "AIza") and
+            token_run_len(rem[4..]) >= 35)
+        {
+            return .google_aiza_key;
+        }
+        if (std.mem.startsWith(u8, rem, "sk-ant-") and
+            token_run_len(rem[7..]) >= 20)
+        {
+            return .anthropic_key;
+        }
+        if ((std.mem.startsWith(u8, rem, "sk-or-v1-") and
+            token_run_len(rem[9..]) >= 20) or
+            (std.mem.startsWith(u8, rem, "sk-proj-") and
+            token_run_len(rem[8..]) >= 20))
+        {
+            return .openai_or_openrouter_key;
+        }
+        if ((std.mem.startsWith(u8, rem, "ghp_") and
+            token_run_len(rem[4..]) >= 30) or
+            (std.mem.startsWith(u8, rem, "github_pat_") and
+            token_run_len(rem[11..]) >= 20))
+        {
+            return .github_pat_key;
+        }
+        if (std.mem.startsWith(u8, rem, "AKIA") and
+            token_run_len(rem[4..]) >= 16)
+        {
+            return .aws_akia_key;
+        }
+    }
+    // invariant: linear scan reached end with zero live credential shapes.
+    assert(i <= text.len);
+    return .clean;
+}
+
+fn run_selftest() !u8 {
+    // 1. Pedagogical placeholder `sk-or-v1-...` stays CLEAN!
+    if (scan_bytes_for_secrets("example: sk-or-v1-... placeholder") != .clean) {
+        return error.PlaceholderFlagged;
+    }
+
+    // 2. Planted synthetic 39-char `AIza` token caught by name!
+    var fake_gem: [44]u8 = undefined;
+    @memcpy(fake_gem[0..4], "AIza");
+    @memset(fake_gem[4..40], 'B');
+    @memset(fake_gem[40..44], '9');
+    if (scan_bytes_for_secrets(&fake_gem) != .google_aiza_key) {
+        return error.MissedGeminiSecret;
+    }
+
+    // 3. Planted synthetic PEM private header caught by name!
+    var pem_buf: [40]u8 = undefined;
+    const pem = try std.fmt.bufPrint(
+        &pem_buf,
+        "-----{s}{s}-----",
+        .{ "BEGIN OPENSSH ", "PRIVATE KEY" },
+    );
+    if (scan_bytes_for_secrets(pem) != .pem_private_key) {
+        return error.MissedPemKey;
+    }
+
+    print("GREEN: sow_native_gates -- O(n) native secret scanner proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

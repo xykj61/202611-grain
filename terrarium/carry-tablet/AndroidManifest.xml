@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- terrarium/carry-tablet/AndroidManifest.xml
+     Civic Glasswall Manifest for Daylight Computer DC-1 (60Hz LivePaper RLCD):
+       - ZERO INTERNET ad/telemetry permissions,
+       - ZERO RECORD_AUDIO ambient microphone permissions,
+       - Minimal display post-processing for zero-flicker 60Hz RLCD rendering! -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.grainww.vantage.carry">
+
+    <application
+        android:allowBackup="false"
+        android:label="Grain Vantage Carry"
+        android:hasCode="true">
+        <activity
+            android:name=".CarryActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|smallestScreenSize"
+            android:preferMinimalPostProcessing="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

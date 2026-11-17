@@ -1,0 +1,8 @@
+::  languages/glow/examples/seva_clamp_gate.glow -- Multi-rune Citizen gate!
+/!  16384
+|=  bps=@ud                                             ::  basis points in
+^-  @ud                                                 ::  capped <= 2500
+~|  'seva-bps-above-ten-thousand'                       ::  refusal trail
+?>  (lte bps 10000)                                     ::  <= 100.00% guard
+=/  scaled=@ud  (div bps 2)                             ::  half-rate step
+?:  (lte scaled 2500)  scaled  2500                     ::  clamp at 25.00%

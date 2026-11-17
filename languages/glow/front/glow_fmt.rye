@@ -1,0 +1,155 @@
+//! languages/glow/front/glow_fmt.rye -- Col-57 `::` aligner & 80-col gate.
+//!
+//! Glow Mill Stamp: `20261115.091000`).
+//! Enforces and auto-formats Grain's Glow layout law:
+//!   - Code occupies columns 1..56,
+//!   - Inline `::` comment opens at column 57 (`index 56`, 0-based),
+//!   - Every line stops strictly at or before column 80,
+//!   - Formatting is strictly idempotent: `fmt(fmt(src)) == fmt(src)`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.091000";
+pub const inline_comment_col0: u32 = 56; // 1-based column 57!
+pub const hard_max_cols: u32 = 80;
+const nl: u8 = 10;
+const cr: u8 = 13;
+const ws_trim = [_]u8{ 32, 9, 13 };
+
+pub const FmtError = error{
+    LineExceeds80Cols,
+    CodeSpillsIntoCommentCol,
+    MisalignedInlineComment,
+    OutputBufferTooSmall,
+};
+
+pub const LayoutViolation = struct {
+    line: u32,
+    col: u32,
+    err: FmtError,
+};
+
+fn find_inline_colcol(line: []const u8) ?usize {
+    const trimmed_lead = std.mem.trimStart(u8, line, " ");
+    // Full-line `::` or `::::` banner starts right at indent -- not inline!
+    if (std.mem.startsWith(u8, trimmed_lead, "::")) return null;
+    var in_cord = false;
+    var i: usize = 0;
+    while (i + 1 < line.len) : (i += 1) {
+        if (line[i] == 39) in_cord = !in_cord; // single-quoted Glow cord
+        if (!in_cord and line[i] == ':' and line[i + 1] == ':') return i;
+    }
+    return null;
+}
+
+/// Auto-aligns inline `::` comments to column 57 and trims trailing spaces.
+pub fn format_glow(src: []const u8, out: []u8) FmtError![]const u8 {
+    var pos: usize = 0;
+    var it = std.mem.splitScalar(u8, src, nl);
+    var first = true;
+    while (it.next()) |raw| {
+        if (!first) {
+            if (pos + 1 > out.len) return error.OutputBufferTooSmall;
+            out[pos] = nl;
+            pos += 1;
+        }
+        first = false;
+
+        const line = std.mem.trimEnd(u8, raw, &ws_trim);
+        if (find_inline_colcol(line)) |cc_idx| {
+            const code = std.mem.trimEnd(u8, line[0..cc_idx], " ");
+            const comment = std.mem.trimEnd(u8, line[cc_idx..], " ");
+            if (code.len >= inline_comment_col0) {
+                return error.CodeSpillsIntoCommentCol;
+            }
+            const total_len = inline_comment_col0 + comment.len;
+            if (total_len > hard_max_cols) return error.LineExceeds80Cols;
+            if (pos + total_len > out.len) return error.OutputBufferTooSmall;
+
+            @memcpy(out[pos .. pos + code.len], code);
+            pos += code.len;
+            const pad = inline_comment_col0 - code.len;
+            @memset(out[pos .. pos + pad], ' ');
+            pos += pad;
+            @memcpy(out[pos .. pos + comment.len], comment);
+            pos += comment.len;
+        } else {
+            if (line.len > hard_max_cols) return error.LineExceeds80Cols;
+            if (pos + line.len > out.len) return error.OutputBufferTooSmall;
+            @memcpy(out[pos .. pos + line.len], line);
+            pos += line.len;
+        }
+    }
+    // invariant: formatted output fits strictly inside caller buffer.
+    assert(pos <= out.len);
+    return out[0..pos];
+}
+
+pub fn check_glow(src: []const u8, viol: *LayoutViolation) FmtError!void {
+    viol.* = .{ .line = 1, .col = 1, .err = error.LineExceeds80Cols };
+    var ln: u32 = 0;
+    var it = std.mem.splitScalar(u8, src, nl);
+    while (it.next()) |raw| {
+        ln += 1;
+        const clean = std.mem.trimEnd(u8, raw, &[_]u8{cr});
+        if (clean.len > hard_max_cols) {
+            viol.* = .{ .line = ln, .col = 81, .err = error.LineExceeds80Cols };
+            return error.LineExceeds80Cols;
+        }
+        if (find_inline_colcol(clean)) |cc_idx| {
+            if (cc_idx != inline_comment_col0) {
+                viol.* = .{
+                    .line = ln,
+                    .col = @intCast(cc_idx + 1),
+                    .err = error.MisalignedInlineComment,
+                };
+                return error.MisalignedInlineComment;
+            }
+        }
+    }
+    assert(ln >= 1);
+}
+
+fn run_selftest() !u8 {
+    var b_in: [256]u8 = undefined;
+    const unaligned = try std.fmt.bufPrint(
+        &b_in,
+        "::  header note{c}  |=  steps=@ud   ::  whole number{c}",
+        .{ nl, nl },
+    );
+    var b1: [512]u8 = undefined;
+    var b2: [512]u8 = undefined;
+    const f1 = try format_glow(unaligned, &b1);
+    const f2 = try format_glow(f1, &b2);
+
+    // 1. Idempotence: `fmt(fmt(x)) == fmt(x)` + `check_glow` passes on `f1`!
+    if (!std.mem.eql(u8, f1, f2)) return error.NotIdempotent;
+    var viol: LayoutViolation = undefined;
+    try check_glow(f1, &viol);
+
+    // 2. Misaligned inline `::` caught with exact `line:col`!
+    if (check_glow(unaligned, &viol)) |_| {
+        return error.MisalignedAccepted;
+    } else |err| {
+        if (err != error.MisalignedInlineComment or viol.line != 2) return err;
+    }
+
+    // 3. 81-column plant refused!
+    const overlong: [81]u8 = @splat('x');
+    if (check_glow(&overlong, &viol)) |_| {
+        return error.OverlongAccepted;
+    } else |err| {
+        if (err != error.LineExceeds80Cols or viol.col != 81) return err;
+    }
+
+    print("GREEN: glow_fmt -- col-57 :: alignment & 80-col gate proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

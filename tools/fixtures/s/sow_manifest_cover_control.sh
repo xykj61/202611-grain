@@ -9,11 +9,11 @@
 #
 # WHAT IT BUILDS, each a throwaway manifest and root list under a mktemp root, swept on exit.
 #
-#   clean         every root classified, no ghost shipping row, nothing doubled -- M1_OK
-#   defence       a `personal` row naming an absent path -- M1_OK, and the path REPORTED
-#   unclassified  a tracked root with no verdict at all -- M1_BAD
-#   ghost         a `template` row naming a path the tree does not have -- M1_BAD
-#   doubled       one path carrying two verdicts -- M1_BAD, the reading the elder `sort -u`
+#   clean         every root classified, no ghost shipping row, nothing doubled -- MANIFEST_COVER_OK
+#   defence       a `personal` row naming an absent path -- MANIFEST_COVER_OK, and the path REPORTED
+#   unclassified  a tracked root with no verdict at all -- MANIFEST_COVER_BAD
+#   ghost         a `template` row naming a path the tree does not have -- MANIFEST_COVER_BAD
+#   doubled       one path carrying two verdicts -- MANIFEST_COVER_BAD, the reading the elder `sort -u`
 #                 silently collapsed for the whole life of the file
 #
 # The `doubled` case is the one worth watching: it passed the elder check and fails this one, so
@@ -46,27 +46,27 @@ printf 'alpha\nbeta\n' > "$pen/roots"
 
 # ---- clean: every root classified, nothing absent, nothing doubled ---------------------------
 printf 'template  alpha  # a room that ships\npersonal  beta   # a room withheld\n' > "$pen/clean.kyri"
-[ "$(verdict "$pen/clean.kyri" "$pen/roots")" = "M1_OK" ] || { echo "control: a clean manifest must read M1_OK" >&2; exit 1; }
+[ "$(verdict "$pen/clean.kyri" "$pen/roots")" = "MANIFEST_COVER_OK" ] || { echo "control: a clean manifest must read MANIFEST_COVER_OK" >&2; exit 1; }
 echo "clean_manifest=rests"
 proven=$((proven + 1))
 
 # ---- defence: a `personal` row for a path the tree does not carry -----------------------------
 # The `twilight` shape. Permitted, and named on the tail so it stays visible.
 printf 'template  alpha  # a room that ships\npersonal  beta   # a room withheld\npersonal  gone   # debrided, kept as defence in depth\n' > "$pen/defence.kyri"
-[ "$(verdict "$pen/defence.kyri" "$pen/roots")" = "M1_OK" ] || { echo "control: a personal row for an absent path must be permitted" >&2; exit 1; }
+[ "$(verdict "$pen/defence.kyri" "$pen/roots")" = "MANIFEST_COVER_OK" ] || { echo "control: a personal row for an absent path must be permitted" >&2; exit 1; }
 [ "$(reported "$pen/defence.kyri" "$pen/roots")" = "gone" ] || { echo "control: a permitted defence-in-depth row must still be reported by name" >&2; exit 1; }
 echo "defence_in_depth=permitted_and_reported"
 proven=$((proven + 1))
 
 # ---- unclassified: a tracked root with no verdict ---------------------------------------------
 printf 'template  alpha  # a room that ships\n' > "$pen/unclassified.kyri"
-[ "$(verdict "$pen/unclassified.kyri" "$pen/roots")" = "M1_BAD" ] || { echo "control: an unclassified tracked root must read M1_BAD" >&2; exit 1; }
+[ "$(verdict "$pen/unclassified.kyri" "$pen/roots")" = "MANIFEST_COVER_BAD" ] || { echo "control: an unclassified tracked root must read MANIFEST_COVER_BAD" >&2; exit 1; }
 echo "unclassified_root=reds"
 proven=$((proven + 1))
 
 # ---- ghost: a SHIPPING row naming a path the tree does not have --------------------------------
 printf 'template  alpha  # a room that ships\npersonal  beta   # a room withheld\ntemplate  ghost  # a promise to ship what is not there\n' > "$pen/ghost.kyri"
-[ "$(verdict "$pen/ghost.kyri" "$pen/roots")" = "M1_BAD" ] || { echo "control: a shipping row naming an absent path must read M1_BAD" >&2; exit 1; }
+[ "$(verdict "$pen/ghost.kyri" "$pen/roots")" = "MANIFEST_COVER_BAD" ] || { echo "control: a shipping row naming an absent path must read MANIFEST_COVER_BAD" >&2; exit 1; }
 echo "ghost_shipping_row=reds"
 proven=$((proven + 1))
 
@@ -74,7 +74,7 @@ proven=$((proven + 1))
 # The elder check ran `sort -u` on both sides, so this collapsed to one entry and passed. It is
 # the most dangerous of the five, because which verdict wins depends on read order.
 printf 'template  alpha  # ships\npersonal  alpha  # withheld -- which one wins?\npersonal  beta   # a room withheld\n' > "$pen/doubled.kyri"
-[ "$(verdict "$pen/doubled.kyri" "$pen/roots")" = "M1_BAD" ] || { echo "control: a path classified twice must read M1_BAD" >&2; exit 1; }
+[ "$(verdict "$pen/doubled.kyri" "$pen/roots")" = "MANIFEST_COVER_BAD" ] || { echo "control: a path classified twice must read MANIFEST_COVER_BAD" >&2; exit 1; }
 echo "doubled_verdict=reds"
 proven=$((proven + 1))
 

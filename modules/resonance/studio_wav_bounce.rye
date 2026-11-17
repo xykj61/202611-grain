@@ -1,0 +1,116 @@
+//! modules/resonance/studio_wav_bounce.rye -- 4-Track 48kHz Studio `.wav`!
+//!
+//! Stamp: `20261115.111000`): Renders all 4 tracks declared in
+//! `modules/resonance/session.brix` into a playable 48 kHz 16-bit mono RIFF
+//! `.wav` file using pure bounded integer DSP (zero floating-point!):
+//!   - Track 0: `dawn-tanpura` (216 Hz root + 324 Hz fifth drone),
+//!   - Track 1: `tiruppavai-bell` (432 Hz decaying morning chime),
+//!   - Track 2: `earpiece-voice` (0 PCM -- `Glasswall` hardware-off default!),
+//!   - Track 3: `linen-percussion` (wooden *tala* click at beat 0 & midpoint)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.111000";
+pub const sample_rate_hz: u32 = 48000;
+pub const frame_count: u32 = 12000; // 250 ms studio bar bounce (24,044 bytes)
+pub const wav_header_bytes: u32 = 44;
+pub const total_wav_bytes: u32 = wav_header_bytes + frame_count * 2;
+const nl: u8 = 10;
+
+fn tri_osc(sample_idx: u32, freq_hz: u32, amp: i32) i32 {
+    const period: u32 = sample_rate_hz / freq_hz;
+    const phase: u32 = sample_idx % period;
+    const half: u32 = period / 2;
+    const u_val: u32 = if (phase < half)
+        (phase * @as(u32, @intCast(amp * 2))) / half
+    else
+        ((period - phase) * @as(u32, @intCast(amp * 2))) / half;
+    return @as(i32, @intCast(u_val)) - amp;
+}
+
+/// Renders the 4-track Resonance mix + canonical 44-byte RIFF/WAVE header!
+pub fn render_studio_wav(out: *[total_wav_bytes]u8) void {
+    const data_bytes: u32 = frame_count * 2;
+    const riff_chunk_size: u32 = 36 + data_bytes;
+    const byte_rate: u32 = sample_rate_hz * 2;
+
+    @memcpy(out[0..4], "RIFF");
+    std.mem.writeInt(u32, out[4..8], riff_chunk_size, .little);
+    @memcpy(out[8..12], "WAVE");
+    @memcpy(out[12..16], "fmt ");
+    std.mem.writeInt(u32, out[16..20], 16, .little); // PCM fmt chunk len
+    std.mem.writeInt(u16, out[20..22], 1, .little);  // format = 1 (PCM)
+    std.mem.writeInt(u16, out[22..24], 1, .little);  // channels = 1
+    std.mem.writeInt(u32, out[24..28], sample_rate_hz, .little);
+    std.mem.writeInt(u32, out[28..32], byte_rate, .little);
+    std.mem.writeInt(u16, out[32..34], 2, .little);  // block align
+    std.mem.writeInt(u16, out[34..36], 16, .little); // 16-bit signed PCM
+    @memcpy(out[36..40], "data");
+    std.mem.writeInt(u32, out[40..44], data_bytes, .little);
+
+    var i: u32 = 0;
+    while (i < frame_count) : (i += 1) {
+        // Track 0: Dawn Tanpura (216 Hz Sa + 324 Hz Pa)
+        const tr0 = tri_osc(i, 216, 3000) + tri_osc(i, 324, 2000);
+
+        // Track 1: Tiruppavai 432 Hz Bell with linear decay envelope
+        const bell_raw = tri_osc(i, 432, 6000);
+        const tr1 = @divTrunc(
+            bell_raw * @as(i32, @intCast(frame_count - i)),
+            @as(i32, @intCast(frame_count)),
+        );
+
+        // Track 2: Glasswall Earpiece (strictly 0 when HW switch is open!)
+        const tr2: i32 = 0;
+
+        // Track 3: Linen Percussion click at bar start & midpoint (6000..6240)
+        const in_click = (i < 240) or (i >= 6000 and i < 6240);
+        const tr3: i32 = if (in_click) tri_osc(i, 960, 4000) else 0;
+
+        const sum: i32 = tr0 + tr1 + tr2 + tr3;
+        const clamped: i16 = @intCast(@max(-30000, @min(sum, 30000)));
+        const byte_off: usize = wav_header_bytes + @as(usize, i) * 2;
+        std.mem.writeInt(i16, out[byte_off..][0..2], clamped, .little);
+    }
+    // invariant: RIFF/WAVE magic intact and all 12,000 PCM frames written.
+    assert(std.mem.eql(u8, out[0..4], "RIFF"));
+    assert(std.mem.eql(u8, out[8..12], "WAVE") and i == frame_count);
+}
+
+fn run_selftest() !u8 {
+    var wav: [total_wav_bytes]u8 = undefined;
+    render_studio_wav(&wav);
+    if (!std.mem.eql(u8, wav[0..4], "RIFF")) return error.BadRiffMagic;
+    if (!std.mem.eql(u8, wav[36..40], "data")) return error.BadDataChunk;
+    const sample0 = std.mem.readInt(i16, wav[44..46], .little);
+    if (sample0 > 30000 or sample0 < -30000) return error.ClipExceeded;
+
+    print("GREEN: studio_wav_bounce -- 4-track 48kHz RIFF .wav proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    var wav: [total_wav_bytes]u8 = undefined;
+    render_studio_wav(&wav);
+    var f = try cwd.createFile(io, args[1], .{ .truncate = true });
+    defer f.close(io);
+    try f.writeStreamingAll(io, &wav);
+    print("Resonance Studio bounced {d} bytes (48kHz 16-bit WAV) -> {s}{c}", .{
+        total_wav_bytes,
+        args[1],
+        nl,
+    });
+    return 0;
+}

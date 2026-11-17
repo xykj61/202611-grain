@@ -1,0 +1,53 @@
+# tools/v/vantage_shastra_blazepod_witness.rish -- Multi-Target VantageCarry,
+# 30-Song Tiruppavai + Rasamrita, Realidream, & RV64GC Blazepod!
+#
+# Proves on real metal:
+#   1. `modules/comlink/vantage/carry.rye` cross-compiles cleanly from ONE
+#      source file to:
+#        - macOS native host,
+#        - Browser WebAssembly (`wasm32-freestanding`),
+#        - Android Daylight DC-1 (`aarch64-linux-musl` object for JNI), and
+#        - Blazepod RISC-V (`riscv64-freestanding` object)!
+#   2. `tiruppavai_dawn.rye` proves ALL 30 songs (`1..30`, including #29
+#      *Sitram Siru Kale*) + Year-2 `rasamrita_waves.rye` (Rupa Goswami)!
+#   3. `realidream_compose.rye` proves Oat/Purple/Red RLCD `DrawCmd` replay!
+#   4. `blazepod/rv64_pill.rye` cross-compiles to 64-bit `RV64GC` ELF!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "tools/.build" "libraries/shastra/tiruppavai/bin" "libraries/shastra/rasamrita/bin"]
+assert mk.ok else "mkdir failed"
+
+# 1. Cross-compile `vantage/carry.rye` across WASM, Android aarch64, & RV64GC!
+let vc_wasm = run [rye "build" "modules/comlink/vantage/carry.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/vantage_carry.wasm"]
+assert vc_wasm.ok else "vantage/carry wasm32 cross-compile failed"
+let vc_dc1 = run [rye "build-lib" "modules/comlink/vantage/carry.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_carry_dc1.a"]
+assert vc_dc1.ok else "vantage/carry Android DC-1 aarch64 cross-compile failed"
+let vc_rv64 = run [rye "build-lib" "modules/comlink/vantage/carry.rye" "-target" "riscv64-freestanding" "-femit-bin=tools/.build/libvantage_carry_rv64.a"]
+assert vc_rv64.ok else "vantage/carry RV64GC cross-compile failed"
+
+# 2. All 30 Andal Tiruppavai songs + Year-2 Rupa Goswami Rasamrita
+let b_td = run ["sh" rb "libraries/shastra/tiruppavai/tiruppavai_dawn.rye" "-femit-bin=libraries/shastra/tiruppavai/bin/tiruppavai_dawn"]
+assert b_td.ok else "tiruppavai_dawn 30-song build failed"
+let r_td = run ["libraries/shastra/tiruppavai/bin/tiruppavai_dawn" "selftest"]
+assert r_td.ok else "tiruppavai_dawn 30-song selftest failed"
+let r_29 = run ["libraries/shastra/tiruppavai/bin/tiruppavai_dawn" "29"]
+assert r_29.ok else "tiruppavai song 29 failed"
+assert (r_29.err contains "Sitram siru kale") else "song 29 missing Sitram siru kale"
+
+let b_rw = run ["sh" rb "libraries/shastra/rasamrita/rasamrita_waves.rye" "-femit-bin=libraries/shastra/rasamrita/bin/rasamrita_waves"]
+assert b_rw.ok else "rasamrita_waves build failed"
+let r_rw = run ["libraries/shastra/rasamrita/bin/rasamrita_waves" "selftest"]
+assert r_rw.ok else "rasamrita_waves selftest failed"
+
+# 3. Realidream Glasswall surface composer
+let b_rc = run ["sh" rb "modules/brushstroke/skate/realidream_compose.rye" "-femit-bin=tools/.build/realidream_compose"]
+assert b_rc.ok else "realidream_compose build failed"
+let r_rc = run ["tools/.build/realidream_compose"]
+assert r_rc.ok else "realidream_compose selftest failed"
+
+# 4. Freestanding 64-bit `RV64GC` RAM-only Blazepod pill
+let b_bp = run [rye "build" "blazepod/rv64_pill.rye" "-target" "riscv64-freestanding" "-fno-entry" "-femit-bin=tools/.build/blazepod_rv64.elf"]
+assert b_bp.ok else "blazepod/rv64_pill.rye RV64GC build failed"
+
+say "GREEN: vantage_shastra_blazepod_witness -- 4-target VantageCarry, 30-song Tiruppavai + Rasamrita, Realidream, & RV64GC Blazepod proven."

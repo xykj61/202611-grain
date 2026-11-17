@@ -1,0 +1,12 @@
+# modules/resonance/session.brix -- 4-track Resonance studio session graph.
+# Pure transport & parameter bounds live in `glow/fold-resonance-session.glow`;
+# lock-free 48 kHz audio callback stays in zero-jitter Rye!
+
+name 202611-resonance-session
+version 20261115.093000
+sample_rate_hz 48000
+tracks 4
+track_0 dawn-tanpura
+track_1 tiruppavai-bell
+track_2 earpiece-voice
+track_3 linen-percussion

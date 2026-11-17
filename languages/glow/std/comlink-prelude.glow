@@ -1,0 +1,16 @@
+::  comlink-prelude.glow -- friendly plain-name gates   ::  col 57 aligned
+::  Used by modules/apps/bloom/art-of-programming/      ::  zero-jargon entry
+|%
+++  double-steps
+  |=  steps=@ud                                         ::  input: whole number
+  ^-  @ud                                               ::  output: whole number
+  %+  mul  2  steps                                     ::  2 * steps
+++  clamp-volume
+  |=  level=@ud                                         ::  input: 0..any
+  ^-  @ud                                               ::  capped safely <= 100
+  ?:  (lte level 100)  level  100                       ::  safe audio ceiling
+++  welcome-badge
+  |=  orbits=@ud                                        ::  completed orbits
+  ^-  @ud                                               ::  milli-myofascia
+  %+  add  56500  orbits                                ::  56.500 + 0.001*n
+--

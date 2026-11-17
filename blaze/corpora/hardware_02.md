@@ -1,1 +1,0 @@
-../../bloom/hardware/handheld-surface.md

@@ -1,0 +1,118 @@
+format fusion-gates-v1
+stamp 20261115.062500
+voice Kyri
+status living
+# modules/fusion/gates.kyri -- declarative invariant rules evaluated in-memory
+# by `modules/fusion/gate_runner.rye` (collapsing repetitive `.sh` grep/awk
+# fixtures into one fast native Rye pass).
+
+# 80-column hard TAME bound on descriptors, Rishi entrypoints, & core modules
+max_cols 80 .brix
+max_cols 80 blazepod/blazepod.brix
+max_cols 80 modules/fusion/fusion.brix
+max_cols 80 publish-seed.rish
+max_cols 80 publish-redirect.rish
+max_cols 80 tasks.rish
+max_cols 80 modules/sundial/sundial.rye
+max_cols 80 languages/rishi/grain_ww_cli.rye
+max_cols 80 languages/glow/front/rune_book.rye
+max_cols 80 languages/glow/front/cord_interp.rye
+max_cols 80 languages/glow/front/trace_trail.rye
+max_cols 80 languages/glow/front/glow_fmt.rye
+max_cols 80 languages/glow/front/intrinsic_bridge.rye
+max_cols 80 languages/glow/sheaf/sheaf_resolve.rye
+max_cols 80 languages/glow/thresh/thresh_parse.rye
+max_cols 80 languages/glow/trellis/trellis_ast.rye
+max_cols 80 languages/glow/assay/assay_types.rye
+max_cols 80 languages/glow/assay/assay_bounds.rye
+max_cols 80 languages/glow/pith/pith_ir.rye
+max_cols 80 languages/glow/mill/mill_emit.rye
+max_cols 80 languages/glow/driver/glow_self_host.rye
+max_cols 80 languages/glow/compiler/glow.brix
+max_cols 80 modules/resonance/session.brix
+max_cols 80 modules/comlink/vantage/carry.rye
+max_cols 80 modules/comlink/parcel/parcel_core.rye
+max_cols 80 modules/resonance/earpiece/earpiece_core.rye
+max_cols 80 modules/brushstroke/touch/touch_core.rye
+max_cols 80 modules/brushstroke/touch/carry_frame_wire.rye
+max_cols 80 libraries/shastra/tiruppavai/tiruppavai_dawn.rye
+max_cols 80 libraries/shastra/rasamrita/rasamrita_waves.rye
+max_cols 80 libraries/shastra/sikshastakam/sikshastakam_eight.rye
+max_cols 80 libraries/shastra/champu/gopala_champu_weave.rye
+max_cols 80 modules/comlink/vantage/vantage_app.rye
+max_cols 80 modules/comlink/vantage/surf_social_grid.rye
+max_cols 80 modules/pond/testnet/galaxy_testnet.rye
+max_cols 80 modules/brushstroke/skate/realidream_compose.rye
+max_cols 80 blazepod/rv64_pill.rye
+max_cols 80 modules/pond/pond_cli.rye
+max_cols 80 modules/fusion/fusion_dag.rye
+max_cols 80 modules/fusion/fusion_sow.rye
+
+# 7-bit ASCII invariant on root doors, Geode, Bloom, Libraries, & Blazepod BOM
+ascii_7bit README.md
+ascii_7bit SOURCE.md
+ascii_7bit GEMINI.md
+ascii_7bit MAP.md
+ascii_7bit libraries/README.md
+ascii_7bit libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md
+ascii_7bit blazepod/BOM_AND_ASSEMBLY.md
+ascii_7bit docs-geode/README.md
+ascii_7bit docs-geode/architecture/conservation-equations.md
+ascii_7bit docs-geode/architecture/tame-and-civic-ring-audit.md
+ascii_7bit docs-geode/architecture/calfive-fifteen-signs-and-torus-synthesis.md
+ascii_7bit modules/apps/bloom/README.md
+ascii_7bit context/SYSTEM_CATALOG.kyri
+
+# Required semantic anchors
+must_contain README.md Myofascia
+must_contain README.md cavalhatriz
+must_contain context/REMOTE_ROSTER.md grain-ww/202611-grain
+must_contain modules/fusion/fusion.brix cold_bridge
+ascii_7bit docs-geode/lessons/guides/README.md
+ascii_7bit docs-geode/tutorials/vantage-and-carry-interfaces.md
+max_cols 80 modules/fusion/sow_native_gates.rye
+max_cols 80 modules/resonance/studio_wav_bounce.rye
+max_cols 80 languages/glow/driver/glow_compile_cli.rye
+max_cols 80 modules/resonance/dsp_engine.rye
+max_cols 80 modules/comlink/vantage/resonance_dsp.rye
+max_cols 80 modules/comlink/vantage/resonance_station.rye
+max_cols 80 modules/comlink/vantage/vantage_mutations.rye
+ascii_7bit docs-geode/tutorials/resonance-station-daw.md
+max_cols 80 modules/sundial/calfive_wheel.rye
+ascii_7bit GEMINI.md
+ascii_7bit languages/GEMINI.md
+ascii_7bit modules/GEMINI.md
+ascii_7bit libraries/GEMINI.md
+max_cols 80 modules/apps/linengrow/linengrow_commons.rye
+max_cols 80 modules/fusion/manifest_cover.rye
+ascii_7bit MAP.md
+ascii_7bit llms.txt
+max_cols 80 modules/flare/pulp/pulp_movement_stack.rye
+max_cols 80 modules/tablecloth/relational_table.rye
+max_cols 80 modules/comlink/council_405.rye
+max_cols 80 modules/pond/puddle/puddle_remote.rye
+max_cols 80 modules/sundial/one_clock.rye
+ascii_7bit active-development/date/20261115/20261115-134000-est_glasswall-pulp-tablecloth-405-council-puddle-and-one-clock.md
+max_cols 80 modules/pond/puddle/puddle_udp_live.rye
+max_cols 80 modules/flare/pulp/pulp_object_recall.rye
+max_cols 80 modules/tablecloth/sql_workspace.rye
+max_cols 80 modules/comlink/council_mycelium_weave.rye
+max_cols 80 modules/comlink/vantage/vantage_council_puddle.rye
+max_cols 80 modules/pond/puddle/puddle_scp_cli.rye
+max_cols 80 modules/pond/testnet/council_405_testnet.rye
+max_cols 80 modules/tablecloth/gleaner_intake.rye
+max_cols 80 modules/caravan/custody/vault_zeroize_seal.rye
+ascii_7bit mitra-shed/shed-prep.md
+max_cols 80 libraries/shastra/panchanga_shastra_bridge.rye
+ascii_7bit docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md
+max_cols 80 blazepod/rv64_glasswall_boot.rye
+max_cols 80 modules/comlink/constel_405_discovery.rye
+max_cols 80 libraries/risala/twilight_wheel.rye
+max_cols 80 modules/fusion/twilight_residue_audit.rye
+ascii_7bit context/TWILIGHT_STYLE.md
+ascii_7bit libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md
+max_cols 80 modules/comlink/vantage/vantage_twilight_reader.rye
+max_cols 80 modules/vantage_tablecloth_bridge.rye
+max_cols 80 modules/sundial/siya_orbit_harvest.rye
+ascii_7bit modules/sundial/siya_orbit_harvest.rye
+max_cols 80 modules/pond/puddle/puddle_cli_session.rye

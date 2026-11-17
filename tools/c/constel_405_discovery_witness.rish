@@ -1,0 +1,18 @@
+# tools/c/constel_405_discovery_witness.rish -- Movement 11/15 (`Aquarius`):
+# Gatekeeper-Free `405` Constellation Discovery (`grain-ww constel`) Witness!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+let b_cd = run ["sh" rb "modules/comlink/constel_405_discovery.rye" "-femit-bin=tools/.build/constel_405_discovery"]
+assert b_cd.ok else "constel_405_discovery build failed"
+let r_cd = run ["tools/.build/constel_405_discovery"]
+assert r_cd.ok else "constel_405_discovery selftest failed"
+
+let b_gw = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_gw.ok else "grain_ww_cli build failed"
+let r_cli = run ["languages/rishi/bin/grain-ww" "constel"]
+assert r_cli.ok else "grain-ww constel failed"
+
+say "GREEN: constel_405_discovery_witness -- <=3-hop 405 constellation & signed Kumara peer cards proven."

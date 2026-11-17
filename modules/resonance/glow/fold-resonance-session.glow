@@ -1,0 +1,10 @@
+::  modules/resonance/glow/fold-resonance-session.glow -- DAW graph
+/!  16384
+|%
+++  fold-resonance-transport
+  |=  [playing=@ud playhead=@ud loop-end=@ud]           ::  48kHz frame step
+  ^-  @ud                                               ::  next playhead
+  ?>  (gte loop-end 1)                                  ::  non-empty loop
+  ?:  =(playing 0)  playhead                            ::  paused: hold pos
+  ?:  (lte +(playhead) loop-end)  +(playhead)  0        ::  seamless wrap!
+--

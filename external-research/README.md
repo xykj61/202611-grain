@@ -28,14 +28,9 @@ This file is the foundation stone. It rests at the bottom of the stack and expla
 
 ---
 
-## Redirect stubs
+## Redirect stubs and archive custody
 
-When an exploration **lands** (mission complete) or **moves** to active-designing, the numbered file becomes a **stub** -- a short redirect, not deleted, so old links keep working. Stubs say **Deprecated** or **Executed**, name the stamp, and point at the canonical home.
-
-| Stub | Canonical home |
-|------|----------------|
-
-**Width policy:** interim seam manual [`968`](date/20260621/20260621-050312_usize-boundary-not-design.md); fork north star [`967`](date/20260621/20260621-051312_literal-usize-ban-language-fork.md) + [`../active-designing/yonder/date/20260621/20260621-051312_explicit-width-in-rye.md`](../active-designing/yonder/date/20260621/20260621-051312_explicit-width-in-rye.md).
+Pre-reroot summer redirect stubs live in permanent archive custody at `xykj61/20260618-grain` (and walk-back nib `d98bbaac`). Living width rules stand in [`TAME_GUIDANCE.md`](TAME_GUIDANCE.md).
 
 **Retired patterns** (leave these in the archive): Bash `parity.sh`, Python doc enrichers, permanent Tier C `usize` as destination, `init.arena` in prose (use `init.garden`).
 
@@ -49,6 +44,7 @@ Dated explorations carry `YYYYMMDD-HHMMSS_short-sprig.md`; living documents (`RE
 
 | Stamp | Note | Meaning |
 |-------|------|---------|
+| `20261114.214200` | [Glow from First Principles -- Hoon's Thirteen Rune Families, Ford Unbraided, and a Six-Pass Compiler](date/20261114/20261114-214200_glow-first-principles-hoon-runes-and-compiler.md) | Mixed -- measured census of `glow/`, `src/`, and `terrarium/` beside a clean-sheet 13-family rune audit, Sheaf/Brix `/` header, `CoreIR` compiler, and directory proposal |
 | *(living)* | [TAME Guidance](TAME_GUIDANCE.md) | Living -- voiced TAME style canon (philosophy and full why) |
 
 ## How To Add an Exploration

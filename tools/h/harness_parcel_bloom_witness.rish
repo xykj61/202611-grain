@@ -1,0 +1,59 @@
+# tools/h/harness_parcel_bloom_witness.rish -- Capstone witness (Orbits 6-24)
+#
+# Proves end-to-end on real metal:
+#   1. Quest 2: `cast_chart.rye`, `gate_runner.rye` (21 declarative invariants),
+#      `SYSTEM_CATALOG.kyri`, and `tasks.rish`,
+#   2. Quest 3: `comlink-prelude.glow` (col-57 `::` & <= 80 cols) + all 13
+#      numbered `bloom/art-of-programming/00..12` macOS SLC chapters exist &
+#      pass 7-bit ASCII gates,
+#   3. Quest 4: `parcel_core.rye` (Chronological MVS + Ed25519 vessels) +
+#      `gemini_airlock.rye` (`comlink-gemini` Parcel #1 vault & 10-stage guard),
+#   4. Quest 5: `harness_core.rye` (capability router, 3-Tier OmniDiff gate, &
+#      Superfan watchdog) + `virtual_weave.rye` (Scion/Manyana RAM branches).
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Quest 2: Jyotish integer wheel & declarative gate_runner
+let b_cc = run ["sh" rb "libraries/classical-vedic-astrology/cast_chart.rye" "-femit-bin=tools/.build/cast_chart"]
+assert b_cc.ok else "cast_chart build failed"
+let r_cc = run ["tools/.build/cast_chart"]
+assert r_cc.ok else "cast_chart selftest failed"
+
+let b_gr = run ["sh" rb "modules/fusion/gate_runner.rye" "-femit-bin=tools/.build/gate_runner"]
+assert b_gr.ok else "gate_runner build failed"
+let r_gr = run ["tools/.build/gate_runner"]
+assert r_gr.ok else "gate_runner failed declarative invariants"
+
+# 2. Quest 3: Bloom 00..12 chapters & comlink-prelude.glow
+let bloom_chk = run ["sh" "-c" "ls modules/apps/bloom/art-of-programming/[0-9][0-9]-*.md | wc -l | tr -d ' '"]
+assert bloom_chk.ok else "bloom chapter count failed"
+assert (trim bloom_chk.out) == "13" else "expected 13 numbered Bloom chapters (00..12)"
+
+let glow_col = run ["awk" "length > 80 { exit 1 }" "languages/glow/std/comlink-prelude.glow"]
+assert glow_col.ok else "comlink-prelude.glow exceeded 80 columns"
+
+# 3. Quest 4: Comlink Parcel & comlink-gemini Airlock
+let b_pc = run ["sh" rb "modules/comlink/parcel/parcel_core.rye" "-femit-bin=tools/.build/parcel_core"]
+assert b_pc.ok else "parcel_core build failed"
+let r_pc = run ["tools/.build/parcel_core"]
+assert r_pc.ok else "parcel_core selftest failed"
+
+let b_ga = run ["sh" rb "modules/comlink/parcel/gemini/gemini_airlock.rye" "-femit-bin=tools/.build/gemini_airlock"]
+assert b_ga.ok else "gemini_airlock build failed"
+let r_ga = run ["tools/.build/gemini_airlock"]
+assert r_ga.ok else "gemini_airlock selftest failed"
+
+# 4. Quest 5: Agentic Harness & Virtualized Blaze Weaves
+let b_hc = run ["sh" rb "modules/harness/harness_core.rye" "-femit-bin=tools/.build/harness_core"]
+assert b_hc.ok else "harness_core build failed"
+let r_hc = run ["tools/.build/harness_core"]
+assert r_hc.ok else "harness_core selftest failed"
+
+let b_vw = run ["sh" rb "modules/blaze/virtual_weave.rye" "-femit-bin=tools/.build/virtual_weave"]
+assert b_vw.ok else "virtual_weave build failed"
+let r_vw = run ["tools/.build/virtual_weave"]
+assert r_vw.ok else "virtual_weave selftest failed"
+
+say "GREEN: harness_parcel_bloom_witness -- Quests 2-5 (Bloom 00..12, Parcel, comlink-gemini, Harness, & Virtual Weave) proven on metal."

@@ -1,1 +1,0 @@
-../../bloom/curriculum/stage-08-ecology-and-stewardship.md

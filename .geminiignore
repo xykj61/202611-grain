@@ -1,0 +1,41 @@
+# Gemini CLI indexing -- leave git truth whole; skip heavy / yondered shelves.
+# Syntax: gitignore-shaped (.gemini/settings.json respects .gitignore and .geminiignore).
+
+# --- The single cold-horizon & archive vault (open explicitly by path if needed) ---
+yonder/
+**/archive/
+
+# --- Build caches and emitted binaries ---
+tools/.cache/
+tools/.build/
+glow/.cache/
+glow/bin/
+**/.zig-cache/
+**/zig-cache/
+**/bin/
+rye/bin/
+rishi/bin/
+
+# --- Heavy vendored reference trees ---
+vendor/
+old/
+vere/
+gratitude/nix/
+gratitude/s6/
+gratitude/skalibs/
+gratitude/zon/
+
+# --- Editor / agent / enclosure local state ---
+loops/
+.cursor-state/
+.zed-state/
+.gemini-state/
+.gemini/tmp/
+.gemini/logs/
+.gemini/sessions/
+.gemini/transcripts/
+.gemini/checkpoints/
+.gemini/memory/
+.gemini/.inbox/
+.gemini/browser-profile/
+squashfs-root/

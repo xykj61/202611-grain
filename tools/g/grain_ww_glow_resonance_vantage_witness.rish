@@ -1,0 +1,72 @@
+# tools/g/grain_ww_glow_resonance_vantage_witness.rish -- `grain-ww` Suite!
+#
+# Proves on real metal (`Myofascia: 56.665`):
+#   1. `grain-ww` universal CLI (`version` + `doctor`) + native macOS Swift
+#      `vantage_mac_live.swift` (`grain-ww vantage --selftest`) + `carry-apk`!
+#   2. Native Rye `sow_native_gates.rye` linear-time API-secret & PEM scanner!
+#   3. `Resonance` 4-track 48 kHz 16-bit RIFF `.wav` (`grain-ww resonance-bounce`)!
+#   4. Multi-rune `grain-ww glow` native compiler:
+#        - `double_harvest.glow` (`21 -> 49`), AND
+#        - `seva_clamp_gate.glow` (`=/`, `~|`, `?>`, `?:`, `lte`):
+#            * `4000 -> 2000` (welcome),
+#            * `8000 -> 2500` (clamped),
+#            * `12000 -> exit 1` naming `'seva-bps-above-ten-thousand'`!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "tools/.build" "languages/rishi/bin"]
+assert mk.ok else "mkdir failed"
+
+# Build grain-ww umbrella CLI + verify doctor
+let b_go = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_go.ok else "grain_ww_cli build failed"
+let r_doc = run ["languages/rishi/bin/grain-ww" "doctor"]
+assert r_doc.ok else "grain-ww doctor failed"
+
+# 1. Swift <-> Rye VantageApp macOS live app + Carry APK stage
+let b_vlib = run [rye "build-lib" "modules/comlink/vantage/vantage_app.rye" "-dynamic" "-femit-bin=tools/.build/libvantage_app_mac.dylib"]
+assert b_vlib.ok else "libvantage_app_mac.dylib build failed"
+let b_swift = run ["swiftc" "terrarium/app/vantage_mac_live.swift" "tools/.build/libvantage_app_mac.dylib" "-Xlinker" "-rpath" "-Xlinker" "@executable_path" "-framework" "AppKit" "-o" "tools/.build/vantage_mac_live"]
+assert b_swift.ok else "swiftc vantage_mac_live failed"
+let r_vantage = run ["languages/rishi/bin/grain-ww" "vantage" "--selftest"]
+assert r_vantage.ok else "grain-ww vantage --selftest failed"
+assert (r_vantage.err contains "GREEN: vantage_mac_live") else "vantage_mac_live missing GREEN"
+
+let r_apk = run ["languages/rishi/bin/grain-ww" "carry-apk"]
+assert r_apk.ok else "grain-ww carry-apk failed"
+
+# 2. Native Rye sow secret & PEM scanner
+let b_sn = run ["sh" rb "modules/fusion/sow_native_gates.rye" "-femit-bin=tools/.build/sow_native_gates"]
+assert b_sn.ok else "sow_native_gates build failed"
+let r_sn = run ["tools/.build/sow_native_gates"]
+assert r_sn.ok else "sow_native_gates selftest failed"
+
+# 3. Resonance 4-track 48 kHz 16-bit RIFF .wav bounce
+let b_wav = run ["sh" rb "modules/resonance/studio_wav_bounce.rye" "-femit-bin=tools/.build/studio_wav_bounce"]
+assert b_wav.ok else "studio_wav_bounce build failed"
+let r_wav_out = run ["languages/rishi/bin/grain-ww" "resonance-bounce" "tools/.build/resonance_4track.wav"]
+assert r_wav_out.ok else "grain-ww resonance-bounce failed"
+
+# 4. Multi-rune `grain-ww glow` native executable compilation + refusal proof!
+let b_gc = run ["sh" rb "languages/glow/driver/glow_compile_cli.rye" "-femit-bin=tools/.build/glow_compile_cli"]
+assert b_gc.ok else "glow_compile_cli build failed"
+
+let r_dh = run ["languages/rishi/bin/grain-ww" "glow" "languages/glow/examples/double_harvest.glow" "-o" "tools/.build/double_harvest"]
+assert r_dh.ok else "grain-ww glow double_harvest failed"
+let ex_dh = run ["tools/.build/double_harvest" "21"]
+assert ex_dh.ok else "double_harvest(21) failed"
+assert (ex_dh.err contains "49") else "double_harvest(21) != 49"
+
+let r_sc = run ["languages/rishi/bin/grain-ww" "glow" "languages/glow/examples/seva_clamp_gate.glow" "-o" "tools/.build/seva_clamp"]
+assert r_sc.ok else "grain-ww glow seva_clamp_gate failed"
+let ex_ok = run ["tools/.build/seva_clamp" "4000"]
+assert ex_ok.ok else "seva_clamp(4000) exited non-zero"
+assert (ex_ok.err contains "2000") else "seva_clamp(4000) != 2000"
+let ex_cap = run ["tools/.build/seva_clamp" "8000"]
+assert ex_cap.ok else "seva_clamp(8000) exited non-zero"
+assert (ex_cap.err contains "2500") else "seva_clamp(8000) != 2500"
+let ex_ref = run ["tools/.build/seva_clamp" "12000"]
+assert (ex_ref.ok == false) else "seva_clamp(12000) failed to refuse!"
+assert (ex_ref.err contains "seva-bps-above-ten-thousand") else "seva_clamp(12000) missing trail!"
+
+say "GREEN: grain_ww_glow_resonance_vantage_witness -- grain-ww CLI/doctor, Swift VantageApp, Resonance WAV, & multi-rune grain-ww glow proven."

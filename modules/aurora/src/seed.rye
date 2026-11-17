@@ -1,0 +1,59 @@
+//! modules/aurora/src/seed.rye -- Aurora's first seed: a hart wakes on RISC-V.
+//!
+//! Stamp: 20261115.072000 (TAME Core Ring-0 audit upgrade).
+//! Smallest living piece of the Ring-0 boot story (Gall's Law): a single hart
+//! wakes on freestanding RISC-V (`virt`), establishes its bounded stack at
+//! `0x8010_0000`, verifies its invariants with a production-active fail-stop
+//! `assert` (`sifive_test` `0x0001_3333` on failure, `0x5555` on clean pass),
+//! speaks one line over the 16550 UART (`0x1000_0000`), and powers off cleanly.
+
+/// Transmit register of QEMU `virt` 16550 console UART.
+const uart_tx: *volatile u8 = @ptrFromInt(0x1000_0000);
+
+/// QEMU `virt` `sifive_test` (`0x5555` = exit 0; `0x0001_3333` = exit 1).
+const test_finisher: *volatile u32 = @ptrFromInt(0x0010_0000);
+const finisher_pass: u32 = 0x5555;
+const finisher_fail: u32 = 0x0001_3333;
+const max_seed_line_bytes: u32 = 128;
+const nl_byte: u8 = 10;
+
+/// Naked RISC-V reset vector: sets `sp` 1 MiB into RAM (`0x8000_0000` + 1 MiB)
+/// before any C-ABI frame prologue runs, then jumps directly to `kmain`.
+export fn _start() linksection(".text.init") callconv(.naked) noreturn {
+    asm volatile ("li sp, 0x80100000; j kmain");
+}
+
+/// Production-active bare-metal `assert` (TAME Core Rule: Ring-0 safety walls
+/// never vanish in release builds; a tripped invariant halts with exit code 1).
+fn assert(ok: bool) void {
+    if (!ok) {
+        const msg = "ASSERTION FAILED";
+        for (msg) |b| uart_tx.* = b;
+        uart_tx.* = nl_byte;
+        test_finisher.* = finisher_fail;
+        while (true) {}
+    }
+}
+
+/// Speaks the founding Aurora line over UART and powers down cleanly.
+export fn kmain() callconv(.c) noreturn {
+    const line =
+        "Aurora seed: a hart woke on RISC-V, spoke this line, and halted.";
+
+    // invariant: boot banner is non-empty so a silent hart can never pass.
+    assert(line.len > 0);
+    // invariant: boot banner stays strictly within bounded Ring-0 UART ceiling.
+    assert(line.len <= max_seed_line_bytes);
+
+    var written: u32 = 0;
+    for (line) |byte| {
+        uart_tx.* = byte;
+        written += 1;
+    }
+    uart_tx.* = nl_byte;
+    // invariant: every banner byte was transmitted before power-down.
+    assert(written == @as(u32, @intCast(line.len)));
+
+    test_finisher.* = finisher_pass;
+    while (true) {}
+}

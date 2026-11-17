@@ -1,0 +1,65 @@
+# tools/g/glow_mill_pipeline_witness.rish -- Vantage Carry + 6-Pass Glow Mill
+#
+# Proves on real metal (`Myofascia: 56.575`):
+#   1. `modules/comlink/vantage/carry.rye` + `CarryTabletMain.kt` (verifies
+#      Kotlin shell holds ZERO posture/tab state; Vantage owns 100% of Carry!),
+#   2. `glow_fmt.rye` (col-57 `::` idempotent formatter & 80-col gate),
+#   3. `intrinsic_bridge.rye` (checked u64 & FIPS-202 `~% %sha3-256` vector),
+#   4. `trellis_ast.rye` (iterative zero-recursion `AstGarden` & depth-64 guard),
+#   5. `assay_types.rye` + `assay_bounds.rye` (`LayoutTable`, `?-` exhaustiveness,
+#      & compile-time `FrameBudget` / `UnboundedLoopRefused`),
+#   6. `pith_ir.rye` + `mill_emit.rye` (SSA narrow-waist + RV64GC, AArch64, &
+#      TAME Rye Stage-1 == Stage-2 fixed-point parity)!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Vantage Carry core + thin Kotlin JNI shell check
+let b_vc = run ["sh" rb "modules/comlink/vantage/carry.rye" "-femit-bin=tools/.build/vantage_carry"]
+assert b_vc.ok else "vantage/carry.rye build failed"
+let r_vc = run ["tools/.build/vantage_carry"]
+assert r_vc.ok else "vantage/carry selftest failed"
+let thin_kt = run ["sh" "-c" "! grep -E 'enum class CarryPosture|maxFingerRadiusPx' terrarium/carry-tablet/*.kt"]
+assert thin_kt.ok else "duplicated app logic found in Kotlin Carry shell!"
+
+# 2. Glow Mill Orbit 4 & 5: glow_fmt & intrinsic_bridge
+let b_gf = run ["sh" rb "languages/glow/front/glow_fmt.rye" "-femit-bin=tools/.build/glow_fmt"]
+assert b_gf.ok else "glow_fmt build failed"
+let r_gf = run ["tools/.build/glow_fmt"]
+assert r_gf.ok else "glow_fmt selftest failed"
+
+let b_ib = run ["sh" rb "languages/glow/front/intrinsic_bridge.rye" "-femit-bin=tools/.build/intrinsic_bridge"]
+assert b_ib.ok else "intrinsic_bridge build failed"
+let r_ib = run ["tools/.build/intrinsic_bridge"]
+assert r_ib.ok else "intrinsic_bridge selftest failed"
+
+# 3. Glow Mill Orbit 8: Trellis iterative AstGarden
+let b_tr = run ["sh" rb "languages/glow/trellis/trellis_ast.rye" "-femit-bin=tools/.build/trellis_ast"]
+assert b_tr.ok else "trellis_ast build failed"
+let r_tr = run ["tools/.build/trellis_ast"]
+assert r_tr.ok else "trellis_ast selftest failed"
+
+# 4. Glow Mill Orbits 9-10: Assay types & FrameBudget bounds
+let b_at = run ["sh" rb "languages/glow/assay/assay_types.rye" "-femit-bin=tools/.build/assay_types"]
+assert b_at.ok else "assay_types build failed"
+let r_at = run ["tools/.build/assay_types"]
+assert r_at.ok else "assay_types selftest failed"
+
+let b_ab = run ["sh" rb "languages/glow/assay/assay_bounds.rye" "-femit-bin=tools/.build/assay_bounds"]
+assert b_ab.ok else "assay_bounds build failed"
+let r_ab = run ["tools/.build/assay_bounds"]
+assert r_ab.ok else "assay_bounds selftest failed"
+
+# 5. Glow Mill Orbits 11-15: PithIR & Mill dual-silicon emitter
+let b_pi = run ["sh" rb "languages/glow/pith/pith_ir.rye" "-femit-bin=tools/.build/pith_ir"]
+assert b_pi.ok else "pith_ir build failed"
+let r_pi = run ["tools/.build/pith_ir"]
+assert r_pi.ok else "pith_ir selftest failed"
+
+let b_me = run ["sh" rb "languages/glow/mill/mill_emit.rye" "-femit-bin=tools/.build/mill_emit"]
+assert b_me.ok else "mill_emit build failed"
+let r_me = run ["tools/.build/mill_emit"]
+assert r_me.ok else "mill_emit selftest failed"
+
+say "GREEN: glow_mill_pipeline_witness -- Vantage Carry + complete 6-pass Glow Mill (fmt, intrinsics, Trellis, Assay, Pith, & Mill RV64GC/AArch64) proven."

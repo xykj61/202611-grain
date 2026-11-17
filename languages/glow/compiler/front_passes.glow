@@ -1,0 +1,16 @@
+::  languages/glow/compiler/front_passes.glow -- Thresh & Trellis
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-thresh
+  |=  src-len=@ud                                       ::  source byte len
+  ^-  @ud                                               ::  bounded span cap
+  ?>  (lte src-len 65536)                               ::  64 KiB desk cap
+  %+  add  1  (div src-len 2)                           ::  upper token bound
+++  fold-trellis
+  |=  depth=@ud                                         ::  explicit stack sp
+  ^-  @ud                                               ::  verified <= 64
+  ~|  'trellis-parse-depth-exceeded'                    ::  refusal trail
+  ?>  (lte depth 64)                                    ::  no host recursion
+  depth
+--

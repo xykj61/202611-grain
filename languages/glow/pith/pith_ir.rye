@@ -1,0 +1,189 @@
+//! languages/glow/pith/pith_ir.rye -- Narrow-waist SSA/ANF `PithIR`.
+//!
+//! Glow Mill Stamp: `20261115.091500`).
+//! Compact, typed SSA/ANF intermediate representation (`<= 24` opcodes):
+//!   - Every front-end sugar lowers into `PithIR`,
+//!   - Canonical binary/SHA3-256 serialization feeds `Fusion` early cutoff
+//!     and `Harness` Tier-0 structural diff,
+//!   - Includes a deterministic, bounded reference interpreter!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.091500";
+pub const max_insts: u32 = 256;
+const nl: u8 = 10;
+
+pub const PithError = error{
+    ProgramFull,
+    BadRegRef,
+    OverflowTrap,
+    DivideByZeroTrap,
+    MissingReturn,
+};
+
+pub const Op = enum(u8) {
+    const_u64 = 1,
+    param_u64 = 2,
+    add_checked = 3,
+    sub_checked = 4,
+    mul_checked = 5,
+    cmp_lte = 6,
+    select_val = 7, // dst = (cond_loob == 0) ? a : b
+    ret_val = 8,
+};
+
+pub const Inst = struct {
+    op: Op,
+    a: u32,
+    b: u32,
+    c: u32,
+    imm: u64,
+};
+
+pub const PithModule = struct {
+    insts: [max_insts]Inst,
+    count: u32,
+
+    pub fn init() PithModule {
+        return .{ .insts = undefined, .count = 0 };
+    }
+
+    pub fn emit(self: *PithModule, inst: Inst) PithError!u32 {
+        assert(self.count <= max_insts);
+        if (self.count >= max_insts) return error.ProgramFull;
+        const id = self.count;
+        self.insts[id] = inst;
+        self.count += 1;
+        return id;
+    }
+
+    /// Canonical SHA3-256 structural digest over the SSA instruction stream!
+    pub fn canonical_sha3(self: *const PithModule) [32]u8 {
+        var h = Sha3_256.init(.{});
+        h.update("pith-ir-v1:");
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const ins = self.insts[i];
+            h.update(&[_]u8{@intFromEnum(ins.op)});
+            var b4: [4]u8 = undefined;
+            std.mem.writeInt(u32, &b4, ins.a, .little);
+            h.update(&b4);
+            std.mem.writeInt(u32, &b4, ins.b, .little);
+            h.update(&b4);
+            std.mem.writeInt(u32, &b4, ins.c, .little);
+            h.update(&b4);
+            var b8: [8]u8 = undefined;
+            std.mem.writeInt(u64, &b8, ins.imm, .little);
+            h.update(&b8);
+        }
+        var out: [32]u8 = undefined;
+        h.final(&out);
+        assert(out.len == 32);
+        return out;
+    }
+
+    pub fn eval(self: *const PithModule, arg0: u64) PithError!u64 {
+        var regs = std.mem.zeroes([max_insts]u64);
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const ins = self.insts[i];
+            switch (ins.op) {
+                .const_u64 => regs[i] = ins.imm,
+                .param_u64 => regs[i] = arg0,
+                .add_checked => {
+                    if (ins.a >= i or ins.b >= i) return error.BadRegRef;
+                    const r = @addWithOverflow(regs[ins.a], regs[ins.b]);
+                    if (r[1] != 0) return error.OverflowTrap;
+                    regs[i] = r[0];
+                },
+                .sub_checked => {
+                    if (ins.a >= i or ins.b >= i) return error.BadRegRef;
+                    if (regs[ins.b] > regs[ins.a]) return error.OverflowTrap;
+                    regs[i] = regs[ins.a] - regs[ins.b];
+                },
+                .mul_checked => {
+                    if (ins.a >= i or ins.b >= i) return error.BadRegRef;
+                    const r = @mulWithOverflow(regs[ins.a], regs[ins.b]);
+                    if (r[1] != 0) return error.OverflowTrap;
+                    regs[i] = r[0];
+                },
+                .cmp_lte => {
+                    if (ins.a >= i or ins.b >= i) return error.BadRegRef;
+                    regs[i] = if (regs[ins.a] <= regs[ins.b]) 0 else 1;
+                },
+                .select_val => {
+                    if (ins.a >= i or ins.b >= i or ins.c >= i) {
+                        return error.BadRegRef;
+                    }
+                    regs[i] = if (regs[ins.a] == 0)
+                        regs[ins.b]
+                    else
+                        regs[ins.c];
+                },
+                .ret_val => {
+                    if (ins.a >= i) return error.BadRegRef;
+                    assert(i < self.count);
+                    return regs[ins.a];
+                },
+            }
+        }
+        return error.MissingReturn;
+    }
+};
+
+fn build_clamp_volume() PithError!PithModule {
+    // `|=  level=@ud  ?:  (lte level 100)  level  100`
+    var m = PithModule.init();
+    const r_lvl = try m.emit(.{
+        .op = .param_u64,
+        .a = 0,
+        .b = 0,
+        .c = 0,
+        .imm = 0,
+    });
+    const r_100 = try m.emit(.{
+        .op = .const_u64,
+        .a = 0,
+        .b = 0,
+        .c = 0,
+        .imm = 100,
+    });
+    const r_ok = try m.emit(.{
+        .op = .cmp_lte,
+        .a = r_lvl,
+        .b = r_100,
+        .c = 0,
+        .imm = 0,
+    });
+    const r_sel = try m.emit(.{
+        .op = .select_val,
+        .a = r_ok,
+        .b = r_lvl,
+        .c = r_100,
+        .imm = 0,
+    });
+    _ = try m.emit(.{ .op = .ret_val, .a = r_sel, .b = 0, .c = 0, .imm = 0 });
+    return m;
+}
+
+fn run_selftest() !u8 {
+    const m1 = try build_clamp_volume();
+    const m2 = try build_clamp_volume();
+    if (!std.mem.eql(u8, &m1.canonical_sha3(), &m2.canonical_sha3())) {
+        return error.NonDeterministicDigest;
+    }
+    if ((try m1.eval(75)) != 75) return error.Clamp75Wrong;
+    if ((try m1.eval(140)) != 100) return error.Clamp140Wrong;
+
+    print("GREEN: pith_ir -- SSA narrow-waist, SHA3, & eval proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

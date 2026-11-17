@@ -26,7 +26,7 @@ keys=$(find seed \( -name 'keys_*' -o -name 'PUBKEYS.md' -o -name '*.pem' -o -na
 # prefix joined the same day, widened the moment a real Together key was
 # confirmed live (`tgp_v1_...`, 50 characters total) -- the same reflex as the
 # original OpenRouter widening, applied on sight rather than waited on.
-API_SECRETS='sk-or-v1-[A-Fa-f0-9]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|sk-proj-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{32,}|tgp_v1_[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,}'
+API_SECRETS='AIza[0-9A-Za-z_-]{35}|sk-or-v1-[A-Fa-f0-9]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|sk-proj-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{32,}|tgp_v1_[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]{10,}'
 embedded=$(grep -rIlE "ssh-(ed25519|rsa) AAAA[A-Za-z0-9+/]|BEGIN (OPENSSH|PGP|RSA|EC) (PRIVATE|PUBLIC) KEY|$API_SECRETS" seed 2>/dev/null || true)
 if [ -z "$bad" ] && [ -z "$keys" ] && [ -z "$embedded" ]; then
   echo NO_PERSONAL

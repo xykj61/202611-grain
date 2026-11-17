@@ -1,0 +1,218 @@
+//! modules/blaze/virtual_weave.rye -- Scion/Manyana RAM branches & CAS refs.
+//!
+//! Orbit 21 of `20261115-053000` (`20261115.063000`).
+//! Enables up to 16 parallel Gemini + Flare subagents to branch, edit, merge,
+//! and CAS-promote weaves purely in bounded RAM with zero disk checkouts,
+//! representing concurrent path collisions as typed `ConflictBead` values.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.063000";
+pub const max_changesets: u32 = 256;
+pub const max_refs: u32 = 16;
+const nl: u8 = 10;
+
+pub const WeaveError = error{
+    ArenaFull,
+    TooManyRefs,
+    BadChangesetId,
+    CasConflictOnRef,
+};
+
+pub const BeadKind = enum {
+    clean_file,
+    conflict_pair,
+};
+
+pub const Changeset = struct {
+    parent_id: u32,
+    generation: u32,
+    path: []const u8,
+    kind: BeadKind,
+    ours_sha3: [32]u8,
+    theirs_sha3: [32]u8,
+    node_sha3: [32]u8,
+};
+
+pub const BranchRef = struct {
+    name: []const u8,
+    head_id: u32,
+};
+
+pub const VirtualWeaveArena = struct {
+    nodes: [max_changesets]Changeset,
+    node_count: u32,
+    refs: [max_refs]BranchRef,
+    ref_count: u32,
+
+    pub fn init() VirtualWeaveArena {
+        var arena = VirtualWeaveArena{
+            .nodes = undefined,
+            .node_count = 1,
+            .refs = undefined,
+            .ref_count = 1,
+        };
+        const z = std.mem.zeroes([32]u8);
+        arena.nodes[0] = .{
+            .parent_id = 0,
+            .generation = 0,
+            .path = "",
+            .kind = .clean_file,
+            .ours_sha3 = z,
+            .theirs_sha3 = z,
+            .node_sha3 = z,
+        };
+        arena.refs[0] = .{ .name = "main", .head_id = 0 };
+        return arena;
+    }
+
+    /// `O(1)` checkout-free virtual branch creation in RAM!
+    pub fn fork_branch(
+        self: *VirtualWeaveArena,
+        name: []const u8,
+        from_head: u32,
+    ) WeaveError!u32 {
+        assert(self.ref_count <= max_refs);
+        if (from_head >= self.node_count) return error.BadChangesetId;
+        if (self.ref_count >= max_refs) return error.TooManyRefs;
+        const idx = self.ref_count;
+        self.refs[idx] = .{ .name = name, .head_id = from_head };
+        self.ref_count += 1;
+        assert(self.ref_count <= max_refs);
+        return idx;
+    }
+
+    pub fn commit_delta(
+        self: *VirtualWeaveArena,
+        parent_id: u32,
+        path: []const u8,
+        content: []const u8,
+    ) WeaveError!u32 {
+        if (parent_id >= self.node_count) return error.BadChangesetId;
+        if (self.node_count >= max_changesets) return error.ArenaFull;
+        var c_hash: [32]u8 = undefined;
+        Sha3_256.hash(content, &c_hash, .{});
+
+        const gen = self.nodes[parent_id].generation + 1;
+        var h = Sha3_256.init(.{});
+        h.update(&self.nodes[parent_id].node_sha3);
+        h.update(path);
+        h.update(&c_hash);
+        var n_hash: [32]u8 = undefined;
+        h.final(&n_hash);
+
+        const id = self.node_count;
+        self.nodes[id] = .{
+            .parent_id = parent_id,
+            .generation = gen,
+            .path = path,
+            .kind = .clean_file,
+            .ours_sha3 = c_hash,
+            .theirs_sha3 = std.mem.zeroes([32]u8),
+            .node_sha3 = n_hash,
+        };
+        self.node_count += 1;
+        // invariant: child generation strictly exceeds parent generation.
+        assert(self.nodes[id].generation > self.nodes[parent_id].generation);
+        return id;
+    }
+
+    /// Atomic Compare-and-Swap (CAS) ref promotion (Scion/Mononoke lock-free).
+    pub fn cas_promote_ref(
+        self: *VirtualWeaveArena,
+        ref_idx: u32,
+        expected_head: u32,
+        new_head: u32,
+    ) WeaveError!void {
+        assert(ref_idx < self.ref_count);
+        if (new_head >= self.node_count) return error.BadChangesetId;
+        if (self.refs[ref_idx].head_id != expected_head) {
+            return error.CasConflictOnRef;
+        }
+        self.refs[ref_idx].head_id = new_head;
+        assert(self.refs[ref_idx].head_id == new_head);
+    }
+
+    /// Reifies concurrent edits to one path as a typed `ConflictBead`
+    /// (Manyana/Jujutsu style) without corrupting text with conflict markers.
+    pub fn merge_heads(
+        self: *VirtualWeaveArena,
+        ours_id: u32,
+        theirs_id: u32,
+    ) WeaveError!u32 {
+        if (ours_id >= self.node_count or theirs_id >= self.node_count) {
+            return error.BadChangesetId;
+        }
+        if (self.node_count >= max_changesets) return error.ArenaFull;
+        const a = self.nodes[ours_id];
+        const b = self.nodes[theirs_id];
+        const same_path = std.mem.eql(u8, a.path, b.path);
+        const diff_bytes = !std.mem.eql(u8, &a.ours_sha3, &b.ours_sha3);
+        const is_conflict = same_path and diff_bytes;
+
+        var h = Sha3_256.init(.{});
+        h.update("merge:");
+        h.update(&a.node_sha3);
+        h.update(&b.node_sha3);
+        var n_hash: [32]u8 = undefined;
+        h.final(&n_hash);
+
+        const id = self.node_count;
+        self.nodes[id] = .{
+            .parent_id = ours_id,
+            .generation = @max(a.generation, b.generation) + 1,
+            .path = a.path,
+            .kind = if (is_conflict) .conflict_pair else .clean_file,
+            .ours_sha3 = a.ours_sha3,
+            .theirs_sha3 = b.ours_sha3,
+            .node_sha3 = n_hash,
+        };
+        self.node_count += 1;
+        assert(id < max_changesets);
+        return id;
+    }
+};
+
+fn run_selftest() !u8 {
+    var w = VirtualWeaveArena.init();
+    const b1 = try w.fork_branch("agent-gemini-1", 0);
+    const b2 = try w.fork_branch("agent-flare-2", 0);
+    _ = b1;
+    _ = b2;
+
+    const c1 = try w.commit_delta(0, "scene.glow", "|=  x=@u32  +(x)");
+    const c2 = try w.commit_delta(0, "scene.glow", "|=  x=@u32  (add x 2)");
+
+    // Agent 1 promotes `main` (`0 -> c1`) via atomic CAS
+    try w.cas_promote_ref(0, 0, c1);
+
+    // Agent 2 tries stale CAS (`0 -> c2`) and is cleanly refused!
+    if (w.cas_promote_ref(0, 0, c2)) |_| {
+        return error.StaleCasAccepted;
+    } else |err| {
+        if (err != error.CasConflictOnRef) return err;
+    }
+
+    // Merging `c1` and `c2` reifies a typed `.conflict_pair` bead!
+    const m_conflict = try w.merge_heads(c1, c2);
+    if (w.nodes[m_conflict].kind != .conflict_pair) {
+        return error.ExpectedConflictBead;
+    }
+
+    // Disjoint-path edits merge cleanly as `.clean_file`!
+    const c3 = try w.commit_delta(c1, "music.glow", "|=  hz=@u32  hz");
+    const m_clean = try w.merge_heads(c1, c3);
+    if (w.nodes[m_clean].kind != .clean_file) return error.FalseConflict;
+
+    print("GREEN: virtual_weave -- RAM branches & ConflictBead proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

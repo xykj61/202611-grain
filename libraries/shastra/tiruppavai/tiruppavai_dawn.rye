@@ -1,0 +1,144 @@
+//! libraries/shastra/tiruppavai/tiruppavai_dawn.rye -- All 30 Andal Dawn Songs!
+//!
+//! Stamp: `20261115.095000`): Reads all 30 songs (`1..30`) of Andal's
+//! *Tiruppavai* from `libraries/shastra/tiruppavai/tiruppavai_30.kyri` and
+//! synthesizes a bounded, zero-floating-point **48 kHz Dawn Bell** waveform!
+//!
+//! Usage:
+//!   grainos tiruppavai 29       -- prints Song 29 (Sitram Siru Kale) + chime
+//!   tiruppavai_dawn selftest    -- proves all 30 songs (`1..30`) & bells
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.095000";
+pub const total_songs: u32 = 30;
+pub const sample_rate_hz: u32 = 48000;
+pub const bell_samples: u32 = 2400;
+pub const catalog_path = "libraries/shastra/tiruppavai/tiruppavai_30.kyri";
+const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const DawnError = error{
+    SongOutOfRange,
+    MalformedCatalogRow,
+    CatalogIncomplete,
+};
+
+pub const PasuramRow = struct {
+    number: u32,
+    freq_hz: u32,
+    tamil_opening: []const u8,
+    plain_english: []const u8,
+};
+
+pub fn parse_catalog(
+    text: []const u8,
+    rows_out: *[total_songs]PasuramRow,
+) DawnError!void {
+    var seen_count: u32 = 0;
+    var it = std.mem.splitScalar(u8, text, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (line.len == 0 or line[0] == '#') continue;
+        if (!std.mem.startsWith(u8, line, "song ")) continue;
+
+        const body = std.mem.trim(u8, line[5..], &ws);
+        var parts = std.mem.splitScalar(u8, body, '|');
+        const num_s = parts.next() orelse return error.MalformedCatalogRow;
+        const hz_s = parts.next() orelse return error.MalformedCatalogRow;
+        const tam_s = parts.next() orelse return error.MalformedCatalogRow;
+        const eng_s = parts.rest();
+
+        const n = std.fmt.parseInt(u32, num_s, 10) catch {
+            return error.MalformedCatalogRow;
+        };
+        const hz = std.fmt.parseInt(u32, hz_s, 10) catch {
+            return error.MalformedCatalogRow;
+        };
+        if (n < 1 or n > total_songs or eng_s.len == 0) {
+            return error.SongOutOfRange;
+        }
+        rows_out[n - 1] = .{
+            .number = n,
+            .freq_hz = hz,
+            .tamil_opening = tam_s,
+            .plain_english = eng_s,
+        };
+        seen_count += 1;
+    }
+    if (seen_count != total_songs) return error.CatalogIncomplete;
+    // invariant: all 30 pasurams (1..30) populated in ascending slot order.
+    assert(seen_count == total_songs and rows_out[29].number == 30);
+}
+
+pub fn synth_dawn_bell(freq_hz: u32, pcm_out: *[bell_samples]i16) void {
+    assert(freq_hz >= 100 and freq_hz <= 4000);
+    const period: u32 = sample_rate_hz / freq_hz;
+    assert(period >= 12);
+
+    var i: u32 = 0;
+    while (i < bell_samples) : (i += 1) {
+        const phase = i % period;
+        const half = period / 2;
+        const raw_tri: u32 = if (phase < half)
+            (phase * 32000) / half
+        else
+            ((period - phase) * 32000) / half;
+        const tri_u: i32 = @intCast(@min(raw_tri, 32000));
+        const centered: i32 = tri_u - 16000;
+        const env_num: i32 = @intCast(bell_samples - i);
+        const env_den: i32 = @intCast(bell_samples);
+        pcm_out[i] = @intCast(@divTrunc(centered * env_num, env_den));
+    }
+    assert(i == bell_samples);
+}
+
+fn run_selftest(text: []const u8) !u8 {
+    var rows: [total_songs]PasuramRow = undefined;
+    try parse_catalog(text, &rows);
+
+    var idx: u32 = 0;
+    var pcm: [bell_samples]i16 = undefined;
+    while (idx < total_songs) : (idx += 1) {
+        if (rows[idx].number != idx + 1) return error.NumberGap;
+        synth_dawn_bell(rows[idx].freq_hz, &pcm);
+        for (pcm) |s| {
+            if (s > 16000 or s < -16000) return error.AudioPeakExceeded;
+        }
+    }
+    print("GREEN: tiruppavai_dawn -- all 30 Andal dawn songs proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+    const args = try init.minimal.args.toSlice(a);
+    const text = try cwd.readFileAlloc(io, catalog_path, a, .limited(65536));
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest(text);
+    }
+
+    var rows: [total_songs]PasuramRow = undefined;
+    try parse_catalog(text, &rows);
+    const n = std.fmt.parseInt(u32, args[1], 10) catch {
+        return error.SongOutOfRange;
+    };
+    if (n < 1 or n > total_songs) return error.SongOutOfRange;
+
+    const p = rows[n - 1];
+    var pcm: [bell_samples]i16 = undefined;
+    synth_dawn_bell(p.freq_hz, &pcm);
+    print("Tiruppavai Dawn Song #{d}/30 ({d} Hz 48kHz bell){c}", .{
+        p.number, p.freq_hz, nl,
+    });
+    print("  Opening: {s}{c}", .{ p.tamil_opening, nl });
+    print("  Meaning: {s}{c}", .{ p.plain_english, nl });
+    return 0;
+}

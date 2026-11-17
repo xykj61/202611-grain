@@ -1,0 +1,22 @@
+::  languages/glow/compiler/millstones.glow -- Rye & RISC-V stones
+/-  compiler-shapes
+/+  middle-passes
+/!  32768
+|%
+++  gate-mill-riscv-addi
+  |=  [rd=@ud imm12=@ud]                                ::  RV64GC ADDI x0
+  ^-  @ud                                               ::  32-bit inst word
+  ?>  (lte rd 31)                                       ::  5-bit register
+  ?>  (lte imm12 4095)                                  ::  12-bit immediate
+  %+  add  19  %+  add  (mul rd 128)  (mul imm12 1048576)
+++  gate-mill-aarch64-ret
+  |=  unused=@ud                                        ::  Apple Silicon RET
+  ^-  @ud                                               ::  0xD65F03C0 word
+  3596551104
+++  gen-glow
+  |=  [stone=@ud rd=@ud imm12=@ud]                      ::  0=riscv, 1=arm64
+  ^-  @ud                                               ::  emitted word
+  ?:  =(stone 0)
+    (gate-mill-riscv-addi rd imm12)
+  (gate-mill-aarch64-ret 0)
+--

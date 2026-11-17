@@ -1,32 +1,37 @@
-# Frontier -- the four agent CLIs at the pier door
+# Frontier -- the agent CLIs at the pier door
 
 **Language:** EN  
 **Style:** Gauge, Door setting (see [`../context/GAUGE_STYLE.md`](../context/GAUGE_STYLE.md))  
 **Voice:** Kyri  
 **Status:** Built -- the NixOS configuration carries four pinned terminal agents; Cursor CLI's
-terminal-only operating guide lives under [`cursor-cli/`](cursor-cli/README.md)
-**Last updated:** `20260921.152230`
-**Kin:** [`NIXOS_CLI_GUIDE.md`](NIXOS_CLI_GUIDE.md) - [`ANTIGRAVITY.md`](ANTIGRAVITY.md) - `../nixos/configuration.nix` - [`../open/README.md`](../open/README.md) - [`../fleet/README.md`](../fleet/README.md)
+terminal-only operating guide lives under [`cursor-cli/`](cursor-cli/README.md), and Gemini CLI's
+`gemini-4-carbon` bench guide lives at [`GEMINI.md`](GEMINI.md)
+**Last updated:** `20261114.203000`
+**Kin:** [`NIXOS_CLI_GUIDE.md`](NIXOS_CLI_GUIDE.md) - [`GEMINI.md`](GEMINI.md) - [`ANTIGRAVITY.md`](ANTIGRAVITY.md) - `../nixos/configuration.nix` - [`../open/README.md`](../open/README.md) - [`../fleet/README.md`](../fleet/README.md)
 **Home:** [`../README.md`](../README.md)
 
 ---
 
 ## What this room holds
 
-This is the frontier room for the command-line agents installed on the NixOS pier:
+This is the frontier room for the command-line agents installed on the pier and benches:
 
 | File | Reader | What it answers |
 |---|---|---|
 | This page | anyone opening the room | why these tools share one room, and where the facts live |
-| [`NIXOS_CLI_GUIDE.md`](NIXOS_CLI_GUIDE.md) | someone rebuilding the pier | how the four packages are pinned, checked, and updated |
-| [`ANTIGRAVITY.md`](ANTIGRAVITY.md) | someone trying Google's agent | how `agy` is installed, authenticated, and kept distinct from Gemini CLI |
+| [`NIXOS_CLI_GUIDE.md`](NIXOS_CLI_GUIDE.md) | someone rebuilding the pier | how the four NixOS packages are pinned, checked, and updated |
+| [`GEMINI.md`](GEMINI.md) | someone running the Gemini carbon bench | how `gemini` loads `GEMINI.md` and `.gemini/settings.json`, defaults to `gemini-4-carbon`, and pushes to `xy/gemini-4-carbon` |
+| [`ANTIGRAVITY.md`](ANTIGRAVITY.md) | someone trying Google's `agy` agent | how `agy` is installed, authenticated, and kept distinct from Gemini CLI |
 
 The configuration is the source of truth for what the system installs. This room is the handrail:
 it names the upstream release pages, the update path, and the boundary between a reproducible
 system package and a user's private credentials.
 
-## The four seats
+## The agent seats
 
+- **Gemini CLI** -- Google's `gemini` terminal agent (`0.68.0` verified on macOS metal), seated on
+  the `202611-grain-gemini-4-carbon` bench with default model `gemini-4-carbon` and default
+  upstream push branch `xy/gemini-4-carbon`.
 - **Codex** -- OpenAI's terminal coding agent, pinned to `0.155.1`.
 - **Cursor Agent** -- Cursor's terminal agent, pinned to installer build `2026.09.18-9a7762b`,
   with the Incense CLI lane defaulting to Cursor Grok `grok-4.7-high`.

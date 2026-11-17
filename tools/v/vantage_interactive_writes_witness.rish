@@ -1,0 +1,37 @@
+# tools/v/vantage_interactive_writes_witness.rish -- Interactive Vantage Writes!
+#
+# Proves on real metal:
+#   1. `modules/comlink/vantage/vantage_mutations.rye` (Dimeroll double-entry
+#      posts with `sum(nets) == 0`, Scribe Champu SHA3-256 seals, & Surf notes),
+#   2. `modules/comlink/vantage/vantage_app.rye` interactive write routing across
+#      macOS host, WASM (`vantage_app.wasm`), Android `arm64-v8a`, and macOS
+#      Swift `vantage_mac_live.swift` (`+ Write/Seal` toolbar button)!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Vantage write store selftest
+let b_vm = run ["sh" rb "modules/comlink/vantage/vantage_mutations.rye" "-femit-bin=tools/.build/vantage_mutations"]
+assert b_vm.ok else "vantage_mutations.rye build failed"
+let r_vm = run ["tools/.build/vantage_mutations"]
+assert r_vm.ok else "vantage_mutations selftest failed"
+
+# 2. Unified VantageApp interactive write/seal + WASM + Android arm64 + Swift
+let b_va = run ["sh" rb "modules/comlink/vantage/vantage_app.rye" "-femit-bin=tools/.build/vantage_app"]
+assert b_va.ok else "vantage_app.rye build failed"
+let r_va = run ["tools/.build/vantage_app"]
+assert r_va.ok else "vantage_app interactive write selftest failed"
+
+let va_wasm = run [rye "build" "modules/comlink/vantage/vantage_app.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/vantage_app.wasm"]
+assert va_wasm.ok else "vantage_app wasm32 rebuild failed"
+
+let b_vlib = run [rye "build-lib" "modules/comlink/vantage/vantage_app.rye" "-dynamic" "-femit-bin=tools/.build/libvantage_app_mac.dylib"]
+assert b_vlib.ok else "libvantage_app_mac.dylib rebuild failed"
+let b_swift = run ["swiftc" "terrarium/app/vantage_mac_live.swift" "tools/.build/libvantage_app_mac.dylib" "-Xlinker" "-rpath" "-Xlinker" "@executable_path" "-framework" "AppKit" "-o" "tools/.build/vantage_mac_live"]
+assert b_swift.ok else "swiftc vantage_mac_live rebuild failed"
+let r_mac = run ["tools/.build/vantage_mac_live" "--selftest"]
+assert r_mac.ok else "vantage_mac_live selftest failed"
+
+say "GREEN: vantage_interactive_writes_witness -- Interactive Dimeroll/Scribe/Surf writes inside Vantage proven."

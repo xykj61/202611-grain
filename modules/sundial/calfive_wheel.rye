@@ -1,0 +1,238 @@
+//! modules/sundial/calfive_wheel.rye -- `[15..9375]` Calfive Movement Wheel!
+//!
+//! Stamp: `20261115.145000` -- Strict `round -> movement` Calfive Panchanga:
+//!   `[15, 75, 375, 1875, 9375] : [orbit, quest, journey, section, chapter]`
+//!   - `1 Orbit` strictly means **completion of 15 Movements**,
+//!   - 15-Sign Wheel (`Aries`..`Pisces` + 3 `sky` Aether seats ending at
+//!     `Siya`), executable via `grain-ww round-load` / `grain-ww movement`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.145000";
+pub const sign_count: u32 = 15;
+pub const orbit_movements: u32 = 15;
+pub const quest_movements: u32 = 75;
+pub const journey_movements: u32 = 375;
+pub const section_movements: u32 = 1875;
+pub const chapter_movements: u32 = 9375;
+const nl: u8 = 10;
+
+pub const SignSeat = struct {
+    movement: u8,
+    sign: []const u8,
+    mode: []const u8,
+    element: []const u8,
+    goal: []const u8,
+    craft_verb: []const u8,
+};
+
+pub const wheel = [sign_count]SignSeat{
+    .{
+        .movement = 1,
+        .sign = "Aries",
+        .mode = "cardinal",
+        .element = "fire",
+        .goal = "talent",
+        .craft_verb =
+            "Ignite the seed: ship the smallest real file on metal.",
+    },
+    .{
+        .movement = 2,
+        .sign = "Taurus",
+        .mode = "fixed",
+        .element = "earth",
+        .goal = "law",
+        .craft_verb =
+            "Tend fertile ground: guard Tally bounds & keep what works.",
+    },
+    .{
+        .movement = 3,
+        .sign = "Gemini",
+        .mode = "dual",
+        .element = "air",
+        .goal = "fun",
+        .craft_verb =
+            "Speak between twins: pair citizen Glow with Rye plainly.",
+    },
+    .{
+        .movement = 4,
+        .sign = "Cancer",
+        .mode = "cardinal",
+        .element = "water",
+        .goal = "aesthetics",
+        .craft_verb =
+            "Make the home safe: Pond shelter, Glasswall, warm welcome.",
+    },
+    .{
+        .movement = 5,
+        .sign = "Leo",
+        .mode = "fixed",
+        .element = "fire",
+        .goal = "talent",
+        .craft_verb =
+            "Stand in daylight: Dimeroll books balance & Seva shines.",
+    },
+    .{
+        .movement = 6,
+        .sign = "Virgo",
+        .mode = "dual",
+        .element = "earth",
+        .goal = "law",
+        .craft_verb =
+            "Measure & prune: 80-col, ASCII, stamp-and-name, TAME gates.",
+    },
+    .{
+        .movement = 7,
+        .sign = "Libra",
+        .mode = "cardinal",
+        .element = "air",
+        .goal = "fun",
+        .craft_verb =
+            "Meet in balance: welcome & refusal paths answer each other.",
+    },
+    .{
+        .movement = 8,
+        .sign = "Scorpio",
+        .mode = "fixed",
+        .element = "water",
+        .goal = "aesthetics",
+        .craft_verb =
+            "Anuradha covenant: Mitra loyalty & clean secret zeroization.",
+    },
+    .{
+        .movement = 9,
+        .sign = "Sagittarius",
+        .mode = "dual",
+        .element = "fire",
+        .goal = "talent",
+        .craft_verb =
+            "Aim toward wisdom: connect proven code to Bloom & Shastra.",
+    },
+    .{
+        .movement = 10,
+        .sign = "Capricorn",
+        .mode = "cardinal",
+        .element = "earth",
+        .goal = "law",
+        .craft_verb =
+            "Stone & repair: bare-metal RISC-V & ten-year hardware.",
+    },
+    .{
+        .movement = 11,
+        .sign = "Aquarius",
+        .mode = "fixed",
+        .element = "air",
+        .goal = "fun",
+        .craft_verb =
+            "Commons & Comlink: peer constellations without gatekeepers.",
+    },
+    .{
+        .movement = 12,
+        .sign = "Pisces",
+        .mode = "dual",
+        .element = "water",
+        .goal = "aesthetics",
+        .craft_verb =
+            "Twilight close: clear residue & offer one clean seed.",
+    },
+    .{
+        .movement = 13,
+        .sign = "sky",
+        .mode = "cardinal",
+        .element = "aether",
+        .goal = "heart",
+        .craft_verb =
+            "Aether hears: step back and ask whom the work serves.",
+    },
+    .{
+        .movement = 14,
+        .sign = "sky",
+        .mode = "fixed",
+        .element = "aether",
+        .goal = "heart",
+        .craft_verb =
+            "Hold the whole cup: compress two truths into one macro.",
+    },
+    .{
+        .movement = 15,
+        .sign = "sky (Siya)",
+        .mode = "dual",
+        .element = "aether",
+        .goal = "heart",
+        .craft_verb =
+            "Siya's chair: carry the harvest whole into the next Dawn.",
+    },
+};
+
+pub fn seat_for_movement_count(mov_count: u64) SignSeat {
+    const eff = if (mov_count == 0) 1 else mov_count;
+    const idx: usize = @intCast((eff - 1) % sign_count);
+    // invariant: 15-sign modulo index lies strictly in 0..14.
+    assert(idx < sign_count);
+    const s = wheel[idx];
+    assert(s.movement == idx + 1);
+    return s;
+}
+
+fn run_selftest() !u8 {
+    // Verify x5 elemental progression: [15, 75, 375, 1875, 9375]
+    if (orbit_movements * 5 != quest_movements or
+        quest_movements * 5 != journey_movements or
+        journey_movements * 5 != section_movements or
+        section_movements * 5 != chapter_movements)
+    {
+        return error.PanchangaRatioBroken;
+    }
+    if (!std.mem.eql(u8, seat_for_movement_count(1).sign, "Aries")) {
+        return error.Movement1NotAries;
+    }
+    if (!std.mem.eql(u8, seat_for_movement_count(15).sign, "sky (Siya)")) {
+        return error.Movement15NotSiya;
+    }
+    print("GREEN: calfive_wheel -- [15..9375] & 15 signs proven.{c}", .{nl});
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len > 1 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    const r = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{ "git", "rev-list", "--count", "HEAD" },
+    });
+    const ws_trim = [_]u8{ 32, 9, 13, 10 };
+    const trimmed = std.mem.trim(u8, r.stdout, &ws_trim);
+    const cnt = std.fmt.parseInt(u64, trimmed, 10) catch 1;
+    const seat = seat_for_movement_count(cnt);
+    const next_seat = seat_for_movement_count(cnt + 1);
+    const orbits_done = cnt / orbit_movements;
+    const q_place = ((cnt - 1) % quest_movements) + 1;
+
+    print(
+        "Calfive Round Load [15..9375] (mov={d}, orb={d}, q={d}/75):{c}",
+        .{ cnt, orbits_done, q_place, nl },
+    );
+    print("  Movement {d}/15 : {s} ({s} {s} -- goal: {s}){c}", .{
+        seat.movement,
+        seat.sign,
+        seat.mode,
+        seat.element,
+        seat.goal,
+        nl,
+    });
+    print("  Theme          : {s}{c}", .{ seat.craft_verb, nl });
+    print("  Recommend {d}/15: {s} -- {s}{c}", .{
+        next_seat.movement,
+        next_seat.sign,
+        next_seat.craft_verb,
+        nl,
+    });
+    return 0;
+}

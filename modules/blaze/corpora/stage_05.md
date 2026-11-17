@@ -1,0 +1,1 @@
+../../apps/bloom/curriculum/stage-05-garden-of-files.md

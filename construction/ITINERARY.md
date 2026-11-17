@@ -43,11 +43,25 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
+### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261115.162500-est`, `Myofascia: 56.910`)
+
+- **Calfive Vector (`410` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 1 (`375`) COMPLETE + Quest 1, Orbit 2 (`35/75`) of Journey 2** (`27` full 15-Movement Orbits + `5` Movements; **148 `.brix` bricks**, **17 Citizen Ring `.glow` desks**, **24/24 metal witnesses GREEN**).
+- **Completed Software & Civic Foundations in [`../active-pulp/`](../active-pulp/README.md):**
+  - **5 Elemental Rule Cards & `GEMINI.md` Spine:** `aether`, `air`, `fire`, `water`, `earth` in `.gemini/rules/`; `active-tablecloth/` molted to `active-pulp/`.
+  - **Glow Mill & Citizen Ring (`Stage 1 == Stage 2`):** 6-pass native `.glow` compiler (`grain-ww glow`) + 17 col-57 Citizen `.glow` gates across `Aurora`, `Pond`, `Caravan`, `Comlink`, `Tablecloth`, `Pulp`, `Vantage`, `Resonance`, `Dimeroll`, `Colloquium`, and `Linengrow`.
+  - **`Pulp` vs. `Tablecloth` Split:** `Pulp` owns Markdown checklists, prepend-to-front Movement stacks (`grain-ww pulp`), and `Blaze` `i8`+BM25 recall (`grain-ww pulp-recall`); `Tablecloth` owns single-file relational FK+KV `.tcloth` snapshots (`grain-ww tablecloth`) + Glasswall `Gleaner` anti-tracker intake (`grain-ww gleaner`).
+  - **`d15 -> 3 -> 9 -> 405` Council & `Pond Puddle`:** Dual exact-integer `243/405` (`60%` operational) + `324/405` (`80%` constitutional) consensus with CRDT `Mycelium` gossip, `<= 3`-hop `constel` discovery (`grain-ww constel`), live UDP roaming `Pond Puddle` (`grain-ww puddle` / `puddle-cp`), and `@volatile` `secureZero` Vault leases (`grain-ww vault-lease`).
+  - **6-Tab `Vantage` (`Station` + `Carry`) & Multicultural Library Spiral:** Full 3-Zone Desktop `Resonance` DAW + interactive `Dimeroll`/`Scribe`/`Civic`/`Surf` writes across macOS AppKit, WASM, and `com.grainww.vantage.carry`, paired with 4-Year *Shastra* (`grain-ww shastra-wheel`), *Risala* 15-Sign Twilight (`grain-ww twilight-wheel`), and Global Bare-Metal Auto-DST One-Clock (`grain-ww stamp`).
+- **Open Calfive Project Horizons (Awaiting Physical Silicon or Keaton's Word):**
+  1. **Wave D -- Physical Silicon Quest (`1 Quest = 75 Movements` planned; `10` movements gated in [`20261105-085747_blazepod-rv64g-journey`](../active-pulp/date/202611/00/20261105-085747_blazepod-rv64g-journey/CHECKLIST.md) `M41..M50`):** Acquire Milk-V Pioneer / VisionFive 2 + Daylight DC-1 hardware; sideload `com.grainww.vantage.carry` APK onto DC-1 RLCD (`60 fps` zero-ghosting witness) and boot `rv64_glasswall_boot.elf` (`0x5555`) on physical RISC-V silicon.
+  2. **Aether Movements `13..15` (`3 Movements` to close Current 15-Movement Git Orbit `43..45` -> `Siya`):** Unify `Vantage` + `Twilight` + `Tablecloth` live persistence (`Mov 13-14`) and seal the full-orbit `Siya` capstone (`Mov 15`).
+  3. **Mitra Shed Door-Word Queue ([`../mitra-shed/shed-prep.md`](../mitra-shed/shed-prep.md), `1 Orbit = 15 Movements` when Keaton speaks the word):** Repoint remaining elder callers from `compass_sky` (`d12-60-720`), `mand/`, and waymark-named `linengrow/*lulu*` prototypes onto their proven plain-named replacements.
+
 ### RESONANCE -- The Working Studio (Equinox 1, active from `20261103.010404`)
 
 **Calfive schedule:** [`../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md`](../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md)
 **Proposal:** [`../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md`](../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md)
-**Project board:** [`../active-tablecloth/date/202611/00/20261103-005948_resonance-working-studio/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261103-005948_resonance-working-studio/CHECKLIST.md)
+**Project board:** [`../active-pulp/date/202611/00/20261103-005948_resonance-working-studio/CHECKLIST.md`](../active-pulp/date/202611/00/20261103-005948_resonance-working-studio/CHECKLIST.md)
 
 **Quest 1.1 CLOSED (`20261104`).** Record engine GREEN (Orbit 23), WAV encode/decode round-trip GREEN (Orbit 24). SLC met at the CLI boundary: a person can run Resonance, record a voice, and export a WAV -- proven on metal.
 
@@ -147,13 +161,13 @@ Brushstroke declares each component's grid, role, state, tokens, and motion prof
 
 **Priority:** VERY HIGH Long Return; VERY HIGH Lila.
 
-**PAUSED (`20261108`).** All 15 movements COMPLETE across 3 phases -- integration witness GREEN on metal. **Recording red:** UI shows 0 samples recorded; bridge selftest records in loopback (synthetic samples) yet the UI path needs macOS mic permission and a real AUHAL input callback. Bounded fix for when Resonance resumes. Project board: [`../active-tablecloth/date/202611/00/20261107-224400_resonance-macos-native-rebuild/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261107-224400_resonance-macos-native-rebuild/CHECKLIST.md). Paused on Keaton's word `20261108`.
+**PAUSED (`20261108`).** All 15 movements COMPLETE across 3 phases -- integration witness GREEN on metal. **Recording red:** UI shows 0 samples recorded; bridge selftest records in loopback (synthetic samples) yet the UI path needs macOS mic permission and a real AUHAL input callback. Bounded fix for when Resonance resumes. Project board: [`../active-pulp/date/202611/00/20261107-224400_resonance-macos-native-rebuild/CHECKLIST.md`](../active-pulp/date/202611/00/20261107-224400_resonance-macos-native-rebuild/CHECKLIST.md). Paused on Keaton's word `20261108`.
 
 **NEW CHAPTER (`20261111`).** Mandate folds into Tablecloth; Colloquium born fresh. Design: [`../active-designing/date/20261111/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md`](../active-designing/date/20261111/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md). Sequence: (1) DONE -- fold Mandate's vector search into Tablecloth as a capability, (2) DONE -- birth Colloquium as civic-legislative module with automobile-patent nullification bill in Civic Style, (3) DONE -- research treap/persistent vectors for Tablecloth internals ([`../active-designing/date/20261111/20261111-143331_treap-persistent-vector-tablecloth-internals.md`](../active-designing/date/20261111/20261111-143331_treap-persistent-vector-tablecloth-internals.md)). **Awaiting Keaton's read** of the Colloquium automobile-patent bill and the treap research essay.
 
-**COMPLETE: Blaze SLC -- Comlink Realidream content network.** Project board: [`../active-tablecloth/date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md).
+**COMPLETE: Blaze SLC -- Comlink Realidream content network.** Project board: [`../active-pulp/date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md`](../active-pulp/date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md).
 
-**COMPLETE: Terrarium boot journey.** Project board: [`../active-tablecloth/date/202611/00/20261104-161857_terrarium-boot-journey/CHECKLIST.md`](../active-tablecloth/date/202611/00/20261104-161857_terrarium-boot-journey/CHECKLIST.md).
+**COMPLETE: Terrarium boot journey.** Project board: [`../active-pulp/date/202611/00/20261104-161857_terrarium-boot-journey/CHECKLIST.md`](../active-pulp/date/202611/00/20261104-161857_terrarium-boot-journey/CHECKLIST.md).
 
 1. **LANDED (`20261103.020226`).** Zig 0.17.0 molt-breach complete: 1,157 migration sites across 471 files, `rye/bin/rye` rebuilt on 0.17.0, three test builds verified. Commit `001e9f24a1`.
 2. Receipt contract items (review, dual-product integration) move to the ungated claim-as-override queue for any ship.

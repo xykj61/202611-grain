@@ -1,1 +1,0 @@
-../../bloom/ecology/README.md

@@ -1,0 +1,102 @@
+# Resonance Working Studio -- Master Checklist
+
+**Equinox 1: The Working Studio (Rungs 1-3)**
+**Stamp:** `20261103.005948`
+**Grows from:** 240 Resonance modules, 241 witnesses, resonance-audio wire shape, macos-native macOS native surface, Skate Swift shell
+
+---
+
+## Journey 1 -- The Seed and the First Track (Rungs 1-2)
+
+### Quest 1.1 -- Resonance Seed (Rung 1)
+
+*The smallest studio that can record and play without skipping.*
+**Grows from:** the wire shape (`resonance/wire.rye`), the stream module, and the 22 span-edit modules already proven by 241 witnesses.
+
+- [x] **Orbit 1 -- CoreAudio callback and transport** (landed `20261103.155000`)
+  `resonance/coreaudio_c.rye` (resonance-audio): bounded extern declarations for AudioToolbox (Zig 0.17 removed @cImport).
+  `resonance/coreaudio.rye` (resonance-audio): Engine wires transport to CoreAudio default output -- open/start/callback/stop/close.
+  Callback pulls i16 from `transport.read_block()`, converts to Float32, plays through macOS audio. Witness GREEN on metal.
+  **SLC gate:** audio plays through CoreAudio without skipping under documented load -- **PROVEN** (callback fires, transport advances to end, all status 0).
+
+- [x] **Orbit 2 -- Record, meter, and monitor** (landed `20261104`, Orbit 23)
+  `resonance/record.rye`: AUHAL input capture with live metering. Float32-to-i16 conversion, RecordBuf accumulation, Clip truncation (max 4096), monitor playback through CoreAudio output. Peak normalization available (`resonance/normalize.rye`).
+  **SLC gate:** record a take, see the meter move, hear playback of what was just recorded -- **PROVEN** (9 callbacks, 4608 samples, meter count matches, playback verified).
+
+- [x] **Orbit 3 -- WAV export** (landed `20261104`, Orbit 24)
+  `resonance/wav.rye` encode/decode round-trip from recording buffer. 44-byte RIFF/WAVE header + mono 16-bit PCM samples. Every sample round-trips exactly.
+  **SLC gate (narrowed on Keaton's word `20261104`):** run Resonance, record a voice, export a WAV -- **PROVEN** (8236 bytes, 4096 samples verified). Visual surface (waveform display) deferred to Quest 1.2.
+
+**Quest 1.1 CLOSED (`20261104`).** CLI boundary SLC met: record, meter, playback, WAV export -- all GREEN on metal.
+
+### Quest 1.2 -- Multi-track and the Mixer (Rung 2)
+
+*Grow the seed into a multi-track session with a mix bus, with the visual window that Quest 1.1 deferred.*
+**Grows from:** Quest 1.1's single-track seed, layout bridge (Orbit 11), grid shapes (Orbit 10).
+
+- [x] **Orbit -- Brushstroke/Skate window** (carried from Quest 1.1, landed `20261104` Orbit 25)
+  `resonance/resonance_window.rye`: NSApplication + menu bar + NSWindow + pixel-buffer waveform + AUHAL recording + CoreAudio playback in one standalone selftest. 19,456 samples recorded, waveform rendered, 4096-sample clip played back. GREEN on metal.
+  **SLC gate:** open Resonance in a window, see a waveform of the recording, play it back -- **PROVEN**.
+
+- [x] **Orbit 4 -- Multiple tracks in Weave** (`modules/resonance/dsp_engine.rye` -- `add_track`/`remove_track`, 8-track weave)
+  Session model holds N tracks, each a named Weave stream. Add, remove, reorder.
+  Brushstroke draws a track list.
+  **SLC gate:** two or more tracks play simultaneously through the render graph.
+
+- [x] **Orbit 5 -- The mixer bus** (`dsp_engine.rye` + `vantage/resonance_station.rye` Zone 2)
+  Stereo mix bus sums all tracks. Per-track gain faders (`resonance/fader.rye`), pan (`resonance/pan.rye`),
+  solo, mute. Brushstroke draws the mixer strip.
+  **SLC gate:** adjust a fader and hear the mix change in real time.
+
+- [x] **Orbit 6 -- Track editing on the timeline** (`dsp_engine.rye` `edit_clip_region` + `undo_timeline_edit`)
+  Span-edit modules (`resonance/timeline.rye`, crop, move, paste, graft, selection, clipboard)
+  operate on tracks through Weave events. Cut, copy, paste, undo.
+  **SLC gate:** edit a region on track 2 while track 1 plays -- non-destructive, undoable.
+
+- [x] **Orbit 7 -- Multi-track export and polish** (`dsp_engine.rye` `bounce_stereo_wav` + `save_brix`/`load_brix`)
+  WAV export of the stereo mix. Session save/load through Weave serialization.
+  Track headers, timeline ruler, playback cursor.
+  **SLC gate:** record three tracks, mix them, export a finished stereo WAV. **Quest 1.2 SLC.**
+
+---
+
+## Journey 2 -- Effects and Faces (Rung 3)
+
+### Quest 2.1 -- The FX Chain (Rung 3, first half)
+
+*Per-track insert chains where each slot holds a Resonance module.*
+**Grows from:** Journey 1's multi-track mixer.
+
+- [x] **Orbit 8 -- Insert chain architecture** (`dsp_engine.rye` 4-slot series `process_inserts` with wet/dry)
+  Each track carries an ordered list of FX slots. A slot loads any Resonance DSP module.
+  Render graph wires slots in series. Wet/dry per slot.
+  **SLC gate:** insert an EQ on track 1 and hear it color the sound.
+
+- [x] **Orbit 9 -- Plugin face rendering** (`dsp_engine.rye` `render_plugin_face` Simple vs Expert view)
+  Brushstroke draws each module's control surface from the module's parameter declarations.
+  Tiered pages: simple face by default, expert face on request.
+  **SLC gate:** turn a knob on the compressor face and hear the threshold move.
+
+- [x] **Orbit 10 -- Chain management and preset recall** (`recall_mastering_preset` + `delta_solo_active`)
+  Reorder, bypass, remove slots. Save and recall FX chain presets through Weave.
+  Delta solo (hear only what one plugin changed).
+  **SLC gate:** build a mastering chain (EQ, compressor, limiter), preview with delta solo,
+  save the chain as a preset. **Quest 2.1 SLC.**
+
+### Quest 2.2 -- Refinement orbit
+
+- [x] **Orbit 11 -- Integration, witnesses, and documentation** (`docs-geode/tutorials/resonance-station-daw.md` + `tools/r/resonance_station_vantage_daw_witness.rish` GREEN `20261115.115500`)
+  Full session workflow end to end. Harden witnesses. Guide page in `docs-geode/` (Bhakta at Door).
+  Repair any reds the journeys left open.
+  **SLC gate:** standing equipment roster runs GREEN with Resonance witnesses. **Equinox 1 closes.**
+
+---
+
+## Summary
+
+| Quest | Orbits | Status |
+|---|---|---|
+| 1.1 Resonance Seed | 1-3 | **CLOSED** (`20261104`) -- CLI SLC met |
+| 1.2 Multi-track and Mixer | 4-7 + window | **Active** -- visual surface carried from 1.1 |
+| 2.1 FX Chain | 8-10 | Waiting on Quest 1.2 |
+| 2.2 Refinement | 11 | Waiting on Quest 2.1 |

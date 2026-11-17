@@ -1,0 +1,9 @@
+::  modules/pond/glow/gate-pond-customs.glow -- customs gate
+/!  16384
+|%
+++  gate-pond-customs
+  |=  [req-caps=@ud granted-caps=@ud has-script=@ud]    ::  0=no script
+  ^-  @ud                                               ::  0=place, 1=refuse
+  ?:  =(has-script 1)  1                                ::  forbid scripts!
+  ?:  (lte req-caps granted-caps)  0  1                 ::  subset check
+--

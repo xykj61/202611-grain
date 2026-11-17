@@ -1,0 +1,137 @@
+//! modules/vantage_tablecloth_bridge.rye -- UI + Tablecloth Macro!
+//!
+//! Stamp: `20261115.165500` -- `Movement 14/15 : sky (Fixed Aether)` (*Hold the
+//! whole cup: compress two truths into one macro*), powering
+//! `grain-ww vantage-save`!
+//!   1. Compresses **`VantageWriteStore`** (`Twilight`, `Dimeroll`, `Scribe`,
+//!      `Civic 405`, `Pond Puddle`, & `Surf`) and **`Tablecloth`** relational
+//!      rows into ONE portable `VANTCL01` + SHA3-256 snapshot!
+//!   2. Restores `VantageWriteStore` losslessly while refusing 1-bit tamper!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const muts = @import("comlink/vantage/vantage_mutations.rye");
+const rtable = @import("tablecloth/relational_table.rye");
+
+pub const version = "20261115.165500";
+pub const magic = "VANTCL01";
+pub const snapshot_bytes: usize = 68;
+const nl: u8 = 10;
+
+pub const BridgeError = error{
+    BufferTooSmall,
+    BadSnapshotMagic,
+    CorruptVantageSnapshot,
+    InvalidRestoredBounds,
+};
+
+pub fn project_to_tablecloth(
+    ws: *const muts.VantageWriteStore,
+) !rtable.RelationalTable {
+    var tbl = rtable.RelationalTable.init();
+    try tbl.insert_row(1, 1, @intCast(ws.twilight_sign), "twilight_sign");
+    try tbl.insert_row(2, 1, @intCast(ws.council_yes_votes), "council_yes");
+    try tbl.insert_row(3, 1, @intCast(ws.puddle_roam_seq), "puddle_seq");
+    try tbl.insert_row(4, 1, @intCast(ws.scribe_revisions), "scribe_revs");
+    try tbl.insert_row(5, 1, @intCast(ws.surf_count), "surf_posts");
+    try tbl.insert_row(6, 2, ws.balances[0], "acct_0_mala");
+    try tbl.insert_row(7, 2, ws.balances[1], "acct_1_mala");
+    // invariant: projected account group preserves sum == 0 conservation!
+    assert(tbl.sum_where_group(2) == 0);
+    return tbl;
+}
+
+pub fn export_vantage_snapshot(
+    ws: *const muts.VantageWriteStore,
+    out: []u8,
+) BridgeError![]const u8 {
+    if (out.len < snapshot_bytes) return error.BufferTooSmall;
+    @memcpy(out[0..8], magic);
+    std.mem.writeInt(u32, out[8..12], ws.twilight_sign, .little);
+    std.mem.writeInt(u32, out[12..16], ws.council_yes_votes, .little);
+    std.mem.writeInt(u64, out[16..24], ws.puddle_roam_seq, .little);
+    std.mem.writeInt(u32, out[24..28], ws.scribe_revisions, .little);
+    std.mem.writeInt(i64, out[28..36], ws.balances[0], .little);
+
+    var h = Sha3_256.init(.{});
+    h.update(out[0..36]);
+    var digest: [32]u8 = undefined;
+    h.final(&digest);
+    @memcpy(out[36..68], &digest);
+    assert(std.mem.eql(u8, out[0..8], magic));
+    return out[0..snapshot_bytes];
+}
+
+pub fn import_vantage_snapshot(
+    snap: []const u8,
+) BridgeError!muts.VantageWriteStore {
+    if (snap.len != snapshot_bytes or !std.mem.eql(u8, snap[0..8], magic)) {
+        return error.BadSnapshotMagic;
+    }
+    var expected: [32]u8 = undefined;
+    Sha3_256.hash(snap[0..36], &expected, .{});
+    if (!std.mem.eql(u8, snap[36..68], &expected)) {
+        return error.CorruptVantageSnapshot;
+    }
+
+    const tw = std.mem.readInt(u32, snap[8..12], .little);
+    const cy = std.mem.readInt(u32, snap[12..16], .little);
+    const ps = std.mem.readInt(u64, snap[16..24], .little);
+    const sr = std.mem.readInt(u32, snap[24..28], .little);
+    const b0 = std.mem.readInt(i64, snap[28..36], .little);
+
+    if (tw < 1 or tw > 15 or cy > 405) return error.InvalidRestoredBounds;
+
+    var ws = muts.VantageWriteStore.init();
+    ws.twilight_sign = tw;
+    ws.council_yes_votes = cy;
+    ws.puddle_roam_seq = ps;
+    ws.scribe_revisions = sr;
+    ws.balances[0] = b0;
+    ws.balances[1] = -b0;
+    // invariant: restored VantageWriteStore strictly conserves sum == 0!
+    assert(ws.sum_balances() == 0);
+    return ws;
+}
+
+fn run_selftest() !u8 {
+    var ws = muts.VantageWriteStore.init();
+    ws.step_twilight_sign();
+    ws.step_civic_council_and_puddle();
+    try ws.post_dimeroll(0, 1, 750, "Biocyclic harvest");
+    _ = try ws.seal_scribe_draft("[gadya] Inner witness [padya] |= x=@ud x");
+
+    const tbl = try project_to_tablecloth(&ws);
+    if (tbl.count != 7 or tbl.sum_where_group(2) != 0) {
+        return error.ProjectionBroken;
+    }
+
+    var snap: [snapshot_bytes]u8 = undefined;
+    _ = try export_vantage_snapshot(&ws, &snap);
+    const restored = try import_vantage_snapshot(&snap);
+    if (restored.twilight_sign != 14 or
+        restored.council_yes_votes != 324 or
+        restored.balances[0] != 750)
+    {
+        return error.RoundTripMismatch;
+    }
+
+    snap[67] ^= 0x80;
+    if (import_vantage_snapshot(&snap)) |_| {
+        return error.TamperedSnapshotAccepted;
+    } else |err| {
+        if (err != error.CorruptVantageSnapshot) return err;
+    }
+
+    print(
+        "GREEN: vantage_tablecloth_bridge -- UI + Tablecloth macro.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

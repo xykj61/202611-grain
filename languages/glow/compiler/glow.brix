@@ -1,0 +1,12 @@
+# languages/glow/compiler/glow.brix -- Modular self-hosted Glow Mill recipe.
+# Composes the 6 pure compiler passes without a monolithic 64KiB+ file!
+
+name 202611-glow-mill
+version 20261115.093000
+frame_budget_bytes 65536
+default_stone stone_riscv
+
+file languages/glow/compiler/shapes.glow
+file languages/glow/compiler/front_passes.glow
+file languages/glow/compiler/middle_passes.glow
+file languages/glow/compiler/millstones.glow

@@ -1,0 +1,12 @@
+::  modules/comlink/glow/gate-constel-gossip.glow -- Bounded hop gossip!
+/!  16384
+|%
+++  gate-constel-gossip
+  |=  [seat-id=@ud hop-ttl=@ud]                         ::  405 sky + TTL
+  ^-  @ud                                               ::  next hop TTL
+  ~|  'constel-seat-past-404'                           ::  0..404 bounded
+  ?>  (lte seat-id 404)                                 ::  d15 * 3 * 9 - 1
+  ~|  'constel-hop-ttl-invalid'                         ::  1..8 anti-storm
+  ?>  &(gte(hop-ttl 1) lte(hop-ttl 8))
+  (dec hop-ttl)
+--

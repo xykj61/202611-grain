@@ -1,0 +1,13 @@
+::  modules/amphora/glow/fold-amphora-chunk.glow -- 0x33 resin chunks
+/!  16384
+|%
+++  fold-amphora-chunk
+  |=  [magic=@ud idx=@ud total=@ud]                     ::  0x33=51 chunk hdr
+  ^-  @ud                                               ::  next expected idx
+  ~|  'amphora-bad-resin-magic'                         ::  require 0x33 tag
+  ?>  =(magic 51)                                       ::  51 == 0x33
+  ~|  'amphora-chunk-out-of-bounds'                     ::  idx < total <= 64
+  ?>  (lte total 64)                                    ::  bounded manifest
+  ?>  (lte +(idx) total)                                ::  valid chunk slot
+  +(idx)
+--

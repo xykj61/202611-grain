@@ -1,0 +1,20 @@
+::  languages/glow/compiler/middle_passes.glow -- Assay & Pith
+/-  compiler-shapes
+/+  front-passes
+/!  32768
+|%
+++  fold-assay-budget
+  |=  [ticks=@ud step-bytes=@ud ceiling=@ud]            ::  loop & `/!` cap
+  ^-  @ud                                               ::  proven arena sum
+  ~|  'unbounded-loop-refused'                          ::  require >0 ticks
+  ?>  (gte ticks 1)                                     ::  finite termination
+  =/  needed=@ud  (mul ticks step-bytes)                ::  worst-case bytes
+  ~|  'declared-frame-budget-exceeded'                  ::  check `/!` cap
+  ?>  (lte needed ceiling)                              ::  fits Tally slice
+  needed
+++  fold-pith-op
+  |=  op-code=@ud                                       ::  SSA Pith opcode
+  ^-  @ud                                               ::  narrow-waist 1..16
+  ?>  (lte op-code 16)                                  ::  <= 16 core ops
+  op-code
+--

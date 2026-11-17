@@ -1,0 +1,14 @@
+::  modules/comlink/vantage/glow/fold-vantage-carry.glow -- Carry twin
+/!  16384
+|%
+++  select-carry-posture
+  |=  shortest-dp=@ud                                   ::  viewport min dp
+  ^-  @ud                                               ::  0=desk,1=tab,2=mob
+  ?:  (gte shortest-dp 960)  0                          ::  Vantage Station
+  ?:  (gte shortest-dp 600)  1                          ::  Carry Tablet DC-1
+  2                                                     ::  Carry Mobile Deck
+++  gate-palm-accept
+  |=  radius-px=@ud                                     ::  contact radius
+  ^-  @ud                                               ::  0=accept, 1=palm
+  ?:  (lte radius-px 28)  0  1                          ::  28px palm gate
+--

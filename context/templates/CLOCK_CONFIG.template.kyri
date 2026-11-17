@@ -1,0 +1,10 @@
+format clock-config-v1
+stamp 20261115.134000
+voice Kyri
+status template
+# Copy to gitignored root `CLOCK_CONFIG.kyri` to override the universal `UTC`
+# template default with an IANA auto-DST zone (e.g. `America/New_York`, which
+# switches between `-est` UTC-5 and `-edt` UTC-4 automatically in March/Nov!).
+
+timezone UTC
+filename_tz_tag enabled

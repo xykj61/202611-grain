@@ -1,0 +1,159 @@
+//! modules/comlink/council_405.rye -- Dual `324/405` (80%) & `243/405` (60%)!
+//!
+//! Stamp: `20261115.135500` -- Keaton's approved dual-tier direct-democracy
+//! supermajority law over the **`d15 -> 3 -> 9 -> 405`** Council (`Kumara` +
+//! `Mycelium` + `Colloquium` + `Blaze`):
+//!   - `15` Galaxies (`d15`) x `3` Pillars (`45` Stars) x `9` Seats = `405`,
+//!   - **Constitutional / Budget Tier (`324 / 405`):** exact `4/5 = 80.000%`
+//!     (`324 * 5 == 405 * 4 == 1620`, zero rounding!),
+//!   - **Operational / Routine Tier (`243 / 405`):** exact `3/5 = 60.000%`
+//!     (`243 * 5 == 405 * 3 == 1215`, zero rounding!)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.135500";
+pub const galaxy_count: u32 = 15;
+pub const pillars_per_galaxy: u32 = 3;
+pub const star_circles: u32 = galaxy_count * pillars_per_galaxy; // 45
+pub const seats_per_star: u32 = 9;
+pub const council_seats: u32 = star_circles * seats_per_star; // 405!
+pub const operational_60pct: u32 = 243; // 243/405 = 3/5 (60.0%)!
+pub const constitutional_80pct: u32 = 324; // 324/405 = 4/5 (80.0%)!
+const nl: u8 = 10;
+
+pub const ConsensusTier = enum(u8) {
+    operational_60 = 0,
+    constitutional_80 = 1,
+
+    pub fn required_yes(self: ConsensusTier) u32 {
+        return switch (self) {
+            .operational_60 => operational_60pct,
+            .constitutional_80 => constitutional_80pct,
+        };
+    }
+};
+
+pub const CouncilError = error{
+    SeatOutOfRange,
+    DuplicateBallotFromSeat,
+    SupermajorityNotReached,
+};
+
+pub const SeatCoord = struct {
+    galaxy: u8,
+    pillar: u8,
+    navamsa: u8,
+};
+
+pub fn decode_seat(seat_id: u32) CouncilError!SeatCoord {
+    if (seat_id >= council_seats) return error.SeatOutOfRange;
+    const star_idx = seat_id / seats_per_star;
+    const nav: u8 = @intCast(seat_id % seats_per_star);
+    const gal: u8 = @intCast(star_idx / pillars_per_galaxy);
+    const pil: u8 = @intCast(star_idx % pillars_per_galaxy);
+    // invariant: decoded coordinates reconstruct `seat_id` bijectively.
+    assert(gal < 15 and pil < 3 and nav < 9);
+    assert((@as(u32, gal) * 3 + pil) * 9 + nav == seat_id);
+    return .{ .galaxy = gal, .pillar = pil, .navamsa = nav };
+}
+
+pub const ColloquiumBallotBox = struct {
+    tier: ConsensusTier,
+    proposal_sha3: [32]u8,
+    voted_words: [7]u64,
+    yes_count: u32,
+    no_count: u32,
+
+    pub fn open(
+        tier: ConsensusTier,
+        proposal_text: []const u8,
+    ) ColloquiumBallotBox {
+        // invariant: both 243/405 (3/5) and 324/405 (4/5) are exact integers!
+        assert(operational_60pct * 5 == council_seats * 3);
+        assert(constitutional_80pct * 5 == council_seats * 4);
+        var box = std.mem.zeroes(ColloquiumBallotBox);
+        box.tier = tier;
+        Sha3_256.hash(proposal_text, &box.proposal_sha3, .{});
+        return box;
+    }
+
+    pub fn cast_ballot(
+        self: *ColloquiumBallotBox,
+        seat_id: u32,
+        approve: bool,
+    ) CouncilError!void {
+        _ = try decode_seat(seat_id);
+        const word_idx: usize = seat_id / 64;
+        const bit_idx: u6 = @intCast(seat_id % 64);
+        const mask: u64 = @as(u64, 1) << bit_idx;
+        if ((self.voted_words[word_idx] & mask) != 0) {
+            return error.DuplicateBallotFromSeat;
+        }
+        self.voted_words[word_idx] |= mask;
+        if (approve) self.yes_count += 1 else self.no_count += 1;
+        assert(self.yes_count + self.no_count <= council_seats);
+    }
+
+    pub fn seal_blaze_enactment(
+        self: *const ColloquiumBallotBox,
+    ) CouncilError![32]u8 {
+        const threshold = self.tier.required_yes();
+        if (self.yes_count < threshold) return error.SupermajorityNotReached;
+        var h = Sha3_256.init(.{});
+        h.update("blaze-council-405-enacted:");
+        h.update(&self.proposal_sha3);
+        var b5: [5]u8 = undefined;
+        b5[0] = @intFromEnum(self.tier);
+        std.mem.writeInt(u32, b5[1..5], self.yes_count, .little);
+        h.update(&b5);
+        var cert: [32]u8 = undefined;
+        h.final(&cert);
+        assert(self.yes_count >= threshold);
+        return cert;
+    }
+};
+
+fn run_selftest() !u8 {
+    var s: u32 = 0;
+    while (s < council_seats) : (s += 1) _ = try decode_seat(s);
+
+    // 1. Operational 60% tier: 242 refuses, 243rd enacts!
+    var op_box = ColloquiumBallotBox.open(.operational_60, "Routine schedule");
+    var i: u32 = 0;
+    while (i < 242) : (i += 1) try op_box.cast_ballot(i, true);
+    if (op_box.seal_blaze_enactment()) |_| {
+        return error.EnactedAt242;
+    } else |err| {
+        if (err != error.SupermajorityNotReached) return err;
+    }
+    try op_box.cast_ballot(242, true);
+    _ = try op_box.seal_blaze_enactment();
+
+    // 2. Constitutional 80% tier: 323 refuses, 324th enacts!
+    var c_box = ColloquiumBallotBox.open(
+        .constitutional_80,
+        "Molt active-pulp",
+    );
+    var v: u32 = 0;
+    while (v < 323) : (v += 1) try c_box.cast_ballot(v, true);
+    if (c_box.seal_blaze_enactment()) |_| {
+        return error.EnactedAt323;
+    } else |err| {
+        if (err != error.SupermajorityNotReached) return err;
+    }
+    try c_box.cast_ballot(323, true);
+    const cert = try c_box.seal_blaze_enactment();
+    if (cert[0] == 0 and cert[1] == 0) return error.EmptyCert;
+
+    print("GREEN: council_405 -- dual 243/405 (60%) & 324/405 (80%).{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

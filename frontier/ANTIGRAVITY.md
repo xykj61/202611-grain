@@ -45,9 +45,11 @@ release manifest, verifies its SHA-512 digest, and lets a reviewed rebuild move 
 
 ## Gemini CLI is a different door
 
-Antigravity CLI is Google's newer terminal agent, a separate package from the former
-`@google/gemini-cli` npm client. Keep the names separate in scripts, documentation, and
-credentials. This room installs `agy` alone, apart from installing or migrating the old Gemini CLI.
+Antigravity CLI is Google's `agy` terminal agent, a separate package from `@google/gemini-cli`
+(`gemini`). In this project, Gemini CLI runs its own carbon bench (`gemini-4-carbon`, pushing to
+`xy/gemini-4-carbon`) documented in [`GEMINI.md`](GEMINI.md) and [`../GEMINI.md`](../GEMINI.md).
+Keep the names separate in scripts, documentation, and credentials. This page installs `agy`
+alone, apart from Gemini CLI.
 
 ## Sources
 

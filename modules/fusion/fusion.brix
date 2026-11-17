@@ -1,0 +1,18 @@
+# modules/fusion/fusion.brix -- Content-addressed build, witness & seed bounds.
+# Every line stays within 80 columns and plain 7-bit ASCII.
+
+name fusion
+version 20261115.060000
+cache_dir tools/.cache/fusion
+
+# Bounded DAG and receipt limits (TAME Core)
+max_targets 256
+max_deps_per_target 16
+max_seed_candidates 131072
+verify_ich_modulus 16
+
+# The ONLY four permitted cold-start POSIX .sh bridges in the living tree:
+cold_bridge tools/f/fetch-toolchain.sh
+cold_bridge languages/rye/bootstrap.sh
+cold_bridge .gemini/hooks/enable-git-ssh.sh
+cold_bridge terrarium/run.sh

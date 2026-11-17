@@ -1,0 +1,281 @@
+//! modules/comlink/parcel/parcel_core.rye -- Chronological & Spec-ulation pins.
+//!
+//! Grounded directly in `gratitude/Spec_ulation.md` (Rich Hickey) and
+//! `context/specs/rye-versioning-style.md` + TAME Core (`20261115.071500`).
+//!
+//! Why we refuse SemVer and floating version negotiation:
+//!   When you give software to someone, you make a commitment not to take it
+//!   away. Within an enduring epoch name (such as `202611-comlink-gemini`,
+//!   mirroring `202611-grain`), later chronological stamps (`YYYYMMDDHHMMSS`)
+//!   may ONLY grow by accretion: **offer more, require less**. If an author
+//!   ever makes an incompatible design, they give the new thing a new name so
+//!   old and new coexist side by side without breaking any caller.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const Ed25519 = std.crypto.sign.Ed25519;
+
+pub const version = "20261115.071500";
+pub const max_catalog_entries: u32 = 128;
+const nl: u8 = 10;
+
+pub const ParcelError = error{
+    CatalogTooLarge,
+    PinNotFound,
+    PinNibMismatch,
+    EpochNameChangedUseNewImport,
+    NonMonotonicStamp,
+    BrokenPromiseRemovedExport,
+    BrokenPromiseAddedRequirement,
+    BrokenPromiseBudgetGrew,
+    InstallScriptForbidden,
+    FrameBudgetZero,
+    NibMismatch,
+    BadSignature,
+};
+
+/// Explicit call-site pin (Tiger Style + Spec-ulation harmony: no floating
+/// defaults; a caller names the enduring epoch, exact UTC stamp, & SHA3 nib).
+pub const ExplicitPin = struct {
+    epoch_name: []const u8,
+    stamp: u64,
+    expected_sha3_nib: [32]u8,
+};
+
+pub const ParcelHeader = struct {
+    epoch_name: []const u8,
+    stamp: u64,
+    sha3_nib: [32]u8,
+    offered_exports_mask: u32,
+    required_caps_mask: u32,
+    frame_budget_bytes: u32,
+    has_install_script: bool,
+};
+
+/// Resolves an immutable call-site pin against a bounded parcel catalog,
+/// verifying both exact chronological stamp and SHA3-256 content identity.
+pub fn resolve_immutable_pin(
+    pin: ExplicitPin,
+    catalog: []const ParcelHeader,
+) ParcelError!ParcelHeader {
+    // invariant: epoch name and chronological stamp must be populated.
+    assert(pin.epoch_name.len > 0 and pin.stamp >= 20260617000000);
+    if (catalog.len > max_catalog_entries) return error.CatalogTooLarge;
+
+    for (catalog) |hdr| {
+        if (!std.mem.eql(u8, hdr.epoch_name, pin.epoch_name)) continue;
+        if (hdr.stamp != pin.stamp) continue;
+        if (!std.mem.eql(u8, &hdr.sha3_nib, &pin.expected_sha3_nib)) {
+            return error.PinNibMismatch;
+        }
+        // invariant: resolved header matches pin name, stamp, and nib.
+        assert(hdr.stamp == pin.stamp);
+        return hdr;
+    }
+    return error.PinNotFound;
+}
+
+/// Proves Grain's **Evergrow** law (`evergrow`: "offer more, require less",
+/// distilled via Silo Technique with thanks to Rich Hickey's *Spec-ulation*):
+/// `newer` must be strictly later in UTC time, keep every export `older`
+/// offered, and demand zero extra `Pond` capabilities or memory!
+pub fn verify_evergrow(
+    older: ParcelHeader,
+    newer: ParcelHeader,
+) ParcelError!void {
+    return verify_speculation_accretion(older, newer);
+}
+
+pub fn verify_speculation_accretion(
+    older: ParcelHeader,
+    newer: ParcelHeader,
+) ParcelError!void {
+    // invariant: both headers name real non-empty epochs and positive budgets.
+    assert(older.epoch_name.len > 0 and newer.epoch_name.len > 0);
+    assert(older.frame_budget_bytes > 0 and newer.frame_budget_bytes > 0);
+
+    if (!std.mem.eql(u8, older.epoch_name, newer.epoch_name)) {
+        return error.EpochNameChangedUseNewImport;
+    }
+    if (newer.stamp <= older.stamp) {
+        return error.NonMonotonicStamp;
+    }
+    // Offer more (or equal): zero bits in `older.offered_exports_mask` lost.
+    if ((older.offered_exports_mask & ~newer.offered_exports_mask) != 0) {
+        return error.BrokenPromiseRemovedExport;
+    }
+    // Require less (or equal): zero new capability bits demanded by `newer`.
+    if ((newer.required_caps_mask & ~older.required_caps_mask) != 0) {
+        return error.BrokenPromiseAddedRequirement;
+    }
+    // Bounded TAME discipline: memory ceiling cannot silently swell on upgrade.
+    if (newer.frame_budget_bytes > older.frame_budget_bytes) {
+        return error.BrokenPromiseBudgetGrew;
+    }
+    // invariant: accretion verified -- later stamp keeps every prior promise.
+    assert(newer.stamp > older.stamp);
+}
+
+fn signable_digest(hdr: ParcelHeader) [32]u8 {
+    var h = Sha3_256.init(.{});
+    h.update("comlink-parcel-speculation-v1:");
+    h.update(hdr.epoch_name);
+    var b8: [8]u8 = undefined;
+    std.mem.writeInt(u64, &b8, hdr.stamp, .little);
+    h.update(&b8);
+    h.update(&hdr.sha3_nib);
+    var b4: [4]u8 = undefined;
+    std.mem.writeInt(u32, &b4, hdr.offered_exports_mask, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, hdr.required_caps_mask, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, hdr.frame_budget_bytes, .little);
+    h.update(&b4);
+    var out: [32]u8 = undefined;
+    h.final(&out);
+    // invariant: SHA3-256 digest is fixed at 32 bytes.
+    assert(out.len == 32);
+    return out;
+}
+
+pub fn seal_parcel(
+    epoch_name: []const u8,
+    stamp: u64,
+    payload: []const u8,
+    offered_exports_mask: u32,
+    required_caps_mask: u32,
+    frame_budget_bytes: u32,
+    kp: Ed25519.KeyPair,
+) !struct { hdr: ParcelHeader, sig: Ed25519.Signature } {
+    assert(epoch_name.len > 0 and frame_budget_bytes > 0);
+    var nib: [32]u8 = undefined;
+    Sha3_256.hash(payload, &nib, .{});
+    const hdr = ParcelHeader{
+        .epoch_name = epoch_name,
+        .stamp = stamp,
+        .sha3_nib = nib,
+        .offered_exports_mask = offered_exports_mask,
+        .required_caps_mask = required_caps_mask,
+        .frame_budget_bytes = frame_budget_bytes,
+        .has_install_script = false,
+    };
+    const msg = signable_digest(hdr);
+    const sig = try kp.sign(&msg, null);
+    assert(hdr.sha3_nib.len == 32);
+    return .{ .hdr = hdr, .sig = sig };
+}
+
+pub fn verify_parcel_vessel(
+    hdr: ParcelHeader,
+    payload: []const u8,
+    sig: Ed25519.Signature,
+    trusted_pk: Ed25519.PublicKey,
+) ParcelError!void {
+    // invariant: arbitrary install scripts are permanently forbidden in Grain.
+    if (hdr.has_install_script) return error.InstallScriptForbidden;
+    if (hdr.frame_budget_bytes == 0) return error.FrameBudgetZero;
+
+    var actual_nib: [32]u8 = undefined;
+    Sha3_256.hash(payload, &actual_nib, .{});
+    if (!std.mem.eql(u8, &actual_nib, &hdr.sha3_nib)) {
+        return error.NibMismatch;
+    }
+
+    const msg = signable_digest(hdr);
+    sig.verify(&msg, trusted_pk) catch return error.BadSignature;
+    // invariant: verified payload matches header SHA3-256 nib byte-for-byte.
+    assert(std.mem.eql(u8, &actual_nib, &hdr.sha3_nib));
+}
+
+fn run_selftest() !u8 {
+    const seed: [32]u8 = @splat(0x42);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    const epoch = "202611-comlink-gemini";
+    const body_v1 = "name 202611-comlink-gemini; version 20261115.063000;";
+    const body_v2 = "name 202611-comlink-gemini; version 20261115.071500;";
+
+    // 1. Seal v1 and accretive v2 (offers new export bit 0x02, requires LESS!)
+    const v1 = try seal_parcel(
+        epoch,
+        20261115063000,
+        body_v1,
+        0b0001,
+        0b0011,
+        65536,
+        kp,
+    );
+    const v2_growth = try seal_parcel(
+        epoch,
+        20261115071500,
+        body_v2,
+        0b0011, // offers more!
+        0b0001, // requires less!
+        65536,
+        kp,
+    );
+    try verify_parcel_vessel(v1.hdr, body_v1, v1.sig, kp.public_key);
+    try verify_parcel_vessel(
+        v2_growth.hdr,
+        body_v2,
+        v2_growth.sig,
+        kp.public_key,
+    );
+
+    // 2. Explicit immutable pin resolution + NibMismatch refusal
+    const catalog = [_]ParcelHeader{ v1.hdr, v2_growth.hdr };
+    const resolved = try resolve_immutable_pin(.{
+        .epoch_name = epoch,
+        .stamp = 20261115063000,
+        .expected_sha3_nib = v1.hdr.sha3_nib,
+    }, &catalog);
+    if (resolved.stamp != 20261115063000) return error.WrongPinResolved;
+
+    // 3. Spec-ulation Accretion WELCOME: v1 -> v2 ("offer more, require less")
+    try verify_speculation_accretion(v1.hdr, v2_growth.hdr);
+
+    // 4. Spec-ulation Breakage REFUSALS:
+    // Refusal A: removing a promised export under the same name!
+    var broke_export = v2_growth.hdr;
+    broke_export.offered_exports_mask = 0b0010; // dropped bit 0!
+    if (verify_speculation_accretion(v1.hdr, broke_export)) |_| {
+        return error.RemovedExportAccepted;
+    } else |err| {
+        if (err != error.BrokenPromiseRemovedExport) return err;
+    }
+
+    // Refusal B: demanding a new Pond capability under the same name!
+    var broke_cap = v2_growth.hdr;
+    broke_cap.required_caps_mask = 0b0111; // added capability bit 2!
+    if (verify_speculation_accretion(v1.hdr, broke_cap)) |_| {
+        return error.AddedRequirementAccepted;
+    } else |err| {
+        if (err != error.BrokenPromiseAddedRequirement) return err;
+    }
+
+    // Refusal C: install script, tampered payload, & rogue signer refused
+    const bad_body = "name 202611-comlink-gemini; tampered;";
+    if (verify_parcel_vessel(v1.hdr, bad_body, v1.sig, kp.public_key)) |_| {
+        return error.TamperedAccepted;
+    } else |err| {
+        if (err != error.NibMismatch) return err;
+    }
+
+    var script_hdr = v1.hdr;
+    script_hdr.has_install_script = true;
+    if (verify_parcel_vessel(script_hdr, body_v1, v1.sig, kp.public_key)) |_| {
+        return error.InstallScriptAccepted;
+    } else |err| {
+        if (err != error.InstallScriptForbidden) return err;
+    }
+
+    print("GREEN: parcel_core -- Spec-ulation & chrono pins proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

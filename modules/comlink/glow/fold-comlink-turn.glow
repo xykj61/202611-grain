@@ -1,0 +1,12 @@
+::  modules/comlink/glow/fold-comlink-turn.glow -- 112B replay guard
+/!  16384
+|%
+++  fold-comlink-turn
+  |=  [pkt-bytes=@ud prev-seq=@ud incoming-seq=@ud]     ::  112B or 1200B wire
+  ^-  @ud                                               ::  updated high-water
+  ~|  'comlink-oversize-packet'                         ::  wire MTU ceiling
+  ?>  (lte pkt-bytes 1200)                              ::  <= 1200B UDP cap
+  ~|  'comlink-replayed-turn-refused'                   ::  strictly newer seq
+  ?>  (gte incoming-seq +(prev-seq))                    ::  monotonic sequence
+  incoming-seq
+--

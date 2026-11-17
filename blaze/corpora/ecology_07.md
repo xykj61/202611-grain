@@ -1,1 +1,0 @@
-../../bloom/ecology/whole-system-farming.md

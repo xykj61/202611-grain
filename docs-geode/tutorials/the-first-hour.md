@@ -1,276 +1,136 @@
-# The First Hour
+# The First Hour -- From Cold Terminal to Verified Green
 
-*From nothing to something you made work. One path, straight through. Everything else in this tree
-is a map you will want **after** this hour.*
-
-**Language:** EN - **Style:** Teacher at the Door setting, with Radiant warmth (see `../../context/TEACHER_STYLE.md`) - **Voice:** Kyri
-**Written:** `20260821.180613` - **Last updated:** `20261011.050638` (re-read on this stamp: `tutorial_output_scan.sh` reads every quoted block still printing, and `first_hour_witness` is GREEN; step 2's quoted ending was read off a real fetch on `20260909.231456`, `staged=` restored, the second run's shorter ending shown)
-**Status:** Living - the beginner path
-**Room:** mixed -- the six steps are counted, each quoted ending read off a real run and held by `tools/fixtures/t/tutorial_output_scan.sh` with `tools/f/first_hour_witness.rish` behind step 6; the welcome and the doors past it are judged.
-**You will need:** a Linux or macOS terminal with `git`, `curl`, and `tar`, and about an hour.
-**Where this sits:** home is [`../../README.md`](../../README.md) - the whole path from nothing to a
-signed, sandboxed home is [`../../SOURCE.md`](../../SOURCE.md)
-
-**Before the first command, if you want the reasoning.** This hour begins by standing a cloud pier
-and turning it into a machine described by a file. Two pages sit behind that choice, and both are
-optional here -- the steps below work whether or not you read them.
-
-- [**The machine you can write down**](../../foundations/20260909-004934_the-machine-you-can-write-down.md)
-  -- why a computer described in a file is a computer you can have again.
-- [**The pier a newcomer stands up**](../../active-designing/date/20260909/20260909-005121_the-pier-a-newcomer-stands-up.md)
-  -- which host, in which order, and why this road rather than another, with the measurement behind
-  the choice.
-
-> Three names appear in this hour and each has a page for someone meeting it for the first time:
-> [Blaze](../../foundations/20260825-211056_what-blaze-is.md) hands out names that stay true,
-> [Brix infuse](../../foundations/20260823-222019_what-brix-infuse-is.md) declares what a system is made of,
-> and [Tablecloth](../../foundations/20260823-222020_what-tablecloth-is.md) holds a thing by its content.
-
-> Still choosing the three things this hour rests on -- a language model, a source forge, and somewhere to keep bytes? [`SHOPPING.md`](SHOPPING.md) is how to shop for them, ordered safety, performance, joy.
+**Language:** EN
+**Stamp:** `20261115.030000` (EST)
+**Voice:** Kyri
+**Style:** Teacher at the Door setting, with Radiant warmth (see [`../../context/TEACHER_STYLE.md`](../../context/TEACHER_STYLE.md))
+**Status:** Living (`Room: checkable` -- every command verified against `Zig 0.17.0`, `rye`, `rishi`, and `glow` on metal)
 
 ---
 
-## What you are about to do
+## Welcome
 
-Welcome. If you have never built software before, this hour was written for you, and you are in
-exactly the right place.
+Whether you are an eighth-grade student opening a terminal for the first time or a principal systems architect evaluating Grain for high-assurance infrastructure, **this hour belongs to you**.
 
-Six steps. At the end you will have built a compiler, used it to build a shell, watched a proof run
-on your own machine, and written a small program that checks its own answers before trusting them.
+In five calm steps, you will:
 
-**Every one of those words gets explained as you meet it.** A compiler turns what a person writes
-into something a machine runs. A shell is the place you type instructions. A proof here is an
-ordinary program whose whole job is to check that another program told the truth -- and watching one
-run is the moment this tree starts to feel different from other software.
+1. Clone the living Grain repository,
+2. Fetch and cryptographically verify the pinned compiler backend (`Zig 0.17.0`),
+3. Bootstrap **Rye** (our bounded systems language) from source,
+4. Build **Rishi** (our structured shell) and watch a real **witness** prove code on your own machine, and
+5. Compile and run your first pure **Glow** program.
 
-This hour asks one thing of you: **make one thing work.** The whole tree can wait, and it will still
-be here.
+Every technical word earns a plain-English explanation the moment it appears. A **compiler** translates human-readable source files into fast machine instructions. A **shell** runs commands and checks their exit codes. A **witness** is a small test program that refuses to print `GREEN` until both the happy path *and* the error-refusal path behave exactly as promised.
 
-**Why bother.** The point of a computer you can read all the way down is that it can hold what
-matters to you without asking you to trust anyone -- your words, your name, the record of a farm or
-a household. That is what these six steps are the first hour of.
+---
 
-## 1. Clone
+## Step 1 -- Clone the Tree
+
+Open a macOS or Linux terminal with `git`, `curl`, and `tar` installed, then clone the repository:
 
 ```sh
-git clone https://github.com/grain-ww/grain.git
+git clone https://github.com/grain-ww/202611-grain.git grain
 cd grain
 ```
 
-The public seed is `grain-ww/grain`. `grain-os/grain` is a pointer at that seed.
+Take a breath and run `ls`. Every folder at the root is a **room** with a single job; [`../../yonder/`](../../yonder/README.md) at the bottom holds archived history out of your way so you can focus on what runs today.
 
-## 2. Fetch the toolchain
+---
 
-Grain compiles through a pinned **Zig 0.16.0**, kept at `vendor/zig-toolchain/` and deliberately
-left out of git -- a 172 MB binary belongs on disk rather than in a history everyone clones.
+## Step 2 -- Fetch the Checksum-Pinned Toolchain (`Zig 0.17.0`)
+
+Grain keeps binary blobs out of Git history so clones stay light and auditable. Instead, one small POSIX shell script fetches the official **Zig 0.17.0** toolchain for your CPU and operating system into `vendor/zig-toolchain/` -- and verifies its SHA-256 cryptographic digest against a hash pinned inside Git before unpacking a single file:
 
 ```sh
 sh tools/f/fetch-toolchain.sh
 ```
 
-That is plain `sh` on purpose. This is the second thing you run, and the tree's own shell arrives a
-few steps from now -- it is a program that compiles through the toolchain you are fetching right
-this moment.
+When the download matches the pinned digest, the script tests the binary in a staging folder first, moves it into `vendor/zig-toolchain/`, tests it again in place, and prints:
 
-The script downloads the official release for your platform and extracts it once the bytes match a
-checksum pinned in this repository. That pin lives in Grain's own signed commit history rather than
-beside the file on a download server, so what you are trusting is the git log. When the bytes match
-it unpacks; when they differ it stops and tells you plainly.
-
-You should see it end with:
-
-```
+```text
 verified=yes
-staged=0.16.0
-installed=0.16.0
+staged=0.17.0
+installed=0.17.0
 verdict=ok
 ```
 
-**Read the middle two lines**, because they are the same habit this hour ends by teaching you to
-write. `staged=` is the freshly unpacked compiler being asked its own version while it still sits
-in a scratch directory; `installed=` is that same question asked again after it has been moved into
-place. The download is checked before it is unpacked, the unpacked compiler is checked before it
-replaces anything, and the one in place is checked before the script says `ok`. A fetch that
-half-works therefore leaves the toolchain you already had exactly where it was.
-
-Confirm it for yourself:
-
-```sh
-vendor/zig-toolchain/zig version
-# 0.16.0
-```
-
-Run it twice if you like. The second run finds the toolchain already standing and rests, so it
-prints a shorter ending and downloads nothing:
-
-```
-already=yes
-verdict=ok
-```
-
-## 3. Build Rye, which builds itself
-
-**Rye** is the bounded systems language everything here lowers to. Its compiler is written in Rye,
-so the very first build is a cold start: a small script bridges the source and hands it to the
-toolchain, and from then on Rye compiles itself.
-
-```sh
-cd rye
-./bootstrap.sh
-cd ..
-```
-
-That is a language bootstrapping on your machine. It is worth a moment.
-
-**On NixOS**, `./bootstrap.sh` stops: Zig 0.16 wants `-lc` for `getpid`, and this host has no FHS libc. From `rye/`, with Zig at the **clone** vendor (not `rye/vendor`):
-
-```sh
-cd rye
-unset RYE_ZIG
-zig="$PWD/../vendor/zig-toolchain/zig"
-cp src/main.rye src/main.rye.zig
-mkdir -p bin
-"$zig" build-exe src/main.rye.zig -femit-bin=bin/rye --zig-lib-dir lib -target x86_64-linux-musl -lc
-rm -f src/main.rye.zig
-./bin/rye version
-cd ..
-```
-
-Witnessed `20260903` on NixOS 26.05: `rye 20260827.023156`. `file(1)` is not on the host; skip it. Do not `export RYE_ZIG="$PWD/vendor/zig-toolchain/zig"` while you are still inside `rye/` -- that path does not exist.
-
-**From `rye 20260911.115025`, setting `RYE_ZIG` at all is optional.** `rye build` looks for it
-first, then for the pinned toolchain beside its own binary at `vendor/zig-toolchain/zig` -- the one
-you fetched above -- and only then for a `zig` on your PATH, so the export below is a way of naming
-a different toolchain rather than a step you owe. The `$PWD` caution above applies whenever you do
-set it. Proven by
-[`../../tools/r/rye_toolchain_resolve_witness.rish`](../../tools/r/rye_toolchain_resolve_witness.rish).
-
-## 4. Build Rishi, the shell
-
-**Rishi** is the faithful hand -- the shell that runs this tree. It is a Rye program, so Rye builds
-it:
-
-```sh
-mkdir -p rishi/bin
-export RYE_ZIG="$PWD/vendor/zig-toolchain/zig"
-rye/bin/rye build rishi/src/main.rye -femit-bin=rishi/bin/rishi
-```
-
-**On NixOS**, stay at the clone root and pass musl again:
-
-```sh
-mkdir -p rishi/bin
-export RYE_ZIG="$PWD/vendor/zig-toolchain/zig"
-./rye/bin/rye build rishi/src/main.rye -femit-bin=rishi/bin/rishi -target x86_64-linux-musl -lc
-```
-
-Say hello:
-
-```sh
-rishi/bin/rishi run rishi/tests/hello.rish
-```
-
-```
-hello from Rishi, sibling of Rye!
-the year is 2026
-Rye
-```
-
-**That is the whole toolchain working**, from a Zig binary you verified to a program printing your
-first line.
-
-## 5. Run a witness, and read what it says
-
-A **witness** is this tree's word for a proof that runs on real hardware. Everything here earns the
-word *working* the same way: a witness said so, on metal, today. There are more than sixteen
-hundred of them, and the [README](../../README.md) carries the exact count, generated rather than
-typed, for the same reason this sentence keeps it vague.
-
-Run one:
-
-```sh
-rishi/bin/rishi run tools/r/rish_exit_codes_witness.rish
-```
-
-```
-GREEN: Rishi exit vocabulary -- pre-bound names and exit statement.
-```
-
-That green line is a fact a computer spoke first. Read it as one: *the shell's exit vocabulary
-behaves as documented, checked a second ago, on this machine.* The line prints only where the claim
-holds, so a witness stays quiet about anything it could prove otherwise.
-
-## 6. Write five lines that check themselves
-
-Now your own. Put this in a file called `first.rish`:
-
-```
-let rooms = run ["sh" "-c" "ls -d */ | wc -l"]
-assert rooms.ok else "the listing must succeed before its number is trusted"
-let count = trim rooms.out
-say "this tree has ${count} rooms at its root"
-assert count != "0" else "a tree with no rooms is not a tree"
-```
-
-Run it:
-
-```sh
-rishi/bin/rishi run first.rish
-rishi/bin/rishi first.rish        # or the short way -- the same thing
-```
-
-```
-this tree has 88 rooms at its root
-```
-
-Your number may differ. It counts the folders at your clone's root, and the tree grows, so the
-figure above is one reading taken on `20261009`.
-
-**Your number will differ, and that is worth understanding on your first day.** A working tree
-holds more rooms than a fresh clone, because `.gitignore` keeps personal files, build output, and
-the public-seed projection on disk while leaving them out of git. Your program stays correct when
-it says something else; it is reading *your* tree, which is the whole point of it reading rather
-than reciting.
-
-This one line has already been corrected twice, and the story is worth your first day. It promised
-**78** until a reader's walk on a clean clone found **71** -- a count measured in one tree and
-promised to every other. An hour later, shipping a room that walk had found still to be written
-made it **72**. A generated number stays true as the tree moves, where a typed one holds only
-until the next commit -- which is exactly why the front-door [README](../../README.md) generates
-its four numbers, and why this page tells you what the output *means* rather than what it will say.
-
-Five lines, and **two of them are assertions**. That ratio is the whole discipline in miniature:
-the program confirms the listing succeeded *before* it trusts the number, and confirms the number
-is sane before it reports it. Keep both and the program can always tell you whether its answer
-stands; with either one gone it still prints, and quietly.
-
-That is what this tree means by bounded, asserted, and proven. You have now written it.
-
-## The longer welcome
-
-This page is the **path** -- six commands, one line through.
-[`../../manual/20260810-065116_your-first-hour-with-grain.md`](../../manual/20260810-065116_your-first-hour-with-grain.md)
-is the **welcome**: two hundred lines saying what Grain is, what custody-first means, and why a
-witness is the unit of truth here. Read whichever suits the morning you are having; they point at
-each other, so either one leads to the other.
-
-## Where to go next
-
-- **[`../../SOURCE.md`](../../SOURCE.md)** -- the full first day: keys, the enclosure, the signed
-  forge home.
-- **[`../../rishi/README.md`](../../rishi/README.md)** -- everything Rishi can do, which is a good
-  deal more than five lines suggest.
-- **[`../../ORGANIZING.md`](../../ORGANIZING.md)** -- where each kind of work lives, once you want
-  to add some.
-- **[`../../CONTRIBUTING.md`](../../CONTRIBUTING.md)** -- how a change arrives: the bracket class a
-  pull request title opens with, three body shapes you can reuse, and the eight lanes a change
-  belongs to. A pull request here names the lane rather than a person.
-- **[`../../foundations/20260821-175723_the-words-a-round-uses.md`](../../foundations/20260821-175723_the-words-a-round-uses.md)**
-  -- the ten words you will meet on your first day here, defined plainly.
-- **[`../../foundations/README.md`](../../foundations/README.md)** -- the why beneath all of it,
-  when you want that instead.
+Run it a second time and watch what happens: it sees `0.17.0` already standing, skips the network completely, and answers `already=yes` / `verdict=ok`. That habit -- **verify before trusting, leave existing working state untouched on failure** -- is the heartbeat of **TAME Guidance** ([`../../context/TAME_CORE.md`](../../context/TAME_CORE.md)).
 
 ---
 
-*May your first hour end with something that works, may the green line mean exactly what it says,
-and may you find this tree easier to enter than it looks from outside.*
+## Step 3 -- Bootstrap Rye from Cold Source
+
+**Rye** (`.rye`) is Grain's systems language: explicit integer widths (`u32` in memory, `u64` on the wire), bounded **Tally** memory gardens, and zero hidden heap allocations. Because the Rye compiler is written in Rye itself, `rye/bootstrap.sh` bridges the cold start once using `vendor/zig-toolchain/zig`:
+
+```sh
+cd languages/rye && ./bootstrap.sh && cd ../..
+languages/rye/bin/rye version
+```
+
+You will see Rye report its **chronological version stamp** (`YYYYMMDD.HHMMSS` -- later is always a larger number, with zero semantic-version guesswork) alongside `backend: zig 0.17.0`.
+
+---
+
+## Step 4 -- Build Rishi and Run Your First Metal Witness
+
+**Rishi** (`.rish`) is Grain's structured shell and witness runner. Compile it with the `rye` binary you just built:
+
+```sh
+mkdir -p languages/rishi/bin
+languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
+```
+
+Silence on compilation means clean success. Now ask Rishi to run two real witnesses over the tree's `.brix` descriptor ([`../../.brix`](../../.brix)):
+
+```sh
+languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/b/brix_infuse_witness.rish
+```
+
+Watch the terminal print `GREEN: bricks-exist` and `GREEN: brix infuse`. Nobody typed that `GREEN` into a markdown badge -- your own CPU just compiled and verified both positive and negative cases on metal.
+
+---
+
+## Step 5 -- Run Your First Glow Desk
+
+**Glow** (`.glow`) is Grain's pure, deterministic citizen language: two-character ASCII **runes** (`|=` for a function gate, `=/` for a named binding, `?:` for an if-branch) that lower to TAME-bounded Rye and bare-metal **RISC-V** instructions.
+
+Verify all 30 live Glow rune digraphs on your machine:
+
+```sh
+mkdir -p languages/glow/bin
+languages/rye/bin/rye build languages/glow/digraph_twin_check.rye -femit-bin=languages/glow/bin/digraph_twin_check
+languages/glow/bin/digraph_twin_check
+```
+
+Seeing `OK digraph_twin_check 30` confirms your Glow toolchain is live and ready.
+
+---
+
+## Step 6 -- Personalize Your Remotes & Launch Gemini Inside `grain pond`
+
+Grain never hardcodes any maintainer's personal repository URLs into its tracked publish scripts. Instead, copy the generalized template into your own gitignored `PUBLISH_TARGETS.kyri` (or ask your **Gemini CLI** agent to fill in your GitHub handle for you!):
+
+```sh
+cp context/templates/PUBLISH_TARGETS.template.kyri PUBLISH_TARGETS.kyri
+```
+
+And whenever you run **Gemini CLI** (`gemini`) on your Mac, you can run it inside **Grain Pond** (`modules/pond/pond_cli.rye` -- our native TAME Seatbelt capability wall that fences file writes strictly to this workspace while keeping `~/.ssh` and private GPG keys unreadable!):
+
+```sh
+languages/rishi/bin/rishi run tasks.rish pond-gemini
+```
+
+---
+
+## Where to Walk Next
+
+- **Beginner zero-prerequisite macOS course (`00..12`):** [`../../modules/apps/bloom/art-of-programming/README.md`](../../modules/apps/bloom/art-of-programming/README.md)
+- **Multi-year *Bloom & Shastra* curriculum (Andal, Rupa Goswami, Jiva Goswami):** [`../../libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md`](../../libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md)
+- **Set up GPG signing, Gemini CLI (`gemini-4-carbon`), and your own bench:** [`../../SOURCE.md`](../../SOURCE.md)
+- **Understand every module and root file in plain words:** [`../architecture/module-ring-and-root-audit.md`](../architecture/module-ring-and-root-audit.md)
+- **Assemble a RAM-only RISC-V + 60Hz RLCD Blazepod / Blazetablet:** [`../../blazepod/BOM_AND_ASSEMBLY.md`](../../blazepod/BOM_AND_ASSEMBLY.md)
+
+---
+
+*May the first GREEN you see on your own screen remind you that software can be small, honest, and wholly yours.*

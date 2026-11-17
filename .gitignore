@@ -10,9 +10,15 @@
 # --- The project ------------------------------------------------------------
 !/.gitignore
 !/.cursorignore
+!/.geminiignore
 !/.gitmodules
 !/.gitattributes
 !/README.md
+!/GEMINI.md
+!/ORGANIZING.md
+!/STEWARDS.md
+!/llms.txt
+!/publish-seed.rish
 !/SAFE.md
 !/MAP.md
 !/SKILL.md
@@ -25,7 +31,6 @@
 !/LICENSE-MIT
 !/LICENSE-APACHE
 !/LICENSE-CC-BY
-!/PUBKEYS.template.md
 !/PUBKEYS.md
 !/CONTRIBUTING.md
 !/Makefile
@@ -33,6 +38,22 @@
 !/GLOW_PROFILE.template.kyri
 !/template-manifest.kyri
 !/.brix
+!/.gemini/
+/.gemini/*
+!/.gemini/rules/
+!/languages/
+languages/**/bin/
+languages/**/.zig-cache/
+languages/**/zig-out/
+!/modules/
+modules/**/bin/
+modules/**/.zig-cache/
+!/libraries/
+!/blazepod/
+!/mitra-shed/
+!/yonder/
+/CLOCK_CONFIG.kyri
+/PUBLISH_TARGETS.kyri
 !/keys_*.png
 !/keys_*.svg
 !/keys/
@@ -45,7 +66,7 @@
 !/active-designing/
 !/active-development/
 !/active-reviving/
-!/active-tablecloth/
+!/active-pulp/
 !/bloom/
 !/waymarks/
 !/journey/
@@ -100,7 +121,13 @@
 !/mandate/
 !/tablecloth/
 !/colloquium/
+!/languages/
+!/libraries/
+!/modules/
 !/mitra/
+!/mitra-shed/
+!/blazepod/
+!/yonder/
 !/vault/
 !/scribe/
 !/mycelium/
@@ -145,6 +172,7 @@
 !/.cursor-archive/
 !/CLAUDE.md
 !/AGENTS.md
+!/GEMINI.md
 !/ORGANIZING.md
 !/STEWARDS.md
 !/llms.txt
@@ -157,18 +185,33 @@
 # the `personal` verdict in template-manifest.kyri, which is a decision rather than an accident.
 !/publish-seed.sh
 !/publish-seed.rish
+!/publish-redirect.rish
+!/tasks.rish
+/PUBLISH_TARGETS.kyri
 !/publish-seed.template.sh
 !/publish-redirect.sh
 !/.claude/
+!/.gemini/
 # glow-language elder trees vere/ · old/ — untracked `20260725` (Framework ritual).
 # Root /* already ignores them; do not re-allow. Files stay on disk + in history.
-
 # Claude Code grows this file when you approve shell commands in Zed; machine-local.
 /.claude/settings.local.json
 # A MANY HANDS dependent works in its own git worktree under here (granted 20260828). The room is
 # the dependent's checkout, never tree content, and an unignored worktree room is one `git add -A`
 # from committing a whole second copy of the tree.
 /.claude/worktrees/
+# Gemini CLI local overrides, session logs, private memory, and worktrees stay off git.
+/.gemini/settings.local.json
+/.gemini/tmp/
+/.gemini/logs/
+/.gemini/sessions/
+/.gemini/transcripts/
+/.gemini/checkpoints/
+/.gemini/memory/
+/.gemini/.inbox/
+/.gemini/tool-log.txt
+/.gemini/browser-profile/
+/.gemini/worktrees/
 
 # --- Re-ignore fetched dependencies and build artifacts inside the project --
 # The Zig toolchain is large and fetched, not authored (the binary alone is
@@ -225,8 +268,8 @@
 /scribe/bin/
 /kumara/bin/
 /mycelium/bin/
-/image/bin/
-/mikrophone/bin/
+/brushstroke/image/bin/
+/resonance/mikrophone/bin/
 /constel/bin/
 /crypto/bin/
 /encoding/bin/
@@ -236,12 +279,13 @@
 /resonance/.sing.lock/
 /basin/bin/
 /sundial/bin/
+/blazepod/bin/
 /classical-vedic-astrology/bin/
 /comlink/.build/
 /brushstroke/bin/
-/skate/.build/
-/skate/.swiftpm/
-/skate/tools/
+/brushstroke/skate/.build/
+/brushstroke/skate/.swiftpm/
+/brushstroke/skate/tools/
 /.mind-state/
 /.dream-state/
 /blaze/bin/
@@ -253,9 +297,9 @@
 # Witness-seated symlink into glow/.cache (glow-language A import seam).
 /linengrow/lib_session_root_nest_cue_jam.rye
 /dimeroll/bin/
-/lattice/bin/
-/lantern/bin/
-/pulp/bin/
+/flare/lattice/bin/
+/flare/lantern/bin/
+/flare/pulp/bin/
 /flare/bin/
 /gratitude/glow-nock-archive/bin/
 /glow/bin/
@@ -270,9 +314,16 @@ tools/glow/
 # from the tree. Authored code here is Rye; the few genuine Zig files are named back.
 *.zig
 !rye/lib/*.zig
+!languages/rye/lib/*.zig
 !tools/fixtures/**/*.zig
 .zig-cache/
 zig-cache/
+**/bin/
+/languages/glow/.cache/
+/tools/.cache/
+/tools/.build/
+/modules/caravan/.*/
+/modules/resonance/.sing.lock/
 
 # --- macOS extended attributes and Finder artifacts (host moved from Linux) -
 # The Linux-host .gitignore above only named .DS_Store; the Mac host adds a
@@ -439,3 +490,4 @@ fleet/standing-equipment-run.lock.d/
 # Build receipts -- a .ryekey stamp beside an emitted binary is local state, never content
 *.ryekey
 /session-output/
+libraries/**/bin/

@@ -1,0 +1,153 @@
+//! languages/glow/assay/assay_types.rye -- `LayoutTable` & `?-` exhaustiveness.
+//!
+//! Glow Mill Stamp: `20261115.091000`).
+//! Deterministic target-independent memory layout & exhaustiveness prover:
+//!   - Assigns identical byte offsets & alignments on 32-bit (`RV32I`) and
+//!     64-bit (`RV64GC` / `AArch64`) targets using fixed-width Glow atoms,
+//!   - Verifies `%tag` coverage on `?-` switches (`NonExhaustiveSwitch`
+//!     and `DuplicateSwitchTag` refused at compile time!).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.091000";
+pub const max_fields: u32 = 32;
+pub const max_tags: u32 = 32;
+const nl: u8 = 10;
+
+pub const AssayError = error{
+    TooManyFields,
+    EmptyRecord,
+    TooManyUnionTags,
+    NonExhaustiveSwitch,
+    DuplicateSwitchTag,
+    UnknownSwitchTag,
+};
+
+pub const AtomWidth = enum(u8) {
+    u8_byte = 1,
+    u16_half = 2,
+    u32_word = 4,
+    u64_wide = 8,
+};
+
+pub const FieldLayout = struct {
+    name: []const u8,
+    offset_bytes: u32,
+    size_bytes: u32,
+    align_bytes: u32,
+};
+
+pub const RecordLayout = struct {
+    fields: [max_fields]FieldLayout,
+    count: u32,
+    total_size_bytes: u32,
+    max_align_bytes: u32,
+};
+
+fn align_up(offset: u32, alignment: u32) u32 {
+    assert(alignment == 1 or alignment == 2 or
+        alignment == 4 or alignment == 8);
+    const mask = alignment - 1;
+    return (offset + mask) & ~mask;
+}
+
+/// Computes target-independent `$:` record offsets (identical on RV32 & RV64!).
+pub fn measure_record_layout(
+    names: []const []const u8,
+    widths: []const AtomWidth,
+) AssayError!RecordLayout {
+    assert(names.len == widths.len);
+    if (names.len == 0) return error.EmptyRecord;
+    if (names.len > max_fields) return error.TooManyFields;
+
+    var rec = RecordLayout{
+        .fields = undefined,
+        .count = @intCast(names.len),
+        .total_size_bytes = 0,
+        .max_align_bytes = 1,
+    };
+
+    var cur_off: u32 = 0;
+    var i: usize = 0;
+    while (i < names.len) : (i += 1) {
+        const sz: u32 = @intFromEnum(widths[i]);
+        cur_off = align_up(cur_off, sz);
+        rec.fields[i] = .{
+            .name = names[i],
+            .offset_bytes = cur_off,
+            .size_bytes = sz,
+            .align_bytes = sz,
+        };
+        cur_off += sz;
+        if (sz > rec.max_align_bytes) rec.max_align_bytes = sz;
+    }
+    rec.total_size_bytes = align_up(cur_off, rec.max_align_bytes);
+    // invariant: total_size_bytes is a positive multiple of max_align_bytes.
+    assert(rec.total_size_bytes >= rec.max_align_bytes);
+    assert((rec.total_size_bytes % rec.max_align_bytes) == 0);
+    return rec;
+}
+
+/// Verifies `?-` exhaustiveness over a `$%` union (`0..tag_count-1`).
+pub fn check_switch_exhaustive(
+    union_tag_count: u32,
+    handled_tags: []const u32,
+) AssayError!void {
+    if (union_tag_count == 0 or union_tag_count > max_tags) {
+        return error.TooManyUnionTags;
+    }
+    var seen_mask: u32 = 0;
+    for (handled_tags) |t| {
+        if (t >= union_tag_count) return error.UnknownSwitchTag;
+        const bit: u32 = @as(u32, 1) << @intCast(t);
+        if ((seen_mask & bit) != 0) return error.DuplicateSwitchTag;
+        seen_mask |= bit;
+    }
+    const full_mask: u32 = if (union_tag_count == 32)
+        0xFFFF_FFFF
+    else
+        (@as(u32, 1) << @intCast(union_tag_count)) - 1;
+
+    if (seen_mask != full_mask) return error.NonExhaustiveSwitch;
+    // invariant: every union tag bit in 0..union_tag_count-1 is covered once.
+    assert(seen_mask == full_mask);
+}
+
+fn run_selftest() !u8 {
+    // 1. Target-independent `{ tag: u8, seq: u32, stamp: u64 }` layout:
+    //    tag @ 0, seq @ 4, stamp @ 8, total = 16 bytes!
+    const f_names = [_][]const u8{ "tag", "seq", "stamp" };
+    const f_widths = [_]AtomWidth{ .u8_byte, .u32_word, .u64_wide };
+    const layout = try measure_record_layout(&f_names, &f_widths);
+    if (layout.fields[0].offset_bytes != 0 or
+        layout.fields[1].offset_bytes != 4 or
+        layout.fields[2].offset_bytes != 8 or
+        layout.total_size_bytes != 16)
+    {
+        return error.BadRecordOffsets;
+    }
+
+    // 2. Exhaustive `?-` over 3-variant union passes; missing arm refuses!
+    try check_switch_exhaustive(3, &[_]u32{ 0, 1, 2 });
+    if (check_switch_exhaustive(3, &[_]u32{ 0, 2 })) |_| {
+        return error.MissingTagAccepted;
+    } else |err| {
+        if (err != error.NonExhaustiveSwitch) return err;
+    }
+    if (check_switch_exhaustive(3, &[_]u32{ 0, 1, 1, 2 })) |_| {
+        return error.DupTagAccepted;
+    } else |err| {
+        if (err != error.DuplicateSwitchTag) return err;
+    }
+
+    print("GREEN: assay_types -- LayoutTable & ?- exhaustiveness proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,12 @@
+::  modules/apps/linengrow/glow/fold-linengrow-consent.glow -- Consent gate
+/!  16384
+|%
+++  fold-linengrow-consent
+  |=  [uses-so-far=@ud max-uses=@ud promised-mala=@ud]  ::  bounded data grant
+  ^-  @ud                                               ::  next permitted use
+  ~|  'linengrow-zero-return-refused'                   ::  honest reciprocity
+  ?>  (gte promised-mala 1)                             ::  >= 1 MALA promised
+  ~|  'linengrow-use-cap-exhausted'                     ::  bounded consent!
+  ?>  (lte +(uses-so-far) max-uses)                     ::  within use ceiling
+  +(uses-so-far)
+--

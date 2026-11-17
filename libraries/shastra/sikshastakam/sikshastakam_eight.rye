@@ -1,0 +1,149 @@
+//! libraries/shastra/sikshastakam/sikshastakam_eight.rye -- Year 3 Eight Lamps!
+//!
+//! Stamp: `20261115.101500`): Year-3 companion in our 4-year *Bloom &
+//! Shastra* spiral, presenting **Sri Chaitanya Mahaprabhu's 8 Verses of
+//! *Sikshastakam*** alongside their Grain TAME & Civic engineering mirrors:
+//!   1. *Cheto-darpana-marjanam* -- Polishing the mirror of heart & state,
+//!   2. *Namnam akari* -- Open names with zero artificial barriers or fees,
+//!   3. *Trinad api sunichena* -- Humility lower than grass; zero-ego review,
+//!   4. *Na dhanam na janam* -- *Aparigraha*: asking no wealth or followers,
+//!   5. *Ayi nanda-tanuja* -- Reclaiming dignity from dust into active service,
+//!   6. *Nayanam galad-ashru* -- Sincere warmth softening rigid formalism,
+//!   7. *Yugayitam nimeshena* -- Deep attentiveness where every tick counts,
+//!   8. *Ashlishya va pada-ratam* -- Unconditional fidelity in every season!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.101500";
+pub const verse_count: u32 = 8;
+const nl: u8 = 10;
+
+pub const SikshaVerse = struct {
+    number: u32,
+    sanskrit_opening: []const u8,
+    plain_english: []const u8,
+    civic_craft_mirror: []const u8,
+};
+
+pub const verses = [verse_count]SikshaVerse{
+    .{
+        .number = 1,
+        .sanskrit_opening =
+            "Cheto-darpana-marjanam bhava-maha-davagni-nirvapanam",
+        .plain_english =
+            "Cleanses the mirror of the mind and cools the wildfire of strife",
+        .civic_craft_mirror =
+            "Pure deterministic state: clear inputs, zero hidden side-effects",
+    },
+    .{
+        .number = 2,
+        .sanskrit_opening = "Namnam akari bahudha nija-sarva-shaktis",
+        .plain_english =
+            "Every grace invested freely in open names with no rigid gate",
+        .civic_craft_mirror =
+            "The Comlink Tendency: plain, welcoming words open to beginners",
+    },
+    .{
+        .number = 3,
+        .sanskrit_opening = "Trinad api sunichena taror api sahishnuna",
+        .plain_english =
+            "Humbler than a blade of grass, more patient than a shade tree",
+        .civic_craft_mirror =
+            "Zero-ego code review: honor every contributor, ask no applause",
+    },
+    .{
+        .number = 4,
+        .sanskrit_opening =
+            "Na dhanam na janam na sundarim kavitam va jagad-isha",
+        .plain_english =
+            "Seeking neither wealth, crowds, nor praise -- only steady seva",
+        .civic_craft_mirror =
+            "Aparigraha & Glasswall: zero ad rent, zero user capture",
+    },
+    .{
+        .number = 5,
+        .sanskrit_opening = "Ayi nanda-tanuja kinkaram patitam mam vishame",
+        .plain_english =
+            "Lift a fallen servant from rough waves to peaceful stewardship",
+        .civic_craft_mirror =
+            "Right-to-Repair & Rescue: restore old hardware to noble service",
+    },
+    .{
+        .number = 6,
+        .sanskrit_opening =
+            "Nayanam galad-ashru-dharaya vadanam gadgada-ruddhaya",
+        .plain_english =
+            "Genuine feeling softens speech and warms every shared room",
+        .civic_craft_mirror =
+            "Radiant & Teacher Voice: precision carried with human warmth",
+    },
+    .{
+        .number = 7,
+        .sanskrit_opening = "Yugayitam nimeshena chakshusha pravrishayitam",
+        .plain_english =
+            "A single moment of separation sharpens longing for reunion",
+        .civic_craft_mirror =
+            "Blaze Sync & Comlink: patient offline resilience until peers meet",
+    },
+    .{
+        .number = 8,
+        .sanskrit_opening = "Ashlishya va pada-ratam pinashtu mam adarshanam",
+        .plain_english =
+            "Through ease or trial alike, unshakeable devotion holds fast",
+        .civic_craft_mirror =
+            "Lindy Fidelity: four promises a tool keeps in every season",
+    },
+};
+
+pub fn lookup_verse(n: u32) !SikshaVerse {
+    if (n < 1 or n > verse_count) return error.VerseOutOfRange;
+    const v = verses[n - 1];
+    // invariant: looked-up verse number matches 1-based request.
+    assert(v.number == n and v.sanskrit_opening.len > 0);
+    return v;
+}
+
+fn run_selftest() !u8 {
+    var i: u32 = 1;
+    while (i <= verse_count) : (i += 1) {
+        const v = try lookup_verse(i);
+        if (v.number != i or v.plain_english.len > 80) {
+            return error.BadVerseShape;
+        }
+    }
+    if (lookup_verse(9)) |_| {
+        return error.OutOfRangeAccepted;
+    } else |err| {
+        if (err != error.VerseOutOfRange) return err;
+    }
+    print("GREEN: sikshastakam_eight -- all 8 verses & mirrors proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    const n = std.fmt.parseInt(u32, args[1], 10) catch 3;
+    const v = try lookup_verse(n);
+    print(
+        "Sikshastakam #{d}/8:{c}  {s}{c}  Meaning: {s}{c}  Craft:   {s}{c}",
+        .{
+            v.number,
+            nl,
+            v.sanskrit_opening,
+            nl,
+            v.plain_english,
+            nl,
+            v.civic_craft_mirror,
+            nl,
+        },
+    );
+    return 0;
+}

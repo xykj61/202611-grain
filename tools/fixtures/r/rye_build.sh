@@ -90,4 +90,8 @@ for d in $rooms; do
   held="$held $lock"
 done
 
-"$root/rye/bin/rye" build "$@"
+if [ -x "$root/languages/rye/bin/rye" ]; then
+  "$root/languages/rye/bin/rye" build "$@"
+else
+  "$root/rye/bin/rye" build "$@"
+fi

@@ -1,0 +1,110 @@
+//! modules/comlink/vantage/surf_social_grid.rye -- Surf 40x8 FrameGrid (M28)!
+//!
+//! Stamp: `20261115.104500`): Renders calm, chronological `Surf` Social
+//! peer updates into a bounded `8 x 40` (`Skate` `FrameGrid` dimensions!)
+//! inside **`modules/comlink/vantage/`** so macOS Swift, WASM, and Daylight
+//! DC-1 Carry Tablet render `Surf` with zero layout logic in the host shell!
+
+const std = @import("std");
+const builtin = @import("builtin");
+const assert = std.debug.assert;
+
+pub const version = "20261115.104500";
+pub const grid_rows: u32 = 8;
+pub const grid_cols: u32 = 40;
+pub const max_posts: u32 = 16;
+const nl: u8 = 10;
+
+pub const SurfPost = struct {
+    author_galaxy: []const u8,
+    body: []const u8,
+};
+
+pub const SurfFrameGrid = struct {
+    cells: [grid_rows][grid_cols]u8,
+    post_count: u32,
+
+    pub fn init() SurfFrameGrid {
+        var g: SurfFrameGrid = undefined;
+        for (&g.cells) |*row| @memset(row, ' ');
+        g.post_count = 0;
+        // invariant: fresh 8x40 grid starts space-padded with 0 posts.
+        assert(g.cells[0][0] == ' ' and g.post_count == 0);
+        return g;
+    }
+
+    pub fn write_row(self: *SurfFrameGrid, r: u32, text: []const u8) void {
+        if (r >= grid_rows) return;
+        @memset(&self.cells[r], ' ');
+        const n = @min(text.len, grid_cols);
+        @memcpy(self.cells[r][0..n], text[0..n]);
+        assert(n <= grid_cols);
+    }
+
+    pub fn format_feed(self: *SurfFrameGrid, posts: []const SurfPost) void {
+        self.write_row(0, "[Vantage Surf | Chronological Commons]  ");
+        var r: u32 = 1;
+        var idx: usize = 0;
+        while (idx < posts.len and r < grid_rows - 1) : (idx += 1) {
+            var line_buf: [80]u8 = undefined;
+            const formatted = std.fmt.bufPrint(
+                &line_buf,
+                "{s}: {s}",
+                .{ posts[idx].author_galaxy, posts[idx].body },
+            ) catch continue;
+            self.write_row(r, formatted);
+            r += 1;
+        }
+        self.post_count = @intCast(posts.len);
+        self.write_row(
+            grid_rows - 1,
+            "[End of today's updates -- zero ads]    ",
+        );
+        // invariant: header row 0 and calm footer row 7 always anchored.
+        assert(self.cells[0][0] == '[' and self.cells[7][0] == '[');
+    }
+};
+
+var global_surf_grid: SurfFrameGrid = SurfFrameGrid.init();
+
+export fn surf_grid_seed_demo_ffi() void {
+    const demo = [_]SurfPost{
+        .{ .author_galaxy = "~sunflower", .body = "25kg heirloom tomatoes!" },
+        .{ .author_galaxy = "~rosemary", .body = "Compost bed #4 at 58C" },
+        .{ .author_galaxy = "~siya", .body = "Tiruppavai #29 sung at dawn" },
+    };
+    global_surf_grid = SurfFrameGrid.init();
+    global_surf_grid.format_feed(&demo);
+}
+
+export fn surf_grid_read_row_ffi(
+    row: u32,
+    out_ptr: [*]u8,
+    out_cap: u32,
+) u32 {
+    if (row >= grid_rows or out_cap == 0) return 0;
+    const n = @min(@as(usize, out_cap), grid_cols);
+    @memcpy(out_ptr[0..n], global_surf_grid.cells[row][0..n]);
+    return @intCast(n);
+}
+
+fn run_selftest() !u8 {
+    surf_grid_seed_demo_ffi();
+    var r1: [40]u8 = undefined;
+    const n = surf_grid_read_row_ffi(1, &r1, 40);
+    if (n != 40) return error.WrongRowWidth;
+    if (std.mem.indexOf(u8, &r1, "~sunflower: 25kg") == null) {
+        return error.MissingSunflowerPost;
+    }
+    if (builtin.os.tag != .freestanding) {
+        std.debug.print(
+            "GREEN: surf_social_grid -- 40x8 Surf FrameGrid in Vantage.{c}",
+            .{nl},
+        );
+    }
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,39 @@
+module VantageBloom {
+    header "vantage_bloom.h"
+    export *
+}
+
+module VantageDimeroll {
+    header "vantage_dimeroll.h"
+    export *
+}
+
+module VantageResonance {
+    header "vantage_resonance_audio.h"
+    export *
+}
+
+module VantageScribe {
+    header "vantage_scribe.h"
+    export *
+}
+
+module VantageBlaze {
+    header "vantage_blaze.h"
+    export *
+}
+
+module VantageSurf {
+    header "vantage_surf.h"
+    export *
+}
+
+module VantageCarry {
+    header "vantage_carry.h"
+    export *
+}
+
+module VantageApp {
+    header "vantage_app.h"
+    export *
+}

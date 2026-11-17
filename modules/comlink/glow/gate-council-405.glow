@@ -1,0 +1,12 @@
+::  modules/comlink/glow/gate-council-405.glow -- Dual 324 & 243 / 405!
+/!  16384
+|%
+++  gate-council-supermajority
+  |=  [tier=@ud yes-votes=@ud]                          ::  0=60%(243),1=80%
+  ^-  @ud                                               ::  0=enacted,1=short
+  ~|  'council-votes-above-405'                         ::  d15 * 3 * 9 = 405
+  ?>  (lte yes-votes 405)                               ::  bounded seat cap
+  ?:  (eql tier 0)
+    ?:((gte yes-votes 243) 0 1)                         ::  243/405 == 60.00%
+  ?:  (gte yes-votes 324)  0  1                         ::  324/405 == 80.00%
+--

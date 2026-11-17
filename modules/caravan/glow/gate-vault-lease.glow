@@ -1,0 +1,10 @@
+::  modules/caravan/glow/gate-vault-lease.glow -- Ephemeral key lease!
+/!  16384
+|%
+++  gate-vault-lease
+  |=  [now-epoch=@ud valid-until=@ud]                   ::  TTL custody check
+  ^-  @ud                                               ::  remaining epochs
+  ~|  'vault-lease-expired-zeroize-now'                 ::  Scorpio erasure!
+  ?>  (lth now-epoch valid-until)                       ::  strictly active
+  (sub valid-until now-epoch)
+--

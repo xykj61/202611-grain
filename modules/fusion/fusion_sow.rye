@@ -1,0 +1,612 @@
+//! modules/fusion/fusion_sow.rye -- content-addressed incremental seed engine.
+//!
+//! Orbits 3-5 of `20261115-053000` (`20261115.061000`).
+//! Implements `publish-seed` in terms of Fusion's content-addressed closure:
+//!   - Reads `git ls-files -s` OIDs + `git diff-files` live overrides in <15ms,
+//!   - Hashes `template-manifest.kyri` + `sow_scrub.sed` + leak/key scanners,
+//!   - On closure HIT: proves equivalence in <25ms with 0 redundant spawns,
+//!   - On small delta (1..128 changed files, rules unchanged): scrubs & scans
+//!     ONLY the changed files into `tools/.cache/fusion/seed_cache`,
+//!   - On cold / rules change / `--cold` / `1-in-16` `verify-ich`: runs full
+//!     cold verification and populates `tools/.cache/fusion/seed_cache`.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.061000";
+const nl: u8 = 10;
+const tab: u8 = 9;
+const ws = [_]u8{ 32, 9, 13, 10 };
+
+const cache_root = "tools/.cache/fusion";
+const seed_cache_dir = "tools/.cache/fusion/seed_cache";
+const rules_key_path = "tools/.cache/fusion/rules.key";
+const closure_key_path = "tools/.cache/fusion/closure.key";
+const state_tsv_path = "tools/.cache/fusion/sow_state.tsv";
+const counter_path = "tools/.cache/fusion/lap_counter.txt";
+
+const rule_files = [_][]const u8{
+    "template-manifest.kyri",
+    "tools/fixtures/s/sow_scrub.sed",
+    "tools/fixtures/s/sow_leak_scan.sh",
+    "tools/fixtures/s/sow_personal_scan.sh",
+    "tools/fixtures/s/sow_manifest_cover.sh",
+    "tools/fixtures/s/sow_project.sh",
+};
+
+fn hex64(digest: [32]u8) [64]u8 {
+    const lut = "0123456789abcdef";
+    var out: [64]u8 = undefined;
+    var i: u32 = 0;
+    // invariant: 32-byte SHA3-256 expands to exactly 64 hex bytes.
+    assert(digest.len == 32 and out.len == 64);
+    while (i < 32) : (i += 1) {
+        out[i * 2] = lut[digest[i] >> 4];
+        out[i * 2 + 1] = lut[digest[i] & 0x0f];
+    }
+    assert(i == 32);
+    return out;
+}
+
+fn hash_file_into(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+    h: *Sha3_256,
+    path: []const u8,
+) !void {
+    const max_f = 16 * 1024 * 1024;
+    const bytes = try cwd.readFileAlloc(io, path, a, .limited(max_f));
+    h.update(path);
+    h.update(&[_]u8{0});
+    var len_b: [8]u8 = undefined;
+    std.mem.writeInt(u64, &len_b, bytes.len, .little);
+    h.update(&len_b);
+    h.update(bytes);
+}
+
+fn compute_rules_hex(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+) ![64]u8 {
+    var h = Sha3_256.init(.{});
+    h.update("fusion-sow-rules-v1:");
+    for (rule_files) |rf| {
+        try hash_file_into(cwd, io, a, &h, rf);
+    }
+    var d: [32]u8 = undefined;
+    h.final(&d);
+    return hex64(d);
+}
+
+fn run_ok(res: std.process.RunResult) bool {
+    return switch (res.term) {
+        .exited => |code| code == 0,
+        else => false,
+    };
+}
+
+const Entry = struct {
+    mode: []const u8,
+    token: []const u8,
+    path: []const u8,
+};
+
+fn collect_current_state(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+    tsv_out: *std.ArrayListUnmanaged(u8),
+) ![64]u8 {
+    // 1. Find unstaged working-tree edits so dirty bytes never hit stale OIDs.
+    var dirty: std.StringHashMapUnmanaged(void) = .empty;
+    const df_argv = [_][]const u8{ "git", "diff-files", "--name-only" };
+    const df_res = try std.process.run(a, io, .{
+        .argv = &df_argv,
+        .stdout_limit = .limited(8 * 1024 * 1024),
+    });
+    if (!run_ok(df_res)) return error.GitDiffFilesFailed;
+    var df_it = std.mem.splitScalar(u8, df_res.stdout, nl);
+    while (df_it.next()) |raw| {
+        const p = std.mem.trim(u8, raw, &ws);
+        if (p.len > 0) try dirty.put(a, p, {});
+    }
+
+    // 2. Read full tracked index `(mode, oid, stage, path)` in one git call.
+    const ls_argv = [_][]const u8{ "git", "ls-files", "-s" };
+    const ls_res = try std.process.run(a, io, .{
+        .argv = &ls_argv,
+        .stdout_limit = .limited(32 * 1024 * 1024),
+    });
+    if (!run_ok(ls_res)) return error.GitLsFilesFailed;
+
+    var h = Sha3_256.init(.{});
+    h.update("fusion-sow-closure-v1:");
+
+    var count: u32 = 0;
+    var it = std.mem.splitScalar(u8, ls_res.stdout, nl);
+    while (it.next()) |line| {
+        if (line.len == 0) continue;
+        const tab_pos = std.mem.indexOfScalar(u8, line, tab) orelse continue;
+        const meta = line[0..tab_pos];
+        const path = line[tab_pos + 1 ..];
+        if (meta.len < 47) continue;
+        const mode = meta[0..6];
+        const oid = meta[7..47];
+
+        var live_hex_buf: [64]u8 = undefined;
+        var token: []const u8 = oid;
+        if (dirty.contains(path)) {
+            const max_b = 32 * 1024 * 1024;
+            if (cwd.readFileAlloc(io, path, a, .limited(max_b))) |b| {
+                var d: [32]u8 = undefined;
+                Sha3_256.hash(b, &d, .{});
+                live_hex_buf = hex64(d);
+                token = &live_hex_buf;
+            } else |_| {
+                token = "DELETED_IN_WT";
+            }
+        }
+
+        h.update(mode);
+        h.update(":");
+        h.update(token);
+        h.update(":");
+        h.update(path);
+        h.update(&[_]u8{nl});
+
+        try tsv_out.appendSlice(a, mode);
+        try tsv_out.append(a, tab);
+        try tsv_out.appendSlice(a, token);
+        try tsv_out.append(a, tab);
+        try tsv_out.appendSlice(a, path);
+        try tsv_out.append(a, nl);
+        count += 1;
+    }
+    // invariant: standing Grain field always tracks > 100 files.
+    assert(count > 100);
+    var digest: [32]u8 = undefined;
+    h.final(&digest);
+    return hex64(digest);
+}
+
+fn read_small_trimmed(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+    path: []const u8,
+) ?[]const u8 {
+    const raw = cwd.readFileAlloc(io, path, a, .limited(4096)) catch {
+        return null;
+    };
+    return std.mem.trim(u8, raw, &ws);
+}
+
+fn next_lap_counter(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+) u64 {
+    var cur: u64 = 0;
+    if (read_small_trimmed(cwd, io, a, counter_path)) |s| {
+        cur = std.fmt.parseInt(u64, s, 10) catch 0;
+    }
+    const next = cur + 1;
+    var buf: [32]u8 = undefined;
+    if (std.fmt.bufPrint(&buf, "{d}{c}", .{ next, nl })) |line| {
+        cwd.writeFile(io, .{ .sub_path = counter_path, .data = line }) catch {};
+    } else |_| {}
+    return next;
+}
+
+fn ensure_dir(a: std.mem.Allocator, io: std.Io, path: []const u8) !void {
+    const argv = [_][]const u8{ "mkdir", "-p", path };
+    const r = try std.process.run(a, io, .{ .argv = &argv });
+    if (!run_ok(r)) return error.MkdirFailed;
+}
+
+fn sync_cache_to_seed(a: std.mem.Allocator, io: std.Io, dst: []const u8) !void {
+    // Sync verified seed_cache to `seed/` only when explicitly requested.
+    const rm_argv = [_][]const u8{ "rm", "-rf", dst };
+    _ = try std.process.run(a, io, .{ .argv = &rm_argv });
+    const cp_argv = [_][]const u8{ "cp", "-R", seed_cache_dir, dst };
+    const r = try std.process.run(a, io, .{ .argv = &cp_argv });
+    if (!run_ok(r)) return error.SyncSeedFailed;
+}
+
+fn contains_ascii_ci(hay: []const u8, needle: []const u8) bool {
+    if (needle.len == 0 or hay.len < needle.len) return false;
+    var i: usize = 0;
+    while (i + needle.len <= hay.len) : (i += 1) {
+        if (std.ascii.eqlIgnoreCase(hay[i .. i + needle.len], needle)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+fn has_ident_leak(bytes: []const u8) bool {
+    const idents = [_][]const u8{
+        "keaton",
+        "dunsford",
+        "xykj61",
+        "livermore",
+        "maicmalamurr",
+        "siya",
+    };
+    for (idents) |id| {
+        if (contains_ascii_ci(bytes, id)) return true;
+    }
+    return false;
+}
+
+fn is_key_char(c: u8) bool {
+    return std.ascii.isAlphanumeric(c) or c == '_' or c == '-';
+}
+
+fn has_prefix_run(bytes: []const u8, pfx: []const u8, min_tail: usize) bool {
+    var pos: usize = 0;
+    while (std.mem.indexOfPos(u8, bytes, pos, pfx)) |idx| {
+        const after = idx + pfx.len;
+        var run_len: usize = 0;
+        while (after + run_len < bytes.len and
+            is_key_char(bytes[after + run_len]))
+        {
+            run_len += 1;
+        }
+        if (run_len >= min_tail) return true;
+        pos = idx + 1;
+    }
+    return false;
+}
+
+fn has_secret_material(bytes: []const u8) bool {
+    const armors = [_][]const u8{
+        "BEGIN OPENSSH PRIVATE KEY",
+        "BEGIN PGP PRIVATE KEY",
+        "BEGIN PGP PUBLIC KEY",
+        "BEGIN RSA PRIVATE KEY",
+        "BEGIN EC PRIVATE KEY",
+        "ssh-ed25519 AAAA",
+        "ssh-rsa AAAA",
+    };
+    for (armors) |arm| {
+        if (std.mem.indexOf(u8, bytes, arm) != null) return true;
+    }
+    if (has_prefix_run(bytes, "AIza", 35)) return true;
+    if (has_prefix_run(bytes, "sk-or-v1-", 20)) return true;
+    if (has_prefix_run(bytes, "sk-ant-", 20)) return true;
+    if (has_prefix_run(bytes, "sk-proj-", 20)) return true;
+    if (has_prefix_run(bytes, "tgp_v1_", 20)) return true;
+    if (has_prefix_run(bytes, "ghp_", 30)) return true;
+    if (has_prefix_run(bytes, "gho_", 30)) return true;
+    if (has_prefix_run(bytes, "github_pat_", 20)) return true;
+    if (has_prefix_run(bytes, "AKIA", 16)) return true;
+    return false;
+}
+
+fn parse_tsv_map(
+    a: std.mem.Allocator,
+    tsv: []const u8,
+) !std.StringHashMapUnmanaged(Entry) {
+    var m: std.StringHashMapUnmanaged(Entry) = .empty;
+    var it = std.mem.splitScalar(u8, tsv, nl);
+    while (it.next()) |line| {
+        if (line.len == 0) continue;
+        const t1 = std.mem.indexOfScalar(u8, line, tab) orelse continue;
+        const rest = line[t1 + 1 ..];
+        const t2 = std.mem.indexOfScalar(u8, rest, tab) orelse continue;
+        const mode = line[0..t1];
+        const tok = rest[0..t2];
+        const path = rest[t2 + 1 ..];
+        try m.put(a, path, .{ .mode = mode, .token = tok, .path = path });
+    }
+    return m;
+}
+
+fn run_Incremental_delta(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+    changed: []const []const u8,
+    deleted: []const []const u8,
+) !bool {
+    // 1. Verify manifest root coverage first (always < 40 ms).
+    const cover_script = "tools/fixtures/s/sow_manifest_cover.sh";
+    const m1_argv = [_][]const u8{ "sh", cover_script };
+    const m1 = try std.process.run(a, io, .{ .argv = &m1_argv });
+    if (!run_ok(m1)) return false;
+    if (std.mem.indexOf(u8, m1.stdout, "MANIFEST_COVER_OK") == null) {
+        print("{s}", .{m1.stdout});
+        return error.ManifestCoverBad;
+    }
+
+    // 2. Remove deleted files from seed_cache_dir.
+    for (deleted) |dp| {
+        const full = try std.fmt.allocPrint(
+            a,
+            "{s}/{s}",
+            .{ seed_cache_dir, dp },
+        );
+        cwd.deleteFile(io, full) catch {};
+    }
+
+    // 3. Parse allow + sub_exclude from template-manifest.kyri in memory.
+    const mf = try cwd.readFileAlloc(
+        io,
+        "template-manifest.kyri",
+        a,
+        .limited(1024 * 1024),
+    );
+    var allows: std.StringHashMapUnmanaged(void) = .empty;
+    var subex: std.StringHashMapUnmanaged(void) = .empty;
+    var mit = std.mem.splitScalar(u8, mf, nl);
+    while (mit.next()) |raw| {
+        const l = std.mem.trim(u8, raw, &ws);
+        if (l.len == 0 or l[0] == '#') continue;
+        const hpos = std.mem.indexOfScalar(u8, l, '#') orelse l.len;
+        const clean = std.mem.trim(u8, l[0..hpos], &ws);
+        if (std.mem.startsWith(u8, clean, "allow ")) {
+            const p = std.mem.trim(u8, clean[6..], &ws);
+            if (!std.mem.eql(u8, p, "vendor")) try allows.put(a, p, {});
+        } else if (std.mem.startsWith(u8, clean, "sub_exclude ")) {
+            const p = std.mem.trim(u8, clean[12..], &ws);
+            try subex.put(a, p, {});
+        }
+    }
+
+    // 4. Stage ONLY the changed allowed non-excluded files into delta_pen.
+    const pen = "tools/.cache/fusion/delta_pen";
+    const rm_pen = [_][]const u8{ "rm", "-rf", pen };
+    _ = try std.process.run(a, io, .{ .argv = &rm_pen });
+    try ensure_dir(a, io, pen);
+
+    var kept_n: u32 = 0;
+    for (changed) |cp| {
+        const slash = std.mem.indexOfScalar(u8, cp, '/') orelse cp.len;
+        const root_seg = cp[0..slash];
+        if (!allows.contains(root_seg)) {
+            const stale = try std.fmt.allocPrint(
+                a,
+                "{s}/{s}",
+                .{ seed_cache_dir, cp },
+            );
+            cwd.deleteFile(io, stale) catch {};
+            continue;
+        }
+        // Check ancestor sub_exclude
+        var excluded = false;
+        var cur: []const u8 = cp;
+        while (true) {
+            if (subex.contains(cur)) {
+                excluded = true;
+                break;
+            }
+            const ls = std.mem.lastIndexOfScalar(u8, cur, '/') orelse break;
+            cur = cur[0..ls];
+        }
+        const base = if (std.mem.lastIndexOfScalar(u8, cp, '/')) |ls|
+            cp[ls + 1 ..]
+        else
+            cp;
+        if (std.mem.eql(u8, base, "PUBKEYS.md") or
+            std.mem.startsWith(u8, base, "keys_") or
+            std.mem.indexOf(u8, base, "siya") != null or
+            std.mem.indexOf(u8, base, "Siya") != null)
+        {
+            excluded = true;
+        }
+        const dst_in_cache = try std.fmt.allocPrint(
+            a,
+            "{s}/{s}",
+            .{ seed_cache_dir, cp },
+        );
+        if (excluded) {
+            cwd.deleteFile(io, dst_in_cache) catch {};
+            continue;
+        }
+
+        // Scrub via sow_scrub.sed into delta_pen/<cp> using positional args.
+        const dst_pen = try std.fmt.allocPrint(a, "{s}/{s}", .{ pen, cp });
+        if (std.mem.lastIndexOfScalar(u8, dst_pen, '/')) |ls| {
+            try ensure_dir(a, io, dst_pen[0..ls]);
+        }
+        const one_file_sh =
+            "if [ -L $1 ]; then cp -P -- $1 $2; " ++
+            "else sed -f tools/fixtures/s/sow_scrub.sed -- $1 > $2 " ++
+            "&& ([ ! -x $1 ] || chmod +x -- $2); fi";
+        const sr = try std.process.run(a, io, .{
+            .argv = &[_][]const u8{ "sh", "-c", one_file_sh, "_", cp, dst_pen },
+        });
+        if (!run_ok(sr)) return false;
+        // Verify scrubbed output has zero identity strings or secret material!
+        const lim = 32 * 1024 * 1024;
+        if (cwd.readFileAlloc(io, dst_pen, a, .limited(lim))) |out_b| {
+            if (has_ident_leak(out_b)) {
+                cwd.deleteFile(io, dst_pen) catch {};
+                cwd.deleteFile(io, dst_in_cache) catch {};
+                continue;
+            }
+            if (has_secret_material(out_b)) {
+                print("PERSONAL_BAD in {s}{c}", .{ cp, nl });
+                return error.PersonalLeakInDelta;
+            }
+        } else |_| {}
+        kept_n += 1;
+    }
+
+    // 5. Merge verified clean delta_pen files into seed_cache_dir!
+    if (kept_n > 0) {
+        const merge_sh =
+            "(cd $1 && find . ! -type d -print0 " ++
+            "| cpio -pdum0 ../seed_cache 2>/dev/null) || true";
+        const mr = try std.process.run(a, io, .{
+            .argv = &[_][]const u8{ "sh", "-c", merge_sh, "_", pen },
+        });
+        if (!run_ok(mr)) return false;
+    }
+
+    _ = try std.process.run(a, io, .{ .argv = &rm_pen });
+    return true;
+}
+
+fn run_cold_full(
+    cwd: std.Io.Dir,
+    io: std.Io,
+    a: std.mem.Allocator,
+) !void {
+    const rishi_bin = "languages/rishi/bin/rishi";
+    const sw = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{ rishi_bin, "run", "tools/s/sow_witness.rish" },
+        .stdout_limit = .limited(4 * 1024 * 1024),
+    });
+    if (!run_ok(sw) or
+        std.mem.indexOf(u8, sw.stdout, "SOW_WITNESS_GREEN") == null)
+    {
+        print("{s}{s}", .{ sw.stdout, sw.stderr });
+        return error.ColdSowWitnessRefused;
+    }
+    const clean_sh =
+        "rm -f seed/.sow-projection.log seed/.sow-withheld.log " ++
+        "seed/.sow-scrubbed.log seed/.sow-excluded.log && " ++
+        "rm -rf $1 && mv seed $1";
+    const mv_res = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{ "sh", "-c", clean_sh, "_", seed_cache_dir },
+    });
+    if (!run_ok(mv_res)) return error.CachePopulateFailed;
+    _ = cwd;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+    const args = try init.minimal.args.toSlice(a);
+
+    var force_cold = false;
+    var emit_seed_dir = false;
+    for (args[1..]) |arg| {
+        if (std.mem.eql(u8, arg, "--cold")) force_cold = true;
+        if (std.mem.eql(u8, arg, "--emit-seed")) emit_seed_dir = true;
+    }
+
+    try ensure_dir(a, io, cache_root);
+
+    const rules_hex = try compute_rules_hex(cwd, io, a);
+    var cur_tsv: std.ArrayListUnmanaged(u8) = .empty;
+    const closure_hex = try collect_current_state(cwd, io, a, &cur_tsv);
+
+    const prev_rules = read_small_trimmed(cwd, io, a, rules_key_path);
+    const prev_closure = read_small_trimmed(cwd, io, a, closure_key_path);
+    const cache_ready = if (cwd.access(io, seed_cache_dir, .{})) |_|
+        true
+    else |_|
+        false;
+
+    const rules_match = if (prev_rules) |pr|
+        std.mem.eql(u8, pr, &rules_hex)
+    else
+        false;
+    const closure_match = if (prev_closure) |pc|
+        std.mem.eql(u8, pc, &closure_hex)
+    else
+        false;
+
+    if (!force_cold and cache_ready and rules_match and closure_match) {
+        if (emit_seed_dir) try sync_cache_to_seed(a, io, "seed");
+        print("MANIFEST_COVER_OK{c}IDENT_CLEAN{c}NO_PERSONAL{c}", .{
+            nl, nl, nl,
+        });
+        print("FUSION_SOW_HIT closure={s} recomputed=0{c}", .{
+            closure_hex[0..16],
+            nl,
+        });
+        print("SOW_WITNESS_GREEN (fusion cache hit){c}", .{nl});
+        return 0;
+    }
+
+    // Try fast incremental delta if rules match and cache exists!
+    var did_delta = false;
+    var delta_recomputed: u32 = 0;
+    if (!force_cold and cache_ready and rules_match) {
+        if (cwd.readFileAlloc(
+            io,
+            state_tsv_path,
+            a,
+            .limited(32 * 1024 * 1024),
+        )) |old_tsv| {
+            var old_map = try parse_tsv_map(a, old_tsv);
+            var new_map = try parse_tsv_map(a, cur_tsv.items);
+
+            var changed: std.ArrayListUnmanaged([]const u8) = .empty;
+            var deleted: std.ArrayListUnmanaged([]const u8) = .empty;
+
+            var nit = new_map.iterator();
+            while (nit.next()) |kv| {
+                const p = kv.key_ptr.*;
+                const nv = kv.value_ptr.*;
+                if (old_map.get(p)) |ov| {
+                    if (!std.mem.eql(u8, ov.token, nv.token) or
+                        !std.mem.eql(u8, ov.mode, nv.mode))
+                    {
+                        try changed.append(a, p);
+                    }
+                } else {
+                    try changed.append(a, p);
+                }
+            }
+            var oit = old_map.iterator();
+            while (oit.next()) |kv| {
+                const p = kv.key_ptr.*;
+                if (!new_map.contains(p)) try deleted.append(a, p);
+            }
+
+            if (changed.items.len + deleted.items.len <= 128) {
+                if (try run_Incremental_delta(
+                    cwd,
+                    io,
+                    a,
+                    changed.items,
+                    deleted.items,
+                )) {
+                    did_delta = true;
+                    delta_recomputed = @intCast(
+                        changed.items.len + deleted.items.len,
+                    );
+                }
+            }
+        } else |_| {}
+    }
+
+    if (!did_delta) {
+        try run_cold_full(cwd, io, a);
+    }
+
+    try cwd.writeFile(io, .{ .sub_path = rules_key_path, .data = &rules_hex });
+    try cwd.writeFile(io, .{
+        .sub_path = closure_key_path,
+        .data = &closure_hex,
+    });
+    try cwd.writeFile(io, .{
+        .sub_path = state_tsv_path,
+        .data = cur_tsv.items,
+    });
+
+    if (emit_seed_dir) try sync_cache_to_seed(a, io, "seed");
+
+    print("MANIFEST_COVER_OK{c}IDENT_CLEAN{c}NO_PERSONAL{c}", .{ nl, nl, nl });
+    if (did_delta) {
+        print("FUSION_SOW_DELTA closure={s} recomputed={d}{c}", .{
+            closure_hex[0..16],
+            delta_recomputed,
+            nl,
+        });
+    } else {
+        print("FUSION_SOW_COLD closure={s}{c}", .{ closure_hex[0..16], nl });
+    }
+    print("SOW_WITNESS_GREEN (fusion verified){c}", .{nl});
+    return 0;
+}

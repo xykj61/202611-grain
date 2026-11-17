@@ -1,0 +1,18 @@
+format publish-targets-v1
+stamp 20261115.081500
+voice Kyri
+status template
+# context/templates/PUBLISH_TARGETS.template.kyri -- generalized remote template!
+#
+# During `docs-geode/tutorials/the-first-hour.md`, copy this file to the root as
+# `PUBLISH_TARGETS.kyri` (which is gitignored so your personal GitHub orgs/repos
+# never leak into the public seed) and let your Gemini CLI agent fill in your
+# own repository URLs!
+
+seed_remote_url git@github.com:YOUR-PUBLIC-ORG/202611-grain.git
+seed_author_name your-public-handle
+seed_author_email your-public-handle@users.noreply.github.com
+
+# Optional legacy pointer-repo redirects used by `publish-redirect.rish`:
+redirect_target git@github.com:YOUR-HANDLE/grain.git
+redirect_target git@github.com:YOUR-PUBLIC-ORG/grain.git

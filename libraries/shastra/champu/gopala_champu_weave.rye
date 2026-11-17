@@ -1,0 +1,99 @@
+//! libraries/shastra/champu/gopala_champu_weave.rye -- Year 4 Champu Weaver!
+//!
+//! Stamp: `20261115.101500`): Year-4 capstone in our 4-year *Bloom &
+//! Shastra* spiral, honoring **Jiva Goswami's *Gopala-champu*** (*Champu* =
+//! alternating *Gadya* clear prose + *Padya* measured verse!) and **Sanatana
+//! Goswami's *Brihad-bhagavatamrita*** concentric *seva* ascent.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.101500";
+pub const max_blocks: u32 = 64;
+const nl: u8 = 10;
+const cr: u8 = 13;
+
+pub const ChampuError = error{
+    EmptyWeave,
+    TooManyBlocks,
+    MissingGadyaProse,
+    MissingPadyaVerse,
+    LineExceeds80Cols,
+};
+
+pub const ChampuSummary = struct {
+    gadya_count: u32,
+    padya_count: u32,
+    max_line_len: u32,
+};
+
+pub fn verify_champu_weave(doc: []const u8) ChampuError!ChampuSummary {
+    if (doc.len == 0) return error.EmptyWeave;
+    var sum = ChampuSummary{
+        .gadya_count = 0,
+        .padya_count = 0,
+        .max_line_len = 0,
+    };
+
+    var it = std.mem.splitScalar(u8, doc, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trimEnd(u8, raw, &[_]u8{cr});
+        if (line.len > 80) return error.LineExceeds80Cols;
+        if (line.len > sum.max_line_len) sum.max_line_len = @intCast(line.len);
+
+        const t = std.mem.trimStart(u8, line, " ");
+        if (std.mem.startsWith(u8, t, "[gadya]")) sum.gadya_count += 1;
+        if (std.mem.startsWith(u8, t, "[padya]")) sum.padya_count += 1;
+        if (sum.gadya_count + sum.padya_count > max_blocks) {
+            return error.TooManyBlocks;
+        }
+    }
+
+    if (sum.gadya_count == 0) return error.MissingGadyaProse;
+    if (sum.padya_count == 0) return error.MissingPadyaVerse;
+    // invariant: verified Champu weave holds both Gadya prose & Padya verse.
+    assert(sum.gadya_count >= 1 and sum.padya_count >= 1);
+    assert(sum.max_line_len <= 80);
+    return sum;
+}
+
+fn format_sample(buf: []u8) ![]const u8 {
+    return std.fmt.bufPrint(
+        buf,
+        "[gadya] Morning light touches Govardhana's quiet pasture.{c}" ++
+            "Every steward tends one small garden with bounded care.{c}" ++
+            "[padya]   |=  harvest=@ud  %+  add  harvest  1{c}" ++
+            "[gadya] Prose explains the heart; verse seals the measure.{c}",
+        .{ nl, nl, nl, nl },
+    );
+}
+
+fn run_selftest() !u8 {
+    var sbuf: [512]u8 = undefined;
+    const doc = try format_sample(&sbuf);
+    const ok = try verify_champu_weave(doc);
+    if (ok.gadya_count != 2 or ok.padya_count != 1) return error.CountWrong;
+
+    if (verify_champu_weave("[gadya] Prose alone without verse")) |_| {
+        return error.MissingPadyaAccepted;
+    } else |err| {
+        if (err != error.MissingPadyaVerse) return err;
+    }
+    print("GREEN: gopala_champu_weave -- Year 4 Champu weave proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    var sbuf: [512]u8 = undefined;
+    const doc = try format_sample(&sbuf);
+    print("Gopala-champu Literate Weave:{c}{s}", .{ nl, doc });
+    return 0;
+}

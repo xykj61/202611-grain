@@ -1,0 +1,9 @@
+::  modules/flare/glow/gate-flare-slice.glow -- context bundle bound
+/!  16384
+|%
+++  gate-flare-slice
+  |=  [tokens=@ud max-ctx=@ud]                          ::  prompt token cap
+  ^-  @ud                                               ::  clamped slice
+  ?>  (lte max-ctx 32768)                               ::  bounded Lantern KV
+  ?:  (lte tokens max-ctx)  tokens  max-ctx             ::  never overflow KV
+--

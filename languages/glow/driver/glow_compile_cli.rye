@@ -1,0 +1,312 @@
+//! languages/glow/driver/glow_compile_cli.rye -- `.glow` -> Native Binary!
+//!
+//! Stamp: `20261115.113500`): Multi-rune `grain-ww glow` compiler!
+//! Supports:
+//!   - `/!` `FrameBudget` > 0, `<= 80` cols, & col-57 `::` verification,
+//!   - `|=` gate parameter, `=/  name=@ud  <expr>` local bindings,
+//!   - `~|  'reason'` + `?>  <cond>` runtime TAME assertions (exits 1 naming
+//!     the exact `'reason'` cord on failure!),
+//!   - `?:  <cond>  <then>  <else>` Loobean conditionals (`0`=true, `1`=false),
+//!   - `add`, `sub`, `mul`, `div`, `lte`, `gte`, `=(a b)`, and `+(x)`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.113500";
+pub const inline_col0: usize = 56;
+const nl: u8 = 10;
+const cr: u8 = 13;
+const q: u8 = 34;
+const sq: u8 = 39;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const CompileError = error{
+    OutOfMemory,
+    UsageError,
+    LineExceeds80Cols,
+    MisalignedCol57Comment,
+    MissingFrameBudget,
+    MissingGateParam,
+    MissingGateBody,
+    UnsupportedExprToken,
+    SyntaxDepthExceeded,
+    BackendBuildFailed,
+};
+
+fn find_inline_cc(line: []const u8) ?usize {
+    const lead = std.mem.trimStart(u8, line, " ");
+    if (std.mem.startsWith(u8, lead, "::")) return null;
+    var in_q = false;
+    var i: usize = 0;
+    while (i + 1 < line.len) : (i += 1) {
+        if (line[i] == sq) in_q = !in_q;
+        if (!in_q and line[i] == ':' and line[i + 1] == ':') return i;
+    }
+    return null;
+}
+
+const TokStream = struct {
+    s: []const u8,
+    pos: usize,
+
+    fn next(self: *TokStream) ?[]const u8 {
+        while (self.pos < self.s.len) {
+            const c = self.s[self.pos];
+            if (c == ' ' or c == '(' or c == ')') {
+                self.pos += 1;
+                continue;
+            }
+            break;
+        }
+        if (self.pos >= self.s.len) return null;
+        if (self.s[self.pos] == '+' and self.pos + 1 < self.s.len and
+            self.s[self.pos + 1] == '(')
+        {
+            self.pos += 2;
+            return "inc1";
+        }
+        if (self.s[self.pos] == '=' and self.pos + 1 < self.s.len and
+            self.s[self.pos + 1] == '(')
+        {
+            self.pos += 2;
+            return "tis";
+        }
+        const start = self.pos;
+        while (self.pos < self.s.len and self.s[self.pos] != ' ' and
+            self.s[self.pos] != '(' and
+            self.s[self.pos] != ')') : (self.pos += 1)
+        {}
+        const tok = self.s[start..self.pos];
+        if (std.mem.eql(u8, tok, "%+")) return self.next();
+        return tok;
+    }
+};
+
+fn sanitize_ident(
+    raw: []const u8,
+    out: *std.ArrayListUnmanaged(u8),
+    a: std.mem.Allocator,
+) !void {
+    try out.appendSlice(a, "v_");
+    for (raw) |c| {
+        try out.append(a, if (c == '-') '_' else c);
+    }
+}
+
+fn emit_expr_rye(
+    ts: *TokStream,
+    depth: u32,
+    out: *std.ArrayListUnmanaged(u8),
+    a: std.mem.Allocator,
+) CompileError!void {
+    if (depth > 32) return error.SyntaxDepthExceeded;
+    const tok = ts.next() orelse return error.MissingGateBody;
+
+    if (std.mem.eql(u8, tok, "?:")) {
+        try out.appendSlice(a, "(if (");
+        try emit_expr_rye(ts, depth + 1, out, a);
+        try out.appendSlice(a, " == 0) ");
+        try emit_expr_rye(ts, depth + 1, out, a);
+        try out.appendSlice(a, " else ");
+        try emit_expr_rye(ts, depth + 1, out, a);
+        try out.append(a, ')');
+        return;
+    }
+    if (std.mem.eql(u8, tok, "inc1")) {
+        try out.appendSlice(a, "op_add(");
+        try emit_expr_rye(ts, depth + 1, out, a);
+        try out.appendSlice(a, ", 1)");
+        return;
+    }
+    if (std.mem.eql(u8, tok, "add") or std.mem.eql(u8, tok, "sub") or
+        std.mem.eql(u8, tok, "mul") or std.mem.eql(u8, tok, "div") or
+        std.mem.eql(u8, tok, "lte") or std.mem.eql(u8, tok, "gte") or
+        std.mem.eql(u8, tok, "tis"))
+    {
+        try out.appendSlice(a, "op_");
+        try out.appendSlice(a, tok);
+        try out.append(a, '(');
+        try emit_expr_rye(ts, depth + 1, out, a);
+        try out.appendSlice(a, ", ");
+        try emit_expr_rye(ts, depth + 1, out, a);
+        try out.append(a, ')');
+        return;
+    }
+    if (std.fmt.parseInt(u64, tok, 10)) |_| {
+        try out.appendSlice(a, tok);
+        return;
+    } else |_| {}
+
+    if (tok[0] >= 'a' and tok[0] <= 'z') {
+        try sanitize_ident(tok, out, a);
+        return;
+    }
+    return error.UnsupportedExprToken;
+}
+
+pub fn compile_glow_to_binary(
+    a: std.mem.Allocator,
+    io: std.Io,
+    in_path: []const u8,
+    out_bin: []const u8,
+) !void {
+    const cwd = std.Io.Dir.cwd();
+    const src = try cwd.readFileAlloc(io, in_path, a, .limited(65536));
+
+    var budget: u32 = 0;
+    var param_name: []const u8 = "";
+    var cur_trail: []const u8 = "glow-assertion-refused";
+    var stmts: std.ArrayListUnmanaged(u8) = .empty;
+    var final_expr: std.ArrayListUnmanaged(u8) = .empty;
+
+    var it = std.mem.splitScalar(u8, src, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trimEnd(u8, raw, &[_]u8{cr});
+        if (line.len > 80) return error.LineExceeds80Cols;
+        if (find_inline_cc(line)) |cc| {
+            if (cc != inline_col0) return error.MisalignedCol57Comment;
+        }
+        const code = if (find_inline_cc(line)) |cc| line[0..cc] else line;
+        const t = std.mem.trim(u8, code, &ws);
+        if (t.len == 0 or std.mem.startsWith(u8, t, "::")) continue;
+        if (std.mem.startsWith(u8, t, "/!")) {
+            const cap_s = std.mem.trim(u8, t[2..], &ws);
+            budget = std.fmt.parseInt(u32, cap_s, 10) catch 0;
+            continue;
+        }
+        if (t[0] == '/' or std.mem.startsWith(u8, t, "^-") or
+            std.mem.eql(u8, t, "|%") or std.mem.eql(u8, t, "--"))
+        {
+            continue;
+        }
+        if (std.mem.startsWith(u8, t, "|=")) {
+            const spec = std.mem.trim(u8, t[2..], &ws);
+            const eq = std.mem.indexOfScalar(u8, spec, '=') orelse spec.len;
+            param_name = spec[0..eq];
+            continue;
+        }
+        if (std.mem.startsWith(u8, t, "~|")) {
+            const cord = std.mem.trim(u8, t[2..], &[_]u8{ ' ', sq });
+            if (cord.len > 0) cur_trail = cord;
+            continue;
+        }
+        if (std.mem.startsWith(u8, t, "?>")) {
+            var ts = TokStream{ .s = std.mem.trim(u8, t[2..], &ws), .pos = 0 };
+            try stmts.appendSlice(a, "    if (");
+            try emit_expr_rye(&ts, 0, &stmts, a);
+            const fail_s = try std.fmt.allocPrint(
+                a,
+                " != 0) {{ std.debug.print({c}REFUSED: {s}{{c}}{c}," ++
+                    " .{{10}}); return 1; }}{c}",
+                .{ q, cur_trail, q, nl },
+            );
+            try stmts.appendSlice(a, fail_s);
+            continue;
+        }
+        if (std.mem.startsWith(u8, t, "=/")) {
+            const rest = std.mem.trim(u8, t[2..], &ws);
+            const sp = std.mem.indexOfScalar(u8, rest, ' ') orelse {
+                return error.MissingGateBody;
+            };
+            const lhs = rest[0..sp];
+            const eq = std.mem.indexOfScalar(u8, lhs, '=') orelse lhs.len;
+            try stmts.appendSlice(a, "    const ");
+            try sanitize_ident(lhs[0..eq], &stmts, a);
+            try stmts.appendSlice(a, ": u64 = ");
+            const rhs_s = std.mem.trim(u8, rest[sp..], &ws);
+            var ts = TokStream{ .s = rhs_s, .pos = 0 };
+            try emit_expr_rye(&ts, 0, &stmts, a);
+            try stmts.appendSlice(a, ";");
+            try stmts.append(a, nl);
+            continue;
+        }
+        final_expr.clearRetainingCapacity();
+        var ts = TokStream{ .s = t, .pos = 0 };
+        try emit_expr_rye(&ts, 0, &final_expr, a);
+    }
+
+    if (budget == 0) return error.MissingFrameBudget;
+    if (param_name.len == 0) return error.MissingGateParam;
+    if (final_expr.items.len == 0) return error.MissingGateBody;
+    // invariant: verified FrameBudget > 0 and non-empty lowered final expr.
+    assert(budget > 0 and final_expr.items.len > 0);
+
+    var p_ident: std.ArrayListUnmanaged(u8) = .empty;
+    try sanitize_ident(param_name, &p_ident, a);
+
+    const generated = try std.fmt.allocPrint(
+        a,
+        "const std = @import({c}std{c});{c}" ++
+            "fn op_add(x: u64, y: u64) u64 {{ return x + y; }}{c}" ++
+            "fn op_sub(x: u64, y: u64) u64 {{ return x - y; }}{c}" ++
+            "fn op_mul(x: u64, y: u64) u64 {{ return x * y; }}{c}" ++
+            "fn op_div(x: u64, y: u64) u64 {{ return x / y; }}{c}" ++
+            "fn op_lte(x: u64, y: u64) u64" ++
+            " {{ return if (x <= y) 0 else 1; }}{c}" ++
+            "fn op_gte(x: u64, y: u64) u64" ++
+            " {{ return if (x >= y) 0 else 1; }}{c}" ++
+            "fn op_tis(x: u64, y: u64) u64" ++
+            " {{ return if (x == y) 0 else 1; }}{c}" ++
+            "pub fn main(init: std.process.Init) !u8 {{{c}" ++
+            "    const a = init.arena.allocator();{c}" ++
+            "    const args = try init.minimal.args.toSlice(a);{c}" ++
+            "    const {s}: u64 = if (args.len > 1){c}" ++
+            "        try std.fmt.parseInt(u64, args[1], 10){c}" ++
+            "    else 0;{c}" ++
+            "{s}" ++
+            "    const res: u64 = {s};{c}" ++
+            "    std.debug.print({c}{{d}}{{c}}{c}, .{{ res, 10 }});{c}" ++
+            "    return 0;{c}}}{c}",
+        .{
+            q, q, nl, nl, nl, nl, nl, nl, nl, nl, nl, nl, nl,
+            p_ident.items, nl, nl, nl,
+            stmts.items,
+            final_expr.items, nl, q, q, nl, nl, nl,
+        },
+    );
+
+    const tmp_rye = "tools/.build/glow_mill_emitted_gate.rye";
+    var f = try cwd.createFile(io, tmp_rye, .{ .truncate = true });
+    try f.writeStreamingAll(io, generated);
+    f.close(io);
+
+    const emit_flag = try std.fmt.allocPrint(a, "-femit-bin={s}", .{out_bin});
+    const r = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{
+            "languages/rye/bin/rye",
+            "build",
+            tmp_rye,
+            emit_flag,
+        },
+    });
+    switch (r.term) {
+        .exited => |code| if (code != 0) return error.BackendBuildFailed,
+        else => return error.BackendBuildFailed,
+    }
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        try compile_glow_to_binary(
+            a,
+            io,
+            "languages/glow/examples/double_harvest.glow",
+            "tools/.build/double_harvest_selftest",
+        );
+        print("GREEN: glow_compile_cli -- multi-rune .glow proven.{c}", .{
+            nl,
+        });
+        return 0;
+    }
+    if (args.len < 4 or !std.mem.eql(u8, args[2], "-o")) {
+        return error.UsageError;
+    }
+    try compile_glow_to_binary(a, io, args[1], args[3]);
+    print("Glow Mill compiled {s} -> {s}{c}", .{ args[1], args[3], nl });
+    return 0;
+}

@@ -1,0 +1,10 @@
+::  modules/apps/colloquium/glow/fold-colloquium-bill.glow -- Civic
+/!  16384
+|%
+++  fold-civic-seva-split
+  |=  [gross-mala=@ud seva-bps=@ud]                     ::  bps: 0..10000
+  ^-  @ud                                               ::  transparent Seva
+  ~|  'civic-bps-above-hundred-percent'                 ::  <= 100.00%
+  ?>  (lte seva-bps 10000)                              ::  policy in .brix!
+  (div (mul gross-mala seva-bps) 10000)                 ::  auditable share
+--

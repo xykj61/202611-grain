@@ -1,1 +1,0 @@
-../../bloom/curriculum/stage-10-the-technical-vision.md

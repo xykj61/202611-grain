@@ -1,0 +1,216 @@
+//! languages/glow/trellis/trellis_ast.rye -- Iterative bounded `AstGarden`.
+//!
+//! Glow Mill Stamp: `20261115.091000`).
+//! Builds Glow's `AstGarden` (`max_nodes = 1024`, explicit `work_stack: [64]`
+//! with ZERO Rye call-stack recursion!):
+//!   - Supports core runes (`|=`, `=/`, `?:`, `%+`, `|-`) AND state-machine /
+//!     wire-parser additions (`|_` door, `=^` state-thread, `%=` update,
+//!     `=~` pipeline, `;~` combinator, `;;` validator),
+//!   - Cleanly refuses adversarial >64 nesting with `error.ParseDepthExceeded`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.091000";
+pub const max_nodes: u32 = 1024;
+pub const max_parse_depth: u32 = 64;
+const nl: u8 = 10;
+
+pub const TrellisError = error{
+    GardenFull,
+    ParseDepthExceeded,
+    UnbalancedNesting,
+    EmptyProgram,
+};
+
+pub const NodeKind = enum(u8) {
+    atom_lit,
+    bartis_gate,  // |=
+    barcab_door,  // |_
+    tisfas_bind,  // =/
+    tisket_state, // =^
+    centis_recur, // %=
+    tissig_pipe,  // =~
+    wutcol_if,    // ?:
+    barhep_trap,  // |-
+    micsig_parse, // ;~
+    micmic_valid, // ;;
+    call_pair,    // %+
+};
+
+pub const AstNode = struct {
+    kind: NodeKind,
+    depth: u16,
+    first_child: u32,
+    next_sibling: u32,
+    atom_val: u64,
+};
+
+pub const none_id: u32 = 0xFFFF_FFFF;
+
+pub const AstGarden = struct {
+    nodes: [max_nodes]AstNode,
+    count: u32,
+    peak_depth: u32,
+
+    pub fn init() AstGarden {
+        return .{
+            .nodes = undefined,
+            .count = 0,
+            .peak_depth = 0,
+        };
+    }
+
+    /// Iterative, zero-recursion bracketed-rune climber using a fixed 64-frame
+    /// explicit `work_stack` (`(` pushes frame, `)` pops frame).
+    pub fn climb_iterative(
+        self: *AstGarden,
+        sexp: []const u8,
+    ) TrellisError!u32 {
+        if (sexp.len == 0) return error.EmptyProgram;
+        var stack: [max_parse_depth]u32 = undefined;
+        var last_child: [max_parse_depth]u32 = undefined;
+        var sp: u32 = 0;
+        var root_id: u32 = none_id;
+
+        var i: usize = 0;
+        while (i < sexp.len) {
+            const c = sexp[i];
+            if (c == ' ' or c == nl or c == 9 or c == 13) {
+                i += 1;
+                continue;
+            }
+            if (c == '(') {
+                if (sp >= max_parse_depth) return error.ParseDepthExceeded;
+                i += 1;
+                while (i < sexp.len and sexp[i] == ' ') : (i += 1) {}
+                const kind = match_rune_head(sexp[i..]);
+                while (i < sexp.len and sexp[i] != ' ' and
+                    sexp[i] != '(' and sexp[i] != ')') : (i += 1)
+                {}
+
+                const nid = try self.alloc_node(kind, @intCast(sp + 1), 0);
+                if (sp == 0) {
+                    root_id = nid;
+                } else {
+                    self.attach_child(stack[sp - 1], &last_child[sp - 1], nid);
+                }
+                stack[sp] = nid;
+                last_child[sp] = none_id;
+                sp += 1;
+                if (sp > self.peak_depth) self.peak_depth = sp;
+                continue;
+            }
+            if (c == ')') {
+                if (sp == 0) return error.UnbalancedNesting;
+                sp -= 1;
+                i += 1;
+                continue;
+            }
+            // Atom token inside current frame
+            const start = i;
+            while (i < sexp.len and sexp[i] != ' ' and
+                sexp[i] != '(' and sexp[i] != ')') : (i += 1)
+            {}
+            const val = std.fmt.parseInt(u64, sexp[start..i], 10) catch 0;
+            const aid = try self.alloc_node(.atom_lit, @intCast(sp), val);
+            if (sp == 0) {
+                root_id = aid;
+            } else {
+                self.attach_child(stack[sp - 1], &last_child[sp - 1], aid);
+            }
+        }
+
+        if (sp != 0 or root_id == none_id) return error.UnbalancedNesting;
+        // invariant: stack unwound to 0 and peak_depth <= max_parse_depth.
+        assert(sp == 0 and self.peak_depth <= max_parse_depth);
+        return root_id;
+    }
+
+    fn alloc_node(
+        self: *AstGarden,
+        kind: NodeKind,
+        depth: u16,
+        atom_val: u64,
+    ) TrellisError!u32 {
+        assert(self.count <= max_nodes);
+        if (self.count >= max_nodes) return error.GardenFull;
+        const id = self.count;
+        self.nodes[id] = .{
+            .kind = kind,
+            .depth = depth,
+            .first_child = none_id,
+            .next_sibling = none_id,
+            .atom_val = atom_val,
+        };
+        self.count += 1;
+        return id;
+    }
+
+    fn attach_child(
+        self: *AstGarden,
+        parent: u32,
+        tail_slot: *u32,
+        child: u32,
+    ) void {
+        assert(parent < self.count and child < self.count);
+        if (tail_slot.* == none_id) {
+            self.nodes[parent].first_child = child;
+        } else {
+            self.nodes[tail_slot.*].next_sibling = child;
+        }
+        tail_slot.* = child;
+    }
+};
+
+fn match_rune_head(s: []const u8) NodeKind {
+    if (s.len >= 2) {
+        const d = s[0..2];
+        if (std.mem.eql(u8, d, "|=")) return .bartis_gate;
+        if (std.mem.eql(u8, d, "|_")) return .barcab_door;
+        if (std.mem.eql(u8, d, "=/")) return .tisfas_bind;
+        if (std.mem.eql(u8, d, "=^")) return .tisket_state;
+        if (std.mem.eql(u8, d, "%=")) return .centis_recur;
+        if (std.mem.eql(u8, d, "=~")) return .tissig_pipe;
+        if (std.mem.eql(u8, d, "?:")) return .wutcol_if;
+        if (std.mem.eql(u8, d, "|-")) return .barhep_trap;
+        if (std.mem.eql(u8, d, ";~")) return .micsig_parse;
+        if (std.mem.eql(u8, d, ";;")) return .micmic_valid;
+    }
+    return .call_pair;
+}
+
+fn run_selftest() !u8 {
+    // 1. 5-deep nested `|_` + `=^` + `;~` + `?:` + `%=` state-machine desk!
+    var g = AstGarden.init();
+    const desk = "(|_ (=^ (;~ 1) (?: 0 (%= 42) 7)))";
+    const root = try g.climb_iterative(desk);
+    if (g.nodes[root].kind != .barcab_door or g.peak_depth != 4) {
+        return error.WrongTreeShape;
+    }
+
+    // 2. 65-deep adversarial nest cleanly refused with `ParseDepthExceeded`!
+    var adv: [140]u8 = undefined;
+    var k: usize = 0;
+    while (k < 65) : (k += 1) adv[k] = '(';
+    adv[65] = '1';
+    k = 0;
+    while (k < 65) : (k += 1) adv[66 + k] = ')';
+
+    var g_adv = AstGarden.init();
+    if (g_adv.climb_iterative(adv[0..131])) |_| {
+        return error.OverdeepNestAccepted;
+    } else |err| {
+        if (err != error.ParseDepthExceeded) return err;
+    }
+
+    print("GREEN: trellis_ast -- AstGarden & depth-64 guard proven.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

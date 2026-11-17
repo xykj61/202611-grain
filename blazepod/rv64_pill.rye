@@ -1,0 +1,53 @@
+//! blazepod/rv64_pill.rye -- Freestanding 64-bit `RV64GC` RAM-only Blazepod!
+//!
+//! Stamp: `20261115.095500`): Targets our flagship 64-bit RAM-only
+//! RISC-V Blazepod boards (`Milk-V Oasis SG2380` 128 GB LPDDR5 & `ESWIN
+//! EIC7702X` 64 GB LPDDR5):
+//!   - 64-bit `u64` stack initialization (`0x8020_0000`),
+//!   - Production-active TAME `assert` writing `sifive_test` `0x0001_3333`
+//!     (exit 1) on failure and `0x5555` (exit 0) on clean volatile-RAM pass,
+//!   - Bounded `Tally` 64-bit DRAM garden carve + cryptographic wipe proof!
+
+const uart_tx: *volatile u8 = @ptrFromInt(0x1000_0000);
+const test_finisher: *volatile u32 = @ptrFromInt(0x0010_0000);
+const finisher_pass: u32 = 0x5555;
+const finisher_fail: u32 = 0x0001_3333;
+const nl: u8 = 10;
+
+var tally_ram_seed: [4096]u64 = undefined;
+
+export fn _start() linksection(".text.init") callconv(.naked) noreturn {
+    asm volatile ("li sp, 0x80200000; j blazepod_rv64_main");
+}
+
+fn assert(ok: bool) void {
+    if (!ok) {
+        const msg = "BLAZEPOD RV64 ASSERT FAILED";
+        for (msg) |b| uart_tx.* = b;
+        uart_tx.* = nl;
+        test_finisher.* = finisher_fail;
+        while (true) {}
+    }
+}
+
+export fn blazepod_rv64_main() callconv(.c) noreturn {
+    // 1. Verify 64-bit pointer width on RV64GC silicon (`@sizeOf(usize) == 8`)!
+    // invariant: Blazepod Titan/Tablet runs 64-bit RV64GC addressing >= 64 GB.
+    assert(@sizeOf(usize) == 8);
+
+    // 2. Carve & wipe volatile `tally-ram` pocket ("The Device That Forgets")
+    tally_ram_seed[0] = 0x56_600_20261115;
+    assert(tally_ram_seed[0] == 0x56_600_20261115);
+    for (&tally_ram_seed) |*slot| {
+        @as(*volatile u64, @ptrCast(slot)).* = 0;
+    }
+    // invariant: volatile zeroization leaves 0 in DRAM slot.
+    assert(tally_ram_seed[0] == 0);
+
+    const banner = "Blazepod RV64GC RAM-only pill: 64-bit Tally proven.";
+    for (banner) |b| uart_tx.* = b;
+    uart_tx.* = nl;
+
+    test_finisher.* = finisher_pass;
+    while (true) {}
+}

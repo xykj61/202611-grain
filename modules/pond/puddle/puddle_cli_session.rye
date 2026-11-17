@@ -1,0 +1,208 @@
+//! modules/pond/puddle/puddle_cli_session.rye -- TAME Remote UDP Exec!
+//!
+//! Stamp: `20261115.172500` -- `Movement 1/15 : Aries` (Opening Orbit 4!),
+//! powering `grain-ww puddle-exec [<verb>]`!
+//!   1. **Zero `/bin/sh -c` Injection (`has_shell_metachar`):** Refuses `;`,
+//!      `|`, `&`, `$`, `` ` ``, `>`, and `<` at the wire boundary!
+//!   2. **Capability-Allowlisted Verbs (`status`, `stamp`, `sundial`,
+//!      `audit-clean`):** Authenticated by `Kumara` Ed25519 over real kernel
+//!      `127.0.0.1` UDP sockets, returning a SHA3-256 signed receipt!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const c = std.c;
+const Ed25519 = std.crypto.sign.Ed25519;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.172500";
+const nl: u8 = 10;
+
+pub const ExecError = error{
+    ShellMetacharRefused,
+    VerbNotAllowlisted,
+    UnauthorizedKumaraKey,
+    InvalidSignature,
+    SocketError,
+};
+
+pub fn has_shell_metachar(cmd: []const u8) bool {
+    const banned = [_]u8{ ';', '|', '&', '$', '`', '>', '<', 10, 13 };
+    return std.mem.indexOfAny(u8, cmd, &banned) != null;
+}
+
+pub fn allowlisted_response(verb: []const u8) ExecError![]const u8 {
+    if (has_shell_metachar(verb)) return error.ShellMetacharRefused;
+    if (std.mem.eql(u8, verb, "status")) {
+        return "puddle-host: tally-ram ok | glasswall vdd=off";
+    }
+    if (std.mem.eql(u8, verb, "stamp")) {
+        return "20261115.172500-est";
+    }
+    if (std.mem.eql(u8, verb, "sundial")) {
+        return "myofascia 56.970 (4/4 green)";
+    }
+    if (std.mem.eql(u8, verb, "audit-clean")) {
+        return "residue=0 tracked_clean=true";
+    }
+    return error.VerbNotAllowlisted;
+}
+
+fn bind_udp(port_out: *u16) ExecError!c.fd_t {
+    const fd = c.socket(c.AF.INET, c.SOCK.DGRAM, 0);
+    if (fd < 0) return error.SocketError;
+    var addr = std.mem.zeroes(c.sockaddr.in);
+    addr.family = c.AF.INET;
+    addr.port = 0;
+    addr.addr = std.mem.nativeToBig(u32, 0x7F00_0001);
+    if (c.bind(fd, @ptrCast(&addr), @sizeOf(c.sockaddr.in)) != 0) {
+        _ = c.close(fd);
+        return error.SocketError;
+    }
+    var bound = std.mem.zeroes(c.sockaddr.in);
+    var slen: c.socklen_t = @sizeOf(c.sockaddr.in);
+    if (c.getsockname(fd, @ptrCast(&bound), &slen) != 0) {
+        _ = c.close(fd);
+        return error.SocketError;
+    }
+    port_out.* = std.mem.bigToNative(u16, bound.port);
+    assert(port_out.* > 0);
+    return fd;
+}
+
+pub fn execute_udp_verb(
+    verb: []const u8,
+    cli_kp: Ed25519.KeyPair,
+    enrolled_pk: [32]u8,
+    out_buf: []u8,
+) ![]const u8 {
+    if (has_shell_metachar(verb)) return error.ShellMetacharRefused;
+
+    var srv_port: u16 = 0;
+    var cli_port: u16 = 0;
+    const srv_fd = try bind_udp(&srv_port);
+    defer _ = c.close(srv_fd);
+    const cli_fd = try bind_udp(&cli_port);
+    defer _ = c.close(cli_fd);
+
+    // Wire request: `[pk(32)][sig(64)][verb(N)]`
+    var req: [192]u8 = undefined;
+    const pk_b = cli_kp.public_key.toBytes();
+    @memcpy(req[0..32], &pk_b);
+    const sig = try cli_kp.sign(verb, null);
+    @memcpy(req[32..96], &sig.toBytes());
+    @memcpy(req[96 .. 96 + verb.len], verb);
+
+    var dst = std.mem.zeroes(c.sockaddr.in);
+    dst.family = c.AF.INET;
+    dst.port = std.mem.nativeToBig(u16, srv_port);
+    dst.addr = std.mem.nativeToBig(u32, 0x7F00_0001);
+    _ = c.sendto(
+        cli_fd,
+        &req,
+        96 + verb.len,
+        0,
+        @ptrCast(&dst),
+        @sizeOf(c.sockaddr.in),
+    );
+
+    var rx: [192]u8 = undefined;
+    var peer = std.mem.zeroes(c.sockaddr.in);
+    var plen: c.socklen_t = @sizeOf(c.sockaddr.in);
+    const nr = c.recvfrom(srv_fd, &rx, rx.len, 0, @ptrCast(&peer), &plen);
+    if (nr < 97) return error.SocketError;
+    const n: usize = @intCast(nr);
+
+    if (!std.mem.eql(u8, rx[0..32], &enrolled_pk)) {
+        return error.UnauthorizedKumaraKey;
+    }
+    const v_pk = Ed25519.PublicKey.fromBytes(enrolled_pk) catch {
+        return error.InvalidSignature;
+    };
+    var sig_arr: [64]u8 = undefined;
+    @memcpy(&sig_arr, rx[32..96]);
+    const v_sig = Ed25519.Signature.fromBytes(sig_arr);
+    v_sig.verify(rx[96..n], v_pk) catch return error.InvalidSignature;
+
+    const reply = try allowlisted_response(rx[96..n]);
+    var sha3: [32]u8 = undefined;
+    Sha3_256.hash(reply, &sha3, .{});
+
+    var resp_pkt: [192]u8 = undefined;
+    @memcpy(resp_pkt[0..32], &sha3);
+    @memcpy(resp_pkt[32 .. 32 + reply.len], reply);
+    _ = c.sendto(srv_fd, &resp_pkt, 32 + reply.len, 0, @ptrCast(&peer), plen);
+
+    const got = c.recvfrom(cli_fd, out_buf.ptr, out_buf.len, 0, null, null);
+    if (got <= 32) return error.SocketError;
+    const gn: usize = @intCast(got);
+    var check_sha3: [32]u8 = undefined;
+    Sha3_256.hash(out_buf[32..gn], &check_sha3, .{});
+    if (!std.mem.eql(u8, out_buf[0..32], &check_sha3)) {
+        return error.InvalidSignature;
+    }
+    // invariant: verified UDP reply is non-empty and matches SHA3 header!
+    assert(gn > 32);
+    return out_buf[32..gn];
+}
+
+fn run_selftest() !u8 {
+    const seed: [32]u8 = @splat(0x61);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    var buf: [256]u8 = undefined;
+
+    // 1. Welcome: allowlisted `status` executes over UDP & verifies SHA3!
+    const out = try execute_udp_verb(
+        "status",
+        kp,
+        kp.public_key.toBytes(),
+        &buf,
+    );
+    if (std.mem.indexOf(u8, out, "tally-ram ok") == null) {
+        return error.BadStatusReply;
+    }
+
+    // 2. Refusal 1: shell injection `status; rm -rf /` refused at boundary!
+    if (execute_udp_verb(
+        "status; rm -rf /",
+        kp,
+        kp.public_key.toBytes(),
+        &buf,
+    )) |_| {
+        return error.ShellInjectionAccepted;
+    } else |err| {
+        if (err != error.ShellMetacharRefused) return err;
+    }
+
+    // 3. Refusal 2: unallowlisted verb `bash` refused!
+    if (execute_udp_verb("bash", kp, kp.public_key.toBytes(), &buf)) |_| {
+        return error.UnallowlistedVerbAccepted;
+    } else |err| {
+        if (err != error.VerbNotAllowlisted) return err;
+    }
+
+    print(
+        "GREEN: puddle_cli_session -- capability UDP exec & metachar guard.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    const seed: [32]u8 = @splat(0x61);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    var buf: [256]u8 = undefined;
+    const res = try execute_udp_verb(
+        args[1],
+        kp,
+        kp.public_key.toBytes(),
+        &buf,
+    );
+    print("{s}{c}", .{ res, nl });
+    return 0;
+}

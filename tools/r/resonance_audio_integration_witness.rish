@@ -1,0 +1,40 @@
+# tools/r/resonance_audio_integration_witness.rish -- the Resonance Audio FFI bridge builds and passes.
+#
+#   rishi/bin/rishi run tools/r/resonance_audio_integration_witness.rish
+#
+# WHY. The bridge selftest in resonance/resonance_vantage_audio.rye exercises 15 claims across the
+# complete Resonance Audio FFI surface: init, play, stop, close, loop, gain, recording,
+# record-to-playback, WAV export. This witness proves the build succeeds and every claim passes
+# on this machine, end to end. The scan builds the dynamic library, runs the selftest, and checks
+# the C header declares every export the Swift layer imports.
+#
+# WHAT IS GATED, hard:
+#
+#   build_ok       -- the bridge compiles to vantage/lib/libresonance_audio.dylib
+#   selftest_exit  -- the selftest exits zero (all 15 assert claims pass)
+#   claims_green   -- the selftest prints its own "15 claims GREEN" line
+#   banner         -- the selftest prints its opening line
+#   header_exports -- the C header declares all 23 FFI exports
+#   verdict        -- the scan's own composite reading
+
+say "resonance-audio-integration: Language EN -- the Resonance Audio FFI bridge builds and its 15-claim selftest passes on this machine."
+say "resonance-audio-integration: Style Gauge, Meter -- every count below is the scan's own output."
+say "resonance-audio-integration: Lens TAME -- safety first; the bridge proves init, play, stop, close, recording, and WAV export end to end."
+
+let scan = run ["sh" "tools/fixtures/r/resonance_audio_integration_scan.sh"]
+say scan.out
+
+# -- skip gracefully when toolchain is absent --
+if (scan.out contains "verdict=skip") then say "SKIP: resonance-audio-integration -- toolchain not available on this machine."
+
+# -- gate all readings when the scan ran --
+if (scan.out contains "verdict=skip" == false) then assert scan.ok else "resonance-audio-integration: the scan must complete"
+if (scan.out contains "verdict=skip" == false) then assert scan.out contains "build_ok=yes" else "resonance-audio-integration: the bridge must build to a dynamic library"
+if (scan.out contains "verdict=skip" == false) then assert scan.out contains "dylib=present" else "resonance-audio-integration: vantage/lib/libresonance_audio.dylib must exist after build"
+if (scan.out contains "verdict=skip" == false) then assert scan.out contains "selftest_exit=0" else "resonance-audio-integration: the selftest must exit zero -- all 15 claims pass"
+if (scan.out contains "verdict=skip" == false) then assert scan.out contains "claims_green=yes" else "resonance-audio-integration: the selftest must print its 15 claims GREEN line"
+if (scan.out contains "verdict=skip" == false) then assert scan.out contains "banner=yes" else "resonance-audio-integration: the selftest must print its opening banner"
+if (scan.out contains "verdict=skip" == false) then assert scan.out contains "verdict=green" else "resonance-audio-integration: the composite verdict must be green"
+
+if (scan.out contains "verdict=green") then say ""
+if (scan.out contains "verdict=green") then say "GREEN: resonance-audio-integration -- the Resonance Audio FFI bridge builds and its 15-claim selftest passes, 23 exports declared in the C header, end to end on this machine."

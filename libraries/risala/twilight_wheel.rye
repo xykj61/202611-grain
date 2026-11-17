@@ -1,0 +1,180 @@
+//! libraries/risala/twilight_wheel.rye -- Multicultural 15-Sign Twilight!
+//!
+//! Stamp: `20261115.162500` -- `Movement 12/15 : Pisces` (*Sandhya / Shafaq*),
+//! powering `grain-ww twilight-wheel [1..15]`!
+//! Pairs each of the 15 Calfive Signs with its *Shastra* (*Prema-Bhakti*) and
+//! *Risala* (*Buruj / Mahabbah / Hikmah*) dusk contemplation!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.162500";
+pub const sign_count: usize = 15;
+const nl: u8 = 10;
+
+pub const TwilightCard = struct {
+    movement: u8,
+    sign: []const u8,
+    shastra_term: []const u8,
+    risala_term: []const u8,
+    dusk_counsel: []const u8,
+};
+
+pub const cards = [sign_count]TwilightCard{
+    .{
+        .movement = 1,
+        .sign = "Aries",
+        .shastra_term = "Mesha / Tiruvilakku (first clay lamp)",
+        .risala_term = "al-Hamal / Siraj (lamp of beginning)",
+        .dusk_counsel = "Kindle one small, honest flame without boast.",
+    },
+    .{
+        .movement = 2,
+        .sign = "Taurus",
+        .shastra_term = "Vrishabha / Bhumi-seva & Prasadam",
+        .risala_term = "ath-Thawr / Barakah (blessed sustenance)",
+        .dusk_counsel = "Tend biocyclic soil and share warm bread cleanly.",
+    },
+    .{
+        .movement = 3,
+        .sign = "Gemini",
+        .shastra_term = "Mithuna / Satsanga (truthful fellowship)",
+        .risala_term = "al-Jawza' / Suhbah (companionship)",
+        .dusk_counsel = "Bridge two tongues without erasing either voice.",
+    },
+    .{
+        .movement = 4,
+        .sign = "Cancer",
+        .shastra_term = "Karka / Ashrama (unwatched sanctuary)",
+        .risala_term = "as-Saratan / Sakinah (indwelling peace)",
+        .dusk_counsel = "Keep Glasswall hospitality so every guest rests safe.",
+    },
+    .{
+        .movement = 5,
+        .sign = "Leo",
+        .shastra_term = "Simha / Sankirtana & Seva",
+        .risala_term = "al-Asad / Sama' & Futuwwah (generosity)",
+        .dusk_counsel = "Sing whole-heartedly and balance every shared coin.",
+    },
+    .{
+        .movement = 6,
+        .sign = "Virgo",
+        .shastra_term = "Kanya / Paricarya (loving exactness)",
+        .risala_term = "al-'Adhra' / Itqan & Ihsan (hidden excellence)",
+        .dusk_counsel = "Polish the unseen seam because devotion notices care.",
+    },
+    .{
+        .movement = 7,
+        .sign = "Libra",
+        .shastra_term = "Tula / Samatva (equanimity)",
+        .risala_term = "al-Mizan / 'Adl & Mizan (just scales)",
+        .dusk_counsel =
+            "Let welcome and refusal answer each other in fairness.",
+    },
+    .{
+        .movement = 8,
+        .sign = "Scorpio",
+        .shastra_term = "Vrishchika / Anuradha Mitra-vrata",
+        .risala_term = "al-'Aqrab / Amanah (sacred trust)",
+        .dusk_counsel = "Keep a friend's covenant and wipe spent keys to zero.",
+    },
+    .{
+        .movement = 9,
+        .sign = "Sagittarius",
+        .shastra_term = "Dhanus / Svadhyaya (living study)",
+        .risala_term = "al-Qaws / Rihlah fi talab al-'ilm",
+        .dusk_counsel = "Aim proven craft back toward teaching the next child.",
+    },
+    .{
+        .movement = 10,
+        .sign = "Capricorn",
+        .shastra_term = "Makara / Tapasya (patient endurance)",
+        .risala_term = "al-Jady / Sabr & Istiqamah (steadfastness)",
+        .dusk_counsel =
+            "Forge repairable ten-year stone that outlasts fashion.",
+    },
+    .{
+        .movement = 11,
+        .sign = "Aquarius",
+        .shastra_term = "Kumbha / Sabha (open commons well)",
+        .risala_term = "ad-Dalw / Majlis & Shura (mutual counsel)",
+        .dusk_counsel =
+            "Share clean water across 405 peers with zero tollbooth.",
+    },
+    .{
+        .movement = 12,
+        .sign = "Pisces",
+        .shastra_term = "Meena / Sandhya-arpana (dusk offering)",
+        .risala_term = "al-Hut / Shafaq (rose-amber twilight return)",
+        .dusk_counsel =
+            "Wash the brushes clean of residue and release the day.",
+    },
+    .{
+        .movement = 13,
+        .sign = "sky (Cardinal Aether)",
+        .shastra_term = "Brahman / Cid-akasha (unbounded sky)",
+        .risala_term = "as-Samad / Nur al-Anwar (Light of Lights)",
+        .dusk_counsel = "Step back into quiet sky; ask whom the work serves.",
+    },
+    .{
+        .movement = 14,
+        .sign = "sky (Fixed Aether)",
+        .shastra_term = "Paramatman / Antaryamin (heart witness)",
+        .risala_term = "ar-Raqib / Shahid al-Qalb (inner witness)",
+        .dusk_counsel = "Listen within; fold two truths into one honest macro.",
+    },
+    .{
+        .movement = 15,
+        .sign = "sky (Siya -- Dual Aether)",
+        .shastra_term = "Bhagavan & Prema-Bhakti (Aparigraha love)",
+        .risala_term = "al-Wadud & Mahabbah (reciprocal devotion)",
+        .dusk_counsel = "Offer the 15-step garland whole; rest before Dawn.",
+    },
+};
+
+pub fn lookup_movement(mov_1based: u32) !TwilightCard {
+    if (mov_1based < 1 or mov_1based > 15) return error.MovementOutOfRange;
+    const c = cards[mov_1based - 1];
+    assert(c.movement == mov_1based);
+    return c;
+}
+
+fn run_selftest() !u8 {
+    var m: u32 = 1;
+    while (m <= 15) : (m += 1) _ = try lookup_movement(m);
+    if (lookup_movement(0)) |_| {
+        return error.ZeroAccepted;
+    } else |err| {
+        if (err != error.MovementOutOfRange) return err;
+    }
+    const siya = try lookup_movement(15);
+    if (std.mem.indexOf(u8, siya.shastra_term, "Prema-Bhakti") == null or
+        std.mem.indexOf(u8, siya.risala_term, "al-Wadud") == null)
+    {
+        return error.SiyaBridgeMissing;
+    }
+    print(
+        "GREEN: twilight_wheel -- 15 Prema-Bhakti & Risala dusk signs.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+    const m: u32 = if (args.len >= 2)
+        std.fmt.parseInt(u32, args[1], 10) catch 12
+    else
+        12;
+    const c = try lookup_movement(m);
+    print("Twilight Movement {d}/15 -- {s}:{c}", .{ c.movement, c.sign, nl });
+    print("  Shastra : {s}{c}", .{ c.shastra_term, nl });
+    print("  Risala  : {s}{c}", .{ c.risala_term, nl });
+    print("  Counsel : {s}{c}", .{ c.dusk_counsel, nl });
+    return 0;
+}

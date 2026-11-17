@@ -1,0 +1,49 @@
+# tools/w/witness_all.rish -- Unified Single-Stranded Witness Macro!
+#
+# Powers `grain-ww witness-all` (`Movement 14/15 : sky Fixed Aether`): runs
+# `vantage_tablecloth_bridge` + all 24 metal witnesses + Sundial in one pass!
+
+let rishi = "languages/rishi/bin/rishi"
+let rb = "tools/fixtures/r/rye_build.sh"
+
+let b_vt = run ["sh" rb "modules/vantage_tablecloth_bridge.rye" "-femit-bin=tools/.build/vantage_tablecloth_bridge"]
+assert b_vt.ok else "vantage_tablecloth_bridge build failed"
+let r_vt = run ["tools/.build/vantage_tablecloth_bridge"]
+assert r_vt.ok else "vantage_tablecloth_bridge selftest failed"
+
+let b_sh = run ["sh" rb "modules/sundial/siya_orbit_harvest.rye" "-femit-bin=tools/.build/siya_orbit_harvest"]
+assert b_sh.ok else "siya_orbit_harvest build failed"
+let r_sh = run ["tools/.build/siya_orbit_harvest"]
+assert r_sh.ok else "siya_orbit_harvest selftest failed"
+
+let b_pe = run ["sh" rb "modules/pond/puddle/puddle_cli_session.rye" "-femit-bin=tools/.build/puddle_cli_session"]
+assert b_pe.ok else "puddle_cli_session build failed"
+let r_pe = run ["tools/.build/puddle_cli_session" "selftest"]
+assert r_pe.ok else "puddle_cli_session selftest failed"
+
+assert (run [rishi "run" "tools/b/bricks_exist_witness.rish"]).ok else "bricks_exist failed"
+assert (run [rishi "run" "tools/g/glow_rune_book_witness.rish"]).ok else "glow_rune_book failed"
+assert (run [rishi "run" "tools/g/glow_cord_interp_witness.rish"]).ok else "glow_cord_interp failed"
+assert (run [rishi "run" "tools/g/glow_mill_pipeline_witness.rish"]).ok else "glow_mill_pipeline failed"
+assert (run [rishi "run" "tools/g/glow_citizen_ring_and_selfhost_witness.rish"]).ok else "glow_citizen_ring failed"
+assert (run [rishi "run" "tools/b/blazepod_rv64_glasswall_witness.rish"]).ok else "blazepod_rv64_glasswall failed"
+assert (run [rishi "run" "tools/c/constel_405_discovery_witness.rish"]).ok else "constel_405_discovery failed"
+assert (run [rishi "run" "tools/t/twilight_risala_and_itinerary_witness.rish"]).ok else "twilight_risala failed"
+assert (run [rishi "run" "tools/v/vantage_shastra_blazepod_witness.rish"]).ok else "vantage_shastra_blazepod failed"
+assert (run [rishi "run" "tools/s/shastra_four_years_and_vantage_app_witness.rish"]).ok else "shastra_four_years failed"
+assert (run [rishi "run" "tools/s/shastra_panchanga_and_geode_tutorial_witness.rish"]).ok else "shastra_panchanga failed"
+assert (run [rishi "run" "tools/b/bloom_full_platform_witness.rish"]).ok else "bloom_full_platform failed"
+assert (run [rishi "run" "tools/v/vantage_civic_and_puddle_cp_witness.rish"]).ok else "vantage_civic_and_puddle_cp failed"
+assert (run [rishi "run" "tools/c/council_405_testnet_and_global_clock_witness.rish"]).ok else "council_405_testnet failed"
+assert (run [rishi "run" "tools/g/grain_ww_glow_resonance_vantage_witness.rish"]).ok else "grain_ww_glow_resonance failed"
+assert (run [rishi "run" "tools/r/resonance_station_vantage_daw_witness.rish"]).ok else "resonance_station failed"
+assert (run [rishi "run" "tools/v/vantage_interactive_writes_witness.rish"]).ok else "vantage_interactive_writes failed"
+assert (run [rishi "run" "tools/c/calfive_and_stamp_name_witness.rish"]).ok else "calfive_and_stamp_name failed"
+assert (run [rishi "run" "tools/l/linengrow_commons_and_frontdoor_witness.rish"]).ok else "linengrow_commons failed"
+assert (run [rishi "run" "tools/p/pulp_tablecloth_council_puddle_clock_witness.rish"]).ok else "pulp_tablecloth_council failed"
+assert (run [rishi "run" "tools/c/civic_carry_pond_witness.rish"]).ok else "civic_carry_pond failed"
+assert (run [rishi "run" "tools/h/harness_parcel_bloom_witness.rish"]).ok else "harness_parcel_bloom failed"
+assert (run [rishi "run" "tools/f/fusion_seed_and_build_witness.rish"]).ok else "fusion_seed_and_build failed"
+assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial failed"
+
+say "GREEN: witness_all -- puddle-exec + Siya Orbit Harvest + all 27 metal witnesses proven."

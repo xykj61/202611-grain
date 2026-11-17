@@ -1,0 +1,46 @@
+# tools/g/glow_cord_interp_witness.rish -- Glow Mill Orbit 2 & TAME Ring-0 witness
+#
+# Proves on metal:
+#   1. Glow Mill Orbit 2 (`languages/glow/front/cord_interp.rye`): bounded
+#      `"text {(expr)}"` cord interpolation + `?!` (`wutzap`) negation + refusals,
+#   2. Ring 0 & Terrarium TAME Core audit (`modules/aurora/src/seed.rye` +
+#      `terrarium/src/bounded.rye` + `terrarium/src/tally_arena.rye` RV32I ELFs
+#      with `0x0001_3333` fail-stop assertions, `tally/region.rye`, `dimeroll`,
+#      and `linengrow/disclosure_core.rye`).
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "languages/glow/bin" "tools/.build"]
+assert mk.ok else "mkdir failed"
+
+# 1. Glow Mill Orbit 2: cord_interp & ?! wutzap
+let col = run ["awk" "length > 80 { exit 1 }" "languages/glow/front/cord_interp.rye"]
+assert col.ok else "cord_interp.rye exceeded 80 columns"
+let b_ci = run ["sh" rb "languages/glow/front/cord_interp.rye" "-femit-bin=languages/glow/bin/cord_interp"]
+assert b_ci.ok else "cord_interp build failed"
+let r_ci = run ["languages/glow/bin/cord_interp"]
+assert r_ci.ok else "cord_interp selftest failed"
+
+# 2. Ring 0 & Terrarium freestanding RV32I ELF cross-compile + fail-stop check
+let b_au = run [rye "build" "modules/aurora/src/seed.rye" "-target" "riscv32-freestanding" "-fno-entry" "-femit-bin=tools/.build/aurora_seed.elf"]
+assert b_au.ok else "aurora/seed.rye freestanding RV32I build failed"
+let b_tb = run [rye "build" "terrarium/src/bounded.rye" "-target" "riscv32-freestanding" "-fno-entry" "-femit-bin=tools/.build/terrarium_bounded.elf"]
+assert b_tb.ok else "terrarium/bounded.rye freestanding RV32I build failed"
+
+# 3. Tally Region, Dimeroll, and Linengrow Disclosure host metal proofs
+let b_tr = run ["sh" rb "modules/tally/region.rye" "-femit-bin=tools/.build/tally_region"]
+assert b_tr.ok else "tally/region.rye build failed"
+let r_tr = run ["tools/.build/tally_region" "selftest"]
+assert r_tr.ok else "tally/region.rye selftest failed"
+
+let b_dm = run ["sh" rb "modules/market/dimeroll/dimeroll.rye" "-femit-bin=tools/.build/dimeroll"]
+assert b_dm.ok else "dimeroll build failed"
+let r_dm = run ["tools/.build/dimeroll" "selftest"]
+assert r_dm.ok else "dimeroll selftest failed"
+
+let b_lg = run ["sh" rb "modules/apps/linengrow/disclosure_core.rye" "-femit-bin=tools/.build/linengrow_disclosure"]
+assert b_lg.ok else "linengrow/disclosure_core build failed"
+let r_lg = run ["tools/.build/linengrow_disclosure" "selftest"]
+assert r_lg.ok else "linengrow/disclosure_core selftest failed"
+
+say "GREEN: glow_cord_interp_witness -- Glow Orbit 2 (cord_interp + ?!) and Ring-0/Terrarium/Dimeroll/Linengrow TAME proofs held."

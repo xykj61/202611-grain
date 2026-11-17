@@ -1,0 +1,49 @@
+# Gemini Bench -- `gemini-4-carbon` model, door, and upstream branch
+
+**Seated:** `20261114.203000` on Keaton's word - **Status:** Living
+**Kin:** [`declared-host-config`](declared-host-config.md) - [`session-log-provenance`](session-log-provenance.md) - [`git-signing`](git-signing.md) - [`send-word`](send-word.md) - [`read-scope`](read-scope.md)
+
+## One Gemini default, declared in one constellation
+
+When Grain runs on a Gemini-class model through **Gemini CLI** (`gemini`), the project default is
+**`gemini-4-carbon`**, and the Gemini checkout (`202611-grain-gemini-4-carbon`) works on and pushes
+to the git branch **`gemini-4-carbon`** (`xy/gemini-4-carbon` on `xykj61/202611-grain`).
+
+Four tracked files carry the Gemini bench surface, each for its own reader:
+
+| File | Role |
+|---|---|
+| [`../../GEMINI.md`](../../GEMINI.md) | Root session door Gemini CLI loads automatically |
+| [`../../.gemini/settings.json`](../../.gemini/settings.json) and [`../../.gemini/hooks/enable-git-ssh.sh`](../../.gemini/hooks/enable-git-ssh.sh) | Workspace configuration (`model.name` = `gemini-4-carbon`, `GEMINI.md`, `.geminiignore`, `cat` pager, and `BeforeTool` outbound `GIT_SSH_COMMAND=ssh` default) |
+| [`../../.geminiignore`](../../.geminiignore) | Context-indexing filter skipping closed archives, build caches, and vendored trees |
+| [`../../.brix`](../../.brix) and [`../../context/MODEL_ROSTER.kyri`](../../context/MODEL_ROSTER.kyri) | Course and multi-provider metadata naming `gemini-4-carbon` for model usage and branch pushing |
+
+## Branch and push law on the carbon bench
+
+1. **Upstream branch:** `gemini-4-carbon` tracks `xy/gemini-4-carbon` (`branch.gemini-4-carbon.remote = xy`, `branch.gemini-4-carbon.merge = refs/heads/gemini-4-carbon`, `remote.pushDefault = xy`, `push.default = upstream`). Routine pushes from the Gemini bench go to `xy/gemini-4-carbon` rather than overwriting `claude-opus-4-6` or pushing straight to `main` unasked.
+2. **Signed commits:** every commit on `gemini-4-carbon` carries an OpenPGP signature (`git commit -S`) and a Gauge Meter message per [`commit-messages`](commit-messages.md) and [`git-signing`](git-signing.md).
+3. **Crossing to `main`:** when Keaton says **"send"** ([`send-word`](send-word.md)), verified commits fast-forward into `main` (`xy/main`) without merge commits or force-pushes.
+
+## Local state stays out of git
+
+`.gitignore` opens `!/GEMINI.md`, `!/.geminiignore`, and `!/.gemini/`, while keeping local overrides
+and runtime artifacts out of the tracked tree: `.gemini/settings.local.json`, `.gemini/tmp/`,
+`.gemini/logs/`, `.gemini/sessions/`, `.gemini/transcripts/`, `.gemini/checkpoints/`,
+`.gemini/memory/`, `.gemini/.inbox/`, `.gemini/tool-log.txt`, `.gemini/browser-profile/`, and
+`.gemini/worktrees/`. Never commit `GEMINI_API_KEY`, OAuth tokens, or session transcripts.
+
+## Provenance and the two Google CLIs
+
+- **Provenance:** in `session-logs/date/YYYYMMDD/*.kyri.md`, record `editor Gemini CLI`,
+  `provider Google`, `product Gemini CLI`, `configured_model gemini-4-carbon`,
+  `configured_status configured default only`, and
+  `evidence .gemini/settings.json, .brix, context/MODEL_ROSTER.kyri`. Record
+  `model gemini-4-carbon` with `model_status active runtime` only when runtime telemetry or user
+  session headers confirm it; otherwise write `model unverified` per
+  [`session-log-provenance`](session-log-provenance.md).
+- **Separate doors:** Gemini CLI (`gemini`, [`../../frontier/GEMINI.md`](../../frontier/GEMINI.md))
+  and Antigravity CLI (`agy`, [`../../frontier/ANTIGRAVITY.md`](../../frontier/ANTIGRAVITY.md)) are
+  distinct packages with separate binaries, config directories, and auth flows. Keep their names
+  apart in scripts, docs, and logs.
+
+Canonical Cursor twin: `.cursor/rules/gemini-bench.mdc`

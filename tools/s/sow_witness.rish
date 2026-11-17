@@ -52,11 +52,11 @@ say kctl.out
 assert kctl.ok else "the key-material control failed to run"
 assert (kctl.out contains "control_verdict=ok") else "the key-material scan did not red on a planted API secret"
 
-# Duty 1 -- manifest completeness (M1)
+# Duty 1 -- manifest completeness (every tracked root classified once)
 let cover = run ["sh" "tools/fixtures/s/sow_manifest_cover.sh"]
 say cover.out
 assert cover.ok else "manifest-cover scan failed to run"
-assert (cover.out contains "M1_OK") else "manifest does not classify every root path exactly once"
+assert (cover.out contains "MANIFEST_COVER_OK") else "manifest does not classify every root path exactly once"
 
 # Duty 2 -- project fresh
 let proj = run ["sh" "tools/fixtures/s/sow_project.sh"]

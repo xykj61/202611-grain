@@ -23,10 +23,10 @@
 # now. And the shipping rows are gated on their own, rather than inside a set comparison where
 # a withhold row could mask them.
 #
-# WHAT IT PRINTS. `M1_OK` when the tree's roots are all classified, no shipping row is a ghost,
-# and no path is classified twice. Otherwise `M1_BAD` and the offending lists by name.
-# Absent `personal` rows are printed under their own heading either way, so defence in depth
-# stays visible rather than becoming invisible by being permitted.
+# WHAT IT PRINTS. `MANIFEST_COVER_OK` when the tree's roots are all classified, no shipping row is
+# a ghost, and no path is classified twice. Otherwise `MANIFEST_COVER_BAD` and the offending lists
+# by name. Absent `personal` rows are printed under their own heading either way, so defence in
+# depth stays visible rather than becoming invisible by being permitted.
 #
 # Kin: tools/s/sow_witness.rish (the rung that gates on this) - tools/fixtures/s/sow_project.sh
 # (the allowlist projector) - template-manifest.kyri (the boundary itself).
@@ -77,9 +77,9 @@ absent_personal=$(printf '%s\n' "$withheld" | while IFS= read -r x; do
 done)
 
 if [ -z "$unclassified" ] && [ -z "$ghost_shipping" ] && [ -z "$doubled" ]; then
-  echo M1_OK
+  echo MANIFEST_COVER_OK
 else
-  echo M1_BAD
+  echo MANIFEST_COVER_BAD
 fi
 
 echo "--- in tree, not classified ---"

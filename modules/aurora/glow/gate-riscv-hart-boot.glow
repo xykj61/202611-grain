@@ -1,0 +1,14 @@
+::  modules/aurora/glow/gate-riscv-hart-boot.glow -- RV64GC Glasswall!
+/!  16384
+|%
+++  gate-riscv-hart-boot
+  |=  [nvme-present=@ud spi-wp=@ud dram-mib=@ud]        ::  Blazepod pins
+  ^-  @ud                                               ::  0x5555 = PASS
+  ~|  'blazepod-nvme-present-in-ram-mode'               ::  tally-ram law!
+  ?>  (eql nvme-present 0)                              ::  zero disk residue
+  ~|  'blazepod-spi-wp-unasserted'                      ::  immutable ROM!
+  ?>  (eql spi-wp 1)                                    ::  /WP jumper closed
+  ~|  'blazepod-dram-below-4gib'                        ::  4 GiB LPDDR5 min
+  ?>  (gte dram-mib 4096)
+  21.845                                                ::  0x5555 sifive ok
+--

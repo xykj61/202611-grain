@@ -1,0 +1,36 @@
+# blazepod/blazepod.brix -- Two-mode Blazepod hardware & memory profile.
+#
+# Override mode via `brix infuse blazepod/blazepod.brix <overlay.brix>`:
+#   mode ram-only      -> Pure 4 GiB+ physical RAM Grain (zero block/radio I/O)
+#   mode von-neumann   -> Adds NVMe WAL, Wi-Fi NIC, and Cellular Airlock
+# Every line stays within 80 columns and plain 7-bit ASCII.
+
+name blazepod
+version 20261115.031000
+arch rv64g
+mode ram-only
+
+# Physical memory floor and static Tally RAM gardens (MiB, sum = 4096)
+ram_floor_mib 4096
+garden_aurora_boot_mib 64
+garden_caravan_divisions_mib 512
+garden_blaze_weave_mib 1536
+garden_tablecloth_ram_mib 1024
+garden_skate_surface_mib 512
+garden_glow_mill_mib 256
+garden_amphora_wire_mib 192
+
+# Citizen division caps inside caravan_divisions
+pond_divisions_max 16
+pond_division_mib 32
+
+# Von Neumann peripherals (disabled in ram-only; enabled via infuse overlay)
+nvme_wal disabled
+wifi_steward disabled
+cellular_airlock disabled
+cellular_dma_policy deny_all_iopmp
+
+# Display and studio defaults
+surface_driver skate-ram
+surface_palette purple-red-oat
+audio_sample_rate_hz 48000

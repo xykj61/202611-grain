@@ -22,6 +22,9 @@ A spell is a single word that names a whole, repeatable gesture. Where ordinary 
 | Spell | What it does | Home |
 |---|---|---|
 | **send** | commit (signed, CONTRIBUTING style), push `origin` + `xykj61`, merge to `main` | `.claude/rules/send-word.md` |
+| **reroot** | preserve the current signed lineage in an immutable `YYYYMMDD-grain` archive remote, then plant a fresh `YYYYMM-grain` trunk carrying every living room forward | `context/LEXICON.md` - `publish-redirect.rish` |
+| **evergrow** | check that a newer chronological parcel keeps every prior export and adds zero capability or memory demands (*offer more, require less*) | `modules/comlink/parcel/parcel_core.rye` |
+| **pond** | run a CLI agent (`gemini`) or tool inside Grain's inspectable Seatbelt/bubblewrap capability fence (`modules/pond/bin/pond_cli --gemini -- gemini`) | `modules/pond/pond_cli.rye` |
 | **kg** | keep going -- the next mechanical lap (not a send by itself) | `.claude/rules/collaboration.md` |
 | **seat** | make a proposal live -- write it as the standing thing, on Keaton's word | `.claude/rules/cell.md` |
 | **cast** | assign a point its attributes -- a galaxy's element and mode, a chart's longitudes | astrology cast - council topology |
@@ -72,21 +75,21 @@ The five-row council rota stays the lap's deep read. This table is the orbit rou
 
 | Round | Sign | Mode | Element | Goal | The round's verb |
 |---|---|---|---|---|---|
-| 1 | Aries | cardinal | fire | talent | Commence. Finish one to-do. |
-| 2 | Taurus | fixed | earth | law | What must stop, found the way Venus finds a thing already worth keeping: one repeat, named plainly, and left standing -- fertile ground kept whole rather than torn up in haste. |
-| 3 | Gemini | dual | air | fun | Say the work aloud, in one sentence. |
-| 4 | Cancer | cardinal | water | aesthetics | The picture a newcomer can see, offered the way the Moon offers care: held gently, easy to feel at home in, so the first look already feels welcomed. |
-| 5 | Leo | fixed | fire | talent | The economics check. Products, services, infrastructure. The check reads. |
-| 6 | Virgo | dual | earth | law | What must stop. The untidiness across the whole run. |
-| 7 | Libra | cardinal | air | fun | The two checks meet the way Venus meets a partner, each answering the other in balance, and settle into one green line. |
-| 8 | Scorpio | fixed | water | aesthetics | The picture held whole. The fold page, once its links resolve. |
-| 9 | Sagittarius | dual | fire | talent | The mission, in Bhakta, Gauge, Radiant, and Twilight. |
-| 10 | Capricorn | cardinal | earth | law | What must stop. The bound. Fascia's face moves by at most 1.0000. |
-| 11 | Aquarius | fixed | air | fun | One clear type, studied. |
-| 12 | Pisces | dual | water | aesthetics | The wish. One beautiful close. |
-| 13 | sky | cardinal | aether | heart | Wildcard. May borrow one other verb. Names the heart page. |
-| 14 | sky | fixed | aether | heart | Wildcard. Holds one page whole. |
-| 15 | sky | dual | aether | heart | Wildcard, and Siya's chair. Her name stays. The round may borrow one verb. |
+| 1 | Aries | cardinal | fire | talent | Ignite the seed: ship the smallest real file that runs on metal today (*Gall's Law*). |
+| 2 | Taurus | fixed | earth | law | Tend fertile ground: guard **Tally** bounds and keep what already nourishes (*Moon exalted in Taurus*). |
+| 3 | Gemini | dual | air | fun | Speak simply between twins: pair pure citizen **Glow** with metal **Rye** in one clear sentence. |
+| 4 | Cancer | cardinal | water | aesthetics | Make the home safe: **Pond** shelter, **Glasswall**, and a warm first-hour welcome (*Moon's care*). |
+| 5 | Leo | fixed | fire | talent | Stand in daylight: **Dimeroll** books balance to zero in plain sight and **Seva** shines without rent. |
+| 6 | Virgo | dual | earth | law | Measure and prune with care: 80-col, 7-bit ASCII, **stamp-and-name**, and **TAME** two-assertion gates. |
+| 7 | Libra | cardinal | air | fun | Meet in balance: welcome path and refusal path answer each other equally; **Evergrow** keeps every promise. |
+| 8 | Scorpio | fixed | water | aesthetics | Anuradha's covenant: **Mitra** loyalty for friends' code and clean cryptographic zeroization for secrets. |
+| 9 | Sagittarius | dual | fire | talent | Aim toward long wisdom: connect proven code to living **Bloom** and **Shastra** lessons (*Tattva* & *Rasa*). |
+| 10 | Capricorn | cardinal | earth | law | Stone and right-to-repair: bare-metal RISC-V harts, replaceable screws, and ten-year **Blazepod** endurance. |
+| 11 | Aquarius | fixed | air | fun | Commons and constellation: peer-to-peer **Comlink** and **Colloquium** serving neighbors without a gatekeeper. |
+| 12 | Pisces | dual | water | aesthetics | Twilight close and offering: clear residue, run one clean `publish-seed`, and close with gratitude (*Aparigraha*). |
+| 13 | sky | cardinal | aether | heart | Aether hears: step back from the code to ask *why does this exist, and whom does it serve?* |
+| 14 | sky | fixed | aether | heart | Hold the whole cup: compress two apparent opposites into one single-stranded macro (*Sameness Is the Macro*). |
+| 15 | sky | dual | aether | heart | Siya's chair -- circulation and return. Her name stays. Carry the harvest whole across the torus into the next Dawn. |
 
 The plan that seated this table is [`../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md`](../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md).
 
@@ -123,7 +126,7 @@ The count stays exact. The bound stays exact. The question takes the size of the
 
 ## fleet
 
-A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
+A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, `gemini`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
 
 Run an interactive line in that ship's checkout, inside its tmux window. `FLEET_BARE=1` is the pier. `FLEET_CAPTAIN=1` belongs to incense. The captain's gates stay manual: keys, funds, provisioning, identity, and the public seed.
 
@@ -154,7 +157,15 @@ Codex forwards these flags to the interactive CLI. `codex exec` is its one-lap d
 
 Antigravity's command is `agy`. It reads `--dangerously-skip-permissions` and `--prompt-interactive`. The paste leaves the model to the signed-in account. Home: [`../frontier/ANTIGRAVITY.md`](../frontier/ANTIGRAVITY.md).
 
+Gemini CLI's command is `gemini`. It reads `-y` (`--yolo`), `-m gemini-4-carbon`, and `-i` (`--prompt-interactive`). [`.gemini/settings.json`](../.gemini/settings.json), [`../.brix`](../.brix), and [`../context/MODEL_ROSTER.kyri`](../context/MODEL_ROSTER.kyri) declare `gemini-4-carbon` as the Gemini-class default for model usage and `xy/gemini-4-carbon` branch pushing; [`../GEMINI.md`](../GEMINI.md) loads automatically. Home: [`../frontier/GEMINI.md`](../frontier/GEMINI.md).
+
 OpenCode on Together is the interactive open door. The model is the one proven in [`../open/HARNESS_SETUP.md`](../open/HARNESS_SETUP.md) and named in [`../tools/f/fleet-loop-opencode.sh`](../tools/f/fleet-loop-opencode.sh). `opencode run --interactive` keeps the session open after the first message. OpenRouter and Hugging Face remain the request APIs in [`../open/PROVIDER_SETUP.md`](../open/PROVIDER_SETUP.md). This pier's OpenCode config seats Together only, so those two wait for their own model line before they earn a paste.
+
+### fleet interactive carbon gemini
+
+```sh
+gemini -y -m gemini-4-carbon -i "Read GEMINI.md and construction/ITINERARY.md whole before acting. You are on the 202611-grain-gemini-4-carbon bench pushing to xy/gemini-4-carbon. Begin an interactive session."
+```
 
 ### fleet interactive incense cursor
 
@@ -178,6 +189,12 @@ FLEET_BARE=1 FLEET_CAPTAIN=1 codex -m gpt-6-sol --sandbox danger-full-access --d
 
 ```sh
 FLEET_BARE=1 FLEET_CAPTAIN=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Antigravity. Begin an interactive session."
+```
+
+### fleet interactive incense gemini
+
+```sh
+FLEET_BARE=1 FLEET_CAPTAIN=1 gemini -y -m gemini-4-carbon -i "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Gemini CLI. Begin an interactive session."
 ```
 
 ### fleet interactive incense opencode
