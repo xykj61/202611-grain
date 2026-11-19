@@ -6,7 +6,7 @@
 //! grain-ww`) matching our `grain-ww.com` / `github.com/grain-ww` home:
 //!   - `grain-ww version`           -- Chronological stamp & Myofascia reading
 //!   - `grain-ww stamp [sprig.ext]` -- Auto-DST `-utc`/`-est`/`-edt` One-Clock
-//!   - `grain-ww pulp [board.md]`   -- `[15..9375]` prepend Movement stack
+//!   - `grain-ww husk [board.md]`   -- `[15..9375]` prepend Movement stack
 //!   - `grain-ww puddle`            -- Live kernel UDP roaming Mosh/scp proof
 //!   - `grain-ww round-load`        -- Calfive 15-Sign movement & theme
 //!   - `grain-ww doctor`            -- <50 ms toolchain & Glasswall check
@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.171038";
-pub const myofascia_reading = "57.066";
+pub const grain_ww_version = "20261119.171652";
+pub const myofascia_reading = "57.067";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -54,7 +54,7 @@ fn run_doctor(io: std.Io) !u8 {
     print("  [GREEN] Rye compiler      : languages/rye/bin/rye{c}", .{nl});
     print("  [GREEN] Rishi steward     : languages/rishi/bin/rishi{c}", .{nl});
     print("  [GREEN] Vantage core      : modules/comlink/vantage/{c}", .{nl});
-    print("  [GREEN] Active Pulp room  : active-pulp/{c}", .{nl});
+    print("  [GREEN] Active Husk room  : active-husk/{c}", .{nl});
     print("  [GREEN] Myofascia reading : {s} / 100.000{c}", .{
         myofascia_reading,
         nl,
@@ -218,11 +218,11 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "pulp")) {
+    if (std.mem.eql(u8, sub, "husk")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/pulp_movement_stack",
+            "tools/.build/husk_movement_stack",
             null,
             args[2..],
         );
@@ -281,11 +281,11 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "pulp-recall")) {
+    if (std.mem.eql(u8, sub, "husk-recall")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/pulp_object_recall",
+            "tools/.build/husk_object_recall",
             null,
             args[2..],
         );
@@ -621,6 +621,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/twilight_nocturne_svg",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "purpose-check")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/civic_purpose_audit",
             null,
             args[2..],
         );

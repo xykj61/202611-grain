@@ -67,7 +67,7 @@ modules/**/.zig-cache/
 !/active-designing/
 !/active-development/
 !/active-reviving/
-!/active-pulp/
+!/active-husk/
 !/bloom/
 !/waymarks/
 !/journey/
@@ -87,7 +87,7 @@ modules/**/.zig-cache/
 !/dimeroll/
 !/lattice/
 !/lantern/
-!/pulp/
+!/husk/
 !/flare/
 !/flare-voices/
 !/spellbook/
@@ -160,7 +160,7 @@ modules/**/.zig-cache/
 !/libraries/
 !/blazepod/
 !/docs-geode/
-!/active-pulp/
+!/active-husk/
 !/mitra-shed/
 !/terrarium/
 !/src/
@@ -311,7 +311,7 @@ modules/**/.zig-cache/
 /dimeroll/bin/
 /flare/lattice/bin/
 /flare/lantern/bin/
-/flare/pulp/bin/
+/flare/husk/bin/
 /flare/bin/
 /gratitude/glow-nock-archive/bin/
 /glow/bin/

@@ -18,7 +18,7 @@ trap 'rm -rf "$pen"' EXIT
 
 {
   git ls-files
-  find active-pulp/date/202611 -type f 2>/dev/null || true
+  find active-husk/date/202611 -type f 2>/dev/null || true
   find external-research/date/202611 -type f 2>/dev/null || true
   printf '%s
 ' GEMINI.md .claude/rules/gemini-bench.md
@@ -27,7 +27,7 @@ trap 'rm -rf "$pen"' EXIT
 } | sort -u > "$pen/all.txt"
 
 # Count citations strictly from living modules, foundations, context,
-# standing rules, docs-geode, and active-pulp boards.
+# standing rules, docs-geode, and active-husk boards.
 Ex1='^(session-logs|counsel|waymarks|expanding-prompts)/'
 Ex2='^(recursion-prompts|arbor|active-designing|external-research)/'
 Ex3='^(construction|active-development|tools)/'

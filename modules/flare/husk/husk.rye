@@ -7,7 +7,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const Dir = std.Io.Dir;
-const sc = @import("pulp_core.rye");
+const sc = @import("husk_core.rye");
 
 const pulp_version = "20260710.211930";
 pub const fixture_path = "flare/pulp/fixtures/sample.md";

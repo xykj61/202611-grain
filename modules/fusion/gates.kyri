@@ -87,14 +87,14 @@ max_cols 80 modules/apps/linengrow/linengrow_commons.rye
 max_cols 80 modules/fusion/manifest_cover.rye
 ascii_7bit MAP.md
 ascii_7bit llms.txt
-max_cols 80 modules/flare/pulp/pulp_movement_stack.rye
+max_cols 80 modules/flare/husk/husk_movement_stack.rye
 max_cols 80 modules/tablecloth/relational_table.rye
 max_cols 80 modules/comlink/council_405.rye
 max_cols 80 modules/pond/puddle/puddle_remote.rye
 max_cols 80 modules/sundial/one_clock.rye
 ascii_7bit active-development/date/20261115/20261115-134000-est_glasswall-pulp-tablecloth-405-council-puddle-and-one-clock.md
 max_cols 80 modules/pond/puddle/puddle_udp_live.rye
-max_cols 80 modules/flare/pulp/pulp_object_recall.rye
+max_cols 80 modules/flare/husk/husk_object_recall.rye
 max_cols 80 modules/tablecloth/sql_workspace.rye
 max_cols 80 modules/comlink/council_mycelium_weave.rye
 max_cols 80 modules/comlink/vantage/vantage_council_puddle.rye
@@ -214,3 +214,9 @@ ascii_7bit active-development/date/20261119/20261119-165127-est_orbit5-aquarius-
 max_cols 80 libraries/risala/twilight_nocturne_svg.rye
 max_cols 80 modules/brushstroke/glow/fold-twilight-svg.glow
 ascii_7bit active-development/date/20261119/20261119-171038-est_orbit5-pisces-twilight-nocturne-svg-artifact.md
+max_cols 80 libraries/shastra/civic_purpose_audit.rye
+max_cols 80 modules/flare/husk/glow/gate-husk-stack.glow
+ascii_7bit active-husk/README.md
+ascii_7bit active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/README.md
+ascii_7bit active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md
+ascii_7bit active-development/date/20261119/20261119-171652-est_orbit5-sky-husk-breach-and-milestone-60.md

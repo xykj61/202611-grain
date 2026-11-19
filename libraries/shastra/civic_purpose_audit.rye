@@ -1,0 +1,111 @@
+//! libraries/shastra/civic_purpose_audit.rye -- Milestone Proof #60!
+//!
+//! Stamp: `20261119.171652` -- Orbit 5, `Movement 13/15 : sky` (*Aether
+//! hears: step back and ask whom the work serves* + `pulp -> husk` breach),
+//! powering `grain-ww purpose-check` (Milestone Proof #60)!
+//! Verifies on live metal:
+//!   1. All `5` human constituencies (*learner, builder, civil steward,
+//!      musician, privacy-first citizen*) hold live verified front doors,
+//!   2. The `active-pulp -> active-husk` deep debride is complete across
+//!      root manifests (`.brix`, `.gitignore`, `template-manifest.kyri`,
+//!      `LEXICON.md`, `MAP.md`, `README.md`, `grain_ww_cli.rye`),
+//!   3. Our prepended Quest 1 / Journey 1 Husk project stands live at the top
+//!      of `active-husk/README.md`, with paired refusal witness!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.171652";
+const nl: u8 = 10;
+
+pub const PurposeError = error{
+    ConstituencyDoorMissing,
+    RetiredPulpResidueFound,
+    PrependedHuskMissing,
+};
+
+pub const constituency_doors = [_][]const u8{
+    "docs-geode/tutorials/the-first-hour.md",          // 1. 8th-grade learner
+    "languages/glow/README.md",                        // 2. community builder
+    "libraries/civil-engineering/README.md",           // 3. civil steward
+    "modules/resonance/resonance_wood_ledger.rye",     // 4. studio musician
+    "modules/pond/pond_sanctuary_airlock.rye",         // 5. privacy citizen
+};
+
+pub const husk_clean_files = [_][]const u8{
+    ".brix",
+    ".gitignore",
+    "template-manifest.kyri",
+    "LEXICON.md",
+    "MAP.md",
+    "README.md",
+    "languages/rishi/grain_ww_cli.rye",
+};
+
+pub fn verify_no_active_pulp(body: []const u8) PurposeError!void {
+    // invariant: reject retired active-pulp path in living root manifests.
+    if (std.mem.indexOf(u8, body, "active-pulp") != null) {
+        return error.RetiredPulpResidueFound;
+    }
+    assert(std.mem.indexOf(u8, body, "active-pulp") == null);
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    // 1. Verify all 5 human constituency doors stand present & non-empty
+    var doors: u32 = 0;
+    for (constituency_doors) |door| {
+        const body = cwd.readFileAlloc(io, door, a, .limited(65536)) catch {
+            return error.ConstituencyDoorMissing;
+        };
+        if (body.len < 64) return error.ConstituencyDoorMissing;
+        doors += 1;
+    }
+
+    // 2. Verify active-husk/README.md prepends Quest 1 / Journey 1 board!
+    const husk_idx = try cwd.readFileAlloc(
+        io,
+        "active-husk/README.md",
+        a,
+        .limited(65536),
+    );
+    const quest1 = "20261119-171652-est_quest1-husk-breach-and-journey1-spine";
+    if (std.mem.indexOf(u8, husk_idx, quest1) == null) {
+        return error.PrependedHuskMissing;
+    }
+    const q1_chk = try cwd.readFileAlloc(
+        io,
+        "active-husk/date/202611/00/" ++ quest1 ++ "/CHECKLIST.md",
+        a,
+        .limited(65536),
+    );
+    if (q1_chk.len < 128) return error.PrependedHuskMissing;
+
+    // 3. Verify zero retired active-pulp strings across 7 core living configs
+    for (husk_clean_files) |p| {
+        const body = try cwd.readFileAlloc(io, p, a, .limited(131072));
+        try verify_no_active_pulp(body);
+    }
+
+    // 4. Refusal witness: retired active-pulp string rejected cleanly!
+    if (verify_no_active_pulp("allow active-pulp")) |_| {
+        return error.RetiredPulpAccepted;
+    } else |err| {
+        if (err != error.RetiredPulpResidueFound) return err;
+    }
+
+    assert(doors == 5);
+    print(
+        "GREEN: civic_purpose -- {d}/5 doors & active-husk clean (#60)!{c}",
+        .{ doors, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

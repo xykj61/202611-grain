@@ -1,5 +1,9 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261119.171652-est` -- Orbit 5 `13-sky` (`Myofascia 57.067`, Milestone Proof `#60`): `pulp -> husk` & `active-pulp -> active-husk` Molt-Breach-Deep-Debride.**
+- **Walk-back nib:** `42a9cff1` (`xy/gemini-4-neon` immediately prior to `git mv active-pulp active-husk`, `git mv tools/pulp tools/husk`, and `git mv modules/flare/pulp modules/flare/husk`).
+- **Molted & Prepended:** Renamed `active-pulp/` -> `active-husk/`, `tools/pulp/` -> `tools/husk/`, and `modules/flare/pulp/` -> `modules/flare/husk/` (repointing all 4 relative `pulp_core.rye` symlinks cleanly onto `husk_core.rye`), prepended `active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/` at Priority `#0` of the explicit-bound Calfive stack (`[15..9375]`), expanded verified Myofascia hubs to `17/17`, and shipped Milestone Proof `#60` (`libraries/shastra/civic_purpose_audit.rye`, `grain-ww purpose-check`) + `gate-husk-stack.glow` (`47/47` Glow desks).
+
 **Checkpoint `20261119.152019-est` -- Orbit 5 `4-Cancer` (`Myofascia 57.058`): Revived Root `LEXICON.md` (`Modernization`), `10/10` Hub Myofascia Density, & `Pond` Sanctuary Airlock.**
 - **Walk-back nib:** `4f96047b` (`xy/gemini-4-neon` immediately prior to elevating `LEXICON.md` to repo root and archiving the `20261002` elder `context/LEXICON.md` to `yonder/lexicon-20261002-elder.md`).
 - **Molted & Seated:** Root `LEXICON.md` (`0.0%` negation, seating `Modernization` and all living Native-5, Ring-0, Civic, and Voice terms), single-stranded redirect at `context/LEXICON.md`, modernized `languages/rishi/README.md`, `10/10` cross-hub `LEXICON.md` links verified on metal by `modules/pond/pond_sanctuary_airlock.rye` (`grain-ww pond-airlock`, Proof `#51`), and `modules/pond/glow/gate-pond-sanctuary.glow` (Desk `#38`).

@@ -73,14 +73,14 @@ compilable `.rye` (`grain-ww ring0-glow`) and raw `RV64GC` (`0x0000_8067` ret)
 
 ---
 
-## 4. Alignment with Active `Pulp` Journeys & `terrarium/` Directory Structure
+## 4. Alignment with Active `Husk` Projects & `terrarium/` Directory Structure
 
-- **Active `Pulp` Direction:** Glow architecture and prepend-to-front movement
+- **Active `Husk` Direction:** Glow architecture and prepend-to-front movement
   stacks live in
-  [`../../active-pulp/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md`](../../active-pulp/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md),
-  [`../../active-pulp/date/202611/00/20261103-184811_glow-language-journey/README.md`](../../active-pulp/date/202611/00/20261103-184811_glow-language-journey/README.md),
-  and the Master Calfive stack in
-  [`../../active-pulp/date/202611/00/20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/CHECKLIST.md`](../../active-pulp/date/202611/00/20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/CHECKLIST.md).
+  [`../../active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md`](../../active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md),
+  [`../../active-husk/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md`](../../active-husk/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md),
+  and
+  [`../../active-husk/date/202611/00/20261103-184811_glow-language-journey/README.md`](../../active-husk/date/202611/00/20261103-184811_glow-language-journey/README.md).
 - **`terrarium/` Directory Structure:** Glow executes on bare-metal RISC-V and
   post-Glow civic surfaces across `terrarium/`:
   - `terrarium/glow/` & `terrarium/src/` -- bare-metal `RV32IM` / `RV64GC`

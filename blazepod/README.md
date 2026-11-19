@@ -50,7 +50,7 @@ Ring-0 binaries directly from `.glow` source.
 | [`rv64_pill.rye`](rv64_pill.rye) | Minimal `RV64GC` boot pill emitting `sifive_test` `0x5555` on verified pass and `0x0001_3333` on refusal |
 | [`TALLY_TWO_MODES.md`](TALLY_TWO_MODES.md) | Exact `4 GiB` physical memory layout, RAM-only distillations, & IOMMU radio airlock |
 | [`BOM_AND_ASSEMBLY.md`](BOM_AND_ASSEMBLY.md) | Right-to-repair bill of materials, standard fasteners, & open assembly steps |
-| [`JOURNEYS.md`](JOURNEYS.md) | Calfive **Journeys -> Quests -> Orbits -> Movements** hardware sequence aligned with [`../active-pulp/README.md`](../active-pulp/README.md) |
+| [`JOURNEYS.md`](JOURNEYS.md) | Calfive **Journeys -> Quests -> Orbits -> Movements** hardware sequence aligned with [`../active-husk/README.md`](../active-husk/README.md) |
 | [`blazepod.brix`](blazepod.brix) | Declarative Brix hardware-profile descriptor (`ram-4g` & `von-neumann`) |
 
 ```sh

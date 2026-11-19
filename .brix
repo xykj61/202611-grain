@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.171038
-myofascia 57.066
+version 20261119.171652
+myofascia 57.067
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -112,9 +112,11 @@ file modules/sundial/siya_orbit_harvest.rye
 file modules/sundial/glow/fold-siya-orbit.glow
 file context/templates/CLOCK_CONFIG.template.kyri
 file context/templates/PUBKEYS.template.md
-file modules/flare/pulp/pulp_movement_stack.rye
-file modules/flare/pulp/pulp_object_recall.rye
-file modules/flare/pulp/glow/fold-pulp-recall.glow
+file modules/flare/husk/husk_movement_stack.rye
+file modules/flare/husk/husk_object_recall.rye
+file modules/flare/husk/glow/fold-husk-recall.glow
+file modules/flare/husk/glow/gate-husk-stack.glow
+file libraries/shastra/civic_purpose_audit.rye
 file modules/tablecloth/relational_table.rye
 file modules/tablecloth/sql_workspace.rye
 file modules/tablecloth/gleaner_intake.rye
@@ -233,7 +235,7 @@ file tools/rishi/parity.rish
 
 # Flare inference faculties & Agentic Harness
 file modules/flare/lattice/lattice_core.rye
-file modules/flare/pulp/pulp_core.rye
+file modules/flare/husk/husk_core.rye
 file modules/flare/lantern/lantern_core.rye
 file modules/flare/flare_core.rye
 file modules/harness/harness_core.rye

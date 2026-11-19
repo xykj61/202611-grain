@@ -137,8 +137,8 @@ fn run_selftest() !u8 {
 }
 
 const default_board =
-    "active-pulp/date/202611/00/" ++
-    "20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/" ++
+    "active-husk/date/202611/00/" ++
+    "20261119-171652-est_quest1-husk-breach-and-journey1-spine/" ++
     "CHECKLIST.md";
 
 pub fn main(init: std.process.Init) !u8 {
@@ -170,7 +170,7 @@ pub fn main(init: std.process.Init) !u8 {
 
     const p = st.progress();
     print(
-        "Pulp Stack [15 75 375 1875 9375] ({s}):{c}",
+        "Husk Stack [15 75 375 1875 9375] ({s}):{c}",
         .{ std.fs.path.basename(path), nl },
     );
     print(
