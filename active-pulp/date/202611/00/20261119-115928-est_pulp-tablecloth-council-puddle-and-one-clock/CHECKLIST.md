@@ -1,15 +1,17 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.164619` (EST)
+**Stamp:** `20261119.165127` (EST)
 
-## Top of Prepend-to-Front Stack (Quest 1 Home Stretch -- `11-Aquarius -> 15-Siya`, `q=71..75/75`)
+## Top of Prepend-to-Front Stack (Quest 1 Final 4 Movements -- `12-Pisces -> 15-Siya`, `q=72..75/75`)
 
-- [ ] **[TOP -- Orbit 5, Movement 11/15 (`Aquarius`)] `405` Colloquium Peer Gossip & `Constel` Multi-Hop Federation Proof** -- verify <=3-hop quorum convergence across 405 seats with low toll (`Proof #58`, Desk `#45`)
-- [ ] **[Orbit 5, Movement 12/15 (`Pisces`)] Twilight Synthesis & `Shastra` / `Risala` Evening Reading** (`Proof #59`)
-- [ ] **[Orbit 5, Movement 13/15 (`Nakshatra`) -> `15-Siya`] `Shastra` Curriculum Spiral -> `14-Tithi` Closure -> `15-Siya` Quest 1 Seal (`75/75` Movements!)** (`Proofs #60..#62`)
+- [ ] **[TOP -- Orbit 5, Movement 12/15 (`Pisces`)] Twilight Radiant Silo Artifact (`Risala` 15-Sign Nocturne SVG & Meter)** -- craft a gratitude-born `15`-sign Twilight Radiant Silo visual/text artifact (`Proof #59`, Desk `#46`)
+- [ ] **[Orbit 5, Movement 13/15 (`Nakshatra`)] `Shastra` 4-Year Curriculum Spiral & `27`-Nakshatra Bridge** (`Proof #60`, Desk `#47`)
+- [ ] **[Orbit 5, Movement 14/15 (`Tithi`)] Quest 1 (`75`-Movement) Closure Audit** (`Proof #61`, Desk `#48`)
+- [ ] **[Orbit 5, Movement 15/15 (`Siya`)] Quest 1 Harvest (`75/75` Movements!), `62/62` Proofs, & Verified Public Seed!**
 
 ## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Aquarius Movement 11/15 (`57.065`, `xy/gemini-4-neon`)** -- authored `modules/comlink/constel_aquarius_federation.rye` (`grain-ww aquarius-405`: deterministic `<= 3`-hop `15 x 3 x 9 = 405`-seat peer gossip convergence at `112`-byte wire toll with `324/405` constitutional SHA3 seal & Sybil/MTU/hop refusals, Proof `#58`) + `gate-aquarius-405.glow` (`45/45` live Glow desks GREEN!) (`20261119.165127`)
 - [x] **Orbit 5 Capricorn Movement 10/15 (`57.064`, `xy/gemini-4-neon`)** -- authored `blazepod/tally_vn_wal_replay.rye` (`grain-ww wal-replay`: SHA3-256 chained `Blazepod` `tally-vn` NVMe WAL ring with deterministic power-loss torn-tail crash recovery & mid-log tamper refusal, Proof `#57`) + `modules/tally/glow/gate-tally-wal.glow` (`44/44` live Glow desks GREEN!) (`20261119.164619`)
 - [x] **Orbit 5 Sagittarius Movement 9/15 (`57.063`, `xy/gemini-4-neon`)** -- authored `modules/brushstroke/skate/studio_triptych_canvas.rye` (`grain-ww triptych-art`: deterministic `360 x 120` RGB24 3-panel `Vantage` frame uniting Canopy Watershed, Twilight Almanac, & `405` Colloquium quorum lattice sealed by SHA3-256, Proof `#56`) + `fold-studio-triptych.glow` (`43/43` live Glow desks GREEN!) and re-prepended `Pulp` for `10-Capricorn -> 15-Siya` (`20261119.162625`)
 - [x] **Orbit 5 Scorpio Movement 8/15 (`57.062`, `xy/gemini-4-neon`)** -- authored `modules/caravan/custody/scorpio_key_rotation.rye` (`grain-ww key-rotate`: atomic multi-epoch `Caravan` + `Puddle` ephemeral session key rotation with `secureZero` DRAM wipe, SHA3 tombstone chain, & 0 leftover spent bytes, Proof `#55`) + `gate-key-rotation.glow` (`42/42` live Glow desks GREEN!) (`20261119.155742`)

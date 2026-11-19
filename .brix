@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.164619
-myofascia 57.064
+version 20261119.165127
+myofascia 57.065
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -127,8 +127,10 @@ file modules/caravan/glow/gate-key-rotation.glow
 file modules/comlink/council_405.rye
 file modules/comlink/council_mycelium_weave.rye
 file modules/comlink/constel_405_discovery.rye
+file modules/comlink/constel_aquarius_federation.rye
 file modules/comlink/glow/gate-council-405.glow
 file modules/comlink/glow/gate-constel-gossip.glow
+file modules/comlink/glow/gate-aquarius-405.glow
 file modules/comlink/vantage/vantage_council_puddle.rye
 file modules/comlink/vantage/vantage_twilight_reader.rye
 file modules/vantage_tablecloth_bridge.rye

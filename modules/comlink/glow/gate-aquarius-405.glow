@@ -1,0 +1,11 @@
+::  modules/comlink/glow/gate-aquarius-405.glow -- 405 Peer Federation!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-aquarius-packet
+  |=  [hop=@ud mtu=@ud seat=@ud]                        ::  <=3, <=1200, <405
+  ^-  @ud                                               ::  verified mtu
+  ~|  'constel-aquarius-hop-mtu-or-seat-breach'         ::  low-toll water
+  ?>  &(gte(hop 1) lte(hop 3) lte(mtu 1200) lth(seat 405))
+  mtu
+--

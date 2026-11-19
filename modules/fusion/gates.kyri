@@ -208,3 +208,6 @@ ascii_7bit active-development/date/20261119/20261119-162625-est_orbit5-sagittari
 max_cols 80 blazepod/tally_vn_wal_replay.rye
 max_cols 80 modules/tally/glow/gate-tally-wal.glow
 ascii_7bit active-development/date/20261119/20261119-164619-est_orbit5-capricorn-blazepod-tally-vn-wal-replay.md
+max_cols 80 modules/comlink/constel_aquarius_federation.rye
+max_cols 80 modules/comlink/glow/gate-aquarius-405.glow
+ascii_7bit active-development/date/20261119/20261119-165127-est_orbit5-aquarius-constel-405-federation.md
