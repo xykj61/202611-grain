@@ -92,7 +92,7 @@ exactly which prices ~chamomile was responding to.
 
 > ~oregano's west field has more oregano ready than one crew can harvest
 > before the rain comes Tuesday. Looking for two more hands Saturday
-> afternoon. The work earns 15 MUR each and we will split the harvest
+> afternoon. The work earns 15 WOOD each and we will split the harvest
 > for drying.
 
 ~oregano confirms:
@@ -114,7 +114,7 @@ exactly which prices ~chamomile was responding to.
 Four galaxies coordinating real work through signed posts. ~fennel's
 original request, each response, and the commitments they carry are all
 Blaze facts. When Saturday arrives, ~dill can run a consensus round
-that records the harvest quantities and the MUR earned by each
+that records the harvest quantities and the WOOD earned by each
 participant.
 
 ## Evening -- reflection

@@ -9,12 +9,15 @@
 #   `context/templates/PUBLISH_TARGETS.template.kyri` -- zero hardcoded personal
 #   remotes live in this tracked script!).
 
-assert length args < 2 else "publish-seed: pass at most one flag (--push)"
+assert length args < 2 else "publish-seed: pass --push, --force-seed, or none"
 let pushing = "no"
-if length args == 1 then let pushing = args[0]
-if pushing == "--push" then let pushing = "yes"
-if pushing != "yes" then if pushing != "no" then let pushing = "bad"
-assert pushing != "bad" else "publish-seed: unknown flag (want --push or none)"
+let force_seed = "no"
+if length args == 1 then let arg0 = args[0] else let arg0 = ""
+if arg0 == "--push" then let pushing = "yes"
+if arg0 == "--force-seed" then let pushing = "yes"
+if arg0 == "--force-seed" then let force_seed = "yes"
+let bad_flag = "publish-seed: want --push, --force-seed, or none"
+if arg0 != "" then if pushing != "yes" then assert false else bad_flag
 
 let has_brix = run ["test" "-f" ".brix"]
 assert has_brix.ok else "publish-seed: .brix missing -- run from repo root"
@@ -35,6 +38,12 @@ let r_name = run ["awk" "$1 ~ /^seed_author_name$/ { print $2 }" cfg_file]
 let seed_name = trim r_name.out
 let r_mail = run ["awk" "$1 ~ /^seed_author_email$/ { print $2 }" cfg_file]
 let seed_mail = trim r_mail.out
+let r_cad = run ["awk" "$1 ~ /^seed_cadence$/ { print $2 }" cfg_file]
+let cadence = trim r_cad.out
+if cadence == "" then let cadence = "stream"
+let r_srem = run ["awk" "$1 ~ /^seed_remote$/ { print $2 }" cfg_file]
+let seed_rem = trim r_srem.out
+if seed_rem == "" then let seed_rem = "ww"
 
 # Ensure `modules/fusion/bin/fusion_sow` is built.
 let fsow_src = "modules/fusion/fusion_sow.rye"
@@ -57,6 +66,10 @@ let proved = run [fsow_bin]
 say proved.err
 assert proved.ok else "publish-seed: FUSION SOW REFUSED -- nothing initialized"
 assert (proved.err contains "SOW_WITNESS_GREEN") else "publish-seed: not GREEN"
+
+let h_msg = "GREEN: publish-seed -- hearth cadence (${seed_rem} deferred)."
+if cadence == "hearth" then if force_seed != "yes" then say h_msg
+if cadence == "hearth" then if force_seed != "yes" then let pushing = "no"
 
 let inited = run ["git" "init" "-q" "-b" "main" seed_dir]
 assert inited.ok else "publish-seed: git init -b main refused"

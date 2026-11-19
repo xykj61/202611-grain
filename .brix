@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.172500
-myofascia 56.970
+version 20261115.174500
+myofascia 56.985
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -67,7 +67,15 @@ file libraries/shastra/panchanga_shastra_bridge.rye
 file libraries/risala/twilight_wheel.rye
 file libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md
 file context/TWILIGHT_STYLE.md
+file context/CIVIC_STYLE.md
 file modules/fusion/twilight_residue_audit.rye
+file modules/fusion/hearth_cadence.rye
+file modules/market/wood_token.rye
+file modules/market/glow/fold-wood-mint.glow
+file modules/synonym/synonym_macro.rye
+file terrarium/faa-atc/atc_separation.rye
+file terrarium/civil-engineering/structural_colloquium.rye
+file docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md
 file docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md
 file .gemini/rules/aether-purpose-and-sameness.md
 file .gemini/rules/air-stamp-and-naming.md

@@ -77,7 +77,8 @@ pub const cards = [sign_count]TwilightCard{
         .sign = "Scorpio",
         .shastra_term = "Vrishchika / Anuradha Mitra-vrata",
         .risala_term = "al-'Aqrab / Amanah (sacred trust)",
-        .dusk_counsel = "Keep a friend's covenant and wipe spent keys to zero.",
+        .dusk_counsel =
+            "Keep a friend's covenant and clear spent keys to zero.",
     },
     .{
         .movement = 9,
@@ -100,7 +101,7 @@ pub const cards = [sign_count]TwilightCard{
         .shastra_term = "Kumbha / Sabha (open commons well)",
         .risala_term = "ad-Dalw / Majlis & Shura (mutual counsel)",
         .dusk_counsel =
-            "Share clean water across 405 peers with zero tollbooth.",
+            "Share clean water across 405 peers with little toll.",
     },
     .{
         .movement = 12,

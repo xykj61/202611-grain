@@ -34,7 +34,7 @@ When you open the Bloom tab in Terrarium, you see five shelves:
 
 4. **Demos** -- nine walkthroughs of a live 14-galaxy Pond/Puddle test
    network: galaxy registry, Kumara identity, Comlink sessions,
-   Mycelium consensus, MUR token transfers, and Surf social. These
+   Mycelium consensus, WOOD token transfers, and Surf social. These
    pages put Stages 5, 6, and 7 into practice.
 
 5. **Essays** -- four design essays on the ideas behind Grain's

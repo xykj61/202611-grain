@@ -1,13 +1,27 @@
 format publish-targets-v1
-stamp 20261115.081500
+stamp 20261115.174500
 voice Kyri
 status template
-# context/templates/PUBLISH_TARGETS.template.kyri -- generalized remote template!
+# context/templates/PUBLISH_TARGETS.template.kyri -- Remotes & Hearth Cadence!
 #
-# During `docs-geode/tutorials/the-first-hour.md`, copy this file to the root as
-# `PUBLISH_TARGETS.kyri` (which is gitignored so your personal GitHub orgs/repos
-# never leak into the public seed) and let your Gemini CLI agent fill in your
-# own repository URLs!
+# Copy to gitignored root `PUBLISH_TARGETS.kyri` (see
+# `docs-geode/tutorials/the-first-hour.md` and
+# `docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md`).
+# Both `bench_remote` (default `xy`) and `seed_remote` (default `ww`) adapt
+# freely to your own git remote names!
+#
+# `seed_cadence` controls when `publish-seed.rish --push` sends to `seed_remote`:
+#   - `hearth` : Fast bench focus! Pushes work to `bench_remote` (`xy`), proves
+#                `SOW_WITNESS_GREEN` locally (~130 ms), and skips `seed_remote`
+#                (`ww`) network push unless `--force-seed` is passed.
+#   - `siya`   : Orbit harvest! Pushes `seed_remote` (`ww`) automatically on
+#                Movement 15/15 (`mov % 15 == 0`) and stays local on 1..14.
+#   - `stream` : Continuous release! Pushes `seed_remote` (`ww`) on every
+#                `--push` (default when `seed_cadence` is omitted).
+
+bench_remote xy
+seed_remote ww
+seed_cadence hearth
 
 seed_remote_url git@github.com:YOUR-PUBLIC-ORG/202611-grain.git
 seed_author_name your-public-handle

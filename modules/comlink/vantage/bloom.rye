@@ -157,7 +157,7 @@ pub const galaxies = [galaxy_count]Galaxy{
             "blake2s-sha3-evaluation.md",
             "comlink-sessions.md",
             "mycelium-consensus.md",
-            "mur-token-transfer.md",
+            "wood-token-transfer.md",
             "surf-social-design.md",
             "surf-social-walkthrough.md",
         },

@@ -1,0 +1,145 @@
+//! modules/fusion/hearth_cadence.rye -- Comlink `Hearth / Siya / Stream` Gate!
+//!
+//! Stamp: `20261115.174500` -- Powers `grain-ww cadence`!
+//! Reads adaptable `bench_remote` (default `xy`), `seed_remote` (default `ww`),
+//! and `seed_cadence` (`hearth` | `siya` | `stream`) from gitignored
+//! `PUBLISH_TARGETS.kyri` (or `PUBLISH_TARGETS.template.kyri`):
+//!   - `hearth` : Focus on `bench_remote` (`xy`); defer `seed_remote` (`ww`),
+//!   - `siya`   : Push `seed_remote` (`ww`) only when `mov_count % 15 == 0`,
+//!   - `stream` : Push `seed_remote` (`ww`) on every movement!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.174500";
+const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const SeedCadence = enum(u8) {
+    hearth = 0, // Fast bench-only (`xy`); `ww` skipped unless `--force-seed`!
+    siya = 1,   // Push `ww` only on Movement 15/15 Orbit closure!
+    stream = 2, // Push `ww` on every `--push`!
+
+    pub fn name(self: SeedCadence) []const u8 {
+        return switch (self) {
+            .hearth => "hearth",
+            .siya => "siya",
+            .stream => "stream",
+        };
+    }
+};
+
+pub const CadenceConfig = struct {
+    bench_remote: [24]u8,
+    bench_len: u8,
+    seed_remote: [24]u8,
+    seed_len: u8,
+    cadence: SeedCadence,
+
+    pub fn should_push_seed(
+        self: *const CadenceConfig,
+        mov_count: u64,
+        force_seed: bool,
+    ) bool {
+        if (force_seed) return true;
+        return switch (self.cadence) {
+            .hearth => false,
+            .siya => (mov_count >= 15 and (mov_count % 15) == 0),
+            .stream => true,
+        };
+    }
+};
+
+pub fn parse_targets_kyri(text: []const u8) CadenceConfig {
+    var cfg = std.mem.zeroes(CadenceConfig);
+    @memcpy(cfg.bench_remote[0..2], "xy");
+    cfg.bench_len = 2;
+    @memcpy(cfg.seed_remote[0..2], "ww");
+    cfg.seed_len = 2;
+    cfg.cadence = .stream; // Evergrow backwards-compatible default if omitted
+
+    var it = std.mem.splitScalar(u8, text, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (line.len == 0 or line[0] == '#') continue;
+        if (std.mem.startsWith(u8, line, "bench_remote ")) {
+            const v = std.mem.trim(u8, line[13..], &ws);
+            const n = @min(v.len, 24);
+            @memcpy(cfg.bench_remote[0..n], v[0..n]);
+            cfg.bench_len = @intCast(n);
+        } else if (std.mem.startsWith(u8, line, "seed_remote ")) {
+            const v = std.mem.trim(u8, line[12..], &ws);
+            const n = @min(v.len, 24);
+            @memcpy(cfg.seed_remote[0..n], v[0..n]);
+            cfg.seed_len = @intCast(n);
+        } else if (std.mem.startsWith(u8, line, "seed_cadence ")) {
+            const v = std.mem.trim(u8, line[13..], &ws);
+            if (std.mem.eql(u8, v, "hearth")) cfg.cadence = .hearth;
+            if (std.mem.eql(u8, v, "siya")) cfg.cadence = .siya;
+            if (std.mem.eql(u8, v, "stream")) cfg.cadence = .stream;
+        }
+    }
+    // invariant: remote names always carry >= 1 byte (`xy` / `ww` defaults).
+    assert(cfg.bench_len >= 1 and cfg.seed_len >= 1);
+    return cfg;
+}
+
+fn run_selftest() !u8 {
+    const lf = [_]u8{10};
+    const sample = "bench_remote forge_priv" ++ &lf ++
+        "seed_remote public_mirror" ++ &lf ++
+        "seed_cadence hearth" ++ &lf;
+    const c_h = parse_targets_kyri(sample);
+    if (!std.mem.eql(u8, c_h.bench_remote[0..c_h.bench_len], "forge_priv")) {
+        return error.BadBenchRemote;
+    }
+    if (c_h.should_push_seed(45, false)) return error.HearthShouldSkipSeed;
+    if (!c_h.should_push_seed(45, true)) return error.ForceSeedIgnored;
+
+    const c_s = parse_targets_kyri("seed_cadence siya" ++ &lf);
+    if (c_s.should_push_seed(44, false) or !c_s.should_push_seed(45, false)) {
+        return error.SiyaOrbitGateBroken;
+    }
+
+    print(
+        "GREEN: hearth_cadence -- xy/ww remotes & hearth/siya/stream.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    const cwd = std.Io.Dir.cwd();
+    const txt = cwd.readFileAlloc(
+        io,
+        "PUBLISH_TARGETS.kyri",
+        a,
+        .limited(8192),
+    ) catch try cwd.readFileAlloc(
+        io,
+        "context/templates/PUBLISH_TARGETS.template.kyri",
+        a,
+        .limited(8192),
+    );
+    const cfg = parse_targets_kyri(txt);
+    print("Grain Brix Remotes & Cadence:{c}", .{nl});
+    print("  bench_remote : {s}{c}", .{
+        cfg.bench_remote[0..cfg.bench_len],
+        nl,
+    });
+    print("  seed_remote  : {s}{c}", .{
+        cfg.seed_remote[0..cfg.seed_len],
+        nl,
+    });
+    print("  seed_cadence : {s}{c}", .{ cfg.cadence.name(), nl });
+    return 0;
+}

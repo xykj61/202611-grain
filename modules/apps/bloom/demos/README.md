@@ -21,8 +21,8 @@ the live Urbit network.
 | [Kumara Identity](kumara-identity.md) | Keypairs, signatures, and the three hash algorithms Grain uses |
 | [Blake2s vs SHA3 Evaluation](blake2s-sha3-evaluation.md) | Why Grain uses two hash algorithms rather than one |
 | [Comlink Session](comlink-sessions.md) | How two galaxies open a sealed channel and exchange messages |
-| [Mycelium and MUR](mycelium-consensus.md) | Consensus, token transfers, and how the network agrees |
-| [MUR Token Demo](mur-token-transfer.md) | A walkthrough of sending MUR between galaxies |
+| [Mycelium and WOOD](mycelium-consensus.md) | Consensus, token transfers, and how the network agrees |
+| [WOOD Token Demo](wood-token-transfer.md) | A walkthrough of sending WOOD between galaxies |
 | [Surf Social Design](surf-social-design.md) | The social surface that sits on top of the network |
 | [Surf Social Walkthrough](surf-social-walkthrough.md) | Posting, following, and moderating on a Puddle |
 

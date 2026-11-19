@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.172500";
-pub const myofascia_reading = "56.970";
+pub const grain_ww_version = "20261115.174500";
+pub const myofascia_reading = "56.985";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -115,6 +115,33 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/one_clock",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "cadence")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/hearth_cadence",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "wood")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/wood_token",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "synonym")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/synonym_macro",
             null,
             args[2..],
         );

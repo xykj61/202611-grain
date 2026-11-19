@@ -67,7 +67,7 @@ pub const entries = [15]DuskEntry{
         .sign = "Scorpio",
         .shastra = "Vrishchika / Anuradha Mitra",
         .risala = "al-'Aqrab / Amanah",
-        .counsel = "Keep a friend's covenant and wipe spent keys to zero.",
+        .counsel = "Keep a friend's covenant and clear spent keys to zero.",
     },
     .{
         .sign = "Sagittarius",
@@ -85,7 +85,7 @@ pub const entries = [15]DuskEntry{
         .sign = "Aquarius",
         .shastra = "Kumbha / Sabha",
         .risala = "ad-Dalw / Majlis & Shura",
-        .counsel = "Share clean water across 405 peers with zero toll.",
+        .counsel = "Share clean water across 405 peers with little toll.",
     },
     .{
         .sign = "Pisces",

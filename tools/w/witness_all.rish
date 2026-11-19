@@ -21,6 +21,26 @@ assert b_pe.ok else "puddle_cli_session build failed"
 let r_pe = run ["tools/.build/puddle_cli_session" "selftest"]
 assert r_pe.ok else "puddle_cli_session selftest failed"
 
+let b_hc = run ["sh" rb "modules/fusion/hearth_cadence.rye" "-femit-bin=tools/.build/hearth_cadence"]
+assert b_hc.ok else "hearth_cadence build failed"
+assert (run ["tools/.build/hearth_cadence" "selftest"]).ok else "hearth_cadence selftest failed"
+
+let b_wt = run ["sh" rb "modules/market/wood_token.rye" "-femit-bin=tools/.build/wood_token"]
+assert b_wt.ok else "wood_token build failed"
+assert (run ["tools/.build/wood_token"]).ok else "wood_token selftest failed"
+
+let b_sm = run ["sh" rb "modules/synonym/synonym_macro.rye" "-femit-bin=tools/.build/synonym_macro"]
+assert b_sm.ok else "synonym_macro build failed"
+assert (run ["tools/.build/synonym_macro"]).ok else "synonym_macro selftest failed"
+
+let b_atc = run ["sh" rb "terrarium/faa-atc/atc_separation.rye" "-femit-bin=tools/.build/atc_separation"]
+assert b_atc.ok else "atc_separation build failed"
+assert (run ["tools/.build/atc_separation"]).ok else "atc_separation selftest failed"
+
+let b_civ = run ["sh" rb "terrarium/civil-engineering/structural_colloquium.rye" "-femit-bin=tools/.build/structural_colloquium"]
+assert b_civ.ok else "structural_colloquium build failed"
+assert (run ["tools/.build/structural_colloquium"]).ok else "structural_colloquium selftest failed"
+
 assert (run [rishi "run" "tools/b/bricks_exist_witness.rish"]).ok else "bricks_exist failed"
 assert (run [rishi "run" "tools/g/glow_rune_book_witness.rish"]).ok else "glow_rune_book failed"
 assert (run [rishi "run" "tools/g/glow_cord_interp_witness.rish"]).ok else "glow_cord_interp failed"
@@ -46,4 +66,4 @@ assert (run [rishi "run" "tools/h/harness_parcel_bloom_witness.rish"]).ok else "
 assert (run [rishi "run" "tools/f/fusion_seed_and_build_witness.rish"]).ok else "fusion_seed_and_build failed"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial failed"
 
-say "GREEN: witness_all -- puddle-exec + Siya Orbit Harvest + all 27 metal witnesses proven."
+say "GREEN: witness_all -- Hearth cadence, WOOD, Synonym, FAA ATC, Civil Eng, & all 32 metal witnesses proven."

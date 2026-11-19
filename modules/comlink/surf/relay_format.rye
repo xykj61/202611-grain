@@ -7,7 +7,7 @@ const print = std.debug.print;
 // crypto layer of its own. Frames carry up to 8192 bytes over localhost
 // UDP, following the content_server/content_request precedent.
 //
-// Testnet topology reference: Mycelium MUR -- 15 galaxies, 405 planets.
+// Testnet topology reference: Mycelium WOOD -- 15 galaxies, 405 planets.
 
 pub const relay_version = "20261108.201501";
 
@@ -30,9 +30,9 @@ pub const ack_ok: u8 = 0;
 pub const ack_full: u8 = 1;
 pub const ack_invalid: u8 = 2;
 
-// --- Mycelium MUR testnet topology ------------------------------------------
+// --- Mycelium WOOD testnet topology ------------------------------------------
 
-// invariant: MUR testnet has 15 galaxies and 405 planets.
+// invariant: WOOD testnet has 15 galaxies and 405 planets.
 pub const mur_galaxy_count: u32 = 15;
 pub const mur_planet_count: u32 = 405;
 // invariant: planets per galaxy, average.
@@ -582,7 +582,7 @@ fn prove_frame_bounds() !void {
 }
 
 fn prove_topology_constants() !void {
-    // invariant: MUR testnet -- 15 galaxies, 405 planets.
+    // invariant: WOOD testnet -- 15 galaxies, 405 planets.
     assert(mur_galaxy_count == 15);
     assert(mur_planet_count == 405);
     assert(mur_planets_per_galaxy == 27);

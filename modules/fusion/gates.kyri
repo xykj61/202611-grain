@@ -116,3 +116,11 @@ max_cols 80 modules/vantage_tablecloth_bridge.rye
 max_cols 80 modules/sundial/siya_orbit_harvest.rye
 ascii_7bit modules/sundial/siya_orbit_harvest.rye
 max_cols 80 modules/pond/puddle/puddle_cli_session.rye
+max_cols 80 modules/fusion/hearth_cadence.rye
+max_cols 80 modules/market/wood_token.rye
+max_cols 80 modules/synonym/synonym_macro.rye
+max_cols 80 terrarium/faa-atc/atc_separation.rye
+max_cols 80 terrarium/civil-engineering/structural_colloquium.rye
+ascii_7bit context/CIVIC_STYLE.md
+ascii_7bit docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md
+ascii_7bit active-development/date/20261115/20261115-174500-est_taurus-checkin-tools-reorg-glow-ring0-and-terrarium-stack.md

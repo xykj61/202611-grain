@@ -10,7 +10,7 @@
 
 This page explains how galaxies in a Grain Puddle network reach
 agreement about what happened and in what order. You will learn what
-Mycelium is, what MUR tokens represent, and how a consensus round works
+Mycelium is, what WOOD tokens represent, and how a consensus round works
 from proposal to commitment.
 
 ## What Mycelium is
@@ -29,21 +29,21 @@ galaxy in the Puddle agrees on which happened first. This matters
 because the order of events determines the state of every account, every
 inventory record, and every sealed vessel in the network.
 
-## What MUR is
+## What WOOD is
 
-MUR stands for Mycelium Unit of Record. It is the network's own unit of
+WOOD stands for WOOD (Mycelium Ecological & Timber Unit of Record). It is the network's own unit of
 account -- a way to track who contributed what to the shared work of
 keeping the network running.
 
-A galaxy earns MUR by participating honestly in consensus rounds:
+A galaxy earns WOOD by participating honestly in consensus rounds:
 validating transactions, voting on proposals, and storing the shared
 Blaze log. A galaxy that goes offline or submits false votes earns
-nothing for that round. MUR is not money in the way a dollar or a euro
+nothing for that round. WOOD is not money in the way a dollar or a euro
 is money -- it is a record of contribution, like hours logged in a
 cooperative's ledger.
 
 The 14 galaxies in our demo Puddle each start with an equal allocation
-of MUR. As they participate in consensus rounds, their balances shift
+of WOOD. As they participate in consensus rounds, their balances shift
 to reflect who has been doing the work of keeping the network honest.
 
 ## How a consensus round works
@@ -61,7 +61,7 @@ shared history. For example:
 proposal round 47
   event 1: ~basil sells 24 crates of tomatoes to ~sunflower
   event 2: ~oregano harvests 12 bushels of oregano
-  event 3: ~chive transfers 50 MUR to ~chamomile
+  event 3: ~chive transfers 50 WOOD to ~chamomile
 ```
 
 ~dill signs this proposal with its Kumara identity and sends it to
@@ -73,7 +73,7 @@ Each galaxy receives the proposal and checks it against its own local
 copy of the Blaze log:
 
 - Does ~basil have 24 crates to sell? Check the inventory.
-- Does ~chive have 50 MUR to transfer? Check the balance.
+- Does ~chive have 50 WOOD to transfer? Check the balance.
 - Are the Kumara signatures on each event valid?
 - Does the proposal follow from the last agreed state?
 
