@@ -1,7 +1,7 @@
 # Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Stamp:** `20261115.123500`
-**Voice:** Kyri (Gauge, Teacher, Radiant, & Civic)
+**Stamp:** `20261119.105021` (EST)
+**Voice:** Kyri / Reya (Gauge, Radiant, Civic, Teacher / Karma, & Twilight)
 **Branch:** `xy/gemini-4-carbon` (`publish-seed` -> `grain-ww/202611-grain`)
 
 ---
@@ -26,9 +26,15 @@ hidden macros, private dialects, or duplicated platform logic.
 
 ---
 
-## 2. Stamp and Name -- Count, Never Number
+## 2. Stamp and Name -- Count, Never Number, Never Guess
 
-1. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
+1. **Computationally Measure Every Stamp (Zero Guessing -- HARD RED):** NEVER
+   guess, hand-increment, or invent a `YYYYMMDD.HHMMSS` or `YYYYMMDD-HHMMSS-<tz>`
+   timestamp from memory. Before writing or updating `.brix`, `version`
+   constants, or dated filenames, ALWAYS execute
+   `languages/rishi/bin/grain-ww stamp` on metal and use its exact reading
+   (`grain-ww stamp verify-brix` enforces `<= 1`-day wall-clock agreement!).
+2. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
    versions/headers; `YYYYMMDD-HHMMSS_sprig.ext` for dated records) order work;
    plain descriptive names state meaning.
 2. **Zero ascending serial numbers in living names or headers:** Never mint

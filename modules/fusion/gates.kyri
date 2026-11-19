@@ -125,3 +125,12 @@ ascii_7bit context/CIVIC_STYLE.md
 ascii_7bit docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md
 ascii_7bit active-development/date/20261115/20261115-174500-est_taurus-checkin-tools-reorg-glow-ring0-and-terrarium-stack.md
 max_cols 80 languages/glow/rune_48_lower.rye
+max_cols 80 languages/glow/sheaf/sheaf_wire_doors.rye
+ascii_7bit context/RADIANT_STYLE.md
+ascii_7bit context/GAUGE_STYLE.md
+ascii_7bit context/TWILIGHT_STYLE.md
+ascii_7bit context/KYRI.md
+ascii_7bit context/REYA.md
+ascii_7bit context/TEACHER_STYLE.md
+ascii_7bit context/KARMA_STYLE.md
+ascii_7bit context/SILO_TECHNIQUE.md

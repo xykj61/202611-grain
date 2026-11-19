@@ -1,18 +1,33 @@
-# Teacher Style -- The Open Door of `docs-geode/`
+# Teacher Style -- The Open Classroom & Huddle Door
 
 **Language:** EN
-**Stamp:** `20261115.031500` (EST)
-**Voice:** Kyri
-**Style:** Teacher at Door, Radiant warmth
-**Status:** Living (`Room: checkable` -- governing teaching standard for [`../docs-geode/`](../docs-geode/README.md) and [`../SOURCE.md`](../SOURCE.md))
+**Stamp:** `20261119.105021` (EST)
+**Voice:** Kyri / Reya and Kyli, jointly
+**Style:** Teacher (synonym-paired with [`KARMA_STYLE.md`](KARMA_STYLE.md) via
+[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md))
+**Synonym Binding:** `teacher-style <-> karma-style` in
+[`../modules/synonym/synonym_macro.rye`](../modules/synonym/synonym_macro.rye)
 
 ---
 
-## Four Promises to Every Learner
+## Single-Stranded Style Definition (`Sameness Is the Macro`)
 
-Every page inside [`../docs-geode/`](../docs-geode/README.md) keeps four promises:
+**Teacher Style** is implemented directly and identically in terms of
+**[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md)**
+-- sharing 100% of its zero-assumed-background kindness, first-principles order,
+siloed coaching/practice metaphors (*Film, Huddle, One possession, The bench,
+Conditioning*), and Gauge measurement discipline with its exact synonym
+**[`KARMA_STYLE.md`](KARMA_STYLE.md)** (retiring the elder `BHAKTA_STYLE.md` to
+`yonder/context/BHAKTA_STYLE.md`).
 
-1. **Define Every Term When Met:** The first time a newcomer meets *compiler*, *witness*, *arena*, *rune*, or *digest*, define it in one plain clause on that very line.
-2. **Run Every Command Before Quoting It:** Every code block and terminal excerpt in a tutorial is copied from an actual run against the current pinned toolchain (`Zig 0.17.0`, `rye`, `rishi`, `glow`).
-3. **One Path First, Branches After:** Walk the learner straight from zero to one working `GREEN` proof before offering optional side doors.
-4. **Honest Geode Framing:** Say clearly what is crystal-solid today and what is still molten stone under active construction. Never pretend an unfinished layer is shrink-wrapped.
+### When `Style: Teacher` Is Chosen
+- Onboarding tutorials (`docs-geode/tutorials/`), workplace/civic walkthroughs,
+  and **Movement `9-Sagittarius`** Teacher responses that synthesize `6-Virgo ->
+  7-Libra -> 8-Scorpio` lessons into a welcoming roadmap for the next 15
+  movements.
+- Read the complete, unabridged specification in
+  **[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md)**.
+
+---
+
+*May practice stay kind, and may the connective tissue last.*

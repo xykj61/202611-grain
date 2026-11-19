@@ -1,10 +1,10 @@
 # The Redact Technique -- our own particular, set down as a public general
 
 **Language:** EN
-**Stamp:** `20260908.135331` (EDT) - **Voice:** Kyri - **Style:** written in Bhakta
-**Status:** Living -- seated `20260908` on Keaton's word. **Room:** vision -- the technique is
+**Stamp:** `20260908.135331` (EDT) - **Voice:** Kyri - **Style:** written in Teacher / Karma
+**Status:** Living -- seated `20260908` on the maintainer's word. **Room:** vision -- the technique is
 described here and the fourth manifest verdict it proposes is not yet built.
-**Sibling:** [`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md) - **Register:** [`BHAKTA_STYLE.md`](BHAKTA_STYLE.md)
+**Sibling:** [`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md) - **Register:** [`TEACHER_STYLE.md`](TEACHER_STYLE.md)
 
 ## The one sentence
 
@@ -57,7 +57,7 @@ reader at a different scale, with different terms, can run the same method on th
 
 ## The register
 
-Redacted pages are written in **Bhakta**: no assumed background, first principles in order, one new
+Redacted pages are written in **Teacher / Karma**: no assumed background, first principles in order, one new
 idea at a time, and one honest sentence about why the work matters -- the household it steadies, the
 ecology it serves. Every Gauge discipline still holds. **Accessible means measured too**: a figure
 carries unit, date, source, and what holds it still, and a projection carries horizon, assumptions,

@@ -1,0 +1,21 @@
+::  languages/glow/compiler/sheaf_wire.glow -- Sheaf, Door, & Wire!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-sheaf-nib
+  |=  [got-nib=@ud want-nib=@ud]                        ::  /~ SHA3 nib pin
+  ^-  @ud                                               ::  verified nib
+  ~|  'sheaf-immutable-sha3-nib-mismatch'               ::  refuse tamper!
+  ?>  (eql got-nib want-nib)
+  got-nib
+++  fold-barcab-door
+  |=  [door-state=@ud step-delta=@ud]                   ::  |_ pure door
+  ^-  @ud                                               ::  next state
+  %+  add  door-state  step-delta
+++  gate-micmic-wire
+  |=  [slice-len=@ud max-cap=@ud]                       ::  ;; wire mold
+  ^-  @ud                                               ::  bounded wire
+  ~|  'wire-slice-exceeds-pond-sanctuary-cap'           ::  Pond Glasswall
+  ?>  &(gte(slice-len 1) lte(slice-len max-cap))
+  slice-len
+--

@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.180000
-myofascia 57.000
+version 20261119.105021
+myofascia 57.015
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -68,6 +68,15 @@ file libraries/risala/twilight_wheel.rye
 file libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md
 file context/TWILIGHT_STYLE.md
 file context/CIVIC_STYLE.md
+file context/RADIANT_STYLE.md
+file context/GAUGE_STYLE.md
+file context/KYRI.md
+file context/REYA.md
+file context/voices/companion-voice-base.md
+file context/TEACHER_STYLE.md
+file context/KARMA_STYLE.md
+file context/styles/lib/open-door-style-base.md
+file context/SILO_TECHNIQUE.md
 file modules/fusion/twilight_residue_audit.rye
 file modules/fusion/hearth_cadence.rye
 file modules/market/wood_token.rye
@@ -138,6 +147,8 @@ file languages/glow/pith/pith_ir.rye
 file languages/glow/mill/mill_emit.rye
 file languages/glow/rune_48_lower.rye
 file languages/glow/compiler/rune_48_dispatch.glow
+file languages/glow/sheaf/sheaf_wire_doors.rye
+file languages/glow/compiler/sheaf_wire.glow
 file languages/glow/driver/glow_self_host.rye
 file languages/glow/driver/glow_compile_cli.rye
 file languages/glow/examples/double_harvest.glow

@@ -81,7 +81,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "earth",
         .goal = "law",
         .craft_verb =
-            "Polish unseen seams (Itqan): 80-col, ASCII, & TAME bounds.",
+            "Lantern/TAME/Civic/Radiant/Rota audit & orbit-efficiency review.",
     },
     .{
         .movement = 7,
@@ -90,7 +90,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "air",
         .goal = "fun",
         .craft_verb =
-            "Even scales: plan active-development tidy & Mitra/debride list.",
+            "Weigh 6-Virgo findings, plan tidy/Mitra list, & ask 8-Scorpio.",
     },
     .{
         .movement = 8,
@@ -108,7 +108,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "fire",
         .goal = "talent",
         .craft_verb =
-            "Jupiter radiance: Brushstroke/Skate art & re-prepend Pulp stack.",
+            "Teacher/Karma response: Brushstroke/Skate art & re-prepend Pulp.",
     },
     .{
         .movement = 10,
@@ -135,7 +135,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "water",
         .goal = "aesthetics",
         .craft_verb =
-            "Sandhya/Shafaq dusk: wash brushes clean of residue & rest.",
+            "Twilight Radiant Silo art: craft unique gratitude-born artifact.",
     },
     .{
         .movement = 13,

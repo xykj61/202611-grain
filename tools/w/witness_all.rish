@@ -51,6 +51,17 @@ let o9 = "-femit-bin=tools/.build/rune_48_lower"
 assert (run ["sh" rb s9 o9]).ok else "rune_48_lower build"
 assert (run ["tools/.build/rune_48_lower"]).ok else "rune_48_lower"
 
+let s10 = "languages/glow/sheaf/sheaf_wire_doors.rye"
+let o10 = "-femit-bin=tools/.build/sheaf_wire_doors"
+assert (run ["sh" rb s10 o10]).ok else "sheaf_wire_doors build"
+assert (run ["tools/.build/sheaf_wire_doors"]).ok else "sheaf_wire_doors"
+
+let s11 = "modules/sundial/one_clock.rye"
+let o11 = "-femit-bin=tools/.build/one_clock"
+assert (run ["sh" rb s11 o11]).ok else "one_clock build"
+assert (run ["tools/.build/one_clock" "selftest"]).ok else "one_clock selftest"
+assert (run ["tools/.build/one_clock" "verify-brix"]).ok else "stale .brix!"
+
 let w01 = "tools/b/bricks_exist_witness.rish"
 assert (run [rishi "run" w01]).ok else "bricks_exist"
 let w02 = "tools/g/glow_rune_book_witness.rish"
@@ -99,4 +110,4 @@ let w23 = "tools/f/fusion_seed_and_build_witness.rish"
 assert (run [rishi "run" w23]).ok else "fusion_seed_and_build"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial"
 
-say "GREEN: witness_all -- 48/48 Glow Runes + all 33 metal witnesses (57.000)!"
+say "GREEN: witness_all -- live-clock gate, Glow Doors, & 35 proofs (57.015)!"

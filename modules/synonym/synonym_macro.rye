@@ -11,7 +11,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const version = "20261115.174500";
+pub const version = "20261119.105021";
 pub const max_bindings: u32 = 64;
 const nl: u8 = 10;
 
@@ -89,9 +89,22 @@ pub const SynonymBook = struct {
 
 fn run_selftest() !u8 {
     var book = SynonymBook.init();
+    try book.bind("companion-voice-base", "kyri");
+    try book.bind("companion-voice-base", "reya");
+    try book.bind("open-door-style-base", "teacher-style");
+    try book.bind("open-door-style-base", "karma-style");
     try book.bind("resonance", "harmony-studio");
     try book.bind("tablecloth", "ledger-sql");
     try book.bind("WOOD", "TIMBER");
+
+    // 0. Kyri <-> Reya & Teacher <-> Karma resolve to identical bases!
+    const v_k = try book.resolve_to_canonical("kyri");
+    const v_r = try book.resolve_to_canonical("reya");
+    if (!std.mem.eql(u8, v_k, v_r)) return error.VoiceSynonymMismatch;
+
+    const s_t = try book.resolve_to_canonical("teacher-style");
+    const s_k = try book.resolve_to_canonical("karma-style");
+    if (!std.mem.eql(u8, s_t, s_k)) return error.StyleSynonymMismatch;
 
     // 1. Both custom alias & canonical name resolve to single-stranded core!
     const r1 = try book.resolve_to_canonical("harmony-studio");

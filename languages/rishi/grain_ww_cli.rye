@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.180000";
-pub const myofascia_reading = "57.000";
+pub const grain_ww_version = "20261119.105021";
+pub const myofascia_reading = "57.015";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -84,7 +84,7 @@ fn dispatch_exec(
 fn run_selftest(io: std.Io) !u8 {
     var buf: [128]u8 = undefined;
     const b = try format_banner(&buf);
-    if (std.mem.indexOf(u8, b, "grain-ww 20261115") == null) {
+    if (std.mem.indexOf(u8, b, grain_ww_version) == null) {
         return error.BadBanner;
     }
     if ((try run_doctor(io)) != 0) return error.DoctorFailed;
@@ -151,6 +151,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/rune_48_lower",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "glow-doors")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/sheaf_wire_doors",
             null,
             args[2..],
         );
