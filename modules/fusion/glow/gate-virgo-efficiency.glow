@@ -1,0 +1,11 @@
+::  modules/fusion/glow/gate-virgo-efficiency.glow -- Virgo Film Study!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-virgo-hub-floor
+  |=  [hub-count=@ud glow-desks=@ud]                    ::  >=13 hubs & >=40
+  ^-  @ud                                               ::  verified sum
+  ~|  'virgo-efficiency-below-13-hub-or-40-glow-floor'  ::  Myofascia ratchet
+  ?>  &(gte(hub-count 13) gte(glow-desks 40))
+  %+  add  hub-count  glow-desks
+--

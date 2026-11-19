@@ -1,0 +1,11 @@
+::  modules/brushstroke/glow/fold-twilight-svg.glow -- Nocturne Mandala!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-nocturne-mandala
+  |=  [sign=@ud nodes=@ud]                              ::  1..15 & 15 stars
+  ^-  @ud                                               ::  verified sign
+  ~|  'twilight-nocturne-svg-sign-or-node-breach'       ::  Pisces mandala
+  ?>  &(gte(sign 1) lte(sign 15) eql(nodes 15))
+  sign
+--

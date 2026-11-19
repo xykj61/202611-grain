@@ -1,0 +1,11 @@
+::  modules/comlink/vantage/glow/fold-studio-deck.glow -- Vantage Deck!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-studio-deck-cap
+  |=  [surface=@ud bytes=@ud desks=@ud]                 ::  1..4, <=256K, 50
+  ^-  @ud                                               ::  verified desks
+  ~|  'vantage-studio-deck-surface-or-50-desk-breach'   ::  50/50 Glow desks
+  ?>  &(gte(surface 1) lte(surface 4) lte(bytes 262144) gte(desks 50))
+  desks
+--

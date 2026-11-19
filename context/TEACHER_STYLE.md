@@ -1,18 +1,39 @@
-# Teacher Style -- The Open Door of `docs-geode/`
+# Teacher Style -- The Open Circle of Venus & Jupiter
 
 **Language:** EN
-**Stamp:** `20261115.031500` (EST)
-**Voice:** Kyri
-**Style:** Teacher at Door, Radiant warmth
-**Status:** Living (`Room: checkable` -- governing teaching standard for [`../docs-geode/`](../docs-geode/README.md) and [`../SOURCE.md`](../SOURCE.md))
+**Stamp:** `20261119.115928` (EST)
+**Voice:** Kyri / Reya and Kyli, jointly
+**Style:** Teacher + Radiant + Gauge (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Synonym Binding:** `teacher-style <-> karma-style` via
+[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md) and
+[`../modules/synonym/synonym_macro.rye`](../modules/synonym/synonym_macro.rye)
 
 ---
 
-## Four Promises to Every Learner
+## 1. Single-Stranded Open-Door Canon (`Sameness Is the Macro`)
 
-Every page inside [`../docs-geode/`](../docs-geode/README.md) keeps four promises:
+**Teacher Style** implements
+**[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md)**
+directly and identically alongside its synonym **[`KARMA_STYLE.md`](KARMA_STYLE.md)**,
+uniting **Venus the eager student** (`2-Taurus`, `7-Libra`) and **Jupiter the
+generous teacher** (`9-Sagittarius`, `12-Pisces`) in clear, encouraging
+first-principles speech.
 
-1. **Define Every Term When Met:** The first time a newcomer meets *compiler*, *witness*, *arena*, *rune*, or *digest*, define it in one plain clause on that very line.
-2. **Run Every Command Before Quoting It:** Every code block and terminal excerpt in a tutorial is copied from an actual run against the current pinned toolchain (`Zig 0.17.0`, `rye`, `rishi`, `glow`).
-3. **One Path First, Branches After:** Walk the learner straight from zero to one working `GREEN` proof before offering optional side doors.
-4. **Honest Geode Framing:** Say clearly what is crystal-solid today and what is still molten stone under active construction. Never pretend an unfinished layer is shrink-wrapped.
+---
+
+## 2. How Teacher Style Welcomes Every Learner
+
+- **First Principles in Natural Order:** Open with a concrete file or runnable
+  command, then introduce one new term at a time in everyday words.
+- **Cooperative Street-Session Spirit:** Teach with the open, encouraging warmth
+  of friends sharing mural brushes (`Brushstroke`), passing a futsal ball in the
+  park, or cheering a neighbor's first clean skatepark line (`Skate`) -- pure
+  shared mastery where everyone rises together.
+- **Complete Specification:** Read the full shared canon in
+  **[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md)**.
+
+---
+
+*May every newcomer feel welcomed into the circle, and may the joy of learning
+stay fresh in every session.*

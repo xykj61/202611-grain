@@ -1,0 +1,11 @@
+::  modules/synonym/glow/fold-whole-cup.glow -- Sameness Macro & 48 Desks!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-calfive-quintet
+  |=  [orbit=@ud quest=@ud desks=@ud]                   ::  15, 75, 48 desks
+  ^-  @ud                                               ::  verified desks
+  ~|  'whole-cup-calfive-or-48-desk-parity-breach'      ::  48 desks == 48
+  ?>  &(eql(orbit 15) eql(quest 75) eql(desks 48))
+  desks
+--

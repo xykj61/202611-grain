@@ -10,8 +10,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const rune_book_version = "20261115.044500";
-pub const expected_live_count: u32 = 30;
+pub const rune_book_version = "20261115.180000";
+pub const expected_live_count: u32 = 48;
 pub const expected_family_count: u32 = 13;
 
 pub const Disposition = enum {
@@ -125,25 +125,25 @@ pub const runes = [_]RuneSpec{
     rn('%', "%^", "cenket", .live, "gate a b c", "Call gate with 3-tuple"),
     rn('%', "%*", "centar", .live, "mold init upd+", "Update record fields"),
 
-    // Planned Glow Mill additions (Orbits 2-10)
-    rn('/', "/-", "fashep", .planned, "shape-name+", "Import shape via Sheaf"),
-    rn('/', "/=", "fastis", .planned, "alias target", "Brix infuse override"),
-    rn('/', "/*", "fastar", .planned, "name %aura sha3", "SHA3-verified asset"),
-    rn('/', "/$", "fasbuk", .planned, "conv-name", "Import wire converter"),
-    rn('/', "/%", "fascen", .planned, "course-name", "Pin .brix course"),
-    rn('/', "/~", "fassig", .planned, "name nib-hex", "Pin immutable SHA3 nib"),
-    rn('|', "|_", "barcab", .planned, "state ++arm+ --", "Stateful pure door"),
-    rn('=', "=^", "tisket", .planned, "p st step b", "Thread [prod next_st]"),
-    rn('%', "%=", "centis", .planned, "wing upd+", "Functional update/recur"),
-    rn('=', "=~", "tissig", .planned, "stage+ ==", "Linear subject pipeline"),
-    rn('?', "?!", "wutzap", .planned, "expr", "Logical boolean NOT"),
-    rn(';', ";~", "micsig", .planned, "glue rule+", "Bounded wire combinator"),
-    rn(';', ";;", "micmic", .planned, "mold bytes", "Validate wire slice"),
-    rn('~', "~&", "sigpam", .planned, "label expr", "Pure Basin debug trace"),
-    rn('~', "~|", "sigbar", .planned, "cord expr", "Static refusal trail"),
-    rn('~', "~%", "sigcen", .planned, "%jet core", "Verified Rye intrinsic"),
-    rn('!', "!:", "zapcol", .planned, "expr", "Enable line:col trail"),
-    rn('!', "!!", "zapzap", .planned, "(crash)", "Unreachable refusal"),
+    // Promoted Glow Mill runes (all 48/48 live as of 20261115.180000!)
+    rn('/', "/-", "fashep", .live, "shape-name+", "Import shape via Sheaf"),
+    rn('/', "/=", "fastis", .live, "alias target", "Brix infuse override"),
+    rn('/', "/*", "fastar", .live, "name %aura sha3", "SHA3-verified asset"),
+    rn('/', "/$", "fasbuk", .live, "conv-name", "Import wire converter"),
+    rn('/', "/%", "fascen", .live, "course-name", "Pin .brix course"),
+    rn('/', "/~", "fassig", .live, "name nib-hex", "Pin immutable SHA3 nib"),
+    rn('|', "|_", "barcab", .live, "state ++arm+ --", "Stateful pure door"),
+    rn('=', "=^", "tisket", .live, "p st step b", "Thread [prod next_st]"),
+    rn('%', "%=", "centis", .live, "wing upd+", "Functional update/recur"),
+    rn('=', "=~", "tissig", .live, "stage+ ==", "Linear subject pipeline"),
+    rn('?', "?!", "wutzap", .live, "expr", "Logical boolean NOT"),
+    rn(';', ";~", "micsig", .live, "glue rule+", "Bounded wire combinator"),
+    rn(';', ";;", "micmic", .live, "mold bytes", "Validate wire slice"),
+    rn('~', "~&", "sigpam", .live, "label expr", "Pure Basin debug trace"),
+    rn('~', "~|", "sigbar", .live, "cord expr", "Static refusal trail"),
+    rn('~', "~%", "sigcen", .live, "%jet core", "Verified Rye intrinsic"),
+    rn('!', "!:", "zapcol", .live, "expr", "Enable line:col trail"),
+    rn('!', "!!", "zapzap", .live, "(crash)", "Unreachable refusal"),
 };
 
 pub fn count_live() u32 {
@@ -265,7 +265,7 @@ pub fn render_markdown(out: []u8) RenderError!u32 {
     try append_str(
         out,
         &pos,
-        "\n## 2. All Glow Rune Digraphs (30 Live + 18 Planned Mill Runes)\n\n",
+        "\n## 2. All Glow Rune Digraphs (48/48 Live Across 13 Families)\n\n",
     );
     try append_str(
         out,
@@ -338,8 +338,10 @@ fn run_selftest() !u8 {
 
     if (!is_live_digraph("|=")) return error.MissingBartis;
     if (!is_live_digraph("%^")) return error.MissingCenket;
-    if (is_live_digraph("/~")) return error.PlannedMarkedLive;
-    if (lookup("/~") == null) return error.MissingPlannedFassig;
+    if (!is_live_digraph("/~")) return error.MissingFassig;
+    if (!is_live_digraph("|_")) return error.MissingBarcab;
+    if (!is_live_digraph("!!")) return error.MissingZapzap;
+    if (is_live_digraph("/?")) return error.UnknownMarkedLive;
     if (lookup("??") != null) return error.UnknownAccepted;
 
     var tiny: [32]u8 = undefined;
@@ -353,7 +355,7 @@ fn run_selftest() !u8 {
         return error.DriftAccepted;
     } else |_| {}
 
-    print("rune_book: 13 families, {d} live + 18 planned runes.\n", .{
+    print("rune_book: 13 families, {d}/48 live runes.\n", .{
         count_live(),
     });
     print("GREEN: rune_book -- zero-drift Glow rune table proven.\n", .{});
@@ -395,7 +397,7 @@ fn run_check(
         print("FAIL MarkdownDrift in {s}\n", .{md_path});
         return 1;
     }
-    print("GREEN: rune_book check -- {d}/30 live heads & md agree.\n", .{
+    print("GREEN: rune_book check -- {d}/48 live heads & md agree.\n", .{
         count_live(),
     });
     return 0;

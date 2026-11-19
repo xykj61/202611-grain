@@ -1,0 +1,17 @@
+::  modules/pond/glow/gate-pond-sanctuary.glow -- Unwatched Sanctuary!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-glasswall-voice
+  |=  [mic-on=@ud lamp-lit=@ud]                         ::  hardware + lamp
+  ^-  @ud                                               ::  1=safe, 0=muted
+  ~|  'glasswall-mic-closed-without-bystander-lamp'     ::  consent beacon
+  ?>  |(eql(mic-on 0) eql(lamp-lit 1))
+  mic-on
+++  gate-pond-egress
+  |=  [want-net=@ud cap-granted=@ud]                    ::  explicit egress
+  ^-  @ud                                               ::  verified egress
+  ~|  'pond-sanctuary-egress-capability-absent'         ::  zero-egress air
+  ?>  |(eql(want-net 0) eql(cap-granted 1))
+  want-net
+--

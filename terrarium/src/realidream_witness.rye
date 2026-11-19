@@ -378,7 +378,7 @@ const galaxies = [_]GalaxyPages{
             "comlink-sessions",
             "galaxy-registry",
             "kumara-identity",
-            "mur-token-transfer",
+            "wood-token-transfer",
             "mycelium-consensus",
             "pond-quickstart",
             "surf-social-design",

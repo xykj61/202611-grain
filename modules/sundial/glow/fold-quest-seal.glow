@@ -1,0 +1,11 @@
+::  modules/sundial/glow/fold-quest1-seal.glow -- Siya Quest Harvest!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-quest-harvest
+  |=  [movs=@ud orbs=@ud proofs=@ud]                    ::  75, 5, 62 proofs
+  ^-  @ud                                               ::  verified proofs
+  ~|  'siya-quest-harvest-below-75-mov-5-orb-62-bar'    ::  quest harvest
+  ?>  &(gte(movs 75) gte(orbs 5) gte(proofs 62))
+  proofs
+--

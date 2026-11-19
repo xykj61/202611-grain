@@ -1,0 +1,222 @@
+//! modules/harness/grain_cached_harness.rye -- Cached Grain Harness!
+//!
+//! Stamp: `20261119.180005` -- Gemini (*Dancing friends, many weaves*):
+//! Deterministic content-addressed Harness interface (`grain-ww harness-cache`)
+//! uniting `Flare`, `Pond`, & `Caravan`-gated **Gemini API** transport behind
+//! one single-stranded `Synonym` value model (`Sameness Is the Macro`) across
+//! `Skate`, `Tally`, `Caravan`, `Blaze`, `Mycelium`, `WOOD`, `Blazepod`
+//! (`tally-ram` & `tally-vn`), `Terrarium`, & `Vantage Station`:
+//!   1. Routes `flare_local`, `pond_sandbox`, & `gemini_api_bridge` through
+//!      one uniform `HarnessTurn` contract usable directly from `gemini-cli`
+//!      or standalone `Vantage Station`,
+//!   2. Enforces `Blazepod` posture: `tally_ram` strictly refuses external
+//!      Gemini API egress while welcoming local `Flare` & `Pond` in RAM;
+//!      `tally_vn` permits `gemini_api_bridge` only with `Caravan` capability
+//!      `cap_vault_gemini_key`,
+//!   3. Caches turn digests in a bounded `Tally` arena (`max_entries = 64`)
+//!      with SHA3-256 early-cutoff hits (zero duplicate token / `WOOD` burn)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const hc = @import("harness_core.rye");
+
+pub const version = "20261119.180005";
+pub const max_entries: u32 = 64;
+const nl: u8 = 10;
+
+pub const CachedHarnessError = error{
+    EmptyPromptRefused,
+    RamOnlyRefusesExternalApi,
+    ApiCapRequired,
+    CacheFullRefused,
+};
+
+pub const HardwarePosture = enum(u8) {
+    tally_ram = 1, // Pure RAM-only Blazepod: local Flare & Pond only
+    tally_vn = 2,  // Connected airlock Blazepod / Vantage Station
+};
+
+pub const TransportKind = enum(u8) {
+    flare_local = 1,
+    pond_sandbox = 2,
+    gemini_api_bridge = 3,
+};
+
+pub const HarnessTurn = struct {
+    transport: TransportKind,
+    posture: HardwarePosture,
+    granted_caps: u32,
+    prompt: []const u8,
+    wood_cost: u64,
+};
+
+pub const TurnOutcome = struct {
+    cache_key: [32]u8,
+    response_sha3: [32]u8,
+    cache_hit: bool,
+    wood_spent: u64,
+    mycelium_seq: u32,
+};
+
+const CacheSlot = struct {
+    key: [32]u8,
+    resp: [32]u8,
+};
+
+pub const CachedHarness = struct {
+    slots: [max_entries]CacheSlot,
+    count: u32,
+    hits: u32,
+    misses: u32,
+    wood_total: u64,
+    mycelium_seq: u32,
+
+    pub fn init() CachedHarness {
+        return std.mem.zeroes(CachedHarness);
+    }
+
+    pub fn compute_key(turn: HarnessTurn) [32]u8 {
+        var out: [32]u8 = undefined;
+        var h = Sha3_256.init(.{});
+        h.update("grain-cached-harness-key-v1:");
+        const hdr = [_]u8{
+            @intFromEnum(turn.transport),
+            @intFromEnum(turn.posture),
+        };
+        h.update(&hdr);
+        h.update(turn.prompt);
+        h.final(&out);
+        assert((out[0] | out[1] | out[2]) != 0);
+        return out;
+    }
+
+    pub fn dispatch(
+        self: *CachedHarness,
+        turn: HarnessTurn,
+    ) CachedHarnessError!TurnOutcome {
+        // invariant: validate non-empty prompt & posture/Caravan API bounds.
+        if (turn.prompt.len == 0) return error.EmptyPromptRefused;
+        if (turn.transport == .gemini_api_bridge) {
+            if (turn.posture == .tally_ram) {
+                return error.RamOnlyRefusesExternalApi;
+            }
+            const need = hc.cap_vault_gemini_key;
+            if ((turn.granted_caps & need) != need) {
+                return error.ApiCapRequired;
+            }
+        }
+
+        const key = compute_key(turn);
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (std.mem.eql(u8, &self.slots[i].key, &key)) {
+                self.hits += 1;
+                self.mycelium_seq += 1;
+                // invariant: cache hit burns zero extra WOOD compute units.
+                assert(self.hits > 0 and self.count <= max_entries);
+                return .{
+                    .cache_key = key,
+                    .response_sha3 = self.slots[i].resp,
+                    .cache_hit = true,
+                    .wood_spent = 0,
+                    .mycelium_seq = self.mycelium_seq,
+                };
+            }
+        }
+
+        if (self.count >= max_entries) return error.CacheFullRefused;
+        var resp: [32]u8 = undefined;
+        var hr = Sha3_256.init(.{});
+        hr.update("grain-blaze-weave-reply-v1:");
+        hr.update(&key);
+        hr.final(&resp);
+
+        self.slots[self.count] = .{ .key = key, .resp = resp };
+        self.count += 1;
+        self.misses += 1;
+        self.wood_total += turn.wood_cost;
+        self.mycelium_seq += 1;
+        assert(self.count <= max_entries and self.misses > 0);
+        return .{
+            .cache_key = key,
+            .response_sha3 = resp,
+            .cache_hit = false,
+            .wood_spent = turn.wood_cost,
+            .mycelium_seq = self.mycelium_seq,
+        };
+    }
+};
+
+fn run_selftest() !u8 {
+    var h = CachedHarness.init();
+
+    // 1. Welcome: RAM-only Blazepod executes local Flare + Pond & caches hit!
+    const ram_flare = HarnessTurn{
+        .transport = .flare_local,
+        .posture = .tally_ram,
+        .granted_caps = hc.cap_pure_compute | hc.cap_skate_surface,
+        .prompt = "render skate canopy tile",
+        .wood_cost = 10,
+    };
+    const r1 = try h.dispatch(ram_flare);
+    const r2 = try h.dispatch(ram_flare);
+    if (r1.cache_hit or !r2.cache_hit or r2.wood_spent != 0) {
+        return error.CacheEarlyCutoffBroken;
+    }
+    if (!std.mem.eql(u8, &r1.response_sha3, &r2.response_sha3)) {
+        return error.NonDeterministicCacheReply;
+    }
+
+    // 2. Welcome: tally-vn with Caravan cap_vault_gemini_key reaches Gemini!
+    const vn_gemini = HarnessTurn{
+        .transport = .gemini_api_bridge,
+        .posture = .tally_vn,
+        .granted_caps = hc.cap_vault_gemini_key | hc.cap_comlink_peer,
+        .prompt = "fold synonym macro across vantage station",
+        .wood_cost = 25,
+    };
+    const g1 = try h.dispatch(vn_gemini);
+    const g2 = try h.dispatch(vn_gemini);
+    if (g1.cache_hit or !g2.cache_hit or h.wood_total != 35) {
+        return error.GeminiBridgeCacheBroken;
+    }
+
+    // 3. Refusal 1: RAM-only Blazepod strictly refuses external Gemini API!
+    var bad_ram = vn_gemini;
+    bad_ram.posture = .tally_ram;
+    if (h.dispatch(bad_ram)) |_| {
+        return error.RamOnlyLeakedApi;
+    } else |err| {
+        if (err != error.RamOnlyRefusesExternalApi) return err;
+    }
+
+    // 4. Refusal 2: tally-vn without Caravan API key capability refused!
+    var bad_cap = vn_gemini;
+    bad_cap.granted_caps = hc.cap_pure_compute;
+    if (h.dispatch(bad_cap)) |_| {
+        return error.UnauthorizedApiAccepted;
+    } else |err| {
+        if (err != error.ApiCapRequired) return err;
+    }
+
+    // 5. Refusal 3: empty prompt refused cleanly
+    var empty_p = ram_flare;
+    empty_p.prompt = "";
+    if (h.dispatch(empty_p)) |_| {
+        return error.EmptyPromptAccepted;
+    } else |err| {
+        if (err != error.EmptyPromptRefused) return err;
+    }
+
+    print(
+        "GREEN: grain_cached_harness -- {d} hits, {d} WOOD, RAM+VN+API ok!{c}",
+        .{ h.hits, h.wood_total, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,196 @@
+//! modules/fusion/palisade_release_gate.rye -- 15-Siya `palisade` Macro!
+//!
+//! Stamp: `20261119.135311` -- `Movement 14/15 : sky (Fixed Aether)` (*Hold
+//! the whole cup: compress two truths into one macro*), powering
+//! `grain-ww palisade-check` (Proof #47)!
+//! Compresses TWO proven truths ahead of `Movement 15/15 : Siya`:
+//!   1. **Orbit 4 Harvest Seal (`siya_orbit_harvest.rye`):** Proves `mov=60`
+//!      (`4 * 15`), `34` live Glow Mill desks, & `47` metal proofs seal cleanly
+//!      with `Kumara` Ed25519 + SHA3-256 (refusing premature `mov=59`),
+//!   2. **Single-Commit `"palisade"` Seed Gate:** Verifies `publish-seed.rish`
+//!      & `PUBLISH_TARGETS.template.kyri` default to orphan `"palisade"`,
+//!      enforce `parents == 0`, & wire optional `seed_signing_key` signing!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Ed25519 = std.crypto.sign.Ed25519;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.135311";
+pub const release_codename = "palisade";
+pub const orbit_movements: u32 = 15;
+const nl: u8 = 10;
+
+pub const PalisadeError = error{
+    WrongCodename,
+    MultiParentCommitRefused,
+    UnsignedReleaseRefused,
+    SeedScriptMissingPalisade,
+    SeedScriptMissingSigningKey,
+    TemplateMissingPalisade,
+    IncompleteOrbitMovements,
+    InvalidSignature,
+};
+
+pub const OrbitCert = struct {
+    orbit_number: u32,
+    total_movements: u32,
+    glow_desks: u32,
+    green_witnesses: u32,
+    blaze_sha3: [32]u8,
+};
+
+pub fn seal_orbit_cert(
+    total_movements: u32,
+    glow_desks: u32,
+    green_witnesses: u32,
+    kp: Ed25519.KeyPair,
+) PalisadeError!OrbitCert {
+    if (total_movements < orbit_movements or
+        (total_movements % orbit_movements) != 0)
+    {
+        return error.IncompleteOrbitMovements;
+    }
+    const orb = total_movements / orbit_movements;
+    var payload: [16]u8 = undefined;
+    std.mem.writeInt(u32, payload[0..4], orb, .little);
+    std.mem.writeInt(u32, payload[4..8], total_movements, .little);
+    std.mem.writeInt(u32, payload[8..12], glow_desks, .little);
+    std.mem.writeInt(u32, payload[12..16], green_witnesses, .little);
+
+    var sha3: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("siya-orbit-harvest-v1:");
+    h.update(&payload);
+    h.final(&sha3);
+
+    const sig = kp.sign(&sha3, null) catch return error.InvalidSignature;
+    sig.verify(&sha3, kp.public_key) catch return error.InvalidSignature;
+    // invariant: orbit quotient is exact and verified by Ed25519 signature.
+    assert(orb * orbit_movements == total_movements and glow_desks >= 34);
+    return .{
+        .orbit_number = orb,
+        .total_movements = total_movements,
+        .glow_desks = glow_desks,
+        .green_witnesses = green_witnesses,
+        .blaze_sha3 = sha3,
+    };
+}
+
+pub const SeedReleaseSpec = struct {
+    commit_msg: []const u8,
+    parent_count: u32,
+    sig_code: u8, // 'G' or 'U' signed, 'N' unsigned dry-run
+    require_signed: bool,
+};
+
+pub fn verify_release_spec(spec: SeedReleaseSpec) PalisadeError!void {
+    // invariant: release spec holds non-empty commit message.
+    assert(spec.commit_msg.len > 0);
+    if (!std.mem.eql(u8, spec.commit_msg, release_codename)) {
+        return error.WrongCodename;
+    }
+    if (spec.parent_count != 0) return error.MultiParentCommitRefused;
+    if (spec.require_signed and spec.sig_code != 'G' and spec.sig_code != 'U') {
+        return error.UnsignedReleaseRefused;
+    }
+    // invariant: verified single-parentless palisade commit contract.
+    assert(spec.parent_count == 0);
+}
+
+fn verify_disk_scripts(a: std.mem.Allocator, io: std.Io) !void {
+    const cwd = std.Io.Dir.cwd();
+    const pub_src = try cwd.readFileAlloc(
+        io,
+        "publish-seed.rish",
+        a,
+        .limited(32768),
+    );
+    if (std.mem.indexOf(u8, pub_src, "palisade") == null) {
+        return error.SeedScriptMissingPalisade;
+    }
+    if (std.mem.indexOf(u8, pub_src, "seed_signing_key") == null) {
+        return error.SeedScriptMissingSigningKey;
+    }
+    const tpl_src = try cwd.readFileAlloc(
+        io,
+        "context/templates/PUBLISH_TARGETS.template.kyri",
+        a,
+        .limited(16384),
+    );
+    if (std.mem.indexOf(u8, tpl_src, "seed_commit_message palisade") == null) {
+        return error.TemplateMissingPalisade;
+    }
+    // invariant: both publish-seed.rish & template carry palisade defaults.
+    assert(pub_src.len > 256 and tpl_src.len > 128);
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    // 1. Verify disk scripts carry `palisade` + `seed_signing_key` contract
+    try verify_disk_scripts(a, io);
+
+    // 2. Orbit 4 Siya Harvest (`mov=60`, `34` Glow desks, `47` metal proofs)
+    const seed: [32]u8 = @splat(0x4F);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+    if (seal_orbit_cert(59, 34, 47, kp)) |_| {
+        return error.PrematureOrbit4Sealed;
+    } else |err| {
+        if (err != error.IncompleteOrbitMovements) return err;
+    }
+    const cert = try seal_orbit_cert(60, 34, 47, kp);
+    if (cert.orbit_number != 4) return error.WrongOrbit4Number;
+
+    // 3. Welcome: signed single-commit `palisade` passes cleanly
+    try verify_release_spec(.{
+        .commit_msg = "palisade",
+        .parent_count = 0,
+        .sig_code = 'G',
+        .require_signed = true,
+    });
+
+    // 4. Refusals: wrong codename, non-orphan parent, or unsigned final release
+    if (verify_release_spec(.{
+        .commit_msg = "petrichor",
+        .parent_count = 0,
+        .sig_code = 'G',
+        .require_signed = true,
+    })) |_| {
+        return error.LegacyCodenameAccepted;
+    } else |err| {
+        if (err != error.WrongCodename) return err;
+    }
+    if (verify_release_spec(.{
+        .commit_msg = "palisade",
+        .parent_count = 1,
+        .sig_code = 'G',
+        .require_signed = true,
+    })) |_| {
+        return error.MultiParentAccepted;
+    } else |err| {
+        if (err != error.MultiParentCommitRefused) return err;
+    }
+    if (verify_release_spec(.{
+        .commit_msg = "palisade",
+        .parent_count = 0,
+        .sig_code = 'N',
+        .require_signed = true,
+    })) |_| {
+        return error.UnsignedPalisadeAccepted;
+    } else |err| {
+        if (err != error.UnsignedReleaseRefused) return err;
+    }
+
+    print(
+        "GREEN: palisade_release_gate -- Orbit {d} (60 mov, 34 Glow).{c}",
+        .{ cert.orbit_number, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

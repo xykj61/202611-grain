@@ -1,0 +1,158 @@
+//! modules/fusion/stamp_no_serial_ratchet.rye -- Hard No-Serial Ratchet!
+//!
+//! Stamp: `20261119.175014` -- Enforces Air Rule 2 (*Count, Never Number*)
+//! mechanically across the living tree (`grain-ww stamp-ratchet`):
+//!   1. Scans every living `.rye`/`.glow`/`.rish` path registered in `.brix`
+//!      and `modules/fusion/gates.kyri` for banned ascending Calfive filename
+//!      tokens (`orbit<N>`, `quest<N>`, `journey<N>`, `section<N>`,
+//!      `chapter<N>`),
+//!   2. Scans standing front doors (`GEMINI.md`, `README.md`, `LEXICON.md`,
+//!      `MAP.md`, `active-husk/README.md`) for banned ascending header labels
+//!      (`Orbit <N>`, `Quest <N>`, `Journey <N>`, `Proof #<N>`),
+//!   3. Pairs explicit refusal witnesses so regressions fail loudly on metal!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.175014";
+const nl: u8 = 10;
+
+pub const RatchetError = error{
+    SerialFilenameRefused,
+    SerialHeaderRefused,
+};
+
+fn is_digit(c: u8) bool {
+    return c >= '0' and c <= '9';
+}
+
+fn contains_prefix_digit(hay: []const u8, prefix: []const u8) bool {
+    if (hay.len <= prefix.len) return false;
+    var i: usize = 0;
+    while (i + prefix.len < hay.len) : (i += 1) {
+        if (std.mem.eql(u8, hay[i .. i + prefix.len], prefix)) {
+            if (is_digit(hay[i + prefix.len])) return true;
+        }
+    }
+    return false;
+}
+
+pub fn check_living_code_path(path: []const u8) RatchetError!void {
+    // invariant: reject orbit<N>/quest<N>/journey<N>/section<N>/chapter<N>.
+    assert(path.len > 0);
+    const base = std.fs.path.basename(path);
+    const banned = [_][]const u8{
+        "orbit",
+        "quest",
+        "journey",
+        "section",
+        "chapter",
+    };
+    for (banned) |tok| {
+        if (contains_prefix_digit(base, tok)) {
+            return error.SerialFilenameRefused;
+        }
+    }
+    assert(!contains_prefix_digit(base, "orbit"));
+}
+
+pub fn check_standing_prose(text: []const u8) RatchetError!void {
+    // invariant: reject ascending Orbit/Quest/Journey/Proof serial labels.
+    assert(text.len > 0);
+    const banned = [_][]const u8{
+        "Orbit ",
+        "Quest ",
+        "Journey ",
+        "Section ",
+        "Chapter ",
+        "Proof #",
+    };
+    for (banned) |tok| {
+        if (contains_prefix_digit(text, tok)) {
+            return error.SerialHeaderRefused;
+        }
+    }
+    assert(!contains_prefix_digit(text, "Proof #"));
+}
+
+fn check_manifest_paths(body: []const u8) RatchetError!u32 {
+    var count: u32 = 0;
+    var it = std.mem.splitScalar(u8, body, nl);
+    const ws = [_]u8{ ' ', 13, 9 };
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (line.len == 0 or line[0] == '#') continue;
+        var tok_it = std.mem.tokenizeScalar(u8, line, ' ');
+        var last: []const u8 = "";
+        while (tok_it.next()) |t| last = t;
+        if (std.mem.endsWith(u8, last, ".rye") or
+            std.mem.endsWith(u8, last, ".glow") or
+            std.mem.endsWith(u8, last, ".rish"))
+        {
+            try check_living_code_path(last);
+            count += 1;
+        }
+    }
+    return count;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    // 1. Audit every .rye/.glow/.rish listed in .brix & gates.kyri
+    const brix = try cwd.readFileAlloc(io, ".brix", a, .limited(262144));
+    const gates = try cwd.readFileAlloc(
+        io,
+        "modules/fusion/gates.kyri",
+        a,
+        .limited(262144),
+    );
+    const n1 = try check_manifest_paths(brix);
+    const n2 = try check_manifest_paths(gates);
+
+    // 2. Audit standing root front doors for ascending serial labels
+    const doors = [_][]const u8{
+        "GEMINI.md",
+        "README.md",
+        "LEXICON.md",
+        "MAP.md",
+        "active-husk/README.md",
+    };
+    for (doors) |d| {
+        const body = try cwd.readFileAlloc(io, d, a, .limited(131072));
+        try check_standing_prose(body);
+    }
+
+    // 3. Refusal 1: numbered code filename refused loudly
+    if (check_living_code_path("modules/fusion/orbit5_demo.rye")) |_| {
+        return error.SerialFileAccepted;
+    } else |err| {
+        if (err != error.SerialFilenameRefused) return err;
+    }
+
+    // 4. Refusal 2: ascending Quest/Proof label in standing header refused
+    if (check_standing_prose("Active Quest 2 milestone")) |_| {
+        return error.SerialQuestAccepted;
+    } else |err| {
+        if (err != error.SerialHeaderRefused) return err;
+    }
+    if (check_standing_prose("Verified Proof #64 gate")) |_| {
+        return error.SerialProofAccepted;
+    } else |err| {
+        if (err != error.SerialHeaderRefused) return err;
+    }
+
+    assert(n1 > 20 and n2 > 20);
+    print(
+        "GREEN: stamp_no_serial_ratchet -- {d} paths & 5 doors clean!{c}",
+        .{ n1 + n2, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

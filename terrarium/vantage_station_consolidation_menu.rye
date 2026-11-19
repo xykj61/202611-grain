@@ -1,0 +1,134 @@
+//! terrarium/vantage_station_consolidation_menu.rye -- Libra Station Menu!
+//!
+//! Stamp: `20261119.182903` -- Libra (*Weigh Virgo findings, plan tidy/Mitra
+//! list, & prepare Scorpio*), powering `grain-ww station-menu`!
+//! Weighs the unified 8-faculty `Vantage Station` + `Terrarium` consolidation
+//! spine (`Skate`, `Tally`, `Caravan`, `Blaze`, `Mycelium`, `WOOD`,
+//! `Blazepod`, `Cached Harness`) on even scales and checks `SAFE.md` guard:
+//!   1. Verifies all 8 faculties bind onto one shared C-ABI surface inside
+//!      `<= 256 KiB` Glasswall frame budget & `<= 32 KiB` Glow desk cap,
+//!   2. Verifies every planned Scorpio cleanup stays clear of `SAFE.md` paths,
+//!   3. Pairs refusal witnesses for missing faculty count, oversized Glasswall
+//!      frame, and any attempted touch of a `SAFE.md` protected path!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.182903";
+pub const expected_faculties: u32 = 8;
+pub const max_frame_bytes: u32 = 262_144;
+pub const max_desk_bytes: u32 = 32_768;
+const nl: u8 = 10;
+
+pub const MenuError = error{
+    UnbalancedFacultiesRefused,
+    OverBudgetFrameRefused,
+    OverBudgetDeskRefused,
+    SafePathTouchRefused,
+};
+
+pub const ConsolidationProposal = struct {
+    faculties_bound: u32,
+    frame_bytes: u32,
+    desk_bytes: u32,
+    candidate_trim: []const u8,
+};
+
+pub const MenuVerdict = struct {
+    menu_sha3: [32]u8,
+    faculties_bound: u32,
+    balanced: bool,
+};
+
+const safe_protected = [_][]const u8{
+    "SAFE.md",
+    "LEXICON.md",
+    "GEMINI.md",
+    "PUBKEYS.md",
+};
+
+pub fn weigh_consolidation_menu(
+    p: ConsolidationProposal,
+) MenuError!MenuVerdict {
+    // invariant: all 8 faculties bound, TAME frame/desk bounds, & SAFE intact.
+    if (p.faculties_bound != expected_faculties) {
+        return error.UnbalancedFacultiesRefused;
+    }
+    if (p.frame_bytes == 0 or p.frame_bytes > max_frame_bytes) {
+        return error.OverBudgetFrameRefused;
+    }
+    if (p.desk_bytes == 0 or p.desk_bytes > max_desk_bytes) {
+        return error.OverBudgetDeskRefused;
+    }
+    for (safe_protected) |prot| {
+        if (std.mem.eql(u8, p.candidate_trim, prot)) {
+            return error.SafePathTouchRefused;
+        }
+    }
+
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-libra-station-consolidation-menu-v1:");
+    h.update(p.candidate_trim);
+    h.final(&out);
+    assert((out[0] | out[1] | out[2]) != 0 and p.faculties_bound == 8);
+    return .{
+        .menu_sha3 = out,
+        .faculties_bound = p.faculties_bound,
+        .balanced = true,
+    };
+}
+
+fn run_selftest() !u8 {
+    // 1. Welcome: balanced 8-faculty Vantage Station + Terrarium consolidation
+    const ok = ConsolidationProposal{
+        .faculties_bound = 8,
+        .frame_bytes = 129_600,
+        .desk_bytes = 32_768,
+        .candidate_trim = "terrarium/legacy_scratch_tmp",
+    };
+    const v1 = try weigh_consolidation_menu(ok);
+    const v2 = try weigh_consolidation_menu(ok);
+    if (!v1.balanced or !std.mem.eql(u8, &v1.menu_sha3, &v2.menu_sha3)) {
+        return error.MenuVerdictDrift;
+    }
+
+    // 2. Refusal 1: missing faculty breaks even scales
+    var short_f = ok;
+    short_f.faculties_bound = 7;
+    if (weigh_consolidation_menu(short_f)) |_| {
+        return error.ShortFacultiesAccepted;
+    } else |err| {
+        if (err != error.UnbalancedFacultiesRefused) return err;
+    }
+
+    // 3. Refusal 2: oversized Glasswall frame refused
+    var big_frame = ok;
+    big_frame.frame_bytes = max_frame_bytes + 1;
+    if (weigh_consolidation_menu(big_frame)) |_| {
+        return error.BigFrameAccepted;
+    } else |err| {
+        if (err != error.OverBudgetFrameRefused) return err;
+    }
+
+    // 4. Refusal 3: touching a SAFE.md protected path refused whole!
+    var bad_safe = ok;
+    bad_safe.candidate_trim = "SAFE.md";
+    if (weigh_consolidation_menu(bad_safe)) |_| {
+        return error.SafeTouchAccepted;
+    } else |err| {
+        if (err != error.SafePathTouchRefused) return err;
+    }
+
+    print(
+        "GREEN: station_consolidation_menu -- 8 faculties & SAFE ok!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

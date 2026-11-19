@@ -1,25 +1,35 @@
-# Context -- Single-Stranded Voice, Bounds, and Provenance Canons
+# Context -- Voice, Style, Bounds, and Provenance Canons
 
 **Language:** EN
-**Stamp:** `20261115.031500` (EST)
-**Voice:** Kyri
-**Style:** Gauge at Door, Radiant warmth
-**Status:** Living (`Room: checkable` -- single-stranded canon hub; pre-distillation drafts preserved in [`../yonder/context/`](../yonder/README.md))
+**Now Stamp:** `20261119.182903` (EST)
+**Voice:** Reya / Kyri
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
 
 ---
 
-## One Job Per File (Single-Stranded Design)
+## Voices and Styles of the Grain Canon
 
-Previously, style and engineering rules overlapped across a dozen long manuals. Today each file in `context/` holds **exactly one strand** so humans and **Gemini 4 Carbon** subagents can read the whole canon in minutes without contradiction:
+Every living voice and style guide in `context/` is written in **Gauge + Radiant
+Style** (`0.0%` prose negation, mechanically verified on metal by
+`grain-ww radiant-check`):
 
-| Canon | The Single Question It Answers |
-|---|---|
-| **[`TAME_CORE.md`](TAME_CORE.md)** | **How does code bound itself?** Static ceilings, explicit integer widths, pure folds, `80`-column lines, assertions, and chronological `YYYYMMDD.HHMMSS` stamps. |
-| **[`KYRI.md`](KYRI.md)** | **Who holds the pen, and how are boundary facts recorded?** One clear, warm voice across the project + the `.kyri` flat record notation. |
-| **[`GAUGE_STYLE.md`](GAUGE_STYLE.md)** | **How is technical truth stated?** Lead with what *is*, pair happy-path and refusal proofs, and scale ceremony across *Door*, *Field*, and *Bench*. |
-| **[`RADIANT_STYLE.md`](RADIANT_STYLE.md)** | **How do warmth, enterprise clarity, and biocyclic care enter?** Eighth-grade-to-collegiate hospitality, veganic closed-loop stewardship, and gratitude. |
-| **[`TEACHER_STYLE.md`](TEACHER_STYLE.md)** | **How do we teach newcomers (`docs-geode/`)?** Zero unexplained jargon, runnable steps, real terminal output, honest boundaries. |
-| **[`CIVIC_STYLE.md`](CIVIC_STYLE.md)** | **How do public-interest and policy rooms speak (`colloquium/`)?** Non-partisan fairness, steel-manned trade-offs, measurable outcomes. |
-| **[`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md)** | **How do contemplative essays and creative works breathe?** Quiet evening cadence, explicitly marked `Room: vision` so poetry never impersonates a test. |
+| Canon | Synonym Base or Scope | Core Responsibility |
+|---|---|---|
+| **[`TAME_GUIDANCE.md`](TAME_GUIDANCE.md)** & **[`TAME_CORE.md`](TAME_CORE.md)** | Ring-0 through Citizen code | Fixed capacities, explicit integer widths, pure folds, `80`-column lines, live computational stamps. |
+| **[`KYRI.md`](KYRI.md)** & **[`REYA.md`](REYA.md)** | [`voices/companion-voice-base.md`](voices/companion-voice-base.md) (`kyri <-> reya`) | Standing companion voice + `.kyri` notation (**Kyri**) and sunny feminine voice (**Reya**), uniting Lattice, Husk, Lantern, and Kiln. |
+| **[`RADIANT_STYLE.md`](RADIANT_STYLE.md)** | Daylight affirmative register | `100%` affirmative framing, active voice, vocabulary of correctness, spoken cadence, and earned benedictions. |
+| **[`GAUGE_STYLE.md`](GAUGE_STYLE.md)** | Measured analytical register | Plain reader-first clarity, Door/Field/Bench settings, observation-inference-projection separation, and `6-Virgo` QA readings. |
+| **[`CIVIC_STYLE.md`](CIVIC_STYLE.md)** | Public-benefit alignment | Aligning rewards with real outcomes across living soil, `WOOD` civil works, airspace safety, refuge, and `Glasswall`. |
+| **[`TEACHER_STYLE.md`](TEACHER_STYLE.md)** & **[`KARMA_STYLE.md`](KARMA_STYLE.md)** | [`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md) (`teacher-style <-> karma-style`) | First-principles open classroom (**Teacher**) and selfless craft in action (**Karma**). |
+| **[`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md)** | Contemplative nocturne register | `9-Sagittarius <-> 12-Pisces` pendulum and 15 sky-fractal archetypes inspiring evening study and original art. |
+| **[`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md)** | Clean-room creative distillation | Rebuilding outside inspirations from first principles in Grain's own voice while honoring teachers in `gratitude/`. |
 
-Companion operational rosters in `context/`: [`MODEL_ROSTER.kyri`](MODEL_ROSTER.kyri), [`REMOTE_ROSTER.md`](REMOTE_ROSTER.md), [`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md), and [`TWO_ROOMS.md`](TWO_ROOMS.md).
+Operational companions: **[`../LEXICON.md`](../LEXICON.md)** (canonical living
+vocabulary), [`MODEL_ROSTER.kyri`](MODEL_ROSTER.kyri),
+[`REMOTE_ROSTER.md`](REMOTE_ROSTER.md), [`REDACT_TECHNIQUE.md`](REDACT_TECHNIQUE.md),
+and [`TWO_ROOMS.md`](TWO_ROOMS.md).
+
+---
+
+*May our canons stay clear, warm, and harmonious across every movement.*

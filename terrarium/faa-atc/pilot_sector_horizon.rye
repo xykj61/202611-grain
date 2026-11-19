@@ -1,0 +1,221 @@
+//! terrarium/faa-atc/pilot_sector_horizon.rye -- Pilot's Seat Horizon & Bond!
+//!
+//! Stamp: `20261119.134525` -- `Movement 13/15 : sky (Cardinal Aether)`
+//! (*Aether hears: ask whom the work serves*), powering
+//! `grain-ww terrarium-horizon` (Proof #46)!
+//! Deepens post-Glow `Terrarium` across two public-safety horizons:
+//!   1. **Pilot's-Seat Multi-Track Lookahead (`<= 16` aircraft, `10` steps x
+//!      `30 s` = `5 min`):** Exact integer RVSM (`1,000 ft`) + `5.000 nm`
+//!      lateral trajectory check with zero GC pauses & zero float NaN drift,
+//!   2. **Civic Watershed Bond (`>= 2.0x` safety, `>= 60%` permeable capture,
+//!      `WOOD` timber provenance, `>= 324/405` Colloquium supermajority).**
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.134525";
+pub const max_tracks: usize = 16;
+pub const horizon_steps: u32 = 10; // 10 x 30s == 5 minutes ahead
+pub const min_vert_ft: u32 = 1000;
+pub const min_lat_sq: u64 = 5000 * 5000; // (5.000 nm)^2 in milli-nm^2
+pub const min_capture_permille: u32 = 600;
+pub const min_safety_permille: u32 = 2000;
+pub const colloquium_80pct: u32 = 324;
+const nl: u8 = 10;
+
+pub const HorizonError = error{
+    TooManyTracks,
+    EmptySector,
+    UnsafeStructure,
+    LowPermeability,
+    BondNotEscrowed,
+    ColloquiumShort,
+};
+
+pub const VectorTrack = struct {
+    callsign: [8]u8,
+    x_milli_nm: i64,
+    y_milli_nm: i64,
+    altitude_ft: i32,
+    vx_per_30s: i64,
+    vy_per_30s: i64,
+    vz_ft_per_30s: i32,
+};
+
+pub const ConflictNotice = struct {
+    has_conflict: bool,
+    step_idx: u32,
+    track_a: usize,
+    track_b: usize,
+};
+
+pub const WatershedBond = struct {
+    safety_permille: u32,
+    capture_permille: u32,
+    wood_units: u64,
+    bond_escrow: u64,
+    yes_seats: u32,
+};
+
+fn pair_conflicts_at(a: VectorTrack, b: VectorTrack, step: u32) bool {
+    // invariant: lookahead step stays strictly within bounded horizon.
+    assert(step <= horizon_steps);
+    const s_i64: i64 = @intCast(step);
+    const s_i32: i32 = @intCast(step);
+
+    const alt_a: i32 = a.altitude_ft + a.vz_ft_per_30s * s_i32;
+    const alt_b: i32 = b.altitude_ft + b.vz_ft_per_30s * s_i32;
+    const v_diff_i: i32 = if (alt_a >= alt_b) alt_a - alt_b else alt_b - alt_a;
+    const v_diff: u32 = @intCast(v_diff_i);
+    if (v_diff >= min_vert_ft) {
+        assert(v_diff >= 1000);
+        return false;
+    }
+
+    const ax = a.x_milli_nm + a.vx_per_30s * s_i64;
+    const ay = a.y_milli_nm + a.vy_per_30s * s_i64;
+    const bx = b.x_milli_nm + b.vx_per_30s * s_i64;
+    const by = b.y_milli_nm + b.vy_per_30s * s_i64;
+    const dx = ax - bx;
+    const dy = ay - by;
+    const dist_sq: u64 = @intCast(dx * dx + dy * dy);
+    assert(min_lat_sq == 25_000_000);
+    return dist_sq < min_lat_sq;
+}
+
+pub fn scan_sector_horizon(
+    tracks: []const VectorTrack,
+) HorizonError!ConflictNotice {
+    // invariant: sector count bounded strictly inside 1..max_tracks.
+    if (tracks.len == 0) return error.EmptySector;
+    if (tracks.len > max_tracks) return error.TooManyTracks;
+
+    var step: u32 = 0;
+    while (step <= horizon_steps) : (step += 1) {
+        var i: usize = 0;
+        while (i < tracks.len) : (i += 1) {
+            var j: usize = i + 1;
+            while (j < tracks.len) : (j += 1) {
+                if (pair_conflicts_at(tracks[i], tracks[j], step)) {
+                    assert(i < j and step <= horizon_steps);
+                    return .{
+                        .has_conflict = true,
+                        .step_idx = step,
+                        .track_a = i,
+                        .track_b = j,
+                    };
+                }
+            }
+        }
+    }
+    // invariant: scanned every step 0..horizon_steps cleanly with all clear.
+    assert(step == horizon_steps + 1);
+    return .{
+        .has_conflict = false,
+        .step_idx = horizon_steps,
+        .track_a = 0,
+        .track_b = 0,
+    };
+}
+
+pub fn seal_watershed_bond(b: WatershedBond) HorizonError!u64 {
+    if (b.safety_permille < min_safety_permille) return error.UnsafeStructure;
+    if (b.capture_permille < min_capture_permille) return error.LowPermeability;
+    if (b.bond_escrow == 0) return error.BondNotEscrowed;
+    if (b.yes_seats < colloquium_80pct) return error.ColloquiumShort;
+
+    // invariant: sealed bond satisfies structural, permeable, & civic floors.
+    assert(b.safety_permille >= 2000 and b.capture_permille >= 600);
+    assert(b.yes_seats >= 324);
+    return b.wood_units;
+}
+
+fn run_selftest() !u8 {
+    // Welcome 1: 3 aircraft with safe vertical separation across all 10 steps
+    const safe_sector = [_]VectorTrack{
+        .{
+            .callsign = "GRN101  ".*,
+            .x_milli_nm = 0,
+            .y_milli_nm = 0,
+            .altitude_ft = 34000,
+            .vx_per_30s = 4000,
+            .vy_per_30s = 0,
+            .vz_ft_per_30s = 0,
+        },
+        .{
+            .callsign = "GRN202  ".*,
+            .x_milli_nm = 20000,
+            .y_milli_nm = 0,
+            .altitude_ft = 35000, // +1,000 ft RVSM clear
+            .vx_per_30s = -4000,
+            .vy_per_30s = 0,
+            .vz_ft_per_30s = 0,
+        },
+        .{
+            .callsign = "GRN303  ".*,
+            .x_milli_nm = 0,
+            .y_milli_nm = 30000,
+            .altitude_ft = 34000,
+            .vx_per_30s = 0,
+            .vy_per_30s = -1000,
+            .vz_ft_per_30s = 0,
+        },
+    };
+    const r_safe = try scan_sector_horizon(&safe_sector);
+    if (r_safe.has_conflict) return error.FalseHorizonConflict;
+
+    // Welcome 2: converging same-altitude pair detected at step 2 (60 s ahead!)
+    const closing_sector = [_]VectorTrack{
+        safe_sector[0],
+        .{
+            .callsign = "GRN404  ".*,
+            .x_milli_nm = 20000,
+            .y_milli_nm = 0,
+            .altitude_ft = 34200, // 200 ft < 1,000 ft RVSM!
+            .vx_per_30s = -4000,
+            .vy_per_30s = 0,
+            .vz_ft_per_30s = 0,
+        },
+    };
+    const r_hit = try scan_sector_horizon(&closing_sector);
+    if (!r_hit.has_conflict or r_hit.step_idx != 2) {
+        return error.MissedLookaheadConflict;
+    }
+
+    // Refusal 1: empty sector rejected cleanly
+    if (scan_sector_horizon(&[_]VectorTrack{})) |_| {
+        return error.EmptySectorAccepted;
+    } else |err| {
+        if (err != error.EmptySector) return err;
+    }
+
+    // Welcome 3 & Refusal 2: permeable watershed Colloquium bond
+    const good_bond = WatershedBond{
+        .safety_permille = 2400,
+        .capture_permille = 820,
+        .wood_units = 6400,
+        .bond_escrow = 250_000,
+        .yes_seats = 330,
+    };
+    if ((try seal_watershed_bond(good_bond)) != 6400) {
+        return error.BondWoodMismatch;
+    }
+    var bad_bond = good_bond;
+    bad_bond.capture_permille = 200; // impermeable asphalt -> REFUSED!
+    if (seal_watershed_bond(bad_bond)) |_| {
+        return error.ImpermeableBondAccepted;
+    } else |err| {
+        if (err != error.LowPermeability) return err;
+    }
+
+    print(
+        "GREEN: pilot_sector_horizon -- 5-min ATC lookahead & 324/405 bond.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

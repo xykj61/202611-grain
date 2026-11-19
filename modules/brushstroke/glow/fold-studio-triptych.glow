@@ -1,0 +1,11 @@
+::  modules/brushstroke/glow/fold-studio-triptych.glow -- 3-Panel Studio!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-triptych-bounds
+  |=  [sign=@ud quorum=@ud width=@ud]                   ::  1..15, <=405, >=360
+  ^-  @ud                                               ::  verified quorum
+  ~|  'brushstroke-triptych-bounds-refused'             ::  Glasswall frame
+  ?>  &(gte(sign 1) lte(sign 15) lte(quorum 405) gte(width 360))
+  quorum
+--

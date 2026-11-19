@@ -1,0 +1,11 @@
+::  modules/caravan/glow/gate-key-rotation.glow -- Atomic Key Rotation!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-rotation-monotonic
+  |=  [prev-ep=@ud next-ep=@ud live-slots=@ud]          ::  strictly > & 1
+  ^-  @ud                                               ::  verified epoch
+  ~|  'caravan-key-rotation-epoch-or-live-slot-breach'  ::  zero spent keys
+  ?>  &(gth(next-ep prev-ep) eql(live-slots 1))
+  next-ep
+--

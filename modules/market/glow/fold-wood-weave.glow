@@ -1,0 +1,17 @@
+::  modules/market/glow/fold-wood-weave.glow -- WOOD Across Many Weaves!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-wood-weave-slot
+  |=  weave-count=@ud                                   ::  <= 8 Blaze weaves
+  ^-  @ud                                               ::  verified count
+  ~|  'wood-weave-ledger-exceeds-eight-weaves'          ::  bounded weaves
+  ?>  &(gte(weave-count 1) lte(weave-count 8))
+  weave-count
+++  gate-wood-transfer-cap
+  |=  [from-bal=@ud amount=@ud]                         ::  conserved WOOD
+  ^-  @ud                                               ::  remaining WOOD
+  ~|  'wood-transfer-exceeds-source-weave-balance'      ::  zero overdraft
+  ?>  (gte from-bal amount)
+  (sub from-bal amount)
+--

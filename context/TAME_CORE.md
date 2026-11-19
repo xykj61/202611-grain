@@ -1,26 +1,58 @@
 # TAME Core -- Bounded, Deterministic, Human-Readable Systems
 
 **Language:** EN
-**Stamp:** `20261115.031500` (EST)
-**Voice:** Kyri
-**Style:** Gauge at Door
-**Status:** Living (`Room: checkable` -- engineering law across Glow, Rye, Rishi, Brix, and Blazepod)
+**Stamp:** `20261119.115928` (EST)
+**Voice:** Kyri / Reya
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Companion Canons:** [`TAME_GUIDANCE.md`](TAME_GUIDANCE.md),
+[`GAUGE_STYLE.md`](GAUGE_STYLE.md), [`RADIANT_STYLE.md`](RADIANT_STYLE.md),
+[`CIVIC_STYLE.md`](CIVIC_STYLE.md)
 
 ---
 
 ## Why TAME Exists
 
-Inspired by Gerard Holzmann's *Power of Ten* (NASA/JPL) and TigerBeetle's *TigerStyle* (thanked in [`../gratitude/`](../gratitude/README.md)), **TAME Guidance** ensures that every Grain program has a memory footprint, execution ceiling, and failure mode you can verify **before** it ships to a citizen's pocket or an enterprise server.
+Inspired by aerospace safety engineering and deterministic accounting systems
+honored in [`../gratitude/`](../gratitude/), **TAME Core** ensures that every
+Grain program carries a memory footprint, execution ceiling, and error boundary
+verifiable on metal well ahead of deployment to a citizen's pocket, a pilot's
+seat, or a civic server.
 
 ---
 
-## The Eight Single-Stranded Rules
+## The Eight Foundational Commitments
 
-1. **Bound Every Loop and Recursion:** Every `while` loop, parser scan, and Glow `|-` recursion carries a provable progress measure (`FrameBudget` or explicit `max_steps` ceiling). Unbounded `while (true)` exists only at the outermost Caravan or Aurora hart event loop.
-2. **Static Memory Gardens (`Tally`):** Allocate arenas once at startup or division init (`tally-ram` / `AstGarden`). Never call hidden heap `malloc`/`free` along hot, citizen, or kernel paths.
-3. **Explicit Bit Widths:** Name exact widths (`u8`, `u16`, `u32`, `u64`, `i64`). Use `u32` for bounded in-memory indices and lengths; use `u64` for wire offsets, monotonic counters, and `YYYYMMDDHHMMSS` clocks. Avoid architecture-varying `usize` inside shared data shapes.
-4. **Two or More Assertions Per Function:** Assert preconditions on entry and postconditions before return, pairing each nontrivial assertion with a short `// invariant:` note explaining *why* the bound holds. Assert **both** what valid inputs produce and what malformed inputs refuse.
-5. **Pure Folds Inside, Thin Stewards at the Seam:** Express protocol state machines, compilers, UI layouts, and ledgers as pure `|_` + `=^` + `%=` Glow folds; keep Rye stewards under ~300 lines focused strictly on syscalls, SIMD, crypto primitives, and hardware queues.
-6. **Hard 80-Column Line Width & 7-Bit ASCII:** Every `.glow`, `.rye`, `.rish`, `.brix`, and `.kyri` line fits inside `80` columns (`::` comments aligned at column `57` in `.glow`) using plain 7-bit ASCII.
-7. **Small Functions (~70 Lines):** Keep functions readable on one screen without scrolling; split mixed concerns into a pure calculation and an I/O step.
-8. **Chronological Versioning Only (`YYYYMMDD.HHMMSS`):** Never use semantic versioning (`1.2.3`). Every module, binary, and schema carries a monotonic one-clock stamp where newer is always numerically larger.
+1. **Bounded Loops and Progress Measures:** Every `while` loop, wire scanner,
+   and Glow `|-` recursion carries an explicit `FrameBudget` or `max_steps`
+   ceiling; the single top-level `Caravan` or `Aurora` hart event loop drives
+   steady dispatch.
+2. **Static Memory Gardens (`Tally`):** Allocate fixed arenas up front at boot
+   or module initialization (`tally-ram`, `AstGarden`), keeping hot, citizen,
+   and kernel paths 100% deterministic and predictable.
+3. **Explicit Integer Bit Widths:** Name exact widths (`u8`, `u16`, `u32`,
+   `u64`, `i64`) across every struct and wire frame -- `u32` for bounded
+   in-memory indices and lengths, and `u64` for wire offsets, conserved ledgers,
+   and chronological clocks.
+4. **Paired Preconditions and Postconditions:** Place two or more assertions in
+   every substantive function, accompanying key checks with a concise
+   `// invariant:` rationale and proving both welcome and refusal paths in
+   selftests.
+5. **Pure Folds Inside, Thin Stewards at the Seam:** Express compilers, state
+   machines, UI layouts (`Vantage`), and ledgers as pure `|_` + `=^` + `%=`
+   Glow folds, paired with compact Rye stewards dedicated to syscalls, crypto
+   primitives, and hardware queues.
+6. **80-Column Width and 7-Bit ASCII:** Format every `.glow`, `.rye`, `.rish`,
+   `.brix`, and `.kyri` file within `80` columns using crisp 7-bit ASCII,
+   aligning inline `.glow` `::` comments at column `57`.
+7. **Single-Screen Functions:** Keep functions concise (~70 lines) so an
+   engineer reads the whole transformation on one screen, separating pure
+   calculation cleanly from I/O dispatch.
+8. **Computational Chronological Stamps (`YYYYMMDD.HHMMSS`):** Measure every
+   version and dated filename directly from the live clock via `grain-ww stamp`,
+   ensuring newer releases carry strictly larger numeric stamps (*Evergrow*).
+
+---
+
+*May every bound stand clear at the door, and may sound structure set creative
+craft free.*

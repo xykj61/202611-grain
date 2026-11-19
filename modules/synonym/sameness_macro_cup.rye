@@ -1,0 +1,120 @@
+//! modules/synonym/sameness_macro_cup.rye -- Hold the Whole Cup!
+//!
+//! Stamp: `20261119.182424` -- Fixed Sky (*Hold the whole cup: compress two
+//! truths into one macro*), powering `grain-ww whole-cup`!
+//! Compresses Grain's five dual-truth pairs (`kyri<->reya`,
+//! `teacher<->karma`, `glow<->rye`, `husk<->tablecloth`, `orbit<->quest`)
+//! onto one canonical SHA3-256 macro identity and proves the exact `5x`
+//! Calfive geometric ladder `[15, 75, 375, 1875, 9375]`, with paired refusal
+//! witnesses for unpaired terms and broken Calfive ratios!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.173141";
+pub const calfive_tiers = [5]u32{ 15, 75, 375, 1875, 9375 };
+const nl: u8 = 10;
+
+pub const CupError = error{
+    UnpairedTruthRefused,
+    BrokenCalfiveRatioRefused,
+};
+
+pub const TwinPair = struct {
+    left: []const u8,
+    right: []const u8,
+    canonical: []const u8,
+};
+
+pub const five_twins = [_]TwinPair{
+    .{ .left = "kyri", .right = "reya", .canonical = "companion-voice" },
+    .{ .left = "teacher", .right = "karma", .canonical = "open-door-style" },
+    .{ .left = "glow", .right = "rye", .canonical = "dancing-friends-spine" },
+    .{ .left = "husk", .right = "tablecloth", .canonical = "blaze-memory" },
+    .{ .left = "shastra", .right = "risala", .canonical = "living-library" },
+};
+
+pub fn fold_to_canonical(term: []const u8) CupError![]const u8 {
+    // invariant: map either side of any twin pair to its single macro name.
+    assert(term.len > 0);
+    for (five_twins) |pair| {
+        if (std.mem.eql(u8, term, pair.left) or
+            std.mem.eql(u8, term, pair.right) or
+            std.mem.eql(u8, term, pair.canonical))
+        {
+            assert(pair.canonical.len > 0);
+            return pair.canonical;
+        }
+    }
+    return error.UnpairedTruthRefused;
+}
+
+pub fn canonical_cup_hash(term: []const u8) CupError![32]u8 {
+    const canon = try fold_to_canonical(term);
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-sameness-whole-cup-v1:");
+    h.update(canon);
+    h.final(&out);
+    assert((out[0] | out[1] | out[2]) != 0);
+    return out;
+}
+
+pub fn verify_calfive_ladder(tiers: [5]u32) CupError!u32 {
+    // invariant: every Calfive tier expands strictly by x5 (5 elements).
+    if (tiers[0] != 15) return error.BrokenCalfiveRatioRefused;
+    var i: usize = 0;
+    while (i + 1 < tiers.len) : (i += 1) {
+        if (tiers[i + 1] != tiers[i] * 5) {
+            return error.BrokenCalfiveRatioRefused;
+        }
+    }
+    assert(tiers[1] == 75 and tiers[4] == 9375);
+    return tiers[4];
+}
+
+fn run_selftest() !u8 {
+    // 1. Welcome: all 5 dual-truth pairs hash identically across both sides!
+    var matched: u32 = 0;
+    for (five_twins) |pair| {
+        const hl = try canonical_cup_hash(pair.left);
+        const hr = try canonical_cup_hash(pair.right);
+        const hc = try canonical_cup_hash(pair.canonical);
+        if (!std.mem.eql(u8, &hl, &hr) or !std.mem.eql(u8, &hl, &hc)) {
+            return error.TwinHashDiverged;
+        }
+        matched += 1;
+    }
+
+    // 2. Welcome: exact [15, 75, 375, 1875, 9375] Calfive ladder passes!
+    const cap = try verify_calfive_ladder(calfive_tiers);
+    if (cap != 9375) return error.ChapterCapWrong;
+
+    // 3. Refusal 1: unpaired ad-hoc alias refused cleanly
+    if (canonical_cup_hash("mystery-dialect")) |_| {
+        return error.UnpairedAccepted;
+    } else |err| {
+        if (err != error.UnpairedTruthRefused) return err;
+    }
+
+    // 4. Refusal 2: broken Calfive ratio refused cleanly
+    const bad = [5]u32{ 15, 60, 300, 1500, 7500 };
+    if (verify_calfive_ladder(bad)) |_| {
+        return error.BadLadderAccepted;
+    } else |err| {
+        if (err != error.BrokenCalfiveRatioRefused) return err;
+    }
+
+    assert(matched == 5);
+    print(
+        "GREEN: sameness_macro_cup -- {d}/5 twins & [15..{d}] Calfive ok!{c}",
+        .{ matched, cap, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

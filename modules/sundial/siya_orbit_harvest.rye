@@ -99,17 +99,17 @@ fn run_selftest() !u8 {
     const seed: [32]u8 = @splat(0x15);
     const kp = try Ed25519.KeyPair.generateDeterministic(seed);
 
-    // 1. Movement 44 (not divisible by 15!) MUST refuse premature harvest!
-    if (seal_siya_harvest(44, 155, 20, 26, kp)) |_| {
+    // 1. Movement 59 (not divisible by 15!) MUST refuse premature harvest!
+    if (seal_siya_harvest(59, 270, 34, 47, kp)) |_| {
         return error.PrematureOrbitSealed;
     } else |err| {
         if (err != error.IncompleteOrbitMovements) return err;
     }
 
-    // 2. Movement 45 (`3 * 15 == 45` -> Orbit 3!) seals & verifies cleanly!
-    const cert = try seal_siya_harvest(45, 155, 20, 26, kp);
+    // 2. Movement 60 (`4 * 15 == 60` -> Orbit 4!) seals & verifies cleanly!
+    const cert = try seal_siya_harvest(60, 270, 34, 47, kp);
     try cert.verify();
-    if (cert.orbit_number != 3) return error.WrongOrbitNumber;
+    if (cert.orbit_number != 4) return error.WrongOrbitNumber;
 
     print(
         "GREEN: siya_orbit_harvest -- Orbit {d} ({d} mov, {d} desks).{c}",

@@ -1,0 +1,19 @@
+::  languages/glow/compiler/rune_48_dispatch.glow -- Full 48-rune Mill!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-rune-48-id
+  |=  rune-idx=@ud                                      ::  0..47 live rune
+  ^-  @ud                                               ::  verified slot
+  ~|  'glow-rune-index-out-of-48-book'                  ::  strict 48 book
+  ?>  (lte rune-idx 47)
+  rune-idx
+++  fold-tisket-thread
+  |=  [prod=@ud next-state=@ud]                         ::  =^ pure thread
+  ^-  @ud                                               ::  combined fold
+  %+  add  prod  next-state
+++  gate-wutzap-not
+  |=  loob=@ud                                          ::  ?! 0=yes, 1=no
+  ^-  @ud                                               ::  inverted loob
+  ?:  (eql loob 0)  1  0
+--

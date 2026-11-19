@@ -1,7 +1,7 @@
 # Gratitude
 
 **Language:** EN
-**Last updated:** 2026-08-26 (Swift lineage gratitude + grain-sketchbook pinned study shelf)
+**Last updated:** `20261119.154705` (linked directly to root [`../LEXICON.md`](../LEXICON.md) & [`../MAP.md`](../MAP.md))
 **Style:** Radiant (see `../context/RADIANT_STYLE.md`)
 
 ---

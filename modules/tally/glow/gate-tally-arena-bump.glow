@@ -1,0 +1,10 @@
+::  modules/tally/glow/gate-tally-arena-bump.glow -- Bounded Arena Bump!
+/!  16384
+|%
+++  gate-tally-arena-bump
+  |=  [cap-bytes=@ud used-bytes=@ud]                    ::  Tally garden cap
+  ^-  @ud                                               ::  free headroom
+  ~|  'tally-arena-capacity-exceeded'                   ::  zero heap churn
+  ?>  (gte cap-bytes used-bytes)                        ::  strictly bounded
+  (sub cap-bytes used-bytes)
+--

@@ -9,12 +9,18 @@
 #   `context/templates/PUBLISH_TARGETS.template.kyri` -- zero hardcoded personal
 #   remotes live in this tracked script!).
 
-assert length args < 2 else "publish-seed: pass at most one flag (--push)"
+assert length args < 2 else "publish-seed: pass --push, --force-seed, or none"
 let pushing = "no"
-if length args == 1 then let pushing = args[0]
-if pushing == "--push" then let pushing = "yes"
-if pushing != "yes" then if pushing != "no" then let pushing = "bad"
-assert pushing != "bad" else "publish-seed: unknown flag (want --push or none)"
+let force_seed = "no"
+if length args == 1 then let arg0 = args[0] else let arg0 = ""
+if arg0 == "--push" then let pushing = "yes"
+if arg0 == "--force-seed" then let pushing = "yes"
+if arg0 == "--force-seed" then let force_seed = "yes"
+let bad_flag = "publish-seed: want --push, --force-seed, or none"
+let arg_ok = "no"
+if arg0 == "" then let arg_ok = "yes"
+if pushing == "yes" then let arg_ok = "yes"
+assert arg_ok == "yes" else bad_flag
 
 let has_brix = run ["test" "-f" ".brix"]
 assert has_brix.ok else "publish-seed: .brix missing -- run from repo root"
@@ -26,7 +32,10 @@ let has_local = run ["test" "-f" cfg_file]
 let tpl_file = "context/templates/PUBLISH_TARGETS.template.kyri"
 if has_local.code != 0 then let cfg_file = tpl_file
 let msg_cfg = "publish-seed: copy PUBLISH_TARGETS.template.kyri first"
-if pushing == "yes" then assert has_local.ok else msg_cfg
+let cfg_ok = "no"
+if pushing == "no" then let cfg_ok = "yes"
+if has_local.ok then let cfg_ok = "yes"
+assert cfg_ok == "yes" else msg_cfg
 
 let r_url = run ["awk" "$1 ~ /^seed_remote_url$/ { print $2 }" cfg_file]
 let ww_url = trim r_url.out
@@ -35,6 +44,20 @@ let r_name = run ["awk" "$1 ~ /^seed_author_name$/ { print $2 }" cfg_file]
 let seed_name = trim r_name.out
 let r_mail = run ["awk" "$1 ~ /^seed_author_email$/ { print $2 }" cfg_file]
 let seed_mail = trim r_mail.out
+let r_cad = run ["awk" "$1 ~ /^seed_cadence$/ { print $2 }" cfg_file]
+let cadence = trim r_cad.out
+if cadence == "" then let cadence = "stream"
+let r_srem = run ["awk" "$1 ~ /^seed_remote$/ { print $2 }" cfg_file]
+let seed_rem = trim r_srem.out
+if seed_rem == "" then let seed_rem = "ww"
+let r_msg = run ["awk" "$1 ~ /^seed_commit_message$/ { print $2 }" cfg_file]
+let seed_msg = trim r_msg.out
+if seed_msg == "" then let seed_msg = "palisade"
+let r_key = run ["awk" "$1 ~ /^seed_signing_key$/ { print $2 }" cfg_file]
+let seed_key = trim r_key.out
+let use_sig = "yes"
+if seed_key == "" then let use_sig = "no"
+if seed_key == "NONE" then let use_sig = "no"
 
 # Ensure `modules/fusion/bin/fusion_sow` is built.
 let fsow_src = "modules/fusion/fusion_sow.rye"
@@ -58,10 +81,23 @@ say proved.err
 assert proved.ok else "publish-seed: FUSION SOW REFUSED -- nothing initialized"
 assert (proved.err contains "SOW_WITNESS_GREEN") else "publish-seed: not GREEN"
 
+let h_msg = "GREEN: publish-seed -- hearth cadence (${seed_rem} deferred)."
+let defer_h = "no"
+if cadence == "hearth" then let defer_h = "yes"
+if force_seed == "yes" then let defer_h = "no"
+if defer_h == "yes" then say h_msg
+if defer_h == "yes" then let pushing = "no"
+
 let inited = run ["git" "init" "-q" "-b" "main" seed_dir]
 assert inited.ok else "publish-seed: git init -b main refused"
-let cfg_sign = run ["git" "-C" seed_dir "config" "commit.gpgsign" "false"]
-assert cfg_sign.ok else "publish-seed: could not set commit.gpgsign=false"
+let ok_c = ["true"]
+let sg_off = ["git" "-C" seed_dir "config" "commit.gpgsign" "false"]
+let sg_on = ["git" "-C" seed_dir "config" "commit.gpgsign" "true"]
+if use_sig == "yes" then let cfg_sign = run sg_on else let cfg_sign = run sg_off
+assert cfg_sign.ok else "publish-seed: could not set commit.gpgsign"
+let sk_cmd = ["git" "-C" seed_dir "config" "user.signingkey" seed_key]
+if use_sig == "yes" then let cfg_sk = run sk_cmd else let cfg_sk = run ok_c
+assert cfg_sk.ok else "publish-seed: could not set seed signingkey"
 let cfg_nm = run ["git" "-C" seed_dir "config" "user.name" seed_name]
 assert cfg_nm.ok else "publish-seed: could not set seed user.name"
 let cfg_ml = run ["git" "-C" seed_dir "config" "user.email" seed_mail]
@@ -71,7 +107,7 @@ assert add_rem.ok else "publish-seed: could not add remote ww"
 
 let staged = run ["git" "-C" seed_dir "add" "-A"]
 assert staged.ok else "publish-seed: git add -A refused"
-let committed = run ["git" "-C" seed_dir "commit" "-q" "-m" "petrichor"]
+let committed = run ["git" "-C" seed_dir "commit" "-q" "-m" seed_msg]
 assert committed.ok else "publish-seed: orphan seed commit refused"
 
 let head_run = run ["git" "-C" seed_dir "rev-parse" "HEAD"]
@@ -81,15 +117,19 @@ let sig_run = run ["git" "-C" seed_dir "log" "-1" "--format=%G?"]
 let sig = trim sig_run.out
 let par_probe = run ["git" "-C" seed_dir "rev-parse" "--verify" "HEAD^"]
 assert par_probe.code != 0 else "publish-seed: seed commit must have 0 parents"
-assert sig == "N" else "publish-seed: seed commit must stay unsigned (N)"
+let sig_pair = use_sig + ":" + sig
+let sig_ok = "no"
+if sig_pair == "no:N" then let sig_ok = "yes"
+if sig_pair == "yes:G" then let sig_ok = "yes"
+if sig_pair == "yes:U" then let sig_ok = "yes"
+assert sig_ok == "yes" else "publish-seed: seed signature state mismatch"
 
-say "publish-seed: seed ready -- head=${head} signed=${sig} parents=0"
+say "publish-seed: ready -- msg=${seed_msg} head=${head} sig=${sig} parents=0"
 say "publish-seed: target=${ww_url}"
 if pushing != "yes" then say "publish-seed: DRY RUN ok (pass --push to send)."
 
 let ssh_cfg = "core.sshCommand=ssh -o ControlMaster=no -o ConnectTimeout=60"
 let push_cmd = ["git" "-C" seed_dir "-c" ssh_cfg "push" "-f" "ww" "HEAD:main"]
-let ok_c = ["true"]
 if pushing == "yes" then say "publish-seed: pushing seed to ${ww_url} ..."
 if pushing == "yes" then let pushed = run push_cmd else let pushed = run ok_c
 if pushed.code != 0 then say pushed.err

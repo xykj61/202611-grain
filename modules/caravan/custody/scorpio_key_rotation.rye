@@ -1,0 +1,173 @@
+//! modules/caravan/custody/scorpio_key_rotation.rye -- Atomic Key Rotation!
+//!
+//! Stamp: `20261119.155742` -- Orbit 5, `Movement 8/15 : Scorpio` (*Clear
+//! spent keys to zero & scout 9-Sagittarius*), powering
+//! `grain-ww key-rotate` (Proof #55)!
+//! Composes directly with `vault_zeroize_seal.rye` to execute bounded
+//! multi-epoch `Caravan` + `Puddle` ephemeral session key rotations:
+//!   1. Every rotation atomically mints the next epoch secret, shreds the
+//!      prior secret via `std.crypto.secureZero`, and chains its SHA3-256
+//!      tombstone onto the rotation audit digest,
+//!   2. Proves strictly ONE active key slot exists at every instant while
+//!      every retired slot reads `0x00` across all 32 DRAM bytes,
+//!   3. Pairs refusal witnesses for epoch rollback, duplicate key IDs, and
+//!      reads against any retired epoch slot!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const custody = @import("vault_zeroize_seal.rye");
+
+pub const version = "20261119.155742";
+pub const max_rotations: u32 = 8;
+const nl: u8 = 10;
+
+pub const RotationError = error{
+    NonMonotonicEpochRefused,
+    DuplicateKeyIdRefused,
+    RotationCapReached,
+    VaultOpFailed,
+};
+
+pub const RotationRing = struct {
+    vault: custody.CustodyVault,
+    active_slot: ?u32,
+    last_epoch: u64,
+    rotations_done: u32,
+    chain_sha3: [32]u8,
+
+    pub fn init() RotationRing {
+        return .{
+            .vault = custody.CustodyVault.init(),
+            .active_slot = null,
+            .last_epoch = 0,
+            .rotations_done = 0,
+            .chain_sha3 = @splat(0),
+        };
+    }
+
+    pub fn rotate_session_key(
+        self: *RotationRing,
+        key_id: u64,
+        raw_secret: [32]u8,
+        now_epoch: u64,
+        ttl_epochs: u64,
+    ) RotationError!u32 {
+        // invariant: monotonic epoch, bounded rotations, & unique key IDs.
+        if (self.active_slot != null and now_epoch <= self.last_epoch) {
+            return error.NonMonotonicEpochRefused;
+        }
+        if (self.rotations_done >= max_rotations) {
+            return error.RotationCapReached;
+        }
+        var idx: u32 = 0;
+        while (idx < self.vault.count) : (idx += 1) {
+            if (self.vault.leases[idx].key_id == key_id) {
+                return error.DuplicateKeyIdRefused;
+            }
+        }
+
+        const next_slot = self.vault.mint_puddle_lease(
+            key_id,
+            raw_secret,
+            now_epoch,
+            ttl_epochs,
+        ) catch return error.VaultOpFailed;
+
+        if (self.active_slot) |prev| {
+            const tomb = self.vault.revoke_and_shred(
+                prev,
+                now_epoch,
+            ) catch return error.VaultOpFailed;
+            var h = Sha3_256.init(.{});
+            h.update("grain-scorpio-rotation-chain-v1:");
+            h.update(&self.chain_sha3);
+            h.update(&tomb);
+            h.final(&self.chain_sha3);
+            self.rotations_done += 1;
+        }
+
+        self.active_slot = next_slot;
+        self.last_epoch = now_epoch;
+
+        // invariant: exactly one slot active and all prior slots zeroed!
+        assert(self.count_active_slots() == 1);
+        assert(self.all_prior_slots_zeroed());
+        return next_slot;
+    }
+
+    pub fn count_active_slots(self: *const RotationRing) u32 {
+        var live: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.vault.count) : (i += 1) {
+            if (!self.vault.leases[i].shredded) live += 1;
+        }
+        return live;
+    }
+
+    pub fn all_prior_slots_zeroed(self: *const RotationRing) bool {
+        var i: u32 = 0;
+        while (i < self.vault.count) : (i += 1) {
+            if (self.active_slot) |act| {
+                if (i == act) continue;
+            }
+            if (!self.vault.leases[i].shredded) return false;
+            if (!self.vault.leases[i].is_all_zero()) return false;
+        }
+        return true;
+    }
+};
+
+fn run_selftest() !u8 {
+    var ring = RotationRing.init();
+    const s0: [32]u8 = @splat(0x11);
+    const s1: [32]u8 = @splat(0x22);
+    const s2: [32]u8 = @splat(0x33);
+    const s3: [32]u8 = @splat(0x44);
+
+    // 1. Welcome: 4 epochs (3 rotations), strictly 1 active slot & 3 wiped!
+    const slot0 = try ring.rotate_session_key(5001, s0, 100, 50);
+    const slot1 = try ring.rotate_session_key(5002, s1, 110, 50);
+    const slot2 = try ring.rotate_session_key(5003, s2, 120, 50);
+    const slot3 = try ring.rotate_session_key(5004, s3, 130, 50);
+    if (ring.rotations_done != 3) return error.BadRotationCount;
+    if (ring.count_active_slots() != 1) return error.TooManyActiveKeys;
+    if (!ring.all_prior_slots_zeroed()) return error.SpentKeyResidue;
+
+    const cur = try ring.vault.read_active_secret(slot3, 135);
+    if (cur[0] != 0x44) return error.ActiveSecretMismatch;
+
+    // 2. Refusal 1: reading any retired epoch slot refused cleanly
+    if (ring.vault.read_active_secret(slot0, 135)) |_| {
+        return error.RetiredSlot0Readable;
+    } else |err| {
+        if (err != error.LeaseShreddedOrExpired) return err;
+    }
+    _ = slot1;
+    _ = slot2;
+
+    // 3. Refusal 2: epoch rollback (125 <= 130) refused cleanly
+    if (ring.rotate_session_key(5005, s0, 125, 50)) |_| {
+        return error.EpochRollbackAccepted;
+    } else |err| {
+        if (err != error.NonMonotonicEpochRefused) return err;
+    }
+
+    // 4. Refusal 3: duplicate key ID (5002) refused cleanly
+    if (ring.rotate_session_key(5002, s0, 140, 50)) |_| {
+        return error.DuplicateKeyAccepted;
+    } else |err| {
+        if (err != error.DuplicateKeyIdRefused) return err;
+    }
+
+    print(
+        "GREEN: scorpio_key_rotation -- {d} rotations, 0 spent bytes!{c}",
+        .{ ring.rotations_done, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

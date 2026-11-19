@@ -1,0 +1,46 @@
+# tools/c/calfive_and_stamp_name_witness.rish -- Calfive, Gemini Spine, & Stamp-and-Name!
+#
+# Proves on real metal (`20261115.123500`):
+#   1. Root `GEMINI.md` + scoped `languages/GEMINI.md`, `modules/GEMINI.md`, &
+#      `libraries/GEMINI.md` exist and stay pure 7-bit ASCII,
+#   2. `modules/sundial/calfive_wheel.rye` (`grain-ww round-load`) proves the
+#      `x5` Panchanga (`15 - 75 - 375 - 1,875 - 9,375`) and all 15 Signs,
+#   3. Zero `lotus_*` files remain in `modules/resonance/` or `terrarium/`,
+#   4. Zero `Orbit [0-9]` ascending serial labels remain in our `.glow` desks,
+#      and zero numbered `01-`..`09-` guide prefixes remain in `guides/`!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build" "languages/rishi/bin"]
+assert mk.ok else "mkdir failed"
+
+# 1. Gemini-native instruction spine + 5 Elemental Rule Cards
+let g_files = run ["sh" "-c" "test -f GEMINI.md && test -f languages/GEMINI.md && test -f modules/GEMINI.md && test -f libraries/GEMINI.md && test -f .gemini/rules/aether-purpose-and-sameness.md && test -f .gemini/rules/air-stamp-and-naming.md && test -f .gemini/rules/fire-tame-and-reds-first.md && test -f .gemini/rules/water-voice-and-glasswall.md && test -f .gemini/rules/earth-rooms-molt-and-seed.md"]
+assert g_files.ok else "missing GEMINI.md or one of the 5 Elemental Rule Cards"
+let g_cnt = run ["sh" "-c" "set -- .gemini/rules/*.md && test $# -eq 6"]
+assert g_cnt.ok else "expected exactly 6 .md files in .gemini/rules/ (README + 5 Elemental Cards)"
+
+# 2. Calfive 15-sign wheel & `grain-ww round-load`
+let b_cw = run ["sh" rb "modules/sundial/calfive_wheel.rye" "-femit-bin=tools/.build/calfive_wheel"]
+assert b_cw.ok else "calfive_wheel.rye build failed"
+let r_cw = run ["tools/.build/calfive_wheel" "selftest"]
+assert r_cw.ok else "calfive_wheel selftest failed"
+
+let b_gw = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_gw.ok else "grain_ww_cli build failed"
+let r_rl = run ["languages/rishi/bin/grain-ww" "round-load"]
+assert r_rl.ok else "grain-ww round-load failed"
+assert (r_rl.err contains "Calfive Round Load") else "round-load output missing header"
+
+# 3. Zero living `lotus_*` files in resonance/, vantage/include/, terrarium/, or active-husk/
+let no_lotus = run ["sh" "-c" "! ls -d modules/resonance/*lotus* modules/comlink/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* active-husk/date/202611/00/*lotus* 2>/dev/null"]
+assert no_lotus.ok else "leftover lotus_* path found in resonance, vantage, terrarium, or active-husk!"
+
+# 4. Zero ascending numbers in guide filenames or compiler/citizen .glow headers
+let no_num_guides = run ["sh" "-c" "! ls docs-geode/lessons/guides/[0-9]* 2>/dev/null"]
+assert no_num_guides.ok else "numbered guide filename found in docs-geode/lessons/guides/!"
+let no_orbit_glow = run ["sh" "-c" "! grep -E '(Orbit|Quest|Journey|Section|Chapter) [0-9]' languages/glow/compiler/*.glow modules/*/glow/*.glow modules/*/*/glow/*.glow"]
+assert no_orbit_glow.ok else "ascending Calfive serial label found in .glow desk header!"
+let no_serial_code = run ["sh" "-c" "! git ls-files modules languages libraries blazepod terrarium tools | grep -E '\\.(rye|glow|rish)$' | grep -Ei '(orbit|quest|journey|section|chapter)[0-9]'"]
+assert no_serial_code.ok else "ascending Calfive serial token found in living .rye/.glow/.rish filename!"
+
+say "GREEN: calfive_and_stamp_name_witness -- GEMINI.md spine, Calfive 15-sign round-load, Lotus->Resonance, & hard no-serial ratchet proven."

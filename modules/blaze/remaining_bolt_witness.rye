@@ -69,7 +69,7 @@ const marjoram_pages = [_]Page{
     .{ .name = "comlink-sessions", .content = @embedFile("corpora/demos_02.md") },
     .{ .name = "galaxy-registry", .content = @embedFile("corpora/demos_03.md") },
     .{ .name = "kumara-identity", .content = @embedFile("corpora/demos_04.md") },
-    .{ .name = "mur-token-transfer", .content = @embedFile("corpora/demos_05.md") },
+    .{ .name = "wood-token-transfer", .content = @embedFile("corpora/demos_05.md") },
     .{ .name = "mycelium-consensus", .content = @embedFile("corpora/demos_06.md") },
     .{ .name = "pond-quickstart", .content = @embedFile("corpora/demos_07.md") },
     .{ .name = "surf-social-design", .content = @embedFile("corpora/demos_08.md") },

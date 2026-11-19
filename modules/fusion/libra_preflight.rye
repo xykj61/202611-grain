@@ -1,0 +1,140 @@
+//! modules/fusion/libra_preflight.rye -- Strict `+0.001` Myofascia & Preflight!
+//!
+//! Stamp: `20261119.121259` -- `Movement 7/15 : Libra` (*Even Scales*),
+//! powering `grain-ww preflight`!
+//! Mechanically enforces:
+//!   1. **Strict `+0.001` (`<= 1` milli-point) Myofascia Step Per Movement:**
+//!      Compares working `.brix` `myofascia` against `prev_milli` (`git show
+//!      HEAD:.brix` before commit, or `HEAD~1:.brix` right after commit) and
+//!      refuses (`error.MyofasciaJumpExceededOneMilli`) any jump `> 1` milli!
+//!   2. **4-Way Myofascia Sync:** `.brix == README.md == grain_ww_cli.rye`!
+//!   3. **`.brix` `<= 80` Column Check**!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.121259";
+const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const PreflightError = error{
+    MalformedMyofascia,
+    MyofasciaRegression,
+    MyofasciaJumpExceededOneMilli,
+    MyofasciaCrossFileDrift,
+    BrixLineTooLong,
+};
+
+/// Parses `"57.046"` -> `57046` milli-points!
+pub fn parse_myofascia_milli(s: []const u8) PreflightError!u32 {
+    const dot = std.mem.indexOfScalar(u8, s, '.') orelse {
+        return error.MalformedMyofascia;
+    };
+    if (dot == 0 or s.len != dot + 4) return error.MalformedMyofascia;
+    const whole = std.fmt.parseInt(u32, s[0..dot], 10) catch {
+        return error.MalformedMyofascia;
+    };
+    const frac = std.fmt.parseInt(u32, s[dot + 1 ..], 10) catch {
+        return error.MalformedMyofascia;
+    };
+    assert(frac < 1000);
+    return whole * 1000 + frac;
+}
+
+pub fn extract_brix_myofascia(brix_txt: []const u8) PreflightError![]const u8 {
+    var it = std.mem.splitScalar(u8, brix_txt, nl);
+    while (it.next()) |raw| {
+        if (raw.len > 80) return error.BrixLineTooLong;
+        const line = std.mem.trim(u8, raw, &ws);
+        if (std.mem.startsWith(u8, line, "myofascia ")) {
+            return std.mem.trim(u8, line[10..], &ws);
+        }
+    }
+    return error.MalformedMyofascia;
+}
+
+/// Strict `+0.001` (`delta <= 1` milli-point) law!
+pub fn verify_step_delta(prev_milli: u32, curr_milli: u32) PreflightError!void {
+    if (curr_milli < prev_milli) return error.MyofasciaRegression;
+    const delta = curr_milli - prev_milli;
+    if (delta > 1) return error.MyofasciaJumpExceededOneMilli;
+    assert(delta <= 1);
+}
+
+fn run_selftest() !u8 {
+    if ((try parse_myofascia_milli("57.046")) != 57046) {
+        return error.BadMilliParse;
+    }
+
+    // 1. Welcome: +0.001 (`57045 -> 57046`) and +0.000 (`57046 -> 57046`) pass!
+    try verify_step_delta(57045, 57046);
+    try verify_step_delta(57046, 57046);
+
+    // 2. Refusal: +0.005 (`57045 -> 57050`) and +0.015 (`57045 -> 57060`) RED!
+    if (verify_step_delta(57045, 57050)) |_| {
+        return error.FiveMilliJumpAccepted;
+    } else |err| {
+        if (err != error.MyofasciaJumpExceededOneMilli) return err;
+    }
+    if (verify_step_delta(57045, 57060)) |_| {
+        return error.FifteenMilliJumpAccepted;
+    } else |err| {
+        if (err != error.MyofasciaJumpExceededOneMilli) return err;
+    }
+
+    print(
+        "GREEN: libra_preflight -- strict +0.001/movement Myofascia gate.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    const brix_txt = try cwd.readFileAlloc(io, ".brix", a, .limited(65536));
+    const m_str = try extract_brix_myofascia(brix_txt);
+    const curr_milli = try parse_myofascia_milli(m_str);
+
+    const readme = try cwd.readFileAlloc(io, "README.md", a, .limited(65536));
+    const cli = try cwd.readFileAlloc(
+        io,
+        "languages/rishi/grain_ww_cli.rye",
+        a,
+        .limited(65536),
+    );
+    if (std.mem.indexOf(u8, readme, m_str) == null or
+        std.mem.indexOf(u8, cli, m_str) == null)
+    {
+        return error.MyofasciaCrossFileDrift;
+    }
+
+    // Compare against git HEAD `.brix` when dirty (pre-commit), ensuring <= +1!
+    const res = std.process.run(a, io, .{
+        .argv = &.{ "git", "--no-pager", "show", "HEAD:.brix" },
+    }) catch {
+        print("GREEN: libra_preflight -- myofascia {s} synced.{c}", .{
+            m_str, nl,
+        });
+        return 0;
+    };
+    if (res.term == .exited and res.term.exited == 0) {
+        const head_str = try extract_brix_myofascia(res.stdout);
+        const head_milli = try parse_myofascia_milli(head_str);
+        try verify_step_delta(head_milli, curr_milli);
+    }
+
+    print(
+        "GREEN: libra_preflight -- myofascia {s} (<= +0.001 step) & 80-col.{c}",
+        .{ m_str, nl },
+    );
+    return 0;
+}

@@ -1,0 +1,11 @@
+::  languages/glow/compiler/rye_emitter.glow -- Glow -> Compilable Rye!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-emit-rye-fn
+  |=  [arms-count=@ud max-arms=@ud]                     ::  bounded core arms
+  ^-  @ud                                               ::  verified count
+  ~|  'glow-rye-emitter-too-many-arms'                  ::  <= 64 core arms
+  ?>  &(gte(arms-count 1) lte(arms-count max-arms))
+  arms-count
+--

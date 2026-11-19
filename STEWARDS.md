@@ -1,39 +1,42 @@
-# Stewards — kind and host map
+# Stewards -- Kind & Host Map
 
-**Language:** EN  
-**Seated:** `20260724.143155`  
-**Last updated:** `20260730.153243` (source-identity -- living voice face)  
-**Voice:** Kyri  
-**Status:** Living pin  
-**Bound:** keep under `living_pin_max_bytes`  
-**Counsel:** [`counsel/date/20260724/20260724-141612_names-maps-and-open-questions.md`](counsel/date/20260724/20260724-141612_names-maps-and-open-questions.md)
+**Language:** EN
+**Now Stamp:** `20261119.182008` (EST)
+**Originally Seated:** `20260724.143155`
+**Voice:** Reya / Kyri (`Synonym` twin companion voices)
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Front Doors:** [`README.md`](README.md) | [`LEXICON.md`](LEXICON.md) |
+[`MAP.md`](MAP.md) | [`context/SPELLBOOK.md`](context/SPELLBOOK.md)
+**Status:** Living pin (`Room: checkable`, bounded under `living_pin_max_bytes`)
 
-*Standing writing voice is **Kyri**; **Quin** still stewards the Q-vane faculties (`flare/` · `lantern/` · `lattice/` · `pulp/`) below.*
+---
 
-*What kind is each root thing, and who stewards it?* Not every artifact is a module.
+*Standing writing voice is **Reya / Kyri**; **Quin** stewards the Q-vane
+faculties (`modules/flare/`, `lantern/`, `lattice/`, `husk/`).*
 
-**Pier remotes:** canonical count lives in [`context/REMOTE_ROSTER.md`](context/REMOTE_ROSTER.md) — this page points rather than restates.
+*What kind is each root room, and who stewards it?* Each room plays one clear
+civic role, and canonical remote counts live in
+[`context/REMOTE_ROSTER.md`](context/REMOTE_ROSTER.md).
 
-| Root artifact(s) | Kind | Steward / serves |
+| Root Artifact(s) | Kind | Steward / Serves |
 |---|---|---|
-| `context/` · `foundations/` · `APARIGRAHA.md` · `OPEN_QUESTIONS.md` · `REMOTE_ROSTER.md` | Compass | everyone; `living_docs_lint` · `dated_guard` · `radiant_lint` |
-| `README` · `ORGANIZING` · `CONTRIBUTING` · `SOURCE` · `PUBKEYS` · licenses · `CLAUDE.md` · `llms.txt` · this file | Pier papers | the pier itself |
-| `counsel/` · `expanding-prompts/` · `session-logs/` · `construction/` · `kyri-resins/` · host/profile cards | Relay genres | counsel↔bench relay |
-| `active-designing/` · `active-reviving/` · `waymarks/` | Design · revival · claims | Maze-adjacent; claims forward-only in `waymarks/` |
-| `external-research/` · `gratitude/` · `external-research/yonder/strengthening-compiler/` · `classical-vedic-astrology/` | Study shelves | silo sources; elders honored |
-| `glow/` · `rye/` · `rishi/` · `tools/` | Languages and bench | instruments; Ojjo consumes parity |
-| `aurora/` · `caravan/` · `tally/` | Runtime trio | held unification; ship-day image names it |
-| `linengrow/` · `mandi/` · `granary/` · `amphora/` · `dimeroll/` | Agents and goods | **Pool** |
-| `brushstroke/` | Design system | **Seva** |
-| `comlink/` | Wires | **Neth** · **Pool** jointly |
-| `cellar/` | Archival module | Blaze / Weave |
-| `flare/` · `lantern/` · `lattice/` · `pulp/` | Faculties | **Quin** |
-| `keys/` and key art | Identity custody | Kumara today; **Rhyz** at proven supersede |
-| `pond/` | Isolation stratum | application stratum, as seated |
+| `context/`, `foundations/`, `LEXICON.md`, `context/SPELLBOOK.md`, `context/APARIGRAHA.md` | Compass & Law | Everyone; verified by `grain-ww witness-all` & `radiant-check` |
+| `README.md`, `MAP.md`, `SOURCE.md`, `SAFE.md`, `SECURITY.md`, `CONTRIBUTING.md`, `PUBKEYS.md`, `GEMINI.md`, `STEWARDS.md` | Pier Front Doors | The pier itself & every newcomer |
+| `active-husk/`, `active-designing/`, `active-development/`, `construction/`, `session-logs/` | Living Workbenches | Prepend-to-front `Husk` movement stacks & design records |
+| `external-research/`, `gratitude/`, `libraries/` | Study & Curriculum Shelves | Four-year *Bloom & Shastra*, *Risala*, & clean-room gratitude |
+| `languages/` (`glow/`, `rye/`, `rishi/`, `brix/`, `kyri/`), `tools/` | Native-5 Languages & Bench | `grain-ww` universal CLI & `Stage 1 == Stage 2` self-hosting |
+| `modules/` (`aurora`, `tally`, `caravan`, `blaze`, `pond`, `crypto`, `kumara`, `comlink` + `vantage`, `harness`, `flare`, `brushstroke`, `resonance`, `market`, `synonym`, `sundial`) | System Faculties | TAME Ring-0 / Citizen Ring code & co-located `.glow` desks |
+| `blazepod/`, `terrarium/`, `nixos/` | Hardware, Enclosures, & Packaging | Two-mode `Blazepod` (`tally-ram` & `tally-vn`), QEMU/macOS/Carry shells, & `grain-ww` 5-distro packages |
+| `mitra-shed/`, `yonder/` | Molt Preparation & Cold Archive | Single cold archive vault (`0` scattered archive closets) |
 
-## Questions this map teaches
+## Four Stewardship Questions This Map Answers
 
-1. Who consumes this? (graduation)  
-2. Which witness guards this? (trust)  
-3. What genre is this? (pin or ledger)  
-4. Whose hand may write here? (custody)
+1. **Who consumes this?** (graduation & human constituency)
+2. **Which witness guards this?** (metal proof & `grain-ww witness-all`)
+3. **What room is this?** (`checkable`, `vision`, or `mixed`)
+4. **Whose signed key writes here?** (OpenPGP custody in [`PUBKEYS.md`](PUBKEYS.md))
+
+---
+
+*May every room hold one clear steward, one honest witness, and one open door.*

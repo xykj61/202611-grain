@@ -1,0 +1,17 @@
+::  modules/resonance/glow/fold-resonance-wood.glow -- Stem Patronage!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-stem-split-sum
+  |=  permille-sum=@ud                                  ::  exact 1000 split
+  ^-  @ud                                               ::  verified permille
+  ~|  'resonance-wood-splits-must-sum-to-1000'          ::  zero drift law
+  ?>  (eql permille-sum 1000)
+  permille-sum
+++  gate-stem-cast-cap
+  |=  cast-len=@ud                                      ::  1..8 stems/artists
+  ^-  @ud                                               ::  verified count
+  ~|  'resonance-cast-outside-one-to-eight-bound'       ::  bounded ensemble
+  ?>  &(gte(cast-len 1) lte(cast-len 8))
+  cast-len
+--

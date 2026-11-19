@@ -1,0 +1,138 @@
+//! languages/glow/mill/ring0_glow_to_rye.rye -- Ring-0 Glow -> Rye -> Metal!
+//!
+//! Stamp: `20261119.133148` -- Powers `grain-ww ring0-glow` (Proof #44)!
+//! Lowers all 4 Ring-0 Grain kernel `.glow` gates (`Aurora`, `Tally`,
+//! `Caravan`, `Blaze`) into standalone TAME `.rye` files via
+//! `glow_to_rye_emitter.rye`, compiles each emitted `.rye` file to a native
+//! executable via `tools/fixtures/r/rye_build.sh`, and runs all 4 binaries on
+//! metal alongside a refusal witness for a budget-free `.glow` input!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const emitter = @import("glow_to_rye_emitter.rye");
+
+pub const version = "20261119.133148";
+const nl: u8 = 10;
+
+pub const Ring0Kernel = struct {
+    name: []const u8,
+    glow_path: []const u8,
+    expected_fn: []const u8,
+};
+
+pub const ring0_kernels = [_]Ring0Kernel{
+    .{
+        .name = "aurora_hart_boot",
+        .glow_path = "modules/aurora/glow/gate-riscv-hart-boot.glow",
+        .expected_fn = "pub fn gate_riscv_hart_boot",
+    },
+    .{
+        .name = "tally_arena_bump",
+        .glow_path = "modules/tally/glow/gate-tally-arena-bump.glow",
+        .expected_fn = "pub fn gate_tally_arena_bump",
+    },
+    .{
+        .name = "caravan_vault_lease",
+        .glow_path = "modules/caravan/glow/gate-vault-lease.glow",
+        .expected_fn = "pub fn gate_vault_lease",
+    },
+    .{
+        .name = "blaze_weave_step",
+        .glow_path = "modules/blaze/glow/gate-blaze-weave-step.glow",
+        .expected_fn = "pub fn gate_blaze_weave_step",
+    },
+};
+
+fn run_ok(r: std.process.RunResult) bool {
+    return switch (r.term) {
+        .exited => |code| code == 0,
+        else => false,
+    };
+}
+
+pub fn lower_build_and_run_kernel(
+    a: std.mem.Allocator,
+    io: std.Io,
+    k: Ring0Kernel,
+) !void {
+    // invariant: Ring-0 kernel descriptor carries non-empty name & path.
+    assert(k.name.len > 0 and k.glow_path.len > 0);
+    const cwd = std.Io.Dir.cwd();
+    const src = try cwd.readFileAlloc(io, k.glow_path, a, .limited(32768));
+
+    var out_buf: [2048]u8 = undefined;
+    const emitted = try emitter.emit_compilable_rye_module(src, &out_buf);
+    if (std.mem.indexOf(u8, emitted, k.expected_fn) == null) {
+        return error.Ring0ArmMissing;
+    }
+
+    const gen_rye = try std.fmt.allocPrint(
+        a,
+        "tools/.build/ring0_gen/{s}.rye",
+        .{k.name},
+    );
+    const gen_bin = try std.fmt.allocPrint(
+        a,
+        "tools/.build/ring0_gen/{s}",
+        .{k.name},
+    );
+    const emit_flag = try std.fmt.allocPrint(a, "-femit-bin={s}", .{gen_bin});
+
+    try cwd.writeFile(io, .{ .sub_path = gen_rye, .data = emitted });
+
+    const bld = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{
+            "sh",
+            "tools/fixtures/r/rye_build.sh",
+            gen_rye,
+            emit_flag,
+        },
+    });
+    if (!run_ok(bld)) return error.Ring0RyeBuildFailed;
+
+    const exe = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{gen_bin},
+    });
+    if (!run_ok(exe)) return error.Ring0NativeExecFailed;
+
+    // invariant: emitted Rye source passed compilation and native execution.
+    assert(emitted.len > 64 and run_ok(exe));
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    const mk = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{ "mkdir", "-p", "tools/.build/ring0_gen" },
+    });
+    if (!run_ok(mk)) return error.MkdirFailed;
+
+    var built_count: u32 = 0;
+    for (ring0_kernels) |k| {
+        try lower_build_and_run_kernel(a, io, k);
+        built_count += 1;
+    }
+
+    // Refusal witness: `.glow` missing `/!` FrameBudget must be refused!
+    var bad_buf: [512]u8 = undefined;
+    const bad_glow = "|%\n++  gate-unbounded\n  42\n--\n";
+    if (emitter.emit_compilable_rye_module(bad_glow, &bad_buf)) |_| {
+        return error.UnboundedGlowAccepted;
+    } else |err| {
+        if (err != error.MissingFrameBudget) return err;
+    }
+
+    // invariant: all 4 Ring-0 kernels (Aurora, Tally, Caravan, Blaze) proven!
+    assert(built_count == 4);
+    print(
+        "GREEN: ring0_glow_to_rye -- {d}/4 Ring-0 .glow -> .rye -> metal!{c}",
+        .{ built_count, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

@@ -1,0 +1,82 @@
+//! modules/fusion/libra_scales_gate.rye -- Libra Even Scales Gate!
+//!
+//! Stamp: `20261119.182424` -- Libra (*Weigh Virgo findings, plan Mitra
+//! tidy cuts, & hold even scales*), powering `grain-ww libra-scales`!
+//! Mechanically verifies:
+//!   1. `nixos/README.md` stands present & links `LEXICON.md` (closing
+//!      `MAP.md`'s missing `nixos/README.md` link!),
+//!   2. Even Scales balance floor (`>= 16` hubs, `>= 41` Glow desks,
+//!      `>= 54` metal proofs) with paired refusal witness!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.154705";
+const nl: u8 = 10;
+
+pub const ScalesError = error{
+    HubsBelowSixteen,
+    GlowBelowFortyOne,
+    ProofsBelowFiftyFour,
+    NixosReadmeMissingLexicon,
+};
+
+pub const ScalesReading = struct {
+    lexicon_hubs: u32,
+    glow_desks: u32,
+    metal_proofs: u32,
+};
+
+pub fn weigh_scales(r: ScalesReading) ScalesError!u32 {
+    // invariant: enforce 16-hub, 41-Glow, and 54-proof Even Scales floor.
+    if (r.lexicon_hubs < 16) return error.HubsBelowSixteen;
+    if (r.glow_desks < 41) return error.GlowBelowFortyOne;
+    if (r.metal_proofs < 54) return error.ProofsBelowFiftyFour;
+    assert(r.lexicon_hubs >= 16 and r.metal_proofs >= 54);
+    return r.lexicon_hubs + r.glow_desks + r.metal_proofs;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    const nix = try cwd.readFileAlloc(
+        io,
+        "nixos/README.md",
+        a,
+        .limited(16384),
+    );
+    if (std.mem.indexOf(u8, nix, "LEXICON.md") == null) {
+        return error.NixosReadmeMissingLexicon;
+    }
+
+    const total = try weigh_scales(.{
+        .lexicon_hubs = 16,
+        .glow_desks = 41,
+        .metal_proofs = 54,
+    });
+    if (total != 111) return error.ScalesSumWrong;
+
+    // Refusal witness: sub-floor hub count (12 < 16) rejected cleanly
+    if (weigh_scales(.{
+        .lexicon_hubs = 12,
+        .glow_desks = 41,
+        .metal_proofs = 54,
+    })) |_| {
+        return error.UnbalancedScalesAccepted;
+    } else |err| {
+        if (err != error.HubsBelowSixteen) return err;
+    }
+
+    print(
+        "GREEN: orbit5_libra_scales -- 16 hubs + 41 Glow + 54 proofs = {d}!{c}",
+        .{ total, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

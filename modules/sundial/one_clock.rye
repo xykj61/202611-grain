@@ -15,8 +15,14 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const version = "20261115.145000";
+pub const version = "20261119.105021";
 const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const ClockError = error{
+    GuessedOrStaleBrixStamp,
+    MalformedBrixVersion,
+};
 
 pub const ZonePolicy = enum(u8) {
     utc_universal = 0,
@@ -182,6 +188,32 @@ pub fn format_filename_stamp(
     );
 }
 
+pub fn verify_stamp_freshness(
+    stamp_15: []const u8,
+    now_year: u32,
+    now_month: u32,
+    now_day: u32,
+) ClockError!void {
+    if (stamp_15.len < 8) return error.MalformedBrixVersion;
+    const sy = std.fmt.parseInt(u32, stamp_15[0..4], 10) catch {
+        return error.MalformedBrixVersion;
+    };
+    const sm = std.fmt.parseInt(u32, stamp_15[4..6], 10) catch {
+        return error.MalformedBrixVersion;
+    };
+    const sd = std.fmt.parseInt(u32, stamp_15[6..8], 10) catch {
+        return error.MalformedBrixVersion;
+    };
+    const d_stamp = days_from_civil(sy, sm, sd);
+    const d_now = days_from_civil(now_year, now_month, now_day);
+    const diff: i64 = if (d_now >= d_stamp)
+        d_now - d_stamp
+    else
+        d_stamp - d_now;
+    if (diff > 1) return error.GuessedOrStaleBrixStamp;
+    assert(diff <= 1);
+}
+
 fn load_policy(a: std.mem.Allocator, io: std.Io) ZonePolicy {
     const cwd = std.Io.Dir.cwd();
     const txt = cwd.readFileAlloc(
@@ -242,7 +274,18 @@ fn run_selftest() !u8 {
     if (!std.mem.eql(u8, fname, "20261115-180000-utc_report.md")) {
         return error.BadUtcFilename;
     }
-    print("GREEN: one_clock -- global US/EU/IST/JST/UTC auto-DST.{c}", .{nl});
+
+    // Mechanical No-Guessed-Stamps Gate: same day passes; 4-day lag RED!
+    try verify_stamp_freshness("20261119.105021", 2026, 11, 19);
+    if (verify_stamp_freshness("20261115.174500", 2026, 11, 19)) |_| {
+        return error.StaleGuessedStampAccepted;
+    } else |err| {
+        if (err != error.GuessedOrStaleBrixStamp) return err;
+    }
+
+    print("GREEN: one_clock -- global auto-DST & anti-guess stamp gate.{c}", .{
+        nl,
+    });
     return 0;
 }
 
@@ -260,6 +303,36 @@ pub fn main(init: std.process.Init) !u8 {
     const ns_per_s: i96 = 1_000_000_000;
     const unix_sec: i64 = @intCast(@divFloor(now_ts.nanoseconds, ns_per_s));
     const cs = resolve_stamp(unix_sec, pol);
+
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "verify-brix")) {
+        const btxt = try std.Io.Dir.cwd().readFileAlloc(
+            io,
+            ".brix",
+            a,
+            .limited(32768),
+        );
+        var ver_found = false;
+        var it = std.mem.splitScalar(u8, btxt, nl);
+        while (it.next()) |raw| {
+            const line = std.mem.trim(u8, raw, &ws);
+            if (std.mem.startsWith(u8, line, "version ")) {
+                const v = std.mem.trim(u8, line[8..], &ws);
+                try verify_stamp_freshness(
+                    v,
+                    cs.year,
+                    cs.month,
+                    cs.day,
+                );
+                ver_found = true;
+                break;
+            }
+        }
+        if (!ver_found) return error.MalformedBrixVersion;
+        print("GREEN: one_clock verify-brix -- .brix matches live clock.{c}", .{
+            nl,
+        });
+        return 0;
+    }
 
     if (args.len >= 2) {
         var fbuf: [192]u8 = undefined;

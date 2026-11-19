@@ -1,8 +1,8 @@
 # Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Stamp:** `20261115.123500`
-**Voice:** Kyri (Gauge, Teacher, Radiant, & Civic)
-**Branch:** `xy/gemini-4-carbon` (`publish-seed` -> `grain-ww/202611-grain`)
+**Stamp:** `20261119.183931` (EST)
+**Voice:** Kyri / Reya (Gauge, Radiant, Civic, Teacher / Karma, & Twilight)
+**Branch:** `xy/gemini-4-neon` (`publish-seed` -> `grain-ww/202611-grain`)
 
 ---
 
@@ -10,7 +10,7 @@
 
 Compress the system by making parts publicly similar -- **one value model**
 (Brix/Kyri/wire), **one pure fold** over signed facts (`Blaze`), **one UI**
-(`modules/comlink/vantage/`), and **one plain vocabulary** -- never through
+(`modules/comlink/vantage/`), and **one plain vocabulary** ([`LEXICON.md`](LEXICON.md)) -- never through
 hidden macros, private dialects, or duplicated platform logic.
 
 - **Scoped subdirectory guides** (loaded automatically when entering them):
@@ -26,15 +26,23 @@ hidden macros, private dialects, or duplicated platform logic.
 
 ---
 
-## 2. Stamp and Name -- Count, Never Number
+## 2. Stamp and Name -- Count, Never Number, Never Guess
 
-1. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
+1. **Computationally Measure Every Stamp (Zero Guessing -- HARD RED):** NEVER
+   guess, hand-increment, or invent a `YYYYMMDD.HHMMSS` or `YYYYMMDD-HHMMSS-<tz>`
+   timestamp from memory. Before writing or updating `.brix`, `version`
+   constants, or dated filenames, ALWAYS execute
+   `languages/rishi/bin/grain-ww stamp` on metal and use its exact reading
+   (`grain-ww stamp verify-brix` enforces `<= 1`-day wall-clock agreement!).
+2. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
    versions/headers; `YYYYMMDD-HHMMSS_sprig.ext` for dated records) order work;
    plain descriptive names state meaning.
-2. **Zero ascending serial numbers in living names or headers:** Never mint
-   sequence numbers (`01-`, `_100_`, `Orbit 14`, `v2`, `lap3`, `WAYMARK[0-9]+`)
-   into filenames, function names, or standing file headers. Derive totals by
-   measurement (`git rev-list --count HEAD`, `wc -l`).
+2. **Zero ascending serial numbers in living names or headers (HARD RATCHET):**
+   Never mint ascending sequence counters (`01-`, `_100_`, `<orbit><N>`,
+   `<quest><N>`, `<journey><N>`, `v2`, `lap3`, `WAYMARK<N>`, `Proof #<N>`) into
+   living filenames, CLI subcommands, or standing file headers. Derive totals
+   strictly by measurement (`grain-ww movement`, `git rev-list --count HEAD`,
+   `wc -l`), enforced mechanically by `grain-ww stamp-ratchet`.
 3. **Zero semantic versioning:** Only chronological `YYYYMMDD.HHMMSS` pins
    exist across `.brix`, `.rye`, and `grain-ww` packages (*Evergrow*: updates
    within an epoch name offer more and require less).
@@ -71,6 +79,9 @@ hidden macros, private dialects, or duplicated platform logic.
   **`Resonance`** (never the retired DAW name `Lotus`).
 - **Civic Glasswall:** Write-only RLCD framebuffers, hardware-switched +
   bystander-lamp-gated `Earpiece` voice capture, zero ad/telemetry SDKs.
-- **Calfive Rhythm (`15 - 75 - 375 - 1,875 - 9,375`):** Run
-  `languages/rishi/bin/grain-ww round-load` to read the current 15-sign round
-  (`(commit_count - 1) % 15 + 1`), element, goal, and Myofascia reading.
+- **Calfive Rhythm (`15 - 75 - 375 - 1,875 - 9,375`) & Strict `+0.001` Myofascia Law:**
+  Run `languages/rishi/bin/grain-ww movement` to read the current 15-sign
+  movement (`(commit_count - 1) % 15 + 1`). Each completed Movement (1 git
+  commit) advances `Myofascia` by **strictly `+0.001`** (`+1` milli-point;
+  `+0.015` across a full 15-Movement Orbit). Advancing `Myofascia` by `> 0.001`
+  on a single commit is a **HARD RED** refused by `grain-ww preflight`.

@@ -1,0 +1,11 @@
+::  modules/flare/husk/glow/gate-husk-stack.glow -- Explicit-Bound Husk!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-husk-calfive-cap
+  |=  [cards=@ud tier-cap=@ud]                          ::  <=128 & <=9375
+  ^-  @ud                                               ::  verified cards
+  ~|  'husk-movement-stack-exceeds-explicit-tame-bound' ::  bounded Husk
+  ?>  &(lte(cards 128) lte(tier-cap 9375))
+  cards
+--

@@ -7,21 +7,21 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261115.172500
-myofascia 56.970
+version 20261119.183931
+myofascia 57.078
 
 # Upstream git remote and branch-pushing defaults
 remote xy
 branch_main main
-branch_push_default gemini-4-carbon
+branch_push_default gemini-4-neon
 
-# Active primary bench: Google Gemini CLI (gemini-4-carbon)
+# Active primary bench: Google Gemini CLI (gemini-4-neon)
 provider_gemini Google
 product_gemini Gemini CLI
-model_gemini gemini-4-carbon
-branch_gemini gemini-4-carbon
+model_gemini gemini-4-neon
+branch_gemini gemini-4-neon
 push_remote_gemini xy
-push_branch_gemini gemini-4-carbon
+push_branch_gemini gemini-4-neon
 door_gemini GEMINI.md
 settings_gemini .gemini/settings.json
 rules_gemini .gemini/rules/README.md
@@ -54,10 +54,11 @@ binary_antigravity agy
 # Typo and synthesis aliases
 alias Prim Prin
 alias Synthesis Choir
-file tools/l/launch-choir-synthesis-chapter.rish
+file tools/rishi/launch-choir-synthesis-chapter.rish
 
 # Five-language spine (languages/) & Gemini instruction spine
 file GEMINI.md
+file LEXICON.md
 file MAP.md
 file llms.txt
 file languages/GEMINI.md
@@ -66,8 +67,41 @@ file libraries/GEMINI.md
 file libraries/shastra/panchanga_shastra_bridge.rye
 file libraries/risala/twilight_wheel.rye
 file libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md
+file libraries/civic-ecology/README.md
+file libraries/civic-ecology/canopy_hydrology.rye
+file libraries/civic-ecology/lessons/canopy-cooling-and-continental-rain.md
+file libraries/civil-engineering/README.md
+file libraries/civil-engineering/watershed_structures.rye
+file libraries/civil-engineering/lessons/permeable-works-and-timber-craft.md
+file context/TAME_CORE.md
+file context/TAME_GUIDANCE.md
 file context/TWILIGHT_STYLE.md
+file context/CIVIC_STYLE.md
+file context/RADIANT_STYLE.md
+file context/GAUGE_STYLE.md
+file context/KYRI.md
+file context/REYA.md
+file context/voices/companion-voice-base.md
+file context/TEACHER_STYLE.md
+file context/KARMA_STYLE.md
+file context/styles/lib/open-door-style-base.md
+file context/SILO_TECHNIQUE.md
 file modules/fusion/twilight_residue_audit.rye
+file modules/fusion/hearth_cadence.rye
+file modules/fusion/radiant_zero_neg_check.rye
+file modules/fusion/virgo_compass_audit.rye
+file modules/fusion/libra_preflight.rye
+file modules/market/wood_token.rye
+file modules/market/wood_weave_bridge.rye
+file modules/market/glow/fold-wood-mint.glow
+file modules/market/glow/fold-wood-weave.glow
+file terrarium/README.md
+file modules/synonym/synonym_macro.rye
+file modules/synonym/sameness_macro_cup.rye
+file modules/synonym/glow/fold-whole-cup.glow
+file terrarium/faa-atc/atc_separation.rye
+file terrarium/civil-engineering/structural_colloquium.rye
+file docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md
 file docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md
 file .gemini/rules/aether-purpose-and-sameness.md
 file .gemini/rules/air-stamp-and-naming.md
@@ -78,34 +112,64 @@ file modules/sundial/calfive_wheel.rye
 file modules/sundial/one_clock.rye
 file modules/sundial/siya_orbit_harvest.rye
 file modules/sundial/glow/fold-siya-orbit.glow
+file modules/sundial/quest_harvest_seal.rye
+file modules/sundial/glow/fold-quest-seal.glow
 file context/templates/CLOCK_CONFIG.template.kyri
 file context/templates/PUBKEYS.template.md
-file modules/flare/pulp/pulp_movement_stack.rye
-file modules/flare/pulp/pulp_object_recall.rye
-file modules/flare/pulp/glow/fold-pulp-recall.glow
+file modules/flare/husk/husk_movement_stack.rye
+file modules/flare/husk/husk_object_recall.rye
+file modules/flare/husk/glow/fold-husk-recall.glow
+file modules/flare/husk/glow/gate-husk-stack.glow
+file libraries/shastra/civic_purpose_audit.rye
 file modules/tablecloth/relational_table.rye
 file modules/tablecloth/sql_workspace.rye
 file modules/tablecloth/gleaner_intake.rye
 file modules/tablecloth/glow/gate-tablecloth-fk.glow
 file modules/tablecloth/glow/gate-gleaner-balance.glow
 file modules/caravan/custody/vault_zeroize_seal.rye
+file modules/caravan/custody/scorpio_key_rotation.rye
 file modules/caravan/glow/gate-vault-lease.glow
+file modules/caravan/glow/gate-key-rotation.glow
 file modules/comlink/council_405.rye
 file modules/comlink/council_mycelium_weave.rye
 file modules/comlink/constel_405_discovery.rye
+file modules/comlink/constel_aquarius_federation.rye
 file modules/comlink/glow/gate-council-405.glow
 file modules/comlink/glow/gate-constel-gossip.glow
+file modules/comlink/glow/gate-aquarius-405.glow
 file modules/comlink/vantage/vantage_council_puddle.rye
 file modules/comlink/vantage/vantage_twilight_reader.rye
 file modules/vantage_tablecloth_bridge.rye
 file modules/comlink/vantage/glow/fold-twilight-turn.glow
 file modules/comlink/vantage/glow/fold-vantage-snapshot.glow
-file tools/w/witness_all.rish
+file modules/comlink/vantage/vantage_canvas_bridge.rye
+file modules/comlink/vantage/glow/fold-vantage-canvas.glow
+file modules/comlink/vantage/vantage_studio_deck.rye
+file modules/comlink/vantage/glow/fold-studio-deck.glow
+file modules/comlink/vantage/vantage_husk_editor.rye
+file modules/comlink/vantage/glow/fold-husk-editor.glow
+file modules/brushstroke/skate/canopy_watershed_canvas.rye
+file modules/brushstroke/glow/fold-canopy-canvas.glow
+file modules/brushstroke/skate/twilight_almanac_art.rye
+file modules/brushstroke/glow/fold-twilight-almanac.glow
+file modules/brushstroke/skate/studio_triptych_canvas.rye
+file modules/brushstroke/glow/fold-studio-triptych.glow
+file modules/brushstroke/skate/vantage_harness_console.rye
+file modules/brushstroke/glow/fold-harness-console.glow
+file libraries/risala/twilight_nocturne_svg.rye
+file modules/brushstroke/glow/fold-twilight-svg.glow
+file terrarium/faa-atc/pilot_sector_horizon.rye
+file modules/apps/colloquium/glow/gate-terrarium-horizon.glow
+file tools/witness_all.rish
 file blazepod/rv64_glasswall_boot.rye
+file blazepod/tally_vn_wal_replay.rye
+file modules/tally/glow/gate-tally-wal.glow
 file modules/aurora/glow/gate-riscv-hart-boot.glow
 file modules/pond/puddle/puddle_remote.rye
 file modules/pond/puddle/puddle_udp_live.rye
 file modules/pond/puddle/puddle_scp_cli.rye
+file modules/pond/pond_sanctuary_airlock.rye
+file modules/pond/glow/gate-pond-sanctuary.glow
 file modules/pond/puddle/puddle_cli_session.rye
 file modules/pond/glow/gate-puddle-roam.glow
 file modules/pond/glow/gate-puddle-exec.glow
@@ -128,6 +192,17 @@ file languages/glow/assay/assay_types.rye
 file languages/glow/assay/assay_bounds.rye
 file languages/glow/pith/pith_ir.rye
 file languages/glow/mill/mill_emit.rye
+file languages/glow/rune_48_lower.rye
+file languages/glow/compiler/rune_48_dispatch.glow
+file languages/glow/sheaf/sheaf_wire_doors.rye
+file languages/glow/compiler/sheaf_wire.glow
+file languages/glow/mill/glow_to_rye_emitter.rye
+file languages/glow/mill/ring0_glow_to_rye.rye
+file languages/glow/mill/ring0_dual_silicon.rye
+file languages/glow/compiler/rye_emitter.glow
+file languages/glow/compiler/ring0_silicon.glow
+file modules/tally/glow/gate-tally-arena-bump.glow
+file modules/blaze/glow/gate-blaze-weave-step.glow
 file languages/glow/driver/glow_self_host.rye
 file languages/glow/driver/glow_compile_cli.rye
 file languages/glow/examples/double_harvest.glow
@@ -158,16 +233,36 @@ file modules/fusion/fusion.brix
 file modules/fusion/fusion_dag.rye
 file modules/fusion/fusion_sow.rye
 file modules/fusion/gate_runner.rye
+file modules/fusion/palisade_release_gate.rye
+file modules/fusion/virgo_efficiency_audit.rye
+file modules/fusion/glow/gate-virgo-efficiency.glow
+file modules/fusion/libra_scales_gate.rye
+file modules/fusion/glow/gate-libra-scales.glow
+file modules/fusion/stamp_no_serial_ratchet.rye
+file terrarium/terrarium_consolidation_audit.rye
+file modules/fusion/glow/gate-terrarium-audit.glow
+file terrarium/vantage_station_consolidation_menu.rye
+file modules/comlink/vantage/glow/fold-station-menu.glow
+file nixos/README.md
 
 # Gate witness runner
-file tools/p/parity.rish
+file tools/rishi/parity.rish
 
 # Flare inference faculties & Agentic Harness
 file modules/flare/lattice/lattice_core.rye
-file modules/flare/pulp/pulp_core.rye
+file modules/flare/husk/husk_core.rye
 file modules/flare/lantern/lantern_core.rye
 file modules/flare/flare_core.rye
 file modules/harness/harness_core.rye
+file modules/harness/grain_cached_harness.rye
+file modules/harness/glow/fold-harness-cache.glow
+file modules/harness/pond_api_airlock.rye
+file modules/harness/glow/gate-api-airlock.glow
+file modules/harness/harness_wood_ledger.rye
+file modules/harness/glow/fold-harness-wood.glow
+file modules/harness/scorpio_session_zeroize.rye
+file modules/harness/glow/gate-session-zeroize.glow
+file context/SPELLBOOK.md
 
 # Identity, topology, Comlink Parcel, Pond CLI, Touch, and Earpiece
 file modules/kumara/kumara.rye
@@ -181,9 +276,11 @@ file modules/comlink/vantage/surf_social_grid.rye
 file modules/comlink/vantage/vantage_carry_jni.c
 file modules/comlink/vantage/glow/fold-vantage-carry.glow
 file terrarium/app/vantage_mac_live.swift
-file tools/c/build_dc1_apk.rish
+file tools/vantage/build_dc1_apk.rish
 file modules/resonance/dsp_engine.rye
 file modules/resonance/studio_wav_bounce.rye
+file modules/resonance/resonance_wood_ledger.rye
+file modules/resonance/glow/fold-resonance-wood.glow
 file docs-geode/tutorials/resonance-station-daw.md
 file modules/fusion/sow_native_gates.rye
 file modules/pond/testnet/galaxy_testnet.rye

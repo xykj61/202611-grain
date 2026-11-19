@@ -1,64 +1,75 @@
-# The Silo Technique
+# The Silo Technique -- Making Outside Inspiration Genuinely Our Own
 
 **Language:** EN
-**Last updated:** `20261007.085102` (Teacher Style is a siloed sibling of Bhakta; gratitude stays apart)
-**Style:** Gauge (see `GAUGE_STYLE.md`); the opening paragraph is Bhakta (see `BHAKTA_STYLE.md`)
-
-**Purpose:** Name a way of taking in an idea from outside your work and making it truly your own -- so that what enters your writing arrives as an owned, understood concept in your own voice, rather than a borrowed quotation wearing someone else's name. This is a portable technique; it travels to any subject and any tool.
-**Room:** vision -- a way of taking in an idea; no witness binds it.
-
----
-
-## What Siloing Is Not
-
-The Silo Technique is not plagiarism. Plagiarism presents another person's words or ideas as your own discovery. Siloing is the practice of understanding an idea until you can teach it yourself, and then writing that understanding in your own words. The idea stays at full strength. You plant it again in your own ground, and its reasons and its edges come with it. The people who taught you stay named and honored in a place kept for thanks, and the practice depends on that open gratitude. The test is comprehension. When you can teach the idea, you hold it. Teacher Style (`TEACHER_STYLE.md`) is this technique applied to a register: Bhakta's open door, rewritten in civic American English, with sports metaphors of our own and thanks at `../gratitude/american-coaching-craft.md`.
-
-## What Siloing Is
-
-To silo an idea is to receive it from the world, understand it fully, and set it down again in your own words and your own vocabulary -- with the outside names, brands, citations, and original phrasing left at the door. The insight comes in; the scaffolding stays out. What lands on your page reads as something you arrived at yourself, because, having understood it, you have.
-
-A silo is therefore a kind of clean room for thinking. Ideas enter freely. They simply enter abstracted -- a particular method becomes the general pattern it exemplifies, a specific teacher's phrase becomes the truth it points to, a named product becomes the capability it offers. The idea keeps all its substance and sheds only its origin's particular dress.
-
-## Why We Silo
-
-Siloing earns its place for several reasons at once, and they reinforce one another.
-
-It keeps one voice. A body of work that silos its sources speaks throughout in a single, coherent register, rather than as a patchwork of borrowed terms each carrying its own accent. The reader meets one mind, thinking clearly, rather than a relay of quotations.
-
-It proves understanding. You cannot silo what you have only skimmed. To re-express an idea in your own terms, you must actually hold it -- its shape, its reasons, its edges. Siloing is thus a quiet comprehension test you give yourself: if you can rebuild the idea from your own materials, you truly have it.
-
-It lets ideas stand on their merit. Stripped of the authority of a famous name, a claim has to be true and useful on its own. This is healthy. It keeps the work honest, and it keeps you from leaning on borrowed prestige in place of clear thought.
-
-It keeps the work portable and clean. An idea re-expressed in your own words travels into any context without dragging its origin's baggage, and it carries no copied text with it. When the source is a recording or a transcript, this matters doubly: siloing produces your own expression of what was said, rather than a reproduction of the saying -- so the work stays both genuinely yours and clean of anyone else's words.
-
-And for tender or sacred material, siloing becomes a form of devotion. To take a teaching and hold it in your own heart's vocabulary, rather than only repeating its received phrases, is to digest it -- to let it become part of how you actually see, chapter after chapter. The understanding deepens precisely because you had to make it your own.
-
-## How To Silo
-
-The practice moves in a few natural steps, each flowing into the next.
-
-Receive the source fully first. Read it, hear it, sit with it until you grasp the idea beneath the words, rather than only the words themselves.
-
-Then separate the insight from its scaffolding. Ask what, exactly, is the transferable truth here -- and set that apart from the proper names, the particular examples, the citations, and the source's own turns of phrase.
-
-Re-express the insight in your own voice and your own conceptual terms, as though explaining it to a friend who shares your vocabulary and knows nothing of where you found it. Where the source named a specific thing, name instead the general concept it stands for. Keep the original's exact wording out entirely; if a sentence still sounds like the source, it has not yet been siloed.
-
-Then test the result with one plain question: could a reader who never met the source understand this completely? If yes, the silo holds. If a name remains on the page, ask whether it is there on purpose -- for gratitude -- or by accident. If by accident, let it go.
-
-## Gratitude Stands Apart
-
-Siloing never erases the teacher. It keeps gratitude in its own honored space -- a place where sources are named plainly and thanked, distinct from the siloed body of the work. Breaking the silo is a deliberate act, reserved for thanks and honest attribution, rather than the default way ideas arrive.
-
-This is the whole shape of the trust: the ideas move into your work digested and owned, while the record of who taught you stays explicit and warm in the place set aside for it. Siloing hides nothing. It simply keeps the thinking in one room and the thanksgiving in another, so each can be whole.
-
-## Scoped relaxation (docs compression layer)
-
-**Product-facing and civic-facing prose keeps full Silo.** Pages under `docs/`, and `active-designing/` notes that carry an explicit **Dependencies** section, may name teachers plainly in that section -- naming *is* the clarity there. Every relaxed page still closes with its gratitude lines. Design law: [`active-designing/date/20260712/20260712-221600_docs-compression-layer-design.md`](../active-designing/date/20260712/20260712-221600_docs-compression-layer-design.md).
-
-## Where It Serves
-
-The technique fits wherever ideas come in from outside. A recorded talk or a transcript becomes a set of notes written entirely in your own words, holding the speaker's insight and none of the speaker's sentences. A tradition's teaching becomes a concept named in your own devotional vocabulary, with the lineage thanked in the space kept for thanks. A technical method described elsewhere becomes a pattern named within your own system, free to combine with everything else you have built. In each case the same motion repeats: understand, abstract, re-express, and keep gratitude apart and honored.
+**Now Stamp:** `20261119.183452` (EST)
+**Voice:** Reya / Kyri
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Front Doors:** [`../README.md`](../README.md) |
+[`../LEXICON.md`](../LEXICON.md) | [`SPELLBOOK.md`](SPELLBOOK.md)
+**Companion Canons:** [`GAUGE_STYLE.md`](GAUGE_STYLE.md),
+[`RADIANT_STYLE.md`](RADIANT_STYLE.md), [`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md),
+[`TEACHER_STYLE.md`](TEACHER_STYLE.md), [`KARMA_STYLE.md`](KARMA_STYLE.md)
 
 ---
 
-*May every idea we welcome become truly our own through understanding. May our work speak in one clear voice, owing nothing it has not digested and hiding nothing it owes. And may the teachers who lit the way be named with warmth in the place we keep for thanks, chapter after chapter, through all the long and grateful work of learning.*
+## 1. Comprehension as Ownership, Gratitude as Honor
+
+The Silo Technique is our clean-room practice for welcoming wisdom, architecture,
+and artistry from the wider world and expressing it purely in our own voice.
+True comprehension lets an engineer, writer, or artist rebuild an idea from
+first principles in fresh, native vocabulary while honoring and thanking every
+inspiring teacher openly in [`../gratitude/`](../gratitude/).
+
+---
+
+## 2. What a Creative Silo Does
+
+A **silo** acts as a clear distillation chamber between study and creation:
+- A teacher's memorable phrase distills into the universal principle it reveals.
+- A beloved building, musical instrument, or painting distills into the
+  proportion, rhythm, and structural balance that give it life.
+- An external software tool distills into the plain human capability it serves,
+  rebuilt cleanly inside our TAME, Radiant, and `Glasswall` foundations.
+
+The living essence arrives at full strength, dressed entirely in Grain's own
+woven cloth.
+
+---
+
+## 3. Five Strengths of Siloed Creation
+
+1. **Unified Voice:** Every room in the repository speaks one coherent, warm
+   language free of borrowed slogans.
+2. **Verified Understanding:** Rebuilding a concept from scratch proves genuine
+   mastery of its invariants, trade-offs, and boundaries.
+3. **Merit in Daylight:** Ideas stand on measurable usefulness, clarity, and
+   beauty rather than borrowed prestige.
+4. **Clean Provenance:** Original prose, code, and visual geometry travel
+   anywhere with complete legal and creative integrity.
+5. **`12-Pisces` Twilight Radiant Artistry:** During **Movement `12-Pisces`**,
+   we contemplate visionaries honored in `gratitude/` -- architects, painters,
+   composers, systems builders, and regenerative growers -- distill their core
+   harmony through the Silo clean room, and craft a **unique artistic artifact**
+   that belongs wholly to Grain.
+
+---
+
+## 4. The Four-Step Silo Practice
+
+1. **Study Deeply:** Sit with the inspiring work until its underlying geometry
+   and human purpose become crystal clear.
+2. **Extract the Transferable Principle:** State the structural truth in plain,
+   general terms independent of external brand names or signature idioms.
+3. **Compose Anew in Grain's Materials:** Build and write from first principles
+   using our own styles (`Radiant`, `Gauge`, `Civic`, `Teacher / Karma`,
+   `Twilight`) and TAME bounds until every line sounds natively ours.
+4. **Record Warm Thanks in `gratitude/`:** Dedicate explicit, generous credit to
+   the teachers and visionaries in [`../gratitude/`](../gratitude/) so thinking
+   and thanksgiving each flourish in their proper room.
+
+---
+
+*May every insight we study blossom anew through genuine understanding, may our
+craft speak in one clear and original voice, and may our gratitude room stay
+warm with honor for every teacher along the way.*

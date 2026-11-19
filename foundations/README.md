@@ -1,8 +1,8 @@
 # Foundations
 
 **Language:** EN
-**Last updated:** `20260822.014628` (seat [The Mechanism and the Metaphor](20260822-014628_the-mechanism-and-the-metaphor.md) -- a commit body names the change in plain engineering words before it reaches for an image, with a wall in the commit hook and a meter behind it)
-**Style:** Gauge, Door setting (see `context/GAUGE_STYLE.md`) - **Voice:** Kyri
+**Last updated:** `20261119.154705` (linked directly to root [`../LEXICON.md`](../LEXICON.md) & [`../MAP.md`](../MAP.md))
+**Style:** Gauge, Door setting (see `context/GAUGE_STYLE.md`) - **Voice:** Kyri / Reya
 
 ---
 

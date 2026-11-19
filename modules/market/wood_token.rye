@@ -1,0 +1,90 @@
+//! modules/market/wood_token.rye -- Conserved `WOOD` Ecological Unit!
+//!
+//! Stamp: `20261115.174500` -- Molts legacy `Mox / MUR` onto **`WOOD`**
+//! (`grain-ww wood`)!
+//! `WOOD` is NOT fiat money (only sovereign state currency is money); `WOOD`
+//! is Mycelium & Civil Engineering's **provenance & ecological contribution
+//! unit of record** (embodied timber/fiber carbon, biocyclic harvest checks,
+//! and honest consensus rounds across all 15 Galaxies / 405 seats)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.174500";
+pub const token_symbol = "WOOD";
+pub const galaxy_count: usize = 15;
+const nl: u8 = 10;
+
+pub const WoodError = error{
+    BadGalaxyId,
+    SameGalaxyRefused,
+    ZeroAmountRefused,
+    InsufficientWoodBalance,
+};
+
+pub const WoodLedger = struct {
+    balances: [galaxy_count]u64,
+    total_supply: u64,
+
+    pub fn init_genesis(per_galaxy_wood: u64) WoodLedger {
+        var wl = std.mem.zeroes(WoodLedger);
+        var g: usize = 0;
+        while (g < galaxy_count) : (g += 1) {
+            wl.balances[g] = per_galaxy_wood;
+        }
+        wl.total_supply = per_galaxy_wood * galaxy_count;
+        assert(wl.sum_balances() == wl.total_supply);
+        return wl;
+    }
+
+    pub fn sum_balances(self: *const WoodLedger) u64 {
+        var acc: u64 = 0;
+        for (self.balances) |b| acc += b;
+        return acc;
+    }
+
+    pub fn transfer_wood(
+        self: *WoodLedger,
+        from_galaxy: usize,
+        to_galaxy: usize,
+        amount_wood: u64,
+    ) WoodError!void {
+        if (from_galaxy >= galaxy_count or to_galaxy >= galaxy_count) {
+            return error.BadGalaxyId;
+        }
+        if (from_galaxy == to_galaxy) return error.SameGalaxyRefused;
+        if (amount_wood == 0) return error.ZeroAmountRefused;
+        if (self.balances[from_galaxy] < amount_wood) {
+            return error.InsufficientWoodBalance;
+        }
+
+        self.balances[from_galaxy] -= amount_wood;
+        self.balances[to_galaxy] += amount_wood;
+        // invariant: total WOOD supply is strictly conserved on transfer!
+        assert(self.sum_balances() == self.total_supply);
+    }
+};
+
+fn run_selftest() !u8 {
+    var ledger = WoodLedger.init_genesis(1000);
+    try ledger.transfer_wood(0, 1, 100);
+    try ledger.transfer_wood(1, 14, 250);
+    if (ledger.balances[0] != 900 or ledger.balances[14] != 1250) {
+        return error.BadWoodBalance;
+    }
+    if (ledger.transfer_wood(0, 2, 5000)) |_| {
+        return error.OverdraftAccepted;
+    } else |err| {
+        if (err != error.InsufficientWoodBalance) return err;
+    }
+    print(
+        "GREEN: wood_token -- conserved 15-galaxy WOOD provenance ledger.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

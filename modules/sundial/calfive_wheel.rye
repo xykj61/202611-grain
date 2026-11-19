@@ -36,7 +36,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "fire",
         .goal = "talent",
         .craft_verb =
-            "Ignite the seed: ship the smallest real file on metal.",
+            "First clay wick (Siraj): ship the smallest real file on metal.",
     },
     .{
         .movement = 2,
@@ -45,7 +45,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "earth",
         .goal = "law",
         .craft_verb =
-            "Tend fertile ground: guard Tally bounds & keep what works.",
+            "Venus student-teacher: weigh Sagittarius & scout Gemini.",
     },
     .{
         .movement = 3,
@@ -54,7 +54,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "air",
         .goal = "fun",
         .craft_verb =
-            "Speak between twins: pair citizen Glow with Rye plainly.",
+            "Dancing friends, many weaves (Satsanga/Suhbah): Glow & Rye.",
     },
     .{
         .movement = 4,
@@ -63,7 +63,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "water",
         .goal = "aesthetics",
         .craft_verb =
-            "Make the home safe: Pond shelter, Glasswall, warm welcome.",
+            "Unwatched sanctuary (Sakinah): Pond shelter & Glasswall care.",
     },
     .{
         .movement = 5,
@@ -72,7 +72,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "fire",
         .goal = "talent",
         .craft_verb =
-            "Stand in daylight: Dimeroll books balance & Seva shines.",
+            "Wholehearted song (Sankirtana/Sama'): Resonance & WOOD/MALA.",
     },
     .{
         .movement = 6,
@@ -81,7 +81,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "earth",
         .goal = "law",
         .craft_verb =
-            "Measure & prune: 80-col, ASCII, stamp-and-name, TAME gates.",
+            "Lantern/TAME/Civic/Radiant/Rota audit & orbit-efficiency review.",
     },
     .{
         .movement = 7,
@@ -90,7 +90,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "air",
         .goal = "fun",
         .craft_verb =
-            "Meet in balance: welcome & refusal paths answer each other.",
+            "Weigh 6-Virgo findings, plan tidy/Mitra list, & ask 8-Scorpio.",
     },
     .{
         .movement = 8,
@@ -99,7 +99,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "water",
         .goal = "aesthetics",
         .craft_verb =
-            "Anuradha covenant: Mitra loyalty & clean secret zeroization.",
+            "Run approved sheds, clear spent keys to zero, & scout 9-Sag.",
     },
     .{
         .movement = 9,
@@ -108,7 +108,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "fire",
         .goal = "talent",
         .craft_verb =
-            "Aim toward wisdom: connect proven code to Bloom & Shastra.",
+            "Teacher/Karma response: Brushstroke/Skate art & re-prepend Husk.",
     },
     .{
         .movement = 10,
@@ -117,7 +117,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "earth",
         .goal = "law",
         .craft_verb =
-            "Stone & repair: bare-metal RISC-V & ten-year hardware.",
+            "Ten-year stone (Tapasya/Sabr): bare-metal RISC-V & right-repair.",
     },
     .{
         .movement = 11,
@@ -126,7 +126,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "air",
         .goal = "fun",
         .craft_verb =
-            "Commons & Comlink: peer constellations without gatekeepers.",
+            "Share clean water across 405 peers with little toll.",
     },
     .{
         .movement = 12,
@@ -135,7 +135,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "water",
         .goal = "aesthetics",
         .craft_verb =
-            "Twilight close: clear residue & offer one clean seed.",
+            "Twilight Radiant Silo art: craft unique gratitude-born artifact.",
     },
     .{
         .movement = 13,

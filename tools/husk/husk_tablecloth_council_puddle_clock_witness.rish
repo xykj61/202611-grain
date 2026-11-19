@@ -1,0 +1,98 @@
+# tools/husk/husk_tablecloth_council_puddle_clock_witness.rish -- Unified Witness!
+#
+# Proves on real metal (`20261119.171652`):
+#   1. `modules/flare/husk/husk_movement_stack.rye` + `grain-ww husk` (`active-husk/`),
+#   2. `modules/tablecloth/relational_table.rye` (TAME relational table + KV),
+#   3. `modules/comlink/council_405.rye` + `glow/gate-council-405.glow`
+#      (`d15 -> 3 -> 9 -> 405` dual `243/405 = 60.0%` & `324/405 = 80.0%` tiers),
+#   4. `modules/pond/puddle/puddle_remote.rye` + `puddle_udp_live.rye`
+#      (`grain-ww puddle` real kernel UDP socket roaming `Wi-Fi -> LTE -> ACK`!),
+#   5. `modules/sundial/one_clock.rye` + `grain-ww stamp` (`-utc`/`-est`/`-edt`),
+#   6. `active-husk/` room & `context/templates/PUBKEYS.template.md` tidy!
+
+let rb = "tools/fixtures/r/rye_build.sh"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+
+# 1. Husk prepend-to-front Movement stack ([15 75 375 1875 9375])
+let b_pm = run ["sh" rb "modules/flare/husk/husk_movement_stack.rye" "-femit-bin=tools/.build/husk_movement_stack"]
+assert b_pm.ok else "husk_movement_stack.rye build failed"
+let r_pm = run ["tools/.build/husk_movement_stack" "selftest"]
+assert r_pm.ok else "husk_movement_stack selftest failed"
+
+# 2. Tablecloth TAME relational + KV table engine
+let b_rt = run ["sh" rb "modules/tablecloth/relational_table.rye" "-femit-bin=tools/.build/relational_table"]
+assert b_rt.ok else "relational_table.rye build failed"
+let r_rt = run ["tools/.build/relational_table"]
+assert r_rt.ok else "relational_table selftest failed"
+
+# 3. 405 Council dual 243/405 (60%) & 324/405 (80%) consensus
+let b_c4 = run ["sh" rb "modules/comlink/council_405.rye" "-femit-bin=tools/.build/council_405"]
+assert b_c4.ok else "council_405.rye build failed"
+let r_c4 = run ["tools/.build/council_405"]
+assert r_c4.ok else "council_405 selftest failed"
+
+# 4. Pond Puddle roaming protocol + live kernel UDP socket roam!
+let b_pr = run ["sh" rb "modules/pond/puddle/puddle_remote.rye" "-femit-bin=tools/.build/puddle_remote"]
+assert b_pr.ok else "puddle_remote.rye build failed"
+let r_pr = run ["tools/.build/puddle_remote"]
+assert r_pr.ok else "puddle_remote selftest failed"
+
+let b_pu = run ["sh" rb "modules/pond/puddle/puddle_udp_live.rye" "-femit-bin=tools/.build/puddle_udp_live"]
+assert b_pu.ok else "puddle_udp_live.rye build failed"
+let r_pu = run ["tools/.build/puddle_udp_live"]
+assert r_pu.ok else "puddle_udp_live kernel UDP roam failed"
+
+# 5. Set-and-forget UTC / America/New_York auto-DST One-Clock
+let b_oc = run ["sh" rb "modules/sundial/one_clock.rye" "-femit-bin=tools/.build/one_clock"]
+assert b_oc.ok else "one_clock.rye build failed"
+let r_oc = run ["tools/.build/one_clock" "selftest"]
+assert r_oc.ok else "one_clock selftest failed"
+
+# 6. Turbopuffer-style Husk object/vector recall + Tablecloth SQL+FK snapshot!
+let b_por = run ["sh" rb "modules/flare/husk/husk_object_recall.rye" "-femit-bin=tools/.build/husk_object_recall"]
+assert b_por.ok else "husk_object_recall.rye build failed"
+let r_por = run ["tools/.build/husk_object_recall"]
+assert r_por.ok else "husk_object_recall selftest failed"
+
+let b_sql = run ["sh" rb "modules/tablecloth/sql_workspace.rye" "-femit-bin=tools/.build/sql_workspace"]
+assert b_sql.ok else "sql_workspace.rye build failed"
+let r_sql = run ["tools/.build/sql_workspace"]
+assert r_sql.ok else "sql_workspace selftest failed"
+
+# 7. CRDT Mycelium + 405 Council weave & Vantage Glasswall Command Room!
+let b_cmw = run ["sh" rb "modules/comlink/council_mycelium_weave.rye" "-femit-bin=tools/.build/council_mycelium_weave"]
+assert b_cmw.ok else "council_mycelium_weave.rye build failed"
+let r_cmw = run ["tools/.build/council_mycelium_weave"]
+assert r_cmw.ok else "council_mycelium_weave selftest failed"
+
+let b_vcp = run ["sh" rb "modules/comlink/vantage/vantage_council_puddle.rye" "-femit-bin=tools/.build/vantage_council_puddle"]
+assert b_vcp.ok else "vantage_council_puddle.rye build failed"
+let r_vcp = run ["tools/.build/vantage_council_puddle"]
+assert r_vcp.ok else "vantage_council_puddle selftest failed"
+
+# 8. Rebuild `grain-ww` CLI & prove `stamp`, `husk`, `puddle`, `tablecloth`, & `husk-recall`!
+let b_cli = run ["sh" rb "languages/rishi/grain_ww_cli.rye" "-femit-bin=languages/rishi/bin/grain-ww"]
+assert b_cli.ok else "grain_ww_cli.rye build failed"
+
+let r_st = run ["languages/rishi/bin/grain-ww" "stamp" "cabinet-brief.md"]
+assert r_st.ok else "grain-ww stamp failed"
+assert (r_st.err contains "_cabinet-brief.md") else "grain-ww stamp filename missing suffix"
+
+let r_pl = run ["languages/rishi/bin/grain-ww" "husk" "--prepend" "Verify DC-1 RLCD sideload"]
+assert r_pl.ok else "grain-ww husk failed"
+assert (r_pl.err contains "Verify DC-1 RLCD sideload") else "grain-ww husk prepend missing"
+
+let r_pd = run ["languages/rishi/bin/grain-ww" "puddle"]
+assert r_pd.ok else "grain-ww puddle failed"
+
+let r_tc = run ["languages/rishi/bin/grain-ww" "tablecloth"]
+assert r_tc.ok else "grain-ww tablecloth failed"
+
+let r_pr2 = run ["languages/rishi/bin/grain-ww" "husk-recall"]
+assert r_pr2.ok else "grain-ww husk-recall failed"
+
+let tidy = run ["sh" "-c" "test -d active-husk && test ! -e active-pulp && test ! -e active-tablecloth && test -f context/templates/PUBKEYS.template.md && test ! -e PUBKEYS.template.md"]
+assert tidy.ok else "active-husk or context/templates/PUBKEYS.template.md breach incomplete!"
+
+say "GREEN: husk_tablecloth_council_puddle_clock_witness -- active-husk, dual 243/324 of 405 Council, live UDP Puddle, & grain-ww stamp/husk/puddle proven."

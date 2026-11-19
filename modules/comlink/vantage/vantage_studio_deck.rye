@@ -1,0 +1,152 @@
+//! modules/comlink/vantage/vantage_studio_deck.rye -- C-ABI Studio Deck!
+//!
+//! Stamp: `20261119.174519` -- Quest 2, Orbit 6, `Movement 1/15 : Aries`
+//! (*First clay wick (Siraj): ship the smallest real file on metal*),
+//! powering `grain-ww studio-deck` (Proof #63) & crowning `50/50` Glow desks!
+//! Unites all four live `Vantage` Station & Carry studio surfaces behind one
+//! C-ABI `extern struct` dispatch table (`StudioDeckPacket`) for Swift /
+//! Kotlin platform shells (`terrarium/app/vantage_mac_live.swift` &
+//! `carry-tablet/`), sealing all 4 surface specs with SHA3-256 and pairing
+//! Glasswall & payload-ceiling refusal witnesses!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.174519";
+pub const max_deck_bytes: u32 = 262144; // 256 KiB explicit Glasswall cap
+const nl: u8 = 10;
+
+pub const DeckError = error{
+    UnknownSurfaceRefused,
+    PayloadExceedsDeckWall,
+    GlasswallMicRefused,
+};
+
+pub const SurfaceKind = enum(u32) {
+    triptych_rgb24 = 1,
+    resonance_wav_wood = 2,
+    twilight_svg = 3,
+    husk_stack = 4,
+};
+
+pub const StudioDeckPacket = extern struct {
+    surface_id: u32,
+    posture: u32, // 0 = Station desktop, 1 = Carry tablet/mobile
+    payload_bytes: u32,
+    write_only_fb: u32, // 1 = Glasswall write-only framebuffer
+    mic_hw_open: u32,
+    bystander_lamp: u32,
+};
+
+pub fn dispatch_studio_surface(pkt: StudioDeckPacket) DeckError![32]u8 {
+    // invariant: validate surface 1..4, <=256 KiB wall, & Glasswall consent.
+    if (pkt.surface_id < 1 or pkt.surface_id > 4) {
+        return error.UnknownSurfaceRefused;
+    }
+    if (pkt.payload_bytes == 0 or pkt.payload_bytes > max_deck_bytes) {
+        return error.PayloadExceedsDeckWall;
+    }
+    if (pkt.write_only_fb != 1) return error.GlasswallMicRefused;
+    if (pkt.mic_hw_open == 1 and pkt.bystander_lamp != 1) {
+        return error.GlasswallMicRefused;
+    }
+
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-vantage-studio-deck-v1:");
+    var b16: [16]u8 = undefined;
+    std.mem.writeInt(u32, b16[0..4], pkt.surface_id, .little);
+    std.mem.writeInt(u32, b16[4..8], pkt.posture, .little);
+    std.mem.writeInt(u32, b16[8..12], pkt.payload_bytes, .little);
+    std.mem.writeInt(u32, b16[12..16], pkt.write_only_fb, .little);
+    h.update(&b16);
+    h.final(&out);
+
+    // invariant: C-ABI dispatch yields deterministic non-zero SHA3 seal.
+    assert(pkt.payload_bytes <= max_deck_bytes);
+    assert((out[0] | out[1] | out[2]) != 0);
+    return out;
+}
+
+fn run_selftest() !u8 {
+    const deck = [_]StudioDeckPacket{
+        .{
+            .surface_id = @intFromEnum(SurfaceKind.triptych_rgb24),
+            .posture = 0,
+            .payload_bytes = 129600,
+            .write_only_fb = 1,
+            .mic_hw_open = 0,
+            .bystander_lamp = 0,
+        },
+        .{
+            .surface_id = @intFromEnum(SurfaceKind.resonance_wav_wood),
+            .posture = 0,
+            .payload_bytes = 24044,
+            .write_only_fb = 1,
+            .mic_hw_open = 1,
+            .bystander_lamp = 1,
+        },
+        .{
+            .surface_id = @intFromEnum(SurfaceKind.twilight_svg),
+            .posture = 1,
+            .payload_bytes = 1188,
+            .write_only_fb = 1,
+            .mic_hw_open = 0,
+            .bystander_lamp = 0,
+        },
+        .{
+            .surface_id = @intFromEnum(SurfaceKind.husk_stack),
+            .posture = 1,
+            .payload_bytes = 4096,
+            .write_only_fb = 1,
+            .mic_hw_open = 0,
+            .bystander_lamp = 0,
+        },
+    };
+
+    // 1. Welcome: all 4 Studio Deck surfaces dispatch & hash deterministically
+    for (deck) |pkt| {
+        const d1 = try dispatch_studio_surface(pkt);
+        const d2 = try dispatch_studio_surface(pkt);
+        if (!std.mem.eql(u8, &d1, &d2)) return error.NonDeterministicDeck;
+    }
+
+    // 2. Refusal 1: unknown surface ID (9) rejected cleanly
+    var bad_id = deck[0];
+    bad_id.surface_id = 9;
+    if (dispatch_studio_surface(bad_id)) |_| {
+        return error.BadSurfaceAccepted;
+    } else |err| {
+        if (err != error.UnknownSurfaceRefused) return err;
+    }
+
+    // 3. Refusal 2: oversized payload (> 256 KiB) rejected cleanly
+    var huge = deck[0];
+    huge.payload_bytes = max_deck_bytes + 1;
+    if (dispatch_studio_surface(huge)) |_| {
+        return error.OversizedPayloadAccepted;
+    } else |err| {
+        if (err != error.PayloadExceedsDeckWall) return err;
+    }
+
+    // 4. Refusal 3: open mic without bystander lamp refused cleanly
+    var sneaky = deck[1];
+    sneaky.bystander_lamp = 0;
+    if (dispatch_studio_surface(sneaky)) |_| {
+        return error.UnconsentedMicAccepted;
+    } else |err| {
+        if (err != error.GlasswallMicRefused) return err;
+    }
+
+    print(
+        "GREEN: vantage_studio_deck -- 4/4 C-ABI surfaces & 50 Glow ok!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

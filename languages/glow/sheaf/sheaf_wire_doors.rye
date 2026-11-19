@@ -1,0 +1,119 @@
+//! languages/glow/sheaf/sheaf_wire_doors.rye -- Glow Sheaf, Doors, & Wire!
+//!
+//! Stamp: `20261119.105021` -- `Movement 4/15 : Cancer` (*Unwatched sanctuary:
+//! Pond shelter & Glasswall care*), powering `grain-ww glow-doors`!
+//! Completes multi-file & sanctuary-boundary Self-Hosted Glow execution for:
+//!   1. **`Sheaf` (`/-` `/=` `/*` `/~`)**: SHA3-256 nib-pinned desk resolution
+//!      (refuses 1-bit dependency tamper with `error.SheafNibTampered`!),
+//!   2. **`|_` (`barcab`) Stateful Pure Doors**: Pure state transition cores
+//!      with zero hidden heap globals (`DoorState -> [Prod, DoorState]`),
+//!   3. **`;~` (`micsig`) & `;;` (`micmic`) Bounded Wire Combinators**: Parses
+//!      `Pond` sanctuary frames cleanly within fixed byte bounds!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.105021";
+pub const max_pond_wire_bytes: usize = 512;
+const nl: u8 = 10;
+
+pub const SheafDoorError = error{
+    SheafNibTampered,
+    DoorQuotaExceeded,
+    WireHeaderMagicBad,
+    WireLengthMismatch,
+};
+
+/// Verifies `/~  desk-name  nib` immutable SHA3-256 content pin!
+pub fn verify_sheaf_pin(
+    desk_source: []const u8,
+    expected_sha3: [32]u8,
+) SheafDoorError!void {
+    var got: [32]u8 = undefined;
+    Sha3_256.hash(desk_source, &got, .{});
+    if (!std.mem.eql(u8, &got, &expected_sha3)) return error.SheafNibTampered;
+    assert(got.len == 32);
+}
+
+/// Pure `|_` (`barcab`) Sanctuary Door state machine (`Pond` Glasswall!).
+pub const SanctuaryDoor = struct {
+    enrolled_peers: u32,
+    max_peers: u32,
+    vdd_mic_open: bool,
+
+    pub fn step_enroll(self: SanctuaryDoor) SheafDoorError!SanctuaryDoor {
+        if (self.enrolled_peers >= self.max_peers) {
+            return error.DoorQuotaExceeded;
+        }
+        const next = SanctuaryDoor{
+            .enrolled_peers = self.enrolled_peers + 1,
+            .max_peers = self.max_peers,
+            .vdd_mic_open = false, // Glasswall default stays physically OFF!
+        };
+        assert(next.enrolled_peers <= next.max_peers and !next.vdd_mic_open);
+        return next;
+    }
+};
+
+/// Bounded `;~` + `;;` wire parser for `[POND(4)][len_u16_le(2)][payload]`!
+pub fn parse_pond_wire_frame(frame: []const u8) SheafDoorError![]const u8 {
+    if (frame.len < 6 or frame.len > max_pond_wire_bytes) {
+        return error.WireLengthMismatch;
+    }
+    if (!std.mem.eql(u8, frame[0..4], "POND")) return error.WireHeaderMagicBad;
+    const plen = std.mem.readInt(u16, frame[4..6], .little);
+    if (6 + @as(usize, plen) != frame.len) return error.WireLengthMismatch;
+    assert(frame.len == 6 + @as(usize, plen));
+    return frame[6..];
+}
+
+fn run_selftest() !u8 {
+    // 1. `/~` Sheaf SHA3 pin passes intact & refuses 1-bit tamper!
+    const lf = [_]u8{10};
+    const src = "::  pond-shapes.glow" ++ &lf ++ "/!  8192" ++ &lf;
+    var nib: [32]u8 = undefined;
+    Sha3_256.hash(src, &nib, .{});
+    try verify_sheaf_pin(src, nib);
+    nib[0] ^= 0x01;
+    if (verify_sheaf_pin(src, nib)) |_| {
+        return error.TamperedSheafAccepted;
+    } else |err| {
+        if (err != error.SheafNibTampered) return err;
+    }
+
+    // 2. `|_` pure SanctuaryDoor steps immutably & guards quota!
+    var door = SanctuaryDoor{
+        .enrolled_peers = 0,
+        .max_peers = 2,
+        .vdd_mic_open = false,
+    };
+    door = try door.step_enroll();
+    door = try door.step_enroll();
+    if (door.step_enroll()) |_| {
+        return error.QuotaOverflowAccepted;
+    } else |err| {
+        if (err != error.DoorQuotaExceeded) return err;
+    }
+
+    // 3. `;~` / `;;` wire combinator validates Pond frame & refuses truncation!
+    const pkt = "POND" ++ &[_]u8{ 4, 0 } ++ "SAFE";
+    const body = try parse_pond_wire_frame(pkt);
+    if (!std.mem.eql(u8, body, "SAFE")) return error.BadWirePayload;
+    if (parse_pond_wire_frame("POND" ++ &[_]u8{ 9, 0 } ++ "SAFE")) |_| {
+        return error.TruncatedFrameAccepted;
+    } else |err| {
+        if (err != error.WireLengthMismatch) return err;
+    }
+
+    print(
+        "GREEN: sheaf_wire_doors -- Sheaf SHA3, |_ door, & ;; wire.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

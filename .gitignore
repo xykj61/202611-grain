@@ -20,6 +20,7 @@
 !/llms.txt
 !/publish-seed.rish
 !/SAFE.md
+!/LEXICON.md
 !/MAP.md
 !/SKILL.md
 !/bibliography.md
@@ -66,7 +67,7 @@ modules/**/.zig-cache/
 !/active-designing/
 !/active-development/
 !/active-reviving/
-!/active-pulp/
+!/active-husk/
 !/bloom/
 !/waymarks/
 !/journey/
@@ -86,7 +87,7 @@ modules/**/.zig-cache/
 !/dimeroll/
 !/lattice/
 !/lantern/
-!/pulp/
+!/husk/
 !/flare/
 !/flare-voices/
 !/spellbook/
@@ -151,6 +152,17 @@ modules/**/.zig-cache/
 !/mandi/
 !/mand/
 !/glow/
+!/languages/
+/languages/**/bin/
+/languages/**/.cache/
+!/modules/
+/modules/**/bin/
+!/libraries/
+!/blazepod/
+!/docs-geode/
+!/active-husk/
+!/mitra-shed/
+!/terrarium/
 !/src/
 !/expanding-prompts/
 !/recursion-prompts/
@@ -299,7 +311,7 @@ modules/**/.zig-cache/
 /dimeroll/bin/
 /flare/lattice/bin/
 /flare/lantern/bin/
-/flare/pulp/bin/
+/flare/husk/bin/
 /flare/bin/
 /gratitude/glow-nock-archive/bin/
 /glow/bin/

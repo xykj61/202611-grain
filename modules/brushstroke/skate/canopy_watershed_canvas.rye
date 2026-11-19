@@ -1,0 +1,356 @@
+//! modules/brushstroke/skate/canopy_watershed_canvas.rye -- Canopy Canvas!
+//!
+//! Stamp: `20261119.131122` -- `Movement 9/15 : Sagittarius` (*Teacher/Karma
+//! Brushstroke/Skate artistry*), powering `grain-ww canopy-canvas [show]`!
+//! Unites `Brushstroke / Skate` immediate-mode RLCD drawing with
+//! `libraries/civic-ecology/canopy_hydrology.rye` to render a deterministic
+//! side-by-side watershed scene:
+//!   - Left panel : Bare Impermeable Pavement (`0` canopy, `5%` humus ->
+//!     `111` permille infiltration, `889` permille flash runoff, hot dome),
+//!   - Right panel: 4-Story Living Forest Canopy (`4` layers, `80%` humus ->
+//!     `836` permille sponge infiltration, cool shade, `760` Pa rain draw),
+//!   - Sealed with a Glasswall SHA3-256 frame digest & zero telemetry hooks!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.131122";
+pub const max_cmds: u32 = 128;
+
+// Grain Vegan Oat / Forest Emerald / Humus / Sky Rain / Asphalt / Alert Red
+pub const color_oat: u32 = 0xF5F3EE;
+pub const color_ink: u32 = 0x0A0A0A;
+pub const color_purple: u32 = 0x4A148C;
+pub const color_emerald: u32 = 0x1B5E20;
+pub const color_leaf: u32 = 0x2E7D32;
+pub const color_humus: u32 = 0x4E342E;
+pub const color_rain: u32 = 0x0277BD;
+pub const color_slate: u32 = 0x424242;
+pub const color_red: u32 = 0xD32F2F;
+const nl: u8 = 10;
+
+pub const CanvasError = error{
+    CmdLimitExceeded,
+    ViewportTooSmall,
+    CanopyOutOfRange,
+    HumusOutOfRange,
+};
+
+pub const WatershedSpec = struct {
+    canopy_layers: u32,       // 0..4 multi-story forest strata
+    soil_humus_permille: u32, // 0..1000 living organic sponge richness
+    ambient_deci_c: i32,      // e.g. 400 == 40.0 C summer afternoon
+};
+
+pub const HydrologyBand = struct {
+    infiltration_permille: u32,
+    runoff_permille: u32,
+    surface_deci_c: i32,
+    condensation_draw_pa: u32,
+};
+
+pub const TileKind = enum(u8) {
+    sky_oat = 1,
+    header_purple = 2,
+    panel_divider = 3,
+    pavement_slab = 4,
+    runoff_flash = 5,
+    canopy_story = 6,
+    humus_sponge = 7,
+    rain_stream = 8,
+    aquifer_bar = 9,
+};
+
+pub const TileCmd = struct {
+    kind: TileKind,
+    x: u16,
+    y: u16,
+    w: u16,
+    h: u16,
+    rgb24: u32,
+};
+
+pub const CanopyFrame = struct {
+    cmds: [max_cmds]TileCmd,
+    count: u32,
+    left_reading: HydrologyBand,
+    right_reading: HydrologyBand,
+    frame_sha3: [32]u8,
+};
+
+pub fn eval_hydrology(spec: WatershedSpec) CanvasError!HydrologyBand {
+    // invariant: enforce explicit TAME bounds before integer arithmetic.
+    if (spec.canopy_layers > 4) return error.CanopyOutOfRange;
+    if (spec.soil_humus_permille > 1000) return error.HumusOutOfRange;
+
+    const layers = spec.canopy_layers;
+    const humus = spec.soil_humus_permille;
+    const raw_inf: u32 = 100 + layers * 140 + (humus * 220) / 1000;
+    const inf: u32 = @min(raw_inf, 950);
+    const runoff: u32 = 1000 - inf;
+    const cool: i32 = @intCast(layers * 35 + (humus * 30) / 1000);
+    const draw_pa = layers * layers * 45 + (humus / 20);
+
+    // invariant: infiltration + runoff strictly conserve 1000 permille.
+    assert(inf + runoff == 1000);
+    assert(inf <= 950 and runoff >= 50);
+    return .{
+        .infiltration_permille = inf,
+        .runoff_permille = runoff,
+        .surface_deci_c = spec.ambient_deci_c - cool,
+        .condensation_draw_pa = draw_pa,
+    };
+}
+
+fn push_tile(f: *CanopyFrame, cmd: TileCmd) CanvasError!void {
+    // invariant: draw command count stays strictly inside max_cmds.
+    assert(f.count <= max_cmds);
+    if (f.count >= max_cmds) return error.CmdLimitExceeded;
+    f.cmds[f.count] = cmd;
+    f.count += 1;
+    // invariant: non-zero progress within bounded capacity.
+    assert(f.count >= 1 and f.count <= max_cmds);
+}
+
+pub fn render_watershed_canvas(
+    width_px: u16,
+    height_px: u16,
+    bare: WatershedSpec,
+    forest: WatershedSpec,
+) CanvasError!CanopyFrame {
+    // invariant: require a legible viewport >= 160x80 for side-by-side panels.
+    if (width_px < 160 or height_px < 80) return error.ViewportTooSmall;
+
+    const left = try eval_hydrology(bare);
+    const right = try eval_hydrology(forest);
+
+    var f = CanopyFrame{
+        .cmds = undefined,
+        .count = 0,
+        .left_reading = left,
+        .right_reading = right,
+        .frame_sha3 = std.mem.zeroes([32]u8),
+    };
+
+    const half_w: u16 = width_px / 2;
+    const body_h: u16 = height_px -| 32;
+
+    // 1. Vegan Oat backdrop + Royal Material Purple header + center split
+    try push_tile(&f, .{
+        .kind = .sky_oat,
+        .x = 0,
+        .y = 0,
+        .w = width_px,
+        .h = height_px,
+        .rgb24 = color_oat,
+    });
+    try push_tile(&f, .{
+        .kind = .header_purple,
+        .x = 0,
+        .y = 0,
+        .w = width_px,
+        .h = 32,
+        .rgb24 = color_purple,
+    });
+    try push_tile(&f, .{
+        .kind = .panel_divider,
+        .x = half_w,
+        .y = 32,
+        .w = 2,
+        .h = body_h,
+        .rgb24 = color_ink,
+    });
+
+    // 2. Left panel: bare pavement slab + flash runoff stripe
+    const l_num: u32 = @as(u32, body_h) * left.runoff_permille;
+    const left_runoff_h: u16 = @intCast(l_num / 2000);
+    try push_tile(&f, .{
+        .kind = .pavement_slab,
+        .x = 8,
+        .y = height_px -| 20,
+        .w = half_w -| 16,
+        .h = 16,
+        .rgb24 = color_slate,
+    });
+    try push_tile(&f, .{
+        .kind = .runoff_flash,
+        .x = 8,
+        .y = height_px -| (20 + left_runoff_h),
+        .w = half_w -| 16,
+        .h = left_runoff_h,
+        .rgb24 = color_red,
+    });
+
+    // 3. Right panel: multi-story forest canopy + rain draw + humus sponge
+    var s: u32 = 0;
+    while (s < forest.canopy_layers) : (s += 1) {
+        const y_pos: u16 = @intCast(40 + s * 10);
+        const rgb: u32 = if ((s & 1) == 0) color_emerald else color_leaf;
+        try push_tile(&f, .{
+            .kind = .canopy_story,
+            .x = half_w + 10,
+            .y = y_pos,
+            .w = half_w -| 20,
+            .h = 8,
+            .rgb24 = rgb,
+        });
+    }
+
+    const rain_w: u16 = @intCast(@min(
+        @as(u32, half_w -| 20),
+        16 + (right.condensation_draw_pa / 10),
+    ));
+    try push_tile(&f, .{
+        .kind = .rain_stream,
+        .x = half_w + 10,
+        .y = 34,
+        .w = rain_w,
+        .h = 4,
+        .rgb24 = color_rain,
+    });
+
+    const r_num: u32 = @as(u32, body_h) * right.infiltration_permille;
+    const sponge_h: u16 = @intCast(r_num / 2000);
+    try push_tile(&f, .{
+        .kind = .humus_sponge,
+        .x = half_w + 10,
+        .y = height_px -| (8 + sponge_h),
+        .w = half_w -| 20,
+        .h = sponge_h,
+        .rgb24 = color_humus,
+    });
+    try push_tile(&f, .{
+        .kind = .aquifer_bar,
+        .x = half_w + 10,
+        .y = height_px -| 8,
+        .w = half_w -| 20,
+        .h = 6,
+        .rgb24 = color_rain,
+    });
+
+    // 4. Deterministic Glasswall SHA3-256 frame seal
+    var h = Sha3_256.init(.{});
+    h.update("grain-canopy-watershed-canvas-v1:");
+    var b4: [4]u8 = undefined;
+    std.mem.writeInt(u32, &b4, f.count, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, left.infiltration_permille, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, right.infiltration_permille, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, right.condensation_draw_pa, .little);
+    h.update(&b4);
+    h.final(&f.frame_sha3);
+
+    // invariant: frame carries >= 8 bounded draw commands and valid digest.
+    assert(f.count >= 8 and f.count <= max_cmds);
+    return f;
+}
+
+fn print_canvas_preview(f: *const CanopyFrame) void {
+    print("Brushstroke / Skate -- Canopy & Watershed Canvas{c}", .{nl});
+    print(
+        "+----------------------------+----------------------------+{c}",
+        .{nl},
+    );
+    print(
+        "| BARE PAVEMENT (0st, 5% H)  | 4-STORY CANOPY (4st, 80% H)|{c}",
+        .{nl},
+    );
+    print(
+        "|   [heat dome ~39.9 C]      |   ~~ inland rain 760 Pa ~~ |{c}",
+        .{nl},
+    );
+    print(
+        "|   !! flash runoff 889/1000 |   /\\ /\\ /\\ forest canopy   |{c}",
+        .{nl},
+    );
+    print(
+        "|   [=== asphalt slab ===]   |   #### humus sponge 836/1k |{c}",
+        .{nl},
+    );
+    print(
+        "|   aquifer: 111/1000        |   ~~ cool aquifer 23.6 C ~ |{c}",
+        .{nl},
+    );
+    print(
+        "+----------------------------+----------------------------+{c}",
+        .{nl},
+    );
+    print(
+        "DrawCmds: {d}/{d} | Left inf={d} | Right inf={d} | Draw={d} Pa{c}",
+        .{
+            f.count,
+            max_cmds,
+            f.left_reading.infiltration_permille,
+            f.right_reading.infiltration_permille,
+            f.right_reading.condensation_draw_pa,
+            nl,
+        },
+    );
+}
+
+fn run_selftest(show: bool) !u8 {
+    const bare = WatershedSpec{
+        .canopy_layers = 0,
+        .soil_humus_permille = 50,
+        .ambient_deci_c = 400,
+    };
+    const forest = WatershedSpec{
+        .canopy_layers = 4,
+        .soil_humus_permille = 800,
+        .ambient_deci_c = 400,
+    };
+
+    const f1 = try render_watershed_canvas(1600, 1200, bare, forest);
+    const f2 = try render_watershed_canvas(1600, 1200, bare, forest);
+    if (!std.mem.eql(u8, &f1.frame_sha3, &f2.frame_sha3)) {
+        return error.NonDeterministicFrame;
+    }
+    if (f1.count != 12) return error.UnexpectedTileCount;
+    if (f1.right_reading.infiltration_permille != 836) {
+        return error.UnexpectedForestInfiltration;
+    }
+
+    // Refusal 1: tiny viewport rejected cleanly
+    if (render_watershed_canvas(64, 48, bare, forest)) |_| {
+        return error.SmallViewportAccepted;
+    } else |err| {
+        if (err != error.ViewportTooSmall) return err;
+    }
+
+    // Refusal 2: impossible canopy story count (> 4) rejected cleanly
+    const bad_canopy = WatershedSpec{
+        .canopy_layers = 9,
+        .soil_humus_permille = 500,
+        .ambient_deci_c = 350,
+    };
+    if (render_watershed_canvas(1600, 1200, bare, bad_canopy)) |_| {
+        return error.BadCanopyAccepted;
+    } else |err| {
+        if (err != error.CanopyOutOfRange) return err;
+    }
+
+    if (show) {
+        print_canvas_preview(&f1);
+    }
+    print(
+        "GREEN: canopy_watershed_canvas -- {d} tiles, inf {d}->{d}, {d} Pa.{c}",
+        .{
+            f1.count,
+            f1.left_reading.infiltration_permille,
+            f1.right_reading.infiltration_permille,
+            f1.right_reading.condensation_draw_pa,
+            nl,
+        },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const args = try init.minimal.args.toSlice(init.arena.allocator());
+    const show = args.len >= 2 and std.mem.eql(u8, args[1], "show");
+    return run_selftest(show);
+}

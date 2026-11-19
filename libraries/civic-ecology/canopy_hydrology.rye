@@ -1,0 +1,93 @@
+//! libraries/civic-ecology/canopy_hydrology.rye -- Canopy & Sponge Watershed!
+//!
+//! Stamp: `20261119.115928` -- Powers `grain-ww civic-ecology`!
+//! Deterministic TAME integer hydrology model illustrating:
+//!   1. **Infiltration Permille (`0..1000`):** Bare compacted ground (`120` =
+//!      `12.0%`) vs. multi-layer canopy + biocyclic humus (`880` = `88.0%`),
+//!   2. **Ground Cooling (`deci_celsius`):** Shade + transpiration lowers peak
+//!      surface heat, calming thermal high-pressure domes,
+//!   3. **Condensation Moisture Draw (`pascals_drop`):** Multi-layer leaf area
+//!      drives cloud condensation pressure drop that draws coastal air inland!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.115928";
+const nl: u8 = 10;
+
+pub const LandCover = struct {
+    canopy_layers: u32,        // 0 = bare/paved .. 4 = multi-story forest
+    soil_humus_permille: u32,  // 0..1000 organic sponge richness
+    ambient_deci_c: i32,       // e.g. 380 = 38.0 C summer afternoon
+};
+
+pub const HydrologyReading = struct {
+    infiltration_permille: u32,
+    runoff_permille: u32,
+    surface_deci_c: i32,
+    condensation_draw_pa: u32,
+};
+
+pub fn evaluate_watershed(cover: LandCover) HydrologyReading {
+    const layers: u32 = @min(cover.canopy_layers, 4);
+    const humus: u32 = @min(cover.soil_humus_permille, 1000);
+
+    const raw_inf: u32 = 100 + layers * 140 + (humus * 220) / 1000;
+    const inf: u32 = @min(raw_inf, 950);
+    const runoff: u32 = 1000 - inf;
+
+    // Each canopy story + humus sponge cools surface heat substantially!
+    const cooling: i32 = @intCast(layers * 35 + (humus * 30) / 1000);
+    const surf_c = cover.ambient_deci_c - cooling;
+
+    // Leaf-area vapor condensation creates inland low-pressure draw (Pa).
+    const draw_pa = layers * layers * 45 + (humus / 20);
+
+    // invariant: infiltration + runoff strictly conserve 1000 permille!
+    assert(inf + runoff == 1000 and inf <= 950);
+    return .{
+        .infiltration_permille = inf,
+        .runoff_permille = runoff,
+        .surface_deci_c = surf_c,
+        .condensation_draw_pa = draw_pa,
+    };
+}
+
+fn run_selftest() !u8 {
+    const bare = evaluate_watershed(.{
+        .canopy_layers = 0,
+        .soil_humus_permille = 50,
+        .ambient_deci_c = 400, // 40.0 C
+    });
+    const forest = evaluate_watershed(.{
+        .canopy_layers = 4,
+        .soil_humus_permille = 800,
+        .ambient_deci_c = 400,
+    });
+
+    if (forest.infiltration_permille <= bare.infiltration_permille + 600) {
+        return error.SpongeGainTooLow;
+    }
+    if (forest.surface_deci_c >= bare.surface_deci_c - 120) {
+        return error.CanopyCoolingTooLow;
+    }
+    if (forest.condensation_draw_pa <= bare.condensation_draw_pa + 600) {
+        return error.BioticDrawTooWeak;
+    }
+
+    print(
+        "GREEN: canopy_hydrology -- inf {d}->{d} permille, draw {d} Pa.{c}",
+        .{
+            bare.infiltration_permille,
+            forest.infiltration_permille,
+            forest.condensation_draw_pa,
+            nl,
+        },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

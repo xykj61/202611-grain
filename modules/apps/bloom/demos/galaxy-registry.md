@@ -71,7 +71,7 @@ convention about which names are "reserved."
 | `~fennel` | Fennel -- deep-rooted soil breaker | Reaches deep and opens a path for what follows | Caravan supervision demo |
 | `~marjoram` | Marjoram -- gentle oregano cousin | Softer, sweeter; the social one in the family | Surf Social demo |
 | `~tarragon` | Tarragon -- essential in cooking | A single leaf changes the whole dish | Query engine demo |
-| `~chive` | Chive -- allium companion | Grows in clusters; stronger together | MUR token demo |
+| `~chive` | Chive -- allium companion | Grows in clusters; stronger together | WOOD token demo |
 | `~dill` | Dill -- fermentation friend | Helps things transform and agree | Mycelium consensus demo |
 | `~siya` | Siya -- turmeric relative, sacred root | A golden rhizome that asks the soil what it holds | Content peer -- the one who recalls |
 
@@ -80,7 +80,7 @@ convention about which names are "reserved."
 Every page on the demos shelf uses these fourteen galaxies in its
 examples. When a demo says "`~sunflower` boots and seeds the network,"
 it means the first galaxy in this registry is performing its role as
-the seed node. When it says "`~basil` sends 100 MUR to `~chive`," it
+the seed node. When it says "`~basil` sends 100 WOOD to `~chive`," it
 means the ledger demo galaxy is transferring tokens to the token demo
 galaxy.
 

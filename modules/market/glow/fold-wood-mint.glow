@@ -1,0 +1,12 @@
+::  modules/market/glow/fold-wood-mint.glow -- Ecological WOOD unit!
+/!  16384
+|%
+++  fold-wood-transfer
+  |=  [sender-wood=@ud amount-wood=@ud]                 ::  conserved WOOD
+  ^-  @ud                                               ::  sender remainder
+  ~|  'wood-zero-transfer-refused'                      ::  positive WOOD
+  ?>  (gte amount-wood 1)
+  ~|  'wood-insufficient-balance'                       ::  no overdraft!
+  ?>  (gte sender-wood amount-wood)
+  (sub sender-wood amount-wood)
+--

@@ -1,0 +1,17 @@
+::  modules/brushstroke/glow/fold-canopy-canvas.glow -- Watershed Canvas!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-canopy-infiltration
+  |=  [layers=@ud humus=@ud]                            ::  0..4 & 0..1000
+  ^-  @ud                                               ::  permille <= 950
+  ~|  'canopy-layers-exceed-four-story-bound'           ::  strict story cap
+  ?>  &(lte(layers 4) lte(humus 1000))
+  %+  add  100  (mul layers 140)
+++  gate-canvas-viewport
+  |=  [width-px=@ud height-px=@ud]                      ::  side-by-side px
+  ^-  @ud                                               ::  verified width
+  ~|  'canopy-canvas-viewport-below-160x80-floor'       ::  RLCD legibility
+  ?>  &(gte(width-px 160) gte(height-px 80))
+  width-px
+--

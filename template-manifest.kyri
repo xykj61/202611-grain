@@ -28,6 +28,7 @@ allow CHANGELOG.md
 allow CODE_OF_CONDUCT.md
 allow CONTRIBUTING.md
 allow GEMINI.md
+allow LEXICON.md
 allow LICENSE
 allow LICENSE-APACHE
 allow LICENSE-CC-BY
@@ -78,6 +79,7 @@ scrub     CHANGELOG.md
 scrub     CODE_OF_CONDUCT.md
 scrub     CONTRIBUTING.md
 scrub     GEMINI.md
+scrub     LEXICON.md
 scrub     LICENSE
 scrub     LICENSE-APACHE
 scrub     LICENSE-CC-BY
@@ -119,8 +121,9 @@ personal  PUBKEYS.md
 personal  SAFE.md
 personal  SKILL.md
 personal  STEWARDS.md
-personal  active-pulp
+personal  active-husk
 personal  construction
+personal  expanding-prompts
 personal  journey
 personal  publish-redirect.rish
 personal  publish-seed.rish

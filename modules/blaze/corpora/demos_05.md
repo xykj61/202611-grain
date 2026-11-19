@@ -1,4 +1,4 @@
-# MUR Token Transfer -- Five Scenarios Across the Puddle
+# WOOD Token Transfer -- Five Scenarios Across the Puddle
 
 **Style:** Bhakta at the Door setting, with Radiant warmth
 **Status:** Living
@@ -8,7 +8,7 @@
 
 ## What this page teaches
 
-This page walks through five demonstration scenarios showing how MUR
+This page walks through five demonstration scenarios showing how WOOD
 tokens move between galaxies in a Grain Puddle. Each scenario builds
 on the one before it, from a simple two-party transfer to a full
 network partition and recovery.
@@ -17,11 +17,11 @@ All 14 demo galaxies participate: ~sunflower (seed), ~rosemary
 (identity), ~lavender (relay), ~basil (ledger), ~chamomile (consensus),
 ~oregano (replication), ~thyme (storage), ~sage (key rotation), ~mint
 (discovery), ~fennel (supervision), ~marjoram (social), ~tarragon
-(query), ~chive (MUR token), and ~dill (Mycelium consensus).
+(query), ~chive (WOOD token), and ~dill (Mycelium consensus).
 
 ## Scenario 1 -- Simple transfer
 
-**What happens:** ~sunflower sends 100 MUR to ~basil.
+**What happens:** ~sunflower sends 100 WOOD to ~basil.
 
 Step by step:
 
@@ -30,18 +30,18 @@ Step by step:
    verb: transfer
    from: ~sunflower
    to: ~basil
-   amount: 100 MUR
+   amount: 100 WOOD
    ```
 
 2. ~sunflower signs the event with its Kumara key and submits it to
    the current consensus round.
 
 3. ~dill includes the event in the round's proposal. All 14 galaxies
-   validate: does ~sunflower have at least 100 MUR? The answer is yes.
+   validate: does ~sunflower have at least 100 WOOD? The answer is yes.
 
 4. The round commits. Every galaxy updates its local ledger:
-   - ~sunflower's balance decreases by 100 MUR
-   - ~basil's balance increases by 100 MUR
+   - ~sunflower's balance decreases by 100 WOOD
+   - ~basil's balance increases by 100 WOOD
 
 5. Both ~sunflower and ~basil can query their local Blaze log and see
    the transfer recorded with its timestamp, signatures, and round
@@ -53,7 +53,7 @@ that committed it.
 
 ## Scenario 2 -- Multi-hop relay
 
-**What happens:** ~chamomile sends 50 MUR to ~oregano, relayed through
+**What happens:** ~chamomile sends 50 WOOD to ~oregano, relayed through
 ~lavender.
 
 In a Puddle, not every galaxy has a direct Comlink session with every
@@ -62,7 +62,7 @@ network, with ~lavender sitting between them as a relay.
 
 Step by step:
 
-1. ~chamomile composes a transfer event for 50 MUR to ~oregano and
+1. ~chamomile composes a transfer event for 50 WOOD to ~oregano and
    signs it.
 
 2. ~chamomile sends the sealed datagram to ~lavender through their
@@ -77,8 +77,8 @@ Step by step:
    so it does not matter who delivers it.
 
 5. The round commits. All 14 galaxies update their ledgers:
-   - ~chamomile's balance decreases by 50 MUR
-   - ~oregano's balance increases by 50 MUR
+   - ~chamomile's balance decreases by 50 WOOD
+   - ~oregano's balance increases by 50 WOOD
    - ~lavender's balance is unchanged -- relaying costs nothing
 
 **What the galaxies keep:** The same ledger entry as Scenario 1, with
@@ -87,31 +87,31 @@ not recorded in the Blaze log -- only the transfer itself matters.
 
 ## Scenario 3 -- Consensus round with all 14 voting
 
-**What happens:** A busy round with transfers, harvests, and MUR
+**What happens:** A busy round with transfers, harvests, and WOOD
 movements all committed together.
 
 Step by step:
 
 1. ~dill collects a batch of pending events:
-   - ~basil sells 24 crates to ~sunflower (earns 30 MUR)
-   - ~oregano harvests 12 bushels (earns 20 MUR)
-   - ~chive transfers 75 MUR to ~fennel
-   - ~sage rotates its Kumara key (no MUR change)
-   - ~marjoram posts a farm update (earns 5 MUR for contribution)
+   - ~basil sells 24 crates to ~sunflower (earns 30 WOOD)
+   - ~oregano harvests 12 bushels (earns 20 WOOD)
+   - ~chive transfers 75 WOOD to ~fennel
+   - ~sage rotates its Kumara key (no WOOD change)
+   - ~marjoram posts a farm update (earns 5 WOOD for contribution)
 
 2. ~dill assembles the proposal and sends it to all 14 galaxies.
 
 3. Each galaxy validates independently:
-   - Does ~chive have 75 MUR? Check.
+   - Does ~chive have 75 WOOD? Check.
    - Is ~sage's new key properly derived? Check.
    - Are all signatures valid? Check.
 
 4. All 14 vote yes. The round commits.
 
 5. Every galaxy applies the five events in order. Balances shift:
-   ~basil gains 30 MUR, ~oregano gains 20, ~chive loses 75, ~fennel
+   ~basil gains 30 WOOD, ~oregano gains 20, ~chive loses 75, ~fennel
    gains 75, ~marjoram gains 5. The net change across the network
-   is +55 MUR (newly earned through work).
+   is +55 WOOD (newly earned through work).
 
 **What the galaxies keep:** Five events in one round, all ordered and
 signed. Any galaxy can replay the round and arrive at the same balances.
@@ -185,9 +185,9 @@ agreement check proved that speed did not sacrifice correctness.
 
 Pick one of the five scenarios and trace it with a pencil and paper.
 Draw 14 circles for the galaxies, give each a starting balance of
-1,000 MUR, and walk through the transfers. After each round, write
+1,000 WOOD, and walk through the transfers. After each round, write
 the new balances next to each circle. Notice how every circle ends up
-with the same total when you add them all together -- MUR earned
+with the same total when you add them all together -- WOOD earned
 through work increases the total, but transfers only move it around.
 
 ---

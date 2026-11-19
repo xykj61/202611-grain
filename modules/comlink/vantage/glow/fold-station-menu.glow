@@ -1,0 +1,11 @@
+::  modules/comlink/vantage/glow/fold-station-menu.glow -- Station Menu!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-station-consolidation
+  |=  [faculties=@ud frame=@ud desk=@ud]                ::  8, <=256K, <=32K
+  ^-  @ud                                               ::  verified count
+  ~|  'vantage-station-menu-scales-or-budget-breach'    ::  Libra scales
+  ?>  &(eql(faculties 8) lte(frame 262144) lte(desk 32768))
+  faculties
+--

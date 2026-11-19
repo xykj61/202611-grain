@@ -1,0 +1,11 @@
+::  modules/harness/glow/gate-api-airlock.glow -- Ephemeral API Airlock!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-api-lease-window
+  |=  [now=@ud exp=@ud https=@ud wiped=@ud]             ::  TTL, TLS, & wipe
+  ^-  @ud                                               ::  verified wipe=1
+  ~|  'pond-api-airlock-ttl-https-or-zeroize-breach'    ::  sanctuary law
+  ?>  &(lth(now exp) eql(https 1) eql(wiped 1))
+  wiped
+--

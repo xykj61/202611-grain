@@ -1,0 +1,80 @@
+//! terrarium/civil-engineering/structural_colloquium.rye -- Civic Works!
+//!
+//! Stamp: `20261115.174500` -- Seeded for `Terrarium`, interoperating directly
+//! with `Colloquium` (`243/405` & `324/405`) and `CIVIC_STYLE.md` Section 4
+//! (*Building Materials & Performance Bonds*):
+//!   1. Verifies **safety factor `>= 2,000` permille (`2.000x`)**,
+//!   2. Verifies **thermal resistance (`>= R-20`)** & **`WOOD` carbon**,
+//!   3. Enacts public-works release ONLY when structural + bond gates pass AND
+//!      `Colloquium` reaches `>= 324 / 405` (`80.0%`) civic approval!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.174500";
+pub const min_safety_permille: u32 = 2000; // >= 2.0x load factor!
+pub const min_r_value: u32 = 20;
+pub const colloquium_80pct: u32 = 324;
+const nl: u8 = 10;
+
+pub const CivilError = error{
+    SafetyFactorBelow2x,
+    ThermalInsulationInsufficient,
+    MissingPerformanceBond,
+    ColloquiumConsensusShort,
+};
+
+pub const CivicStructureSpec = struct {
+    safety_factor_permille: u32,
+    thermal_r_value: u32,
+    embodied_wood_units: u64,
+    bond_mala_escrowed: u64,
+    colloquium_yes_seats: u32,
+};
+
+pub fn approve_civic_work(spec: CivicStructureSpec) CivilError!u64 {
+    if (spec.safety_factor_permille < min_safety_permille) {
+        return error.SafetyFactorBelow2x;
+    }
+    if (spec.thermal_r_value < min_r_value) {
+        return error.ThermalInsulationInsufficient;
+    }
+    if (spec.bond_mala_escrowed == 0) return error.MissingPerformanceBond;
+    if (spec.colloquium_yes_seats < colloquium_80pct) {
+        return error.ColloquiumConsensusShort;
+    }
+    // invariant: approved work holds >= 2.0x safety, bond, & 80% Colloquium!
+    assert(spec.safety_factor_permille >= 2000);
+    assert(spec.colloquium_yes_seats >= 324);
+    return spec.embodied_wood_units;
+}
+
+fn run_selftest() !u8 {
+    const bridge = CivicStructureSpec{
+        .safety_factor_permille = 2500,
+        .thermal_r_value = 30,
+        .embodied_wood_units = 4800,
+        .bond_mala_escrowed = 100_000,
+        .colloquium_yes_seats = 324,
+    };
+    if ((try approve_civic_work(bridge)) != 4800) return error.WoodCountWrong;
+
+    var unsafe = bridge;
+    unsafe.safety_factor_permille = 1800; // 1.8x < 2.0x -> REFUSED!
+    if (approve_civic_work(unsafe)) |_| {
+        return error.UnsafeStructureApproved;
+    } else |err| {
+        if (err != error.SafetyFactorBelow2x) return err;
+    }
+
+    print(
+        "GREEN: structural_colloquium -- 2.0x safety, WOOD, & 324/405.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

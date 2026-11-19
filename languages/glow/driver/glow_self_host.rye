@@ -140,6 +140,9 @@ pub fn main(init: std.process.Init) !u8 {
         "languages/glow/compiler/front_passes.glow",
         "languages/glow/compiler/middle_passes.glow",
         "languages/glow/compiler/millstones.glow",
+        "languages/glow/compiler/rune_48_dispatch.glow",
+        "languages/glow/compiler/sheaf_wire.glow",
+        "languages/glow/compiler/rye_emitter.glow",
     };
     var comp_srcs: [compiler_desks.len][]const u8 = undefined;
     for (compiler_desks, 0..) |p, idx| {

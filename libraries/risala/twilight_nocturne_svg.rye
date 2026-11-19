@@ -1,0 +1,158 @@
+//! libraries/risala/twilight_nocturne_svg.rye -- 15-Sign Twilight SVG!
+//!
+//! Stamp: `20261119.171038` -- Orbit 5, `Movement 12/15 : Pisces` (*Twilight
+//! Radiant Silo art: unique gratitude-born artifact*), powering
+//! `grain-ww twilight-svg [emit]` (Proof #59)!
+//! Pure fixed-point integer SVG emitter (zero float!) rendering a standalone
+//! `320 x 320` 15-sign *Sandhya / Shafaq* Twilight Mandala vector artifact
+//! inside a bounded `8 KiB` static buffer, sealed by SHA3-256 with paired
+//! refusal witnesses for invalid sign index & undersized buffers!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.171038";
+pub const max_svg_bytes: usize = 8192;
+pub const sign_count: usize = 15;
+const nl: u8 = 10;
+
+pub const NocturneError = error{
+    SignOutOfRange,
+    BufferTooSmall,
+};
+
+// Precomputed 15-gon coordinates around center (160, 160), radius 108.
+const ring_x = [sign_count]u32{
+    160, 204, 240, 263, 267, 254, 223, 182,
+    138, 97,  66,  53,  57,  80,  116,
+};
+const ring_y = [sign_count]u32{
+    52,  61,  88,  127, 171, 214, 247, 266,
+    266, 247, 214, 171, 127, 88,  61,
+};
+
+fn append_slice(buf: []u8, pos: *usize, s: []const u8) NocturneError!void {
+    if (pos.* + s.len > buf.len) return error.BufferTooSmall;
+    @memcpy(buf[pos.* .. pos.* + s.len], s);
+    pos.* += s.len;
+}
+
+fn append_line(buf: []u8, pos: *usize, s: []const u8) NocturneError!void {
+    try append_slice(buf, pos, s);
+    if (pos.* + 1 > buf.len) return error.BufferTooSmall;
+    buf[pos.*] = nl;
+    pos.* += 1;
+}
+
+pub fn render_nocturne_svg(
+    active_sign_1_to_15: u32,
+    out: []u8,
+) NocturneError![]const u8 {
+    // invariant: validate 1..15 sign & >= 2048 B SVG buffer capacity.
+    if (active_sign_1_to_15 < 1 or active_sign_1_to_15 > sign_count) {
+        return error.SignOutOfRange;
+    }
+    if (out.len < 2048) return error.BufferTooSmall;
+
+    var pos: usize = 0;
+    try append_line(out, &pos,
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'>");
+    try append_line(out, &pos,
+        "<defs><linearGradient id='dusk' x1='0' y1='0' x2='0' y2='1'>");
+    try append_line(out, &pos, "<stop offset='0%' stop-color='#1A103D'/>");
+    try append_line(out, &pos, "<stop offset='55%' stop-color='#4A148C'/>");
+    try append_line(out, &pos, "<stop offset='100%' stop-color='#E65100'/>");
+    try append_line(out, &pos, "</linearGradient></defs>");
+    try append_line(
+        out,
+        &pos,
+        "<rect width='320' height='320' fill='url(#dusk)'/>",
+    );
+    try append_line(out, &pos,
+        "<circle cx='160' cy='160' r='108' fill='none' stroke='#F5F3EE'/>");
+    try append_line(out, &pos,
+        "<circle cx='160' cy='160' r='36' fill='none' stroke='#FFD54F'/>");
+
+    var line_buf: [160]u8 = undefined;
+    var i: usize = 0;
+    while (i < sign_count) : (i += 1) {
+        const is_act = (i + 1 == active_sign_1_to_15);
+        const r: u32 = if (is_act) 11 else 6;
+        const fill = if (is_act) "#FFD54F" else "#F5F3EE";
+        const elem = std.fmt.bufPrint(
+            &line_buf,
+            "<circle cx='{d}' cy='{d}' r='{d}' fill='{s}'/>",
+            .{ ring_x[i], ring_y[i], r, fill },
+        ) catch return error.BufferTooSmall;
+        try append_line(out, &pos, elem);
+    }
+
+    try append_line(out, &pos, "</svg>");
+
+    // invariant: emitted SVG starts with <svg and closes cleanly with </svg>.
+    assert(pos <= out.len and std.mem.startsWith(u8, out[0..pos], "<svg "));
+    return out[0..pos];
+}
+
+pub fn hash_svg(svg: []const u8) [32]u8 {
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-pisces-twilight-nocturne-svg-v1:");
+    h.update(svg);
+    h.final(&out);
+    assert((out[0] | out[1] | out[2]) != 0);
+    return out;
+}
+
+fn run_selftest(emit_stdout: bool, io: std.Io) !u8 {
+    var buf1: [max_svg_bytes]u8 = undefined;
+    var buf2: [max_svg_bytes]u8 = undefined;
+
+    // 1. Welcome: Pisces (sign 12) emits deterministic 15-node mandala SVG!
+    const svg1 = try render_nocturne_svg(12, &buf1);
+    const svg2 = try render_nocturne_svg(12, &buf2);
+    const d1 = hash_svg(svg1);
+    const d2 = hash_svg(svg2);
+    if (!std.mem.eql(u8, &d1, &d2)) return error.NonDeterministicSvg;
+
+    // 2. Refusal 1: out-of-range sign (0 and 16) rejected cleanly
+    if (render_nocturne_svg(0, &buf1)) |_| {
+        return error.ZeroSignAccepted;
+    } else |err| {
+        if (err != error.SignOutOfRange) return err;
+    }
+    if (render_nocturne_svg(16, &buf1)) |_| {
+        return error.OverSignAccepted;
+    } else |err| {
+        if (err != error.SignOutOfRange) return err;
+    }
+
+    // 3. Refusal 2: undersized output buffer rejected cleanly
+    var tiny: [64]u8 = undefined;
+    if (render_nocturne_svg(12, &tiny)) |_| {
+        return error.TinyBufferAccepted;
+    } else |err| {
+        if (err != error.BufferTooSmall) return err;
+    }
+
+    if (emit_stdout) {
+        const out = std.Io.File.stdout();
+        try out.writeStreamingAll(io, svg1);
+        return 0;
+    }
+
+    print(
+        "GREEN: twilight_nocturne_svg -- 15-sign SVG ({d} B) SHA3 ok!{c}",
+        .{ svg1.len, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const args = try init.minimal.args.toSlice(a);
+    const want_emit = (args.len >= 2 and std.mem.eql(u8, args[1], "emit"));
+    return run_selftest(want_emit, init.io);
+}

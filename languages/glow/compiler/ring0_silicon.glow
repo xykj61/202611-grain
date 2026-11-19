@@ -1,0 +1,17 @@
+::  languages/glow/compiler/ring0_silicon.glow -- Dual-Silicon Bounds!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-riscv-enc-bound
+  |=  [rd=@ud imm12=@ud]                                ::  RV64GC reg & imm
+  ^-  @ud                                               ::  verified reg idx
+  ~|  'riscv-register-or-imm12-exceeds-isa-width'       ::  5-bit rd, 11-bit
+  ?>  &(lte(rd 31) lte(imm12 2047))
+  rd
+++  gate-arm64-imm-bound
+  |=  [rd=@ud imm16=@ud]                                ::  AArch64 MOVZ cap
+  ^-  @ud                                               ::  verified reg idx
+  ~|  'aarch64-register-or-imm16-exceeds-isa-width'     ::  5-bit rd, 16-bit
+  ?>  &(lte(rd 31) lte(imm16 65535))
+  rd
+--

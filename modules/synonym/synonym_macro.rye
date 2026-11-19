@@ -1,0 +1,134 @@
+//! modules/synonym/synonym_macro.rye -- "Sameness Is the Macro" Module!
+//!
+//! Stamp: `20261115.174500` -- Turns *Sameness Is the Macro* into an executable
+//! user-customizable naming module (`grain-ww synonym`)!
+//! Gives any steward, cooperative, or agency freedom to rename surface modules,
+//! apps, remotes, or tokens (`bench_remote`, `Resonance`, `WOOD`, `Vantage`)
+//! in their `.brix` / `.kyri` overlay while compiling & proving ONE single-
+//! stranded canonical code base underneath!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.105021";
+pub const max_bindings: u32 = 64;
+const nl: u8 = 10;
+
+pub const SynonymError = error{
+    TableFull,
+    EmptyNameRefused,
+    AliasCollision,
+    UnknownAlias,
+};
+
+pub const Binding = struct {
+    canonical: [32]u8,
+    canonical_len: u8,
+    user_alias: [32]u8,
+    alias_len: u8,
+};
+
+pub const SynonymBook = struct {
+    items: [max_bindings]Binding,
+    count: u32,
+
+    pub fn init() SynonymBook {
+        return std.mem.zeroes(SynonymBook);
+    }
+
+    /// Binds a user-chosen `alias` bijectively onto `canonical`!
+    pub fn bind(
+        self: *SynonymBook,
+        canonical: []const u8,
+        alias: []const u8,
+    ) SynonymError!void {
+        if (canonical.len == 0 or alias.len == 0) return error.EmptyNameRefused;
+        if (self.count >= max_bindings) return error.TableFull;
+
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const b = self.items[i];
+            if (std.mem.eql(u8, b.user_alias[0..b.alias_len], alias)) {
+                return error.AliasCollision;
+            }
+        }
+
+        var item = std.mem.zeroes(Binding);
+        const cn = @min(canonical.len, 32);
+        const an = @min(alias.len, 32);
+        @memcpy(item.canonical[0..cn], canonical[0..cn]);
+        item.canonical_len = @intCast(cn);
+        @memcpy(item.user_alias[0..an], alias[0..an]);
+        item.alias_len = @intCast(an);
+        self.items[self.count] = item;
+        self.count += 1;
+        // invariant: stored alias and canonical lengths are >= 1.
+        assert(item.canonical_len >= 1 and item.alias_len >= 1);
+    }
+
+    /// Resolves either a user `alias` OR the `canonical` name itself back to
+    /// the single-stranded canonical module!
+    pub fn resolve_to_canonical(
+        self: *const SynonymBook,
+        query: []const u8,
+    ) SynonymError![]const u8 {
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const b = &self.items[i];
+            if (std.mem.eql(u8, b.user_alias[0..b.alias_len], query) or
+                std.mem.eql(u8, b.canonical[0..b.canonical_len], query))
+            {
+                assert(b.canonical_len >= 1);
+                return b.canonical[0..b.canonical_len];
+            }
+        }
+        return error.UnknownAlias;
+    }
+};
+
+fn run_selftest() !u8 {
+    var book = SynonymBook.init();
+    try book.bind("companion-voice-base", "kyri");
+    try book.bind("companion-voice-base", "reya");
+    try book.bind("open-door-style-base", "teacher-style");
+    try book.bind("open-door-style-base", "karma-style");
+    try book.bind("resonance", "harmony-studio");
+    try book.bind("tablecloth", "ledger-sql");
+    try book.bind("WOOD", "TIMBER");
+
+    // 0. Kyri <-> Reya & Teacher <-> Karma resolve to identical bases!
+    const v_k = try book.resolve_to_canonical("kyri");
+    const v_r = try book.resolve_to_canonical("reya");
+    if (!std.mem.eql(u8, v_k, v_r)) return error.VoiceSynonymMismatch;
+
+    const s_t = try book.resolve_to_canonical("teacher-style");
+    const s_k = try book.resolve_to_canonical("karma-style");
+    if (!std.mem.eql(u8, s_t, s_k)) return error.StyleSynonymMismatch;
+
+    // 1. Both custom alias & canonical name resolve to single-stranded core!
+    const r1 = try book.resolve_to_canonical("harmony-studio");
+    const r2 = try book.resolve_to_canonical("resonance");
+    if (!std.mem.eql(u8, r1, "resonance") or
+        !std.mem.eql(u8, r2, "resonance"))
+    {
+        return error.ResolutionBroken;
+    }
+
+    // 2. Ambiguous collision refused (`Sameness` stays unambiguous!)
+    if (book.bind("pulp", "harmony-studio")) |_| {
+        return error.CollisionAccepted;
+    } else |err| {
+        if (err != error.AliasCollision) return err;
+    }
+
+    print(
+        "GREEN: synonym_macro -- bijective user renaming over single core.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

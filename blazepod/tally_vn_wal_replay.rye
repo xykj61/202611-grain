@@ -1,0 +1,191 @@
+//! blazepod/tally_vn_wal_replay.rye -- Blazepod tally-vn NVMe WAL Replay!
+//!
+//! Stamp: `20261119.164619` -- Orbit 5, `Movement 10/15 : Capricorn` (*Ten-year
+//! stone: bare-metal RISC-V & right-to-repair persistence*), powering
+//! `grain-ww wal-replay` (Proof #57)!
+//! Proves deterministic SHA3-256 chained append-only NVMe WAL replay for
+//! `Blazepod` `tally-vn` mode:
+//!   1. Every appended frame chains `seq || prev_sha3 || payload_u64` via
+//!      SHA3-256 inside a bounded `32`-frame static ring,
+//!   2. Power-loss torn-tail recovery (`replay_with_torn_tail`) safely drops
+//!      an incomplete final tail frame and restores exact prior `head_sha3`,
+//!   3. Mid-log tampering (`MidLogCorruptionRefused`) and sequence jumps
+//!      (`SeqDiscontinuityRefused`) fail loudly with paired refusal witnesses!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.164619";
+pub const max_frames: u32 = 32;
+const nl: u8 = 10;
+
+pub const WalError = error{
+    WalRingFull,
+    MidLogCorruptionRefused,
+    SeqDiscontinuityRefused,
+};
+
+pub const WalFrame = struct {
+    seq: u64,
+    prev_sha3: [32]u8,
+    payload: u64,
+    frame_sha3: [32]u8,
+};
+
+pub const ReplayResult = struct {
+    recovered_frames: u32,
+    head_sha3: [32]u8,
+    payload_sum: u64,
+    torn_tail_dropped: bool,
+};
+
+pub fn compute_frame_hash(
+    seq: u64,
+    prev_sha3: [32]u8,
+    payload: u64,
+) [32]u8 {
+    // invariant: deterministic SHA3-256 chain binding seq, prev, & payload.
+    assert(seq > 0);
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("blazepod-tally-vn-wal-v1:");
+    var b16: [16]u8 = undefined;
+    std.mem.writeInt(u64, b16[0..8], seq, .little);
+    std.mem.writeInt(u64, b16[8..16], payload, .little);
+    h.update(&b16);
+    h.update(&prev_sha3);
+    h.final(&out);
+    assert((out[0] | out[1] | out[2]) != 0);
+    return out;
+}
+
+pub const NvmeWalRing = struct {
+    frames: [max_frames]WalFrame,
+    count: u32,
+    head_sha3: [32]u8,
+
+    pub fn init() NvmeWalRing {
+        return std.mem.zeroes(NvmeWalRing);
+    }
+
+    pub fn append(self: *NvmeWalRing, payload: u64) WalError!u64 {
+        // invariant: bounded WAL ring capacity & strictly monotonic seq.
+        if (self.count >= max_frames) return error.WalRingFull;
+        const seq: u64 = @as(u64, self.count) + 1;
+        const fh = compute_frame_hash(seq, self.head_sha3, payload);
+        self.frames[self.count] = .{
+            .seq = seq,
+            .prev_sha3 = self.head_sha3,
+            .payload = payload,
+            .frame_sha3 = fh,
+        };
+        self.head_sha3 = fh;
+        self.count += 1;
+        assert(self.count <= max_frames);
+        assert(self.frames[self.count - 1].seq == seq);
+        return seq;
+    }
+
+    pub fn replay_with_torn_tail(
+        self: *const NvmeWalRing,
+    ) WalError!ReplayResult {
+        var cur_head: [32]u8 = @splat(0);
+        var sum: u64 = 0;
+        var ok_n: u32 = 0;
+        var torn = false;
+
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const f = self.frames[i];
+            const expect_seq: u64 = @as(u64, i) + 1;
+            const is_last = (i + 1 == self.count);
+            if (f.seq != expect_seq) {
+                if (is_last) {
+                    torn = true;
+                    break;
+                }
+                return error.SeqDiscontinuityRefused;
+            }
+            const expect_h = compute_frame_hash(f.seq, cur_head, f.payload);
+            const prev_ok = std.mem.eql(u8, &f.prev_sha3, &cur_head);
+            const hash_ok = std.mem.eql(u8, &f.frame_sha3, &expect_h);
+            if (!prev_ok or !hash_ok) {
+                if (is_last) {
+                    torn = true;
+                    break;
+                }
+                return error.MidLogCorruptionRefused;
+            }
+            cur_head = f.frame_sha3;
+            sum += f.payload;
+            ok_n += 1;
+        }
+        // invariant: recovered frame count never exceeds written ring count.
+        assert(ok_n <= self.count);
+        return .{
+            .recovered_frames = ok_n,
+            .head_sha3 = cur_head,
+            .payload_sum = sum,
+            .torn_tail_dropped = torn,
+        };
+    }
+};
+
+fn run_selftest() !u8 {
+    var wal = NvmeWalRing.init();
+    _ = try wal.append(100);
+    _ = try wal.append(250);
+    _ = try wal.append(400);
+    _ = try wal.append(50);
+    const clean_head = wal.head_sha3;
+
+    // 1. Welcome: clean 4-frame replay matches exact head_sha3 & sum == 800
+    const r_clean = try wal.replay_with_torn_tail();
+    if (r_clean.recovered_frames != 4 or r_clean.payload_sum != 800) {
+        return error.CleanReplayWrong;
+    }
+    if (!std.mem.eql(u8, &r_clean.head_sha3, &clean_head)) {
+        return error.HeadDigestMismatch;
+    }
+
+    // 2. Welcome: power-loss torn tail on frame 5 recovers exact frames 1..4!
+    _ = try wal.append(999);
+    wal.frames[4].frame_sha3[0] ^= 0xFF; // simulate power loss mid-write
+    const r_torn = try wal.replay_with_torn_tail();
+    if (!r_torn.torn_tail_dropped or r_torn.recovered_frames != 4) {
+        return error.TornTailRecoveryFailed;
+    }
+    if (!std.mem.eql(u8, &r_torn.head_sha3, &clean_head)) {
+        return error.TornTailHeadCorrupted;
+    }
+
+    // 3. Refusal 1: mid-log tampering on interior frame 2 loudly refused!
+    var tampered = wal;
+    tampered.frames[1].payload = 9999;
+    if (tampered.replay_with_torn_tail()) |_| {
+        return error.MidLogTamperAccepted;
+    } else |err| {
+        if (err != error.MidLogCorruptionRefused) return err;
+    }
+
+    // 4. Refusal 2: interior sequence jump loudly refused!
+    var bad_seq = wal;
+    bad_seq.frames[2].seq = 99;
+    if (bad_seq.replay_with_torn_tail()) |_| {
+        return error.SeqJumpAccepted;
+    } else |err| {
+        if (err != error.SeqDiscontinuityRefused) return err;
+    }
+
+    print(
+        "GREEN: tally_vn_wal_replay -- 4 frames & torn-tail SHA3 recovery!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

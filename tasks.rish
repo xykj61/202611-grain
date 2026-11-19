@@ -22,17 +22,17 @@ if cmd == "help" then say "  seed-dry     verify incremental Fusion public seed"
 if cmd == "help" then say "  sundial      compile & emit Myofascia rollup"
 if cmd == "help" then say "  pond-gemini  run gemini CLI in Grain Pond"
 
-let c_w1 = [rishi "run" "tools/b/bricks_exist_witness.rish"]
+let c_w1 = [rishi "run" "tools/rishi/bricks_exist_witness.rish"]
 if cmd == "prove" then let w1 = run c_w1 else let w1 = run ok_c
 assert w1.ok else "tasks: bricks_exist_witness failed"
 if cmd == "prove" then say w1.out
 
-let c_w2 = [rishi "run" "tools/g/glow_rune_book_witness.rish"]
+let c_w2 = [rishi "run" "tools/glow/glow_rune_book_witness.rish"]
 if cmd == "prove" then let w2 = run c_w2 else let w2 = run ok_c
 assert w2.ok else "tasks: glow_rune_book_witness failed"
 if cmd == "prove" then say w2.out
 
-let c_w3 = [rishi "run" "tools/f/fusion_seed_and_build_witness.rish"]
+let c_w3 = [rishi "run" "tools/fusion/fusion_seed_and_build_witness.rish"]
 if cmd == "prove" then let w3 = run c_w3 else let w3 = run ok_c
 assert w3.ok else "tasks: fusion_seed_and_build_witness failed"
 if cmd == "prove" then say w3.out

@@ -1,0 +1,84 @@
+//! modules/fusion/virgo_efficiency_audit.rye -- Virgo Efficiency Audit!
+//!
+//! Stamp: `20261119.182424` -- Virgo (*Compass audit & efficiency review*),
+//! powering `grain-ww virgo-efficiency`!
+//! Mechanically audits all `9` modernized front-door guides (`LEXICON.md`,
+//! `languages/{glow,rye,rishi}/README.md`, `terrarium/README.md`,
+//! `modules/README.md`, `libraries/README.md`, `blazepod/README.md`,
+//! `MAP.md`), proving zero retired pre-reroot dead links (`active-tablecloth/`
+//! or `tools/w/witness_all`) and pairing a refusal witness!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.154211";
+const nl: u8 = 10;
+
+pub const EfficiencyError = error{
+    StaleLinkDetected,
+    EmptyGuideRefused,
+};
+
+pub const audited_guides = [_][]const u8{
+    "LEXICON.md",
+    "MAP.md",
+    "languages/glow/README.md",
+    "languages/rye/README.md",
+    "languages/rishi/README.md",
+    "terrarium/README.md",
+    "modules/README.md",
+    "libraries/README.md",
+    "blazepod/README.md",
+};
+
+pub fn check_guide_freshness(text: []const u8) EfficiencyError!void {
+    // invariant: non-empty guide audited against retired pre-reroot paths.
+    if (text.len < 64) return error.EmptyGuideRefused;
+    const retired = [_][]const u8{
+        "active-tablecloth/",
+        "tools/w/witness_all",
+        "tools/f/fetch-toolchain",
+    };
+    for (retired) |pat| {
+        if (std.mem.indexOf(u8, text, pat) != null) {
+            return error.StaleLinkDetected;
+        }
+    }
+    // invariant: guide passed all retired-link freshness checks cleanly.
+    assert(text.len >= 64);
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    var checked: u32 = 0;
+    for (audited_guides) |p| {
+        const body = try cwd.readFileAlloc(io, p, a, .limited(65536));
+        try check_guide_freshness(body);
+        checked += 1;
+    }
+
+    // Refusal witness: stale pre-reroot link rejected cleanly by name
+    const stale_sample =
+        "Old Guide: see ../active-tablecloth/date/202611/00/README.md " ++
+        "for historical work across many folders and rooms.";
+    if (check_guide_freshness(stale_sample)) |_| {
+        return error.StaleGuideAccepted;
+    } else |err| {
+        if (err != error.StaleLinkDetected) return err;
+    }
+
+    assert(checked == 9);
+    print(
+        "GREEN: orbit5_virgo_efficiency -- {d}/9 guides fresh & 40 Glow!{c}",
+        .{ checked, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

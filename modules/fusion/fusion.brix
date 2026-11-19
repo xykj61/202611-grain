@@ -12,7 +12,7 @@ max_seed_candidates 131072
 verify_ich_modulus 16
 
 # The ONLY four permitted cold-start POSIX .sh bridges in the living tree:
-cold_bridge tools/f/fetch-toolchain.sh
+cold_bridge tools/rye/fetch-toolchain.sh
 cold_bridge languages/rye/bootstrap.sh
 cold_bridge .gemini/hooks/enable-git-ssh.sh
 cold_bridge terrarium/run.sh

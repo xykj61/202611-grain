@@ -1,0 +1,155 @@
+//! modules/comlink/vantage/vantage_husk_editor.rye -- Vantage Husk Editor!
+//!
+//! Stamp: `20261119.175014` -- Taurus (`Venus student-teacher`) interactive
+//! `Vantage` `Husk` checklist editor & live `WOOD` split previewer, powering
+//! `grain-ww husk-editor`!
+//!   1. Prepend & toggle bounded `Husk` cards (`max_cards = 32`, zero heap
+//!      churn, zero ascending serial numbering),
+//!   2. Compute live conserved `WOOD` split preview (`sum(permille) == 1000`,
+//!      `sum(shares) == pool_wood`) rendered right beside the Husk board inside
+//!      `Vantage` Station & Carry,
+//!   3. Pair refusal witnesses for empty card titles, out-of-range toggle
+//!      indices, and non-conserving permille totals!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.175014";
+pub const max_cards: u32 = 32;
+pub const max_title: usize = 48;
+const nl: u8 = 10;
+
+pub const EditorError = error{
+    DeckFull,
+    EmptyTitleRefused,
+    IndexOutOfRange,
+    SplitSumNotThousand,
+};
+
+pub const HuskCard = struct {
+    title: [max_title]u8,
+    len: u8,
+    done: bool,
+};
+
+pub const WoodPreview = struct {
+    pool_wood: u64,
+    shares: [4]u64,
+};
+
+pub const HuskEditor = struct {
+    cards: [max_cards]HuskCard,
+    count: u32,
+
+    pub fn init() HuskEditor {
+        return std.mem.zeroes(HuskEditor);
+    }
+
+    pub fn prepend_card(self: *HuskEditor, title: []const u8) EditorError!void {
+        // invariant: bounded capacity & non-empty plain title without serials.
+        if (title.len == 0) return error.EmptyTitleRefused;
+        if (self.count >= max_cards) return error.DeckFull;
+        var i: u32 = self.count;
+        while (i > 0) : (i -= 1) {
+            self.cards[i] = self.cards[i - 1];
+        }
+        var c = std.mem.zeroes(HuskCard);
+        const take = @min(title.len, max_title);
+        @memcpy(c.title[0..take], title[0..take]);
+        c.len = @intCast(take);
+        self.cards[0] = c;
+        self.count += 1;
+        assert(self.count <= max_cards and self.cards[0].len == take);
+    }
+
+    pub fn toggle_done(self: *HuskEditor, idx: u32) EditorError!void {
+        // invariant: bounded card index inside active count.
+        if (idx >= self.count) return error.IndexOutOfRange;
+        self.cards[idx].done = !self.cards[idx].done;
+        assert(idx < self.count);
+    }
+
+    pub fn seal_board_digest(self: *const HuskEditor) [32]u8 {
+        var out: [32]u8 = undefined;
+        var h = Sha3_256.init(.{});
+        h.update("grain-vantage-husk-editor-v1:");
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const c = self.cards[i];
+            h.update(c.title[0..c.len]);
+            const flag: [1]u8 = .{if (c.done) '1' else '0'};
+            h.update(&flag);
+        }
+        h.final(&out);
+        assert((out[0] | out[1] | out[2]) != 0);
+        return out;
+    }
+};
+
+pub fn preview_wood_split(
+    pool_wood: u64,
+    permilles: [4]u32,
+) EditorError!WoodPreview {
+    // invariant: permilles sum strictly to 1000 & shares conserve pool_wood.
+    const total_pm = permilles[0] + permilles[1] + permilles[2] + permilles[3];
+    if (total_pm != 1000) return error.SplitSumNotThousand;
+    var shares = [4]u64{ 0, 0, 0, 0 };
+    var sum: u64 = 0;
+    for (permilles, 0..) |pm, idx| {
+        shares[idx] = (pool_wood * @as(u64, pm)) / 1000;
+        sum += shares[idx];
+    }
+    shares[0] += (pool_wood - sum);
+    const check = shares[0] + shares[1] + shares[2] + shares[3];
+    assert(check == pool_wood);
+    return .{ .pool_wood = pool_wood, .shares = shares };
+}
+
+fn run_selftest() !u8 {
+    var ed = HuskEditor.init();
+    try ed.prepend_card("Bind Vantage macOS live deck");
+    try ed.prepend_card("Enforce plain stamp naming ratchet");
+    try ed.toggle_done(0);
+    if (!ed.cards[0].done or ed.cards[1].done) return error.ToggleWrong;
+
+    const d1 = ed.seal_board_digest();
+    const d2 = ed.seal_board_digest();
+    if (!std.mem.eql(u8, &d1, &d2)) return error.NonDeterministicBoard;
+
+    const wp = try preview_wood_split(1003, .{ 400, 300, 200, 100 });
+    const tot = wp.shares[0] + wp.shares[1] + wp.shares[2] + wp.shares[3];
+    if (tot != 1003) return error.WoodConservationBroken;
+
+    // Refusal 1: empty card title rejected cleanly
+    if (ed.prepend_card("")) |_| {
+        return error.EmptyTitleAccepted;
+    } else |err| {
+        if (err != error.EmptyTitleRefused) return err;
+    }
+
+    // Refusal 2: out-of-range toggle index rejected cleanly
+    if (ed.toggle_done(9)) |_| {
+        return error.BadToggleAccepted;
+    } else |err| {
+        if (err != error.IndexOutOfRange) return err;
+    }
+
+    // Refusal 3: non-1000 permille split rejected cleanly
+    if (preview_wood_split(1000, .{ 400, 300, 100, 100 })) |_| {
+        return error.BadWoodSplitAccepted;
+    } else |err| {
+        if (err != error.SplitSumNotThousand) return err;
+    }
+
+    print(
+        "GREEN: vantage_husk_editor -- {d} cards & {d} WOOD preview ok!{c}",
+        .{ ed.count, tot, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

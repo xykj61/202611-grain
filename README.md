@@ -29,7 +29,7 @@ Modern software asks individuals, hospitals, farms, studios, and enterprises to 
 
 - **Approachable on Day One:** Written in clear, welcoming prose ([`docs-geode/`](docs-geode/README.md)) so a curious eighth-grader and a principal systems engineer can both build the compiler from source and run a hardware-verified proof inside one hour.
 - **Enterprise-Grade Determinism:** Every loop, slice, network packet, and memory arena declares an explicit compile-time ceiling (**TAME Guidance**). Zero hidden heap churn, zero ambient authority, and zero semantic-versioning guesswork -- every module and release carries a monotonic **chronological version stamp (`YYYYMMDD.HHMMSS`)** ([`docs-geode/api/chronological-versioning.md`](docs-geode/api/chronological-versioning.md)).
-- **Agent-Native by Construction:** Visual surfaces in **Brushstroke / Skate** and versioned histories in **Blaze / Flare** expose pure callable functions ([`docs-geode/architecture/realidream-agentic-weave.md`](docs-geode/architecture/realidream-agentic-weave.md)) so human builders and **Google Gemini (`gemini-4-carbon`)** + local **Flare** subagents collaborate over exact, deterministic state rather than brittle screen-scraping.
+- **Agent-Native by Construction:** Visual surfaces in **Brushstroke / Skate** and versioned histories in **Blaze / Flare** expose pure callable functions ([`docs-geode/architecture/realidream-agentic-weave.md`](docs-geode/architecture/realidream-agentic-weave.md)) so human builders and **Google Gemini (`gemini-4-neon`)** + local **Flare** subagents collaborate over exact, deterministic state rather than brittle screen-scraping.
 
 ---
 
@@ -41,12 +41,14 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / orbit) | **56.970** / 100.000 |
-| **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **30** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261115.172500** |
+| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.078** / 100.000 |
+| **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **48** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.183931** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->
+
+**Front-Door Vocabulary & Room Map:** Open [`LEXICON.md`](LEXICON.md) for every living term (`Modernization`, `Myofascia`, `Glasswall`, `WOOD`, `Palisade`) and [`MAP.md`](MAP.md) for the room-by-room guide.
 
 ---
 
@@ -74,7 +76,7 @@ Every runtime faculty inside [`modules/`](modules/README.md) co-locates its pure
 | **Isolation & Custody** | [`modules/caravan/`](modules/caravan/), [`modules/pond/`](modules/pond/README.md), [`modules/crypto/`](modules/crypto/) | Fault-isolated capability supervision, auditable key retention/erasure (`caravan/custody/`), citizen sandboxes, and SHA3 / ChaCha20-Poly1305 / Ed25519 |
 | **Storage, Wire & Market** | [`modules/blaze/`](modules/blaze/src/main.rye), [`modules/tablecloth/`](modules/tablecloth/README.md), [`modules/amphora/`](modules/amphora/README.md), [`modules/kumara/`](modules/kumara/README.md), [`modules/comlink/`](modules/comlink/README.md), [`modules/market/`](modules/market/README.md) | Content-addressed weaves, vector & named-bead search, sealed vessels, sovereign identity, encrypted P2P wire turns, and balanced double-entry Dimeroll accounting |
 | **Surface, Studio, AI & Apps** | [`modules/brushstroke/`](modules/brushstroke/README.md), [`modules/resonance/`](modules/resonance/README.md), [`modules/flare/`](modules/flare/README.md), [`modules/apps/`](modules/apps/README.md) | Immediate-mode `FrameGrid` UI (`skate/` + `image/`), 48 kHz creative audio studio (`mikrophone/` + `composition/`), license-clean local AI, and citizen apps (`linengrow`, `bloom`, `mycelium`, `colloquium`) |
-| **Truth, Plans & Vaults** | [`docs-geode/`](docs-geode/README.md), [`active-pulp/`](active-pulp/README.md), [`mitra-shed/`](mitra-shed/README.md), [`yonder/`](yonder/README.md) | Unified crystal documentation, prepend-to-front Pulp movement boards, Anuradha/Mitra *accrete-never-break* fossil prep (`shed-prep.md`), and the single bottom-sorted `yonder/` archive vault |
+| **Truth, Plans & Vaults** | [`docs-geode/`](docs-geode/README.md), [`active-husk/`](active-husk/README.md), [`mitra-shed/`](mitra-shed/README.md), [`yonder/`](yonder/README.md) | Unified crystal documentation, prepend-to-front Husk project boards, Anuradha/Mitra *accrete-never-break* fossil prep (`shed-prep.md`), and the single bottom-sorted `yonder/` archive vault |
 
 Brand marks -- featuring **Cavalhatriz** + **Noto Sans Mono** (alongside `Iosevka`, `JetBrains Mono`, and `Fira Code`) in our vegan **Oat / Material Purple / Material Red** palette -- live in [`assets/`](assets/README.md).
 
@@ -85,10 +87,10 @@ Brand marks -- featuring **Cavalhatriz** + **Noto Sans Mono** (alongside `Iosevk
 ```sh
 git clone https://github.com/xykj61/202611-grain.git grain
 cd grain
-sh tools/f/fetch-toolchain.sh
+sh tools/rye/fetch-toolchain.sh
 cd languages/rye && ./bootstrap.sh && cd ../..
 mkdir -p languages/rishi/bin && languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
-languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/rishi/bricks_exist_witness.rish
 ```
 
 Follow the full guided walkthrough in **[The First Hour](docs-geode/tutorials/the-first-hour.md)**.

@@ -1,0 +1,17 @@
+::  modules/comlink/vantage/glow/fold-vantage-canvas.glow -- Canvas FFI!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-vantage-surface-id
+  |=  surface-id=@ud                                    ::  0=canopy, 1=dusk
+  ^-  @ud                                               ::  verified surface
+  ~|  'vantage-canvas-surface-id-out-of-range'          ::  two live surfaces
+  ?>  (lte surface-id 1)
+  surface-id
+++  gate-vantage-rlcd-bounds
+  |=  [width-px=@ud height-px=@ud]                      ::  Carry / Station
+  ^-  @ud                                               ::  verified width
+  ~|  'vantage-rlcd-viewport-below-floor'               ::  >= 120x60 floor
+  ?>  &(gte(width-px 120) gte(height-px 60))
+  width-px
+--

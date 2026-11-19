@@ -87,14 +87,14 @@ max_cols 80 modules/apps/linengrow/linengrow_commons.rye
 max_cols 80 modules/fusion/manifest_cover.rye
 ascii_7bit MAP.md
 ascii_7bit llms.txt
-max_cols 80 modules/flare/pulp/pulp_movement_stack.rye
+max_cols 80 modules/flare/husk/husk_movement_stack.rye
 max_cols 80 modules/tablecloth/relational_table.rye
 max_cols 80 modules/comlink/council_405.rye
 max_cols 80 modules/pond/puddle/puddle_remote.rye
 max_cols 80 modules/sundial/one_clock.rye
 ascii_7bit active-development/date/20261115/20261115-134000-est_glasswall-pulp-tablecloth-405-council-puddle-and-one-clock.md
 max_cols 80 modules/pond/puddle/puddle_udp_live.rye
-max_cols 80 modules/flare/pulp/pulp_object_recall.rye
+max_cols 80 modules/flare/husk/husk_object_recall.rye
 max_cols 80 modules/tablecloth/sql_workspace.rye
 max_cols 80 modules/comlink/council_mycelium_weave.rye
 max_cols 80 modules/comlink/vantage/vantage_council_puddle.rye
@@ -116,3 +116,161 @@ max_cols 80 modules/vantage_tablecloth_bridge.rye
 max_cols 80 modules/sundial/siya_orbit_harvest.rye
 ascii_7bit modules/sundial/siya_orbit_harvest.rye
 max_cols 80 modules/pond/puddle/puddle_cli_session.rye
+max_cols 80 modules/fusion/hearth_cadence.rye
+max_cols 80 modules/market/wood_token.rye
+max_cols 80 modules/synonym/synonym_macro.rye
+max_cols 80 terrarium/faa-atc/atc_separation.rye
+max_cols 80 terrarium/civil-engineering/structural_colloquium.rye
+ascii_7bit context/CIVIC_STYLE.md
+ascii_7bit docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md
+ascii_7bit active-development/date/20261115/20261115-174500-est_taurus-checkin-tools-reorg-glow-ring0-and-terrarium-stack.md
+max_cols 80 languages/glow/rune_48_lower.rye
+max_cols 80 languages/glow/sheaf/sheaf_wire_doors.rye
+ascii_7bit context/RADIANT_STYLE.md
+ascii_7bit context/GAUGE_STYLE.md
+ascii_7bit context/TWILIGHT_STYLE.md
+ascii_7bit context/KYRI.md
+ascii_7bit context/REYA.md
+ascii_7bit context/TEACHER_STYLE.md
+ascii_7bit context/KARMA_STYLE.md
+ascii_7bit context/SILO_TECHNIQUE.md
+max_cols 80 modules/fusion/radiant_zero_neg_check.rye
+max_cols 80 languages/glow/mill/glow_to_rye_emitter.rye
+max_cols 80 libraries/civic-ecology/canopy_hydrology.rye
+max_cols 80 libraries/civil-engineering/watershed_structures.rye
+max_cols 80 modules/fusion/virgo_compass_audit.rye
+ascii_7bit context/TAME_CORE.md
+ascii_7bit context/TAME_GUIDANCE.md
+ascii_7bit libraries/civic-ecology/README.md
+ascii_7bit libraries/civic-ecology/lessons/canopy-cooling-and-continental-rain.md
+ascii_7bit libraries/civil-engineering/README.md
+ascii_7bit libraries/civil-engineering/lessons/permeable-works-and-timber-craft.md
+max_cols 80 modules/fusion/libra_preflight.rye
+ascii_7bit active-development/date/20261119/20261119-121259-est_libra-even-scales-pruning-and-tree-plan-for-scorpio.md
+ascii_7bit expanding-prompts/date/20261119/20261119-124637-est_gemini-4-neon-expanding-prompt.md
+ascii_7bit active-development/date/20261119/20261119-130204-est_gemini-4-neon-onboarding-synthesis.md
+max_cols 80 modules/brushstroke/skate/canopy_watershed_canvas.rye
+max_cols 80 modules/brushstroke/glow/fold-canopy-canvas.glow
+max_cols 80 tools/witness_all.rish
+ascii_7bit tools/caravan/README.md
+ascii_7bit tools/terrarium/README.md
+ascii_7bit active-development/date/20261119/20261119-131122-est_sagittarius-tools-reorg-mitra-shed-and-canopy-canvas.md
+max_cols 80 languages/glow/mill/ring0_glow_to_rye.rye
+max_cols 80 modules/tally/glow/gate-tally-arena-bump.glow
+max_cols 80 modules/blaze/glow/gate-blaze-weave-step.glow
+ascii_7bit active-development/date/20261119/20261119-133148-est_ring0-glow-to-rye-and-palisade-siya-plan.md
+max_cols 80 modules/brushstroke/skate/twilight_almanac_art.rye
+max_cols 80 modules/brushstroke/glow/fold-twilight-almanac.glow
+ascii_7bit active-development/date/20261119/20261119-134045-est_pisces-twilight-almanac-and-glow-desk-sweep.md
+max_cols 80 terrarium/faa-atc/pilot_sector_horizon.rye
+max_cols 80 modules/apps/colloquium/glow/gate-terrarium-horizon.glow
+ascii_7bit active-development/date/20261119/20261119-134525-est_aether-cardinal-terrarium-horizon-and-heart-check.md
+max_cols 80 modules/fusion/palisade_release_gate.rye
+ascii_7bit active-development/date/20261119/20261119-135311-est_aether-fixed-palisade-prerelease-macro.md
+ascii_7bit active-development/date/20261119/20261119-140021-est_siya-orbit4-harvest-and-palisade-release.md
+max_cols 80 languages/glow/mill/ring0_dual_silicon.rye
+max_cols 80 languages/glow/compiler/ring0_silicon.glow
+ascii_7bit active-development/date/20261119/20261119-144935-est_orbit5-aries-ring0-dual-silicon-emission.md
+max_cols 80 modules/comlink/vantage/vantage_canvas_bridge.rye
+max_cols 80 modules/comlink/vantage/glow/fold-vantage-canvas.glow
+ascii_7bit languages/glow/README.md
+ascii_7bit active-development/date/20261119/20261119-150122-est_orbit5-taurus-vantage-canvas-glow-readme-and-gpg-guidance.md
+max_cols 80 modules/market/wood_weave_bridge.rye
+max_cols 80 modules/market/glow/fold-wood-weave.glow
+ascii_7bit languages/rye/README.md
+ascii_7bit terrarium/README.md
+ascii_7bit active-development/date/20261119/20261119-150830-est_orbit5-gemini-dancing-friends-many-weaves-and-50-proofs.md
+ascii_7bit LEXICON.md
+ascii_7bit context/LEXICON.md
+ascii_7bit languages/rishi/README.md
+max_cols 80 modules/pond/pond_sanctuary_airlock.rye
+max_cols 80 modules/pond/glow/gate-pond-sanctuary.glow
+ascii_7bit active-development/date/20261119/20261119-152019-est_orbit5-cancer-lexicon-modernization-myofascia-and-pond-airlock.md
+max_cols 80 modules/resonance/resonance_wood_ledger.rye
+max_cols 80 modules/resonance/glow/fold-resonance-wood.glow
+ascii_7bit active-development/date/20261119/20261119-153338-est_orbit5-leo-resonance-wood-patronage-ledger.md
+max_cols 80 modules/fusion/virgo_efficiency_audit.rye
+max_cols 80 modules/fusion/glow/gate-virgo-efficiency.glow
+ascii_7bit modules/README.md
+ascii_7bit libraries/README.md
+ascii_7bit blazepod/README.md
+ascii_7bit active-development/date/20261119/20261119-154211-est_orbit5-virgo-compass-film-study-and-13-hub-modernization.md
+max_cols 80 modules/fusion/libra_scales_gate.rye
+max_cols 80 modules/fusion/glow/gate-libra-scales.glow
+ascii_7bit nixos/README.md
+ascii_7bit active-development/date/20261119/20261119-154705-est_orbit5-libra-even-scales-census-and-16-hubs.md
+max_cols 80 modules/caravan/custody/scorpio_key_rotation.rye
+max_cols 80 modules/caravan/glow/gate-key-rotation.glow
+ascii_7bit active-development/date/20261119/20261119-155742-est_orbit5-scorpio-ephemeral-key-rotation-and-zeroize.md
+max_cols 80 modules/brushstroke/skate/studio_triptych_canvas.rye
+max_cols 80 modules/brushstroke/glow/fold-studio-triptych.glow
+ascii_7bit active-development/date/20261119/20261119-162625-est_orbit5-sagittarius-studio-triptych-canvas-and-pulp.md
+max_cols 80 blazepod/tally_vn_wal_replay.rye
+max_cols 80 modules/tally/glow/gate-tally-wal.glow
+ascii_7bit active-development/date/20261119/20261119-164619-est_orbit5-capricorn-blazepod-tally-vn-wal-replay.md
+max_cols 80 modules/comlink/constel_aquarius_federation.rye
+max_cols 80 modules/comlink/glow/gate-aquarius-405.glow
+ascii_7bit active-development/date/20261119/20261119-165127-est_orbit5-aquarius-constel-405-federation.md
+max_cols 80 libraries/risala/twilight_nocturne_svg.rye
+max_cols 80 modules/brushstroke/glow/fold-twilight-svg.glow
+ascii_7bit active-development/date/20261119/20261119-171038-est_orbit5-pisces-twilight-nocturne-svg-artifact.md
+max_cols 80 libraries/shastra/civic_purpose_audit.rye
+max_cols 80 modules/flare/husk/glow/gate-husk-stack.glow
+ascii_7bit active-husk/README.md
+ascii_7bit active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/README.md
+ascii_7bit active-husk/date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md
+ascii_7bit active-development/date/20261119/20261119-171652-est_orbit5-sky-husk-breach-and-milestone-60.md
+max_cols 80 modules/synonym/sameness_macro_cup.rye
+max_cols 80 modules/synonym/glow/fold-whole-cup.glow
+ascii_7bit active-development/date/20261119/20261119-173141-est_orbit5-sky14-hold-the-whole-cup-sameness-macro.md
+max_cols 80 modules/sundial/quest_harvest_seal.rye
+max_cols 80 modules/sundial/glow/fold-quest-seal.glow
+ascii_7bit active-development/date/20261119/20261119-173935-est_orbit5-siya-quest1-75-harvest-seal.md
+max_cols 80 modules/comlink/vantage/vantage_studio_deck.rye
+max_cols 80 modules/comlink/vantage/glow/fold-studio-deck.glow
+ascii_7bit active-development/date/20261119/20261119-174519-est_quest2-orbit6-aries-vantage-studio-deck-and-50-glow.md
+max_cols 80 modules/fusion/stamp_no_serial_ratchet.rye
+max_cols 80 modules/comlink/vantage/vantage_husk_editor.rye
+max_cols 80 modules/comlink/vantage/glow/fold-husk-editor.glow
+ascii_7bit active-development/date/20261119/20261119-175014-est_taurus-stamp-no-serial-ratchet-and-vantage-husk-editor.md
+max_cols 80 modules/harness/grain_cached_harness.rye
+max_cols 80 modules/harness/glow/fold-harness-cache.glow
+ascii_7bit context/SPELLBOOK.md
+ascii_7bit active-development/date/20261119/20261119-180005-est_gemini-cached-harness-synonym-spellbook-and-terrarium-plan.md
+max_cols 80 modules/harness/pond_api_airlock.rye
+max_cols 80 modules/harness/glow/gate-api-airlock.glow
+ascii_7bit context/LINENGROW_MAGAZINE_VOICE.md
+ascii_7bit SOURCE.md
+ascii_7bit SAFE.md
+ascii_7bit SECURITY.md
+ascii_7bit active-development/date/20261119/20261119-180656-est_cancer-pond-api-airlock-and-radiant-sweep.md
+max_cols 80 modules/harness/harness_wood_ledger.rye
+max_cols 80 modules/harness/glow/fold-harness-wood.glow
+ascii_7bit STEWARDS.md
+ascii_7bit CONTRIBUTING.md
+ascii_7bit context/APARIGRAHA.md
+ascii_7bit context/TWO_ROOMS.md
+ascii_7bit active-development/date/20261119/20261119-182008-est_leo-harness-wood-ledger-and-radiant-modernization.md
+max_cols 80 terrarium/terrarium_consolidation_audit.rye
+max_cols 80 modules/fusion/glow/gate-terrarium-audit.glow
+ascii_7bit ORGANIZING.md
+ascii_7bit CODE_OF_CONDUCT.md
+ascii_7bit active-development/date/20261119/20261119-182424-est_virgo-terrarium-consolidation-audit-and-radiant-sweep.md
+max_cols 80 terrarium/vantage_station_consolidation_menu.rye
+max_cols 80 modules/comlink/vantage/glow/fold-station-menu.glow
+ascii_7bit context/OPEN_QUESTIONS.md
+ascii_7bit context/THREATS.md
+ascii_7bit context/README.md
+ascii_7bit active-development/date/20261119/20261119-182903-est_libra-vantage-station-consolidation-menu-and-radiant-sweep.md
+max_cols 80 modules/harness/scorpio_session_zeroize.rye
+max_cols 80 modules/harness/glow/gate-session-zeroize.glow
+ascii_7bit context/REMOTE_ROSTER.md
+ascii_7bit context/REDACT_TECHNIQUE.md
+ascii_7bit context/SILO_TECHNIQUE.md
+ascii_7bit active-development/date/20261119/20261119-183452-est_scorpio-session-zeroize-spellbook-sync-and-radiant-sweep.md
+max_cols 80 modules/brushstroke/skate/vantage_harness_console.rye
+max_cols 80 modules/brushstroke/glow/fold-harness-console.glow
+ascii_7bit context/SIMPLE_LOVABLE_COMPLETE.md
+ascii_7bit context/BREACH.md
+ascii_7bit context/QUIN.md
+ascii_7bit active-development/date/20261119/20261119-183931-est_sagittarius-vantage-harness-console-and-radiant-sweep.md

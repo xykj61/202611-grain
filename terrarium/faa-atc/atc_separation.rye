@@ -1,0 +1,85 @@
+//! terrarium/faa-atc/atc_separation.rye -- TAME Air Traffic Separation!
+//!
+//! Stamp: `20261115.174500` -- Seeded for `Terrarium` (scheduled after full
+//! self-hosted Glow rune completion & Ring-0 Glow->Rye lowering)!
+//! Enforces deterministic integer RVSM & radar separation (`0` GC pauses, `0`
+//! floating-point NaN hazards):
+//!   - Vertical separation `< 1,000 ft` AND lateral distance `< 5,000 milli-nm`
+//!     (`5.000 nm` en-route; `3.000 nm` terminal) triggers immediate
+//!     `SeparationConflict` alert for blameless append-only safety logging!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261115.174500";
+pub const min_vert_feet: u32 = 1000;
+pub const min_enroute_milli_nm: u64 = 5000; // 5.000 nautical miles
+const nl: u8 = 10;
+
+pub const AircraftTrack = struct {
+    callsign: [8]u8,
+    x_milli_nm: i64,
+    y_milli_nm: i64,
+    altitude_ft: u32,
+};
+
+pub const SeparationVerdict = enum(u8) {
+    clear_safe = 0,
+    conflict_alert = 1,
+};
+
+pub fn evaluate_pair(a: AircraftTrack, b: AircraftTrack) SeparationVerdict {
+    const v_diff: u32 = if (a.altitude_ft >= b.altitude_ft)
+        a.altitude_ft - b.altitude_ft
+    else
+        b.altitude_ft - a.altitude_ft;
+
+    if (v_diff >= min_vert_feet) {
+        assert(v_diff >= 1000);
+        return .clear_safe;
+    }
+
+    const dx: i64 = a.x_milli_nm - b.x_milli_nm;
+    const dy: i64 = a.y_milli_nm - b.y_milli_nm;
+    const dist_sq: u64 = @intCast(dx * dx + dy * dy);
+    const min_sq: u64 = min_enroute_milli_nm * min_enroute_milli_nm;
+    assert(min_sq == 25_000_000);
+    return if (dist_sq < min_sq) .conflict_alert else .clear_safe;
+}
+
+fn run_selftest() !u8 {
+    const a1 = AircraftTrack{
+        .callsign = "GRN101  ".*,
+        .x_milli_nm = 0,
+        .y_milli_nm = 0,
+        .altitude_ft = 35000,
+    };
+    const a2_safe_alt = AircraftTrack{
+        .callsign = "GRN202  ".*,
+        .x_milli_nm = 1000,
+        .y_milli_nm = 1000,
+        .altitude_ft = 36000, // 1,000 ft RVSM vertical separation -> SAFE!
+    };
+    const a3_conflict = AircraftTrack{
+        .callsign = "GRN303  ".*,
+        .x_milli_nm = 3000,
+        .y_milli_nm = 3000, // ~4.24 nm (< 5 nm) & 400 ft -> ALERT!
+        .altitude_ft = 35400,
+    };
+
+    if (evaluate_pair(a1, a2_safe_alt) != .clear_safe) return error.FalseAlarm;
+    if (evaluate_pair(a1, a3_conflict) != .conflict_alert) {
+        return error.MissedConflict;
+    }
+
+    print(
+        "GREEN: atc_separation -- Terrarium FAA RVSM & 5nm radar guard.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,17 @@
+::  modules/apps/colloquium/glow/gate-terrarium-horizon.glow -- Horizon!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-sector-tracks
+  |=  [tracks=@ud steps=@ud]                            ::  <=16 & <=10 steps
+  ^-  @ud                                               ::  verified tracks
+  ~|  'terrarium-sector-exceeds-bounded-horizon'        ::  deterministic ATC
+  ?>  &(gte(tracks 1) lte(tracks 16) lte(steps 10))
+  tracks
+++  gate-watershed-bond
+  |=  [capture=@ud seats=@ud]                           ::  >=600 & >=324/405
+  ^-  @ud                                               ::  approved seats
+  ~|  'watershed-bond-below-permeable-or-civic-floor'   ::  Colloquium 80 pct
+  ?>  &(gte(capture 600) gte(seats 324))
+  seats
+--

@@ -6,7 +6,7 @@
 //! grain-ww`) matching our `grain-ww.com` / `github.com/grain-ww` home:
 //!   - `grain-ww version`           -- Chronological stamp & Myofascia reading
 //!   - `grain-ww stamp [sprig.ext]` -- Auto-DST `-utc`/`-est`/`-edt` One-Clock
-//!   - `grain-ww pulp [board.md]`   -- `[15..9375]` prepend Movement stack
+//!   - `grain-ww husk [board.md]`   -- `[15..9375]` prepend Movement stack
 //!   - `grain-ww puddle`            -- Live kernel UDP roaming Mosh/scp proof
 //!   - `grain-ww round-load`        -- Calfive 15-Sign movement & theme
 //!   - `grain-ww doctor`            -- <50 ms toolchain & Glasswall check
@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.172500";
-pub const myofascia_reading = "56.970";
+pub const grain_ww_version = "20261119.183931";
+pub const myofascia_reading = "57.078";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -54,7 +54,7 @@ fn run_doctor(io: std.Io) !u8 {
     print("  [GREEN] Rye compiler      : languages/rye/bin/rye{c}", .{nl});
     print("  [GREEN] Rishi steward     : languages/rishi/bin/rishi{c}", .{nl});
     print("  [GREEN] Vantage core      : modules/comlink/vantage/{c}", .{nl});
-    print("  [GREEN] Active Pulp room  : active-pulp/{c}", .{nl});
+    print("  [GREEN] Active Husk room  : active-husk/{c}", .{nl});
     print("  [GREEN] Myofascia reading : {s} / 100.000{c}", .{
         myofascia_reading,
         nl,
@@ -84,7 +84,7 @@ fn dispatch_exec(
 fn run_selftest(io: std.Io) !u8 {
     var buf: [128]u8 = undefined;
     const b = try format_banner(&buf);
-    if (std.mem.indexOf(u8, b, "grain-ww 20261115") == null) {
+    if (std.mem.indexOf(u8, b, grain_ww_version) == null) {
         return error.BadBanner;
     }
     if ((try run_doctor(io)) != 0) return error.DoctorFailed;
@@ -119,11 +119,110 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "pulp")) {
+    if (std.mem.eql(u8, sub, "cadence")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/pulp_movement_stack",
+            "tools/.build/hearth_cadence",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "wood")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/wood_token",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "synonym")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/synonym_macro",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "glow-48")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/rune_48_lower",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "glow-doors")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/sheaf_wire_doors",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "glow-emit-rye")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/glow_to_rye_emitter",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "radiant-check")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/radiant_zero_neg_check",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "civic-ecology")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/canopy_hydrology",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "civil-eng")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/watershed_structures",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "virgo-audit")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/virgo_compass_audit",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "preflight")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/libra_preflight",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "husk")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/husk_movement_stack",
             null,
             args[2..],
         );
@@ -182,11 +281,11 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "pulp-recall")) {
+    if (std.mem.eql(u8, sub, "husk-recall")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/pulp_object_recall",
+            "tools/.build/husk_object_recall",
             null,
             args[2..],
         );
@@ -361,7 +460,7 @@ pub fn main(init: std.process.Init) !u8 {
             io,
             "languages/rishi/bin/rishi",
             "run",
-            &[_][]const u8{"tools/w/witness_all.rish"},
+            &[_][]const u8{"tools/witness_all.rish"},
         );
     }
     if (std.mem.eql(u8, sub, "carry-apk")) {
@@ -370,7 +469,277 @@ pub fn main(init: std.process.Init) !u8 {
             io,
             "languages/rishi/bin/rishi",
             "run",
-            &[_][]const u8{"tools/c/build_dc1_apk.rish"},
+            &[_][]const u8{"tools/vantage/build_dc1_apk.rish"},
+        );
+    }
+    if (std.mem.eql(u8, sub, "canopy-canvas")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/canopy_watershed_canvas",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "ring0-glow")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/ring0_glow_to_rye",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "twilight-art")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_almanac_art",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "terrarium-horizon")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pilot_sector_horizon",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "palisade-check")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/palisade_release_gate",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "ring0-silicon")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/ring0_dual_silicon",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "vantage-canvas")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_canvas_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "wood-weave")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/wood_weave_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "pond-airlock")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pond_sanctuary_airlock",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "resonance-wood")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/resonance_wood_ledger",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "virgo-efficiency")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/virgo_efficiency_audit",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "libra-scales")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/libra_scales_gate",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "key-rotate")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/scorpio_key_rotation",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "triptych-art")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/studio_triptych_canvas",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "wal-replay")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/tally_vn_wal_replay",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "aquarius-405")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/constel_aquarius_federation",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "twilight-svg")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_nocturne_svg",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "purpose-check")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/civic_purpose_audit",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "whole-cup")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/sameness_macro_cup",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "quest-seal")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/quest_harvest_seal",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "studio-deck")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_studio_deck",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "stamp-ratchet")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/stamp_no_serial_ratchet",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "husk-editor")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_husk_editor",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "harness-cache")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/grain_cached_harness",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "api-airlock")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pond_api_airlock",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "harness-wood")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/harness_wood_ledger",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "terrarium-audit")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/terrarium_consolidation_audit",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "station-menu")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_station_consolidation_menu",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "session-zeroize")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/scorpio_session_zeroize",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "harness-console")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_harness_console",
+            null,
+            args[2..],
         );
     }
     if (std.mem.eql(u8, sub, "blazepod-check")) {
