@@ -1,14 +1,15 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.154705` (EST)
+**Stamp:** `20261119.155742` (EST)
 
-## Top of Prepend-to-Front Stack (Active Orbit 5 -- `8-Scorpio -> 10-Capricorn`)
+## Top of Prepend-to-Front Stack (Active Orbit 5 -- `9-Sagittarius -> 11-Aquarius`)
 
-- [ ] **[TOP -- Orbit 5, Movement 8/15 (`Scorpio`)] Execute Approved `7-Libra` Cuts, Clear Spent Keys to Zero, & Scout `9-Sagittarius`** -- weigh `murr_core` (`42` callers) & `lower_*` (`66` elders) + bind Keaton's new `grain-ww` Machine Account email onto `BF755F6F` once ready
-- [ ] **[Orbit 5, Movement 9/15 (`Sagittarius`)] `Brushstroke / Realidream / Skate` Interactive Multi-Panel Canvas & Re-Prepend `Pulp`** -- combine Canopy Watershed, Twilight Almanac, & `405` Council into one unified `Vantage` interactive studio deck
+- [ ] **[TOP -- Orbit 5, Movement 9/15 (`Sagittarius`)] `Brushstroke / Realidream / Skate` Interactive Multi-Panel Studio & Re-Prepend `Pulp`** -- combine Canopy Watershed, Twilight Almanac, & `405` Council into one unified `Vantage` deterministic triptych (`Proof #56`, Desk `#43`)
+- [ ] **[Orbit 5, Movement 10/15 (`Capricorn`)] Ring-0 `Blaze` + `Tally` Persistent NVMe Airlock WAL Proof** -- prove deterministic crash-recovery WAL replay in `tally-vn` mode (`Proof #57`)
 
 ## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Scorpio Movement 8/15 (`57.062`, `xy/gemini-4-neon`)** -- authored `modules/caravan/custody/scorpio_key_rotation.rye` (`grain-ww key-rotate`: atomic multi-epoch `Caravan` + `Puddle` ephemeral session key rotation with `secureZero` DRAM wipe, SHA3 tombstone chain, & 0 leftover spent bytes, Proof `#55`) + `gate-key-rotation.glow` (`42/42` live Glow desks GREEN!) (`20261119.155742`)
 - [x] **Orbit 5 Libra Movement 7/15 (`57.061`, `xy/gemini-4-neon`)** -- authored `nixos/README.md` (`0.0%` negation, repairing `MAP.md`'s missing link), linked root `LEXICON.md` from `foundations/README.md` & `gratitude/README.md` (`16/16` verified Myofascia hubs!), weighed exact Orbit 5 Even Scales census (`42` `murr_core` callers, `66` `lower_*` elders, `20` `active-development/` files), and shipped `modules/fusion/orbit5_libra_scales.rye` (`grain-ww libra-o5`, Proof `#54`) + `gate-libra-scales.glow` (`41/41` live Glow desks GREEN!) (`20261119.154705`)
 - [x] **Orbit 5 Virgo Movement 6/15 (`57.060`, `xy/gemini-4-neon`)** -- modernized `modules/README.md`, `libraries/README.md`, & `blazepod/README.md` (`0.0%` negation, clearing dead pre-reroot links), lifted verified Myofascia density to `13/13` `LEXICON.md` hubs, and shipped `modules/fusion/orbit5_virgo_efficiency.rye` (`grain-ww virgo-o5`, Proof `#53`) + `gate-virgo-efficiency.glow` (`40/40` live Glow Mill desks GREEN!) (`20261119.154211`)
 - [x] **Orbit 5 Leo Movement 5/15 (`57.059`, `xy/gemini-4-neon`)** -- authored `modules/resonance/resonance_wood_ledger.rye` (`grain-ww resonance-wood`: binds 48 kHz 4-track Resonance RIFF WAV SHA3-256 stem digest directly to conserved `1000`-permille `WOOD` collaborator patronage splits sealed with `Kumara` Ed25519, Proof `#52`) and `fold-resonance-wood.glow` (`39/39` live Glow desks GREEN!) (`20261119.153338`)

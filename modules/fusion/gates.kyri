@@ -199,3 +199,6 @@ max_cols 80 modules/fusion/orbit5_libra_scales.rye
 max_cols 80 modules/fusion/glow/gate-libra-scales.glow
 ascii_7bit nixos/README.md
 ascii_7bit active-development/date/20261119/20261119-154705-est_orbit5-libra-even-scales-census-and-16-hubs.md
+max_cols 80 modules/caravan/custody/scorpio_key_rotation.rye
+max_cols 80 modules/caravan/glow/gate-key-rotation.glow
+ascii_7bit active-development/date/20261119/20261119-155742-est_orbit5-scorpio-ephemeral-key-rotation-and-zeroize.md
