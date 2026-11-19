@@ -1,15 +1,15 @@
 # Checklist -- Prepended Quest 1 / Journey 1 Explicit-Bound Calfive Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.173935` (EST)
+**Stamp:** `20261119.174519` (EST)
 **TAME Stack Capacity:** `max_stack_items = 128` (`modules/flare/husk/husk_movement_stack.rye`)
 **Active Tier:** `Quest 1 SEALED (75/75)` -> `Quest 2 / Orbit 6 (mov = 76..150 / 375)`
 
 ---
 
-## Priority #0 -- Prepended Quest 2 Dawn (`Orbit 6, 1-Aries`, `mov = 76 / 375`)
+## Priority #0 -- Prepended Quest 2 Active Stack (`Orbit 6, 2-Taurus`, `mov = 77 / 375`)
 
-- [ ] **[TOP -- Quest 2, Orbit 6, 1/15 (`Aries`), `57.070`]** First Clay Wick (`Siraj`): Native `Vantage` Studio Deck Wiring -- bind `studio_triptych_canvas.rye`, `resonance_wood_ledger.rye`, & `twilight_nocturne_svg.rye` into one C-ABI studio dispatch table for `terrarium/app/vantage_mac_live.swift` & `carry-tablet/` (`Proof #63`, Crown **`50/50` Glow Desks!**)
-- [ ] **[Quest 2, Orbit 6, 2/15 (`Taurus`)]** `Vantage` Interactive `Husk` Checklist Editor & Live `WOOD` Split Preview
+- [x] **[Quest 2, Orbit 6, 1/15 (`Aries`), `57.070`]** First Clay Wick (`Siraj`): authored `modules/comlink/vantage/vantage_studio_deck.rye` (`grain-ww studio-deck`, Proof `#63`: C-ABI `StudioDeckPacket` uniting Studio Triptych, Resonance WAV+WOOD, Twilight SVG, & Husk stack) + `fold-studio-deck.glow` (**MILESTONE `50/50` live self-hosted Glow Mill desks GREEN!**) (`20261119.174519`)
+- [ ] **[TOP -- Quest 2, Orbit 6, 2/15 (`Taurus`), `57.071`]** `Vantage` Interactive `Husk` Checklist Editor & Live `WOOD` Split Preview (`Proof #64`, Desk `#51`)
 - [ ] **[Quest 3 (`mov = 151..225`)]** `Blazepod` Physical Silicon & `tally-vn` NVMe Airlock Bring-Up -- synced with [`20261105-085747_blazepod-rv64g-journey/`](../20261105-085747_blazepod-rv64g-journey/README.md)
 - [ ] **[Quest 4 (`mov = 226..300`)]** `405` Colloquium Live `Puddle` Roaming Testnet & `WOOD` Regional Weaves
 - [ ] **[Quest 5 (`mov = 301..375`)]** Civic Ecology, Civil Engineering, & Bipartisan Planning Parcel Release -- synced with [`20261119-115928-est_american-bipartisan-civic-planning/`](../20261119-115928-est_american-bipartisan-civic-planning/README.md)

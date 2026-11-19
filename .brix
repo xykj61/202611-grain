@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.173935
-myofascia 57.069
+version 20261119.174519
+myofascia 57.070
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -144,6 +144,8 @@ file modules/comlink/vantage/glow/fold-twilight-turn.glow
 file modules/comlink/vantage/glow/fold-vantage-snapshot.glow
 file modules/comlink/vantage/vantage_canvas_bridge.rye
 file modules/comlink/vantage/glow/fold-vantage-canvas.glow
+file modules/comlink/vantage/vantage_studio_deck.rye
+file modules/comlink/vantage/glow/fold-studio-deck.glow
 file modules/brushstroke/skate/canopy_watershed_canvas.rye
 file modules/brushstroke/glow/fold-canopy-canvas.glow
 file modules/brushstroke/skate/twilight_almanac_art.rye
