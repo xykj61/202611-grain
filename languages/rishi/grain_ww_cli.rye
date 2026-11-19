@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.154211";
-pub const myofascia_reading = "57.060";
+pub const grain_ww_version = "20261119.154705";
+pub const myofascia_reading = "57.061";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -567,6 +567,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/orbit5_virgo_efficiency",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "libra-o5")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/orbit5_libra_scales",
             null,
             args[2..],
         );

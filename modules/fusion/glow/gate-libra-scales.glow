@@ -1,0 +1,11 @@
+::  modules/fusion/glow/gate-libra-scales.glow -- Libra Even Scales!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-libra-balance
+  |=  [hub-count=@ud glow-desks=@ud proofs=@ud]         ::  16 hubs, 41, 54
+  ^-  @ud                                               ::  verified proofs
+  ~|  'libra-scales-below-16-hub-or-41-glow-floor'      ::  Even Scales bar
+  ?>  &(gte(hub-count 16) gte(glow-desks 41) gte(proofs 54))
+  proofs
+--
