@@ -9,7 +9,8 @@
 glyph families, `36/36` self-hosted `.glow` desks passing `Stage 1 == Stage 2`,
 `4/4` Ring-0 `.glow -> .rye -> native metal`, and `8` dual-silicon
 `RV64GC` + `AArch64` binary images verified on metal)
-**Home:** [`../../README.md`](../../README.md) | **Scoped Guide:**
+**Home:** [`../../README.md`](../../README.md) | **Lexicon:**
+[`../../LEXICON.md`](../../LEXICON.md) | **Scoped Guide:**
 [`../GEMINI.md`](../GEMINI.md) | **Rune Book:**
 [`../../docs-geode/api/glow-runes.md`](../../docs-geode/api/glow-runes.md) |
 **First Hour:**

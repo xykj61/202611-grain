@@ -180,3 +180,9 @@ max_cols 80 modules/market/glow/fold-wood-weave.glow
 ascii_7bit languages/rye/README.md
 ascii_7bit terrarium/README.md
 ascii_7bit active-development/date/20261119/20261119-150830-est_orbit5-gemini-dancing-friends-many-weaves-and-50-proofs.md
+ascii_7bit LEXICON.md
+ascii_7bit context/LEXICON.md
+ascii_7bit languages/rishi/README.md
+max_cols 80 modules/pond/pond_sanctuary_airlock.rye
+max_cols 80 modules/pond/glow/gate-pond-sanctuary.glow
+ascii_7bit active-development/date/20261119/20261119-152019-est_orbit5-cancer-lexicon-modernization-myofascia-and-pond-airlock.md

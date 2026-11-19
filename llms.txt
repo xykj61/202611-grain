@@ -1,9 +1,10 @@
 # Grain (grain-ww) -- LLM & Agent Entry Router
-# Stamp: 20261115.131000 -- pure 7-bit ASCII, single-stranded entry list
+# Stamp: 20261119.152019 -- pure 7-bit ASCII, single-stranded entry list
 # Priority head (read these first)
 
 GEMINI.md
 .gemini/rules/README.md
+LEXICON.md
 MAP.md
 construction/ITINERARY.md
 context/SPELLBOOK.md

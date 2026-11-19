@@ -6,7 +6,8 @@
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
 **Status:** Living (`Room: checkable` -- self-hosting on pinned Zig `0.17.0`)
-**Home:** [`../../README.md`](../../README.md) | **Scoped Guide:**
+**Home:** [`../../README.md`](../../README.md) | **Lexicon:**
+[`../../LEXICON.md`](../../LEXICON.md) | **Scoped Guide:**
 [`../GEMINI.md`](../GEMINI.md) | **First Hour:**
 [`../../docs-geode/tutorials/the-first-hour.md`](../../docs-geode/tutorials/the-first-hour.md)
 | **Source Setup:** [`../../SOURCE.md`](../../SOURCE.md)

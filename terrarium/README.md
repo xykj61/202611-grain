@@ -8,7 +8,8 @@
 **Status:** Living (`Room: checkable` -- bare-metal `RV32IM`/`RV64GC` QEMU
 harnesses, thin `Vantage` platform pipes, and post-Glow civic engineering &
 air-traffic proofs)
-**Home:** [`../README.md`](../README.md) | **Glow Compiler:**
+**Home:** [`../README.md`](../README.md) | **Lexicon:**
+[`../LEXICON.md`](../LEXICON.md) | **Glow Compiler:**
 [`../languages/glow/README.md`](../languages/glow/README.md) | **Hardware
 Board:** [`../blazepod/README.md`](../blazepod/README.md)
 

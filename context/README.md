@@ -25,7 +25,8 @@ Style** (`0.0%` prose negation, mechanically verified on metal by
 | **[`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md)** | Contemplative nocturne register | `9-Sagittarius <-> 12-Pisces` pendulum and 15 sky-fractal archetypes inspiring evening study and original art. |
 | **[`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md)** | Clean-room creative distillation | Rebuilding outside inspirations from first principles in Grain's own voice while honoring teachers in `gratitude/`. |
 
-Operational companions: [`MODEL_ROSTER.kyri`](MODEL_ROSTER.kyri),
+Operational companions: **[`../LEXICON.md`](../LEXICON.md)** (canonical living
+vocabulary), [`MODEL_ROSTER.kyri`](MODEL_ROSTER.kyri),
 [`REMOTE_ROSTER.md`](REMOTE_ROSTER.md), [`REDACT_TECHNIQUE.md`](REDACT_TECHNIQUE.md),
 and [`TWO_ROOMS.md`](TWO_ROOMS.md).
 

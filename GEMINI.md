@@ -1,6 +1,6 @@
 # Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Stamp:** `20261119.150830` (EST)
+**Stamp:** `20261119.152019` (EST)
 **Voice:** Kyri / Reya (Gauge, Radiant, Civic, Teacher / Karma, & Twilight)
 **Branch:** `xy/gemini-4-neon` (`publish-seed` -> `grain-ww/202611-grain`)
 
@@ -10,7 +10,7 @@
 
 Compress the system by making parts publicly similar -- **one value model**
 (Brix/Kyri/wire), **one pure fold** over signed facts (`Blaze`), **one UI**
-(`modules/comlink/vantage/`), and **one plain vocabulary** -- never through
+(`modules/comlink/vantage/`), and **one plain vocabulary** ([`LEXICON.md`](LEXICON.md)) -- never through
 hidden macros, private dialects, or duplicated platform logic.
 
 - **Scoped subdirectory guides** (loaded automatically when entering them):

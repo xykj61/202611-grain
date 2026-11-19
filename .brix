@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.150830
-myofascia 57.057
+version 20261119.152019
+myofascia 57.058
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -58,6 +58,7 @@ file tools/rishi/launch-choir-synthesis-chapter.rish
 
 # Five-language spine (languages/) & Gemini instruction spine
 file GEMINI.md
+file LEXICON.md
 file MAP.md
 file llms.txt
 file languages/GEMINI.md
@@ -145,6 +146,8 @@ file modules/aurora/glow/gate-riscv-hart-boot.glow
 file modules/pond/puddle/puddle_remote.rye
 file modules/pond/puddle/puddle_udp_live.rye
 file modules/pond/puddle/puddle_scp_cli.rye
+file modules/pond/pond_sanctuary_airlock.rye
+file modules/pond/glow/gate-pond-sanctuary.glow
 file modules/pond/puddle/puddle_cli_session.rye
 file modules/pond/glow/gate-puddle-roam.glow
 file modules/pond/glow/gate-puddle-exec.glow

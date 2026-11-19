@@ -20,7 +20,8 @@
 
 | Shelf / Guide | Reader | What You Gain |
 |---|---|---|
-| **[`tutorials/the-first-hour.md`](tutorials/the-first-hour.md)** | First-time visitor to senior engineer | Clone, verify `languages/rye` & `languages/rishi`, run live witnesses, and verify all 30 **Glow** runes |
+| **[`../LEXICON.md`](../LEXICON.md)** | Every visitor, learner, & agent | Canonical living vocabulary (`Modernization`, `Myofascia`, `Glasswall`, `WOOD`, `Palisade`) linking straight into every active room |
+| **[`tutorials/the-first-hour.md`](tutorials/the-first-hour.md)** | First-time visitor to senior engineer | Clone, verify `languages/rye` & `languages/rishi`, run live witnesses, and verify all 48 **Glow** runes |
 | **[`tutorials/the-second-hour-remotes-clock-and-cadence.md`](tutorials/the-second-hour-remotes-clock-and-cadence.md)** | Daily builder & team operator | Customize `bench_remote` (`xy`) & `seed_remote` (`ww`), toggle **`seed_cadence hearth \| siya \| stream`**, and set auto-DST `CLOCK_CONFIG.kyri` |
 | **[`tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md`](tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md)** | Power user, team lead, & civic steward | Master `grain-ww stamp` (auto-DST), `pulp` (`[15..9375]`), `tablecloth`, `gleaner`, `puddle` / `puddle-cp`, `vault-lease`, `shastra-wheel`, & `405` Council |
 | **[`lessons/`](lessons/README.md)** | Curious learner (8th grade to collegiate) | First-principles lessons + plain-named *Bloom* guides from silicon boot (`aurora`) to immediate-mode pixels (`brushstroke`) |

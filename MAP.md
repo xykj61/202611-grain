@@ -1,8 +1,8 @@
 # MAP -- Room-by-Room Guide to the Consolidated Grain Tree
 
 **Language:** EN
-**Stamp:** `20261115.131000` (EST)
-**Voice:** Kyri
+**Stamp:** `20261119.152019` (EST)
+**Voice:** Kyri / Reya
 **Style:** Gauge at Door, Radiant warmth
 **Status:** Living (`Room: checkable` -- reflects the `languages/` + `modules/`
 + `libraries/` + `docs-geode/` + `blazepod/` + `mitra-shed/` + `yonder/` tree)
@@ -14,6 +14,7 @@
 | Room | Purpose |
 |---|---|
 | **[`GEMINI.md`](GEMINI.md)** | Root workspace constitution + scoped `GEMINI.md` guides and the **Five Elemental Rule Cards** in [`.gemini/rules/`](.gemini/rules/README.md) |
+| **[`LEXICON.md`](LEXICON.md)** | Living vocabulary & Myofascia cross-links (`Modernization`, `Myofascia`, `Glasswall`, `Dancing Friends / Many Weaves`, `Palisade`, Native-5, & Civic terms) |
 | **[`languages/`](languages/README.md)** | The five languages of Grain: `glow/` (6-pass `Glow Mill` + self-host), `rye/`, `rishi/` (`grain-ww` CLI), `brix/`, and `kyri/` |
 | **[`modules/`](modules/README.md)** | System-critical TAME faculties (`aurora`, `tally`, `caravan`, `pond`, `crypto`, `kumara`, `comlink` + `vantage`, `amphora`, `blaze`, `harness`, `flare`, `brushstroke`, `resonance`, `market`, `sundial`, and `apps`), each co-locating pure `.glow` desks in `glow/` |
 | **[`libraries/`](libraries/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md)** | Four-year *Bloom & Shastra* spiral (`shastra/` -- *Tiruppavai*, *Rasamrita*, *Sikshastakam*, *Champu*), `risala/`, `classical-vedic-astrology/`, `cubist-bhakti-astrology/`, `books/`, and incubating citizen parcels |

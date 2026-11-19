@@ -41,12 +41,14 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.057** / 100.000 |
+| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.058** / 100.000 |
 | **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **48** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.150830** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.152019** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->
+
+**Front-Door Vocabulary & Room Map:** Open [`LEXICON.md`](LEXICON.md) for every living term (`Modernization`, `Myofascia`, `Glasswall`, `WOOD`, `Palisade`) and [`MAP.md`](MAP.md) for the room-by-room guide.
 
 ---
 

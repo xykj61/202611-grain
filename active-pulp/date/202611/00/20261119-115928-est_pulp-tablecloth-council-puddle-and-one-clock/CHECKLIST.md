@@ -1,14 +1,15 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.150830` (EST)
+**Stamp:** `20261119.152019` (EST)
 
-## Top of Prepend-to-Front Stack (Active Orbit 5 -- `4-Cancer -> 7-Libra`)
+## Top of Prepend-to-Front Stack (Active Orbit 5 -- `5-Leo -> 8-Scorpio`)
 
-- [ ] **[TOP -- Orbit 5, Movement 4/15 (`Cancer`)] Unwatched Sanctuary (`Pond` + `Glasswall` + Machine Account Verified Seed)** -- bind Keaton's new GitHub Machine Account email onto `BF755F6F` when ready & deepen `Pond` zero-egress airlock proof
-- [ ] **[Orbit 5, Movement 5/15 (`Leo`)] `Resonance` Multi-Track Mixer + `WOOD` Creative Patronage Ledger** -- connect `Resonance` DSP stem bounce directly into `WOOD` multi-weave receipts
+- [ ] **[TOP -- Orbit 5, Movement 5/15 (`Leo`)] `Resonance` Multi-Track Mixer + `WOOD` Creative Patronage Ledger** -- connect `Resonance` DSP stem bounce directly into `WOOD` multi-weave receipts (`Proof #52`)
+- [ ] **[Orbit 5, Movement 6/15 (`Virgo`)] Wire `grain-ww` Machine Account GPG Verified Badge & Orbit 5 Compass Film Study** -- bind Keaton's new GitHub Machine Account email onto `BF755F6F` once ready & audit Orbit 5 efficiency
 
 ## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Cancer Movement 4/15 (`57.058`, `xy/gemini-4-neon`)** -- elevated revived `0.0%`-negation `LEXICON.md` (seating **`Modernization`** & archiving `20261002` elder to `yonder/lexicon-20261002-elder.md` behind nib `4f96047b`), wired `10/10` cross-hub Myofascia links, modernized `languages/rishi/README.md`, and shipped `modules/pond/pond_sanctuary_airlock.rye` (`grain-ww pond-airlock`, Proof `#51`) + `gate-pond-sanctuary.glow` (`38/38` live Glow desks GREEN!) (`20261119.152019`)
 - [x] **Orbit 5 Gemini Movement 3/15 (`57.057`, `xy/gemini-4-neon`)** -- executed Gemini vocabulary breach (`two tongues -> dancing friends`, `one porch -> many weaves`) across all 5 living wheels & lessons, modernized `languages/rye/README.md` + authored `terrarium/README.md` (`0.0%` negation), and shipped Milestone Proof `#50` (`modules/market/wood_weave_bridge.rye`, `grain-ww wood-weave`) + `fold-wood-weave.glow` (`37/37` live Glow desks GREEN!) (`20261119.150830`)
 - [x] **Orbit 5 Taurus Movement 2/15 (`57.056`, `xy/gemini-4-neon`)** -- authored `modules/comlink/vantage/vantage_canvas_bridge.rye` (`grain-ww vantage-canvas`: C-ABI FFI bridge uniting Canopy Watershed Canvas & Twilight Almanac into Vantage Desktop/Carry, Proof `#49`) + `fold-vantage-canvas.glow` (`36/36` Glow desks GREEN!), modernized `languages/glow/README.md` (`0.0%` negation, `48/48` runes, Ring-0, `Pulp`, & `terrarium/`), and documented GitHub Machine Account GPG signing ToS guidance (`20261119.150122`)
 - [x] **Orbit 5 Aries Movement 1/15 (`57.055`, `xy/gemini-4-neon`)** -- authored `languages/glow/mill/ring0_dual_silicon.rye` (`grain-ww ring0-silicon`: lowers all 4 Ring-0 `.glow` kernels `Aurora / Tally / Caravan / Blaze` into `8` verified `RV64GC` + `AArch64` machine-code images with `Stage 1 == Stage 2` SHA3-256 parity, Proof `#48`) and `languages/glow/compiler/ring0_silicon.glow` (`35/35` live Glow Mill desks GREEN!) (`20261119.144935`)

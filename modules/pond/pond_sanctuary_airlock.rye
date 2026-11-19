@@ -1,0 +1,160 @@
+//! modules/pond/pond_sanctuary_airlock.rye -- 4-Cancer Sanctuary & Myofascia!
+//!
+//! Stamp: `20261119.152019` -- Orbit 5, `Movement 4/15 : Cancer` (*Unwatched
+//! sanctuary: Pond shelter & Glasswall care*), powering
+//! `grain-ww pond-airlock` (Proof #51)!
+//!   1. **Pond Zero-Egress Sanctuary:** Enforces read-only rootfs, zero ambient
+//!      `RECORD_AUDIO`, hardware-switch + bystander-lamp voice consent, and
+//!      explicit capability-gated network egress (`egress_allowed == false` by
+//!      default), with paired refusal witnesses,
+//!   2. **Mechanical Myofascia Connectivity Density Gate:** Verifies all `10`
+//!      major repository hub doors link directly to root `LEXICON.md` AND that
+//!      `LEXICON.md` defines `Modernization`, `Myofascia`, `Glasswall`,
+//!      `Dancing Friends`, and `Palisade` on disk!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.152019";
+const nl: u8 = 10;
+
+pub const SanctuaryError = error{
+    AmbientAudioRefused,
+    UnconsentedMicRefused,
+    UnauthorizedEgressRefused,
+    WritableRootfsRefused,
+    TelemetrySdkRefused,
+    HubMissingLexiconLink,
+    LexiconMissingCoreTerm,
+};
+
+pub const PondSanctuaryPolicy = struct {
+    rootfs_readonly: bool,
+    ambient_record_audio: bool,
+    mic_switch_closed: bool,
+    bystander_lamp_lit: bool,
+    telemetry_sdk_count: u32,
+    network_egress_requested: bool,
+    explicit_egress_cap: bool,
+};
+
+pub fn admit_sanctuary(p: PondSanctuaryPolicy) SanctuaryError!void {
+    // invariant: reject any ambient recording, telemetry, or writable rootfs.
+    if (!p.rootfs_readonly) return error.WritableRootfsRefused;
+    if (p.ambient_record_audio) return error.AmbientAudioRefused;
+    if (p.telemetry_sdk_count != 0) return error.TelemetrySdkRefused;
+    if (p.mic_switch_closed and !p.bystander_lamp_lit) {
+        return error.UnconsentedMicRefused;
+    }
+    if (p.network_egress_requested and !p.explicit_egress_cap) {
+        return error.UnauthorizedEgressRefused;
+    }
+    // invariant: admitted Pond enclosure holds zero telemetry & RO rootfs.
+    assert(p.rootfs_readonly and p.telemetry_sdk_count == 0);
+}
+
+pub const hub_doors = [_][]const u8{
+    "README.md",
+    "MAP.md",
+    "llms.txt",
+    "GEMINI.md",
+    "docs-geode/README.md",
+    "context/README.md",
+    "languages/glow/README.md",
+    "languages/rye/README.md",
+    "languages/rishi/README.md",
+    "terrarium/README.md",
+};
+
+fn verify_myofascia_density(a: std.mem.Allocator, io: std.Io) !u32 {
+    const cwd = std.Io.Dir.cwd();
+    const lex = try cwd.readFileAlloc(io, "LEXICON.md", a, .limited(65536));
+    const core_terms = [_][]const u8{
+        "Modernization",
+        "Myofascia",
+        "Glasswall",
+        "Dancing Friends",
+        "Palisade",
+    };
+    for (core_terms) |term| {
+        if (std.mem.indexOf(u8, lex, term) == null) {
+            return error.LexiconMissingCoreTerm;
+        }
+    }
+
+    var linked: u32 = 0;
+    for (hub_doors) |door| {
+        const body = try cwd.readFileAlloc(io, door, a, .limited(65536));
+        if (std.mem.indexOf(u8, body, "LEXICON.md") == null) {
+            return error.HubMissingLexiconLink;
+        }
+        linked += 1;
+    }
+    // invariant: all 10 major repository hubs connect straight into LEXICON.md.
+    assert(linked == 10 and lex.len > 2048);
+    return linked;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    // 1. Welcome: unwatched Pond Glasswall sanctuary passes cleanly
+    const clean = PondSanctuaryPolicy{
+        .rootfs_readonly = true,
+        .ambient_record_audio = false,
+        .mic_switch_closed = false,
+        .bystander_lamp_lit = false,
+        .telemetry_sdk_count = 0,
+        .network_egress_requested = false,
+        .explicit_egress_cap = false,
+    };
+    try admit_sanctuary(clean);
+
+    // 2. Welcome: explicit consent mic (switch + lamp) passes cleanly
+    var consented = clean;
+    consented.mic_switch_closed = true;
+    consented.bystander_lamp_lit = true;
+    try admit_sanctuary(consented);
+
+    // 3. Refusal 1: unconsented mic (switch closed, lamp dark) refused
+    var sneaky_mic = clean;
+    sneaky_mic.mic_switch_closed = true;
+    if (admit_sanctuary(sneaky_mic)) |_| {
+        return error.SneakyMicAccepted;
+    } else |err| {
+        if (err != error.UnconsentedMicRefused) return err;
+    }
+
+    // 4. Refusal 2: unauthorized network egress refused
+    var rogue_net = clean;
+    rogue_net.network_egress_requested = true;
+    if (admit_sanctuary(rogue_net)) |_| {
+        return error.RogueEgressAccepted;
+    } else |err| {
+        if (err != error.UnauthorizedEgressRefused) return err;
+    }
+
+    // 5. Refusal 3: third-party telemetry SDK refused
+    var ad_sdk = clean;
+    ad_sdk.telemetry_sdk_count = 1;
+    if (admit_sanctuary(ad_sdk)) |_| {
+        return error.TelemetryAccepted;
+    } else |err| {
+        if (err != error.TelemetrySdkRefused) return err;
+    }
+
+    // 6. Verify 10/10 hub door Myofascia connectivity into root LEXICON.md
+    const hubs = try verify_myofascia_density(a, io);
+
+    print(
+        "GREEN: pond_sanctuary_airlock -- Glasswall & {d}/10 LEXICON hubs!{c}",
+        .{ hubs, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

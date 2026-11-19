@@ -1,5 +1,9 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261119.152019-est` -- Orbit 5 `4-Cancer` (`Myofascia 57.058`): Revived Root `LEXICON.md` (`Modernization`), `10/10` Hub Myofascia Density, & `Pond` Sanctuary Airlock.**
+- **Walk-back nib:** `4f96047b` (`xy/gemini-4-neon` immediately prior to elevating `LEXICON.md` to repo root and archiving the `20261002` elder `context/LEXICON.md` to `yonder/lexicon-20261002-elder.md`).
+- **Molted & Seated:** Root `LEXICON.md` (`0.0%` negation, seating `Modernization` and all living Native-5, Ring-0, Civic, and Voice terms), single-stranded redirect at `context/LEXICON.md`, modernized `languages/rishi/README.md`, `10/10` cross-hub `LEXICON.md` links verified on metal by `modules/pond/pond_sanctuary_airlock.rye` (`grain-ww pond-airlock`, Proof `#51`), and `modules/pond/glow/gate-pond-sanctuary.glow` (Desk `#38`).
+
 **Checkpoint `20261119.140021-est` -- Calfive Orbit 4 Seal (`Movement 15/15 : Siya`, `mov=60`, `Myofascia 57.054`): single-commit `"palisade"` public seed signed by `grain-ww`.**
 - **Walk-back nib:** `9215117d` (`xy/gemini-4-neon` entering `15-Siya`) and `dbc80084` (pre-`tools/` semantic reorg).
 - **Orbit 4 Harvest:** Complete `48/48` live Glow runes + `4/4` Ring-0 `.glow -> .rye -> native metal` kernels (`Aurora`, `Tally`, `Caravan`, `Blaze`), `34/34` live self-hosted Glow Mill `.glow` desks, `16` plain-named semantic `tools/` rooms, `0.0%`-negation Gauge+Radiant canons + `radiant-check`, strict `+0.001`/movement `libra_preflight`, USA `civic-ecology` & `civil-engineering`, `Brushstroke / Skate` Canopy Watershed Canvas & Twilight Almanac, post-Glow `Terrarium` 5-min RVSM horizon, and `47/47` metal proofs GREEN -- projected cleanly into the single parentless orphan commit **`palisade`** (`parents=0`, `sig=G` via dedicated `grain-ww` Ed25519 key `BF755F6F966AA50CD41A8457232779DABAB6298A`) on `grain-ww/202611-grain`.
