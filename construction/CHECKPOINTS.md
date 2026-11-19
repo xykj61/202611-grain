@@ -1,5 +1,9 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261119.180005-est` -- Gemini (`Myofascia 57.072`): Revived `context/SPELLBOOK.md` (`Synonym`), Deterministic Cached Grain Harness, & `18/18` Hubs.**
+- **Walk-back nib:** `4532df51` (`xy/gemini-4-neon` immediately prior to archiving the `20260810` `context/SPELLBOOK.md` elder to `yonder/spellbook-20260810-elder.md`).
+- **Seated:** `modules/harness/grain_cached_harness.rye` (`grain-ww harness-cache`) + `fold-harness-cache.glow`, revived `0.0%`-negation `context/SPELLBOOK.md` & expanded `Synonym` in root `LEXICON.md` (`18/18` verified hubs!), and prepended our complete `Terrarium` / `Vantage Station` / `Cached Harness` consolidation plan through Fixed-Sky (`14/15`).
+
 **Checkpoint `20261119.175014-est` -- Taurus (`Myofascia 57.071`): Plain-Name Rename of 4 Serial Filenames & Hard No-Serial Ratchet.**
 - **Walk-back nib:** `e2b9546d` (`xy/gemini-4-neon` immediately prior to renaming `orbit5_virgo_efficiency.rye`, `orbit5_libra_scales.rye`, `quest1_harvest_seal.rye`, and `fold-quest1-seal.glow` onto plain descriptive names).
 - **Tightened & Ratcheted:** Tightened `.gemini/rules/air-stamp-and-naming.md` and `GEMINI.md`, seated `modules/fusion/stamp_no_serial_ratchet.rye` (`grain-ww stamp-ratchet`) plus full-tree `find` enforcement inside `tools/sundial/calfive_and_stamp_name_witness.rish`, and shipped `modules/comlink/vantage/vantage_husk_editor.rye` (`grain-ww husk-editor`) + `fold-husk-editor.glow`.

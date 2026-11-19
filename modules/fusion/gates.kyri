@@ -233,3 +233,7 @@ max_cols 80 modules/fusion/stamp_no_serial_ratchet.rye
 max_cols 80 modules/comlink/vantage/vantage_husk_editor.rye
 max_cols 80 modules/comlink/vantage/glow/fold-husk-editor.glow
 ascii_7bit active-development/date/20261119/20261119-175014-est_taurus-stamp-no-serial-ratchet-and-vantage-husk-editor.md
+max_cols 80 modules/harness/grain_cached_harness.rye
+max_cols 80 modules/harness/glow/fold-harness-cache.glow
+ascii_7bit context/SPELLBOOK.md
+ascii_7bit active-development/date/20261119/20261119-180005-est_gemini-cached-harness-synonym-spellbook-and-terrarium-plan.md

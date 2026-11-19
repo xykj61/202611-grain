@@ -1,560 +1,91 @@
-# The Spellbook -- Grain's Operator Words
-
-**Where this sits:** home is [`../README.md`](../README.md) - a first hour in your hands is
-[`../docs-geode/tutorials/the-first-hour.md`](../docs-geode/tutorials/the-first-hour.md) - the whole
-path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
-
-> **Mirrored at `spellbook/README.md`**, declared in [`../context/document-mirrors.brix`](../context/document-mirrors.brix) and proven byte-identical. Every link here is written `../<room>/<file>` so it resolves from both homes (REDS %176).
+# The Spellbook -- Grain's Living Operator Words & `Synonym` Foundation
 
 **Language:** EN
-**Seated:** `20260810.145033` on Keaton's word - **Style:** Gauge (see `../context/GAUGE_STYLE.md`)
-**Purpose:** Gather the one-word gestures that steer this workspace, so a hand on any client -- phone, terminal, fresh agent -- can read the whole vocabulary in one place.
-**Room:** checkable -- every spell names the rule file that carries it
+**Stamp:** `20261119.180005` (EST)
+**Voice:** Reya / Kyri (`Synonym` twin voices sharing one companion base)
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Status:** Living (`Room: checkable` -- revived & modernized from the
+`20260810` elder preserved whole in
+[`../yonder/spellbook-20260810-elder.md`](../yonder/spellbook-20260810-elder.md)
+behind walk-back nib `4532df51`)
+**Front Doors:** [`../README.md`](../README.md) |
+[`../LEXICON.md`](../LEXICON.md) | [`../MAP.md`](../MAP.md) |
+[`../GEMINI.md`](../GEMINI.md) | [`../docs-geode/README.md`](../docs-geode/README.md)
 
 ---
 
-## What a spell is
-
-A spell is a single word that names a whole, repeatable gesture. Where ordinary prose would spend a paragraph, a spell spends a syllable -- and every spell here already has a home rule that governs it exactly. This page is the index; the rule is the law. Where a spell links `[[nothing]]` yet, it is emerging and earns its own rule when the chapter wants it.
-
-## The command words -- verbs that act
-
-| Spell | What it does | Home |
-|---|---|---|
-| **send** | commit (signed, CONTRIBUTING style), push `origin` + `xykj61`, merge to `main` | `.claude/rules/send-word.md` |
-| **reroot** | preserve the current signed lineage in an immutable `YYYYMMDD-grain` archive remote, then plant a fresh `YYYYMM-grain` trunk carrying every living room forward | `context/LEXICON.md` - `publish-redirect.rish` |
-| **evergrow** | check that a newer chronological parcel keeps every prior export and adds zero capability or memory demands (*offer more, require less*) | `modules/comlink/parcel/parcel_core.rye` |
-| **pond** | run a CLI agent (`gemini`) or tool inside Grain's inspectable Seatbelt/bubblewrap capability fence (`modules/pond/bin/pond_cli --gemini -- gemini`) | `modules/pond/pond_cli.rye` |
-| **kg** | keep going -- the next mechanical lap (not a send by itself) | `.claude/rules/collaboration.md` |
-| **seat** | make a proposal live -- write it as the standing thing, on Keaton's word | `.claude/rules/cell.md` |
-| **cast** | assign a point its attributes -- a galaxy's element and mode, a chart's longitudes | astrology cast - council topology |
-| **remember** | reprint the living operator card for the next hand | `.claude/rules/remember.md` |
-| **align** | reconcile the plan with what is actually true, then fix the plan | `.claude/rules/align.md` |
-| **molt** | prep a dated writing's fossil onto the shred list -- opens no cut | `.claude/rules/molt.md` |
-| **shred** / **shed** | the authorized cut of a fossil that has a living mutant | `.claude/rules/molt.md` - SHRED_PREP |
-| **add to molt queue** | note a document into `construction/SHRED_PREP.md` with its measurement -- prep only, the file itself untouched | `context/CHEMICAL_FORMULAS.md` |
-| **mitra shed prep** | a fossil seen off like a friend -- mutant seated, living citers repointed, banner on its face, row written -- and the cut still RED | `construction/SHRED_PREP.md` Class M |
-| **rota prep** | walk all five rota rows over one named cluster, consolidate what repeats, molt and declare the breach, mitra-shed-prep the old, and leave the cut RED | this page, the section of that name |
-| **round load** | print this orbit's round, its sign and goal, the fascia face, and one sundial line | this page, the section of that name |
-| **same brain** | Use the same brain you used to crack those puny human math problems | this page, the section of that name |
-| **debride** | the sanctioned break of accrete-never-break -- remove named dead history | `.claude/rules/debride.md` |
-| **checkpoint** | mark the way back before a debride rewrites a living card | `.claude/rules/checkpoint.md` |
-| **baton** | write a handoff to disk so the vision survives a context reset | handoff batons in `expanding-prompts/` |
-| **recur** | pass the baton onward -- cite the parent whole, fold in only the delta | this page - the baton chain |
-| **prin** | print the live loop view -- scope, nib, sundial, matrix frame | `context/LEXICON.md` - `tools/p/prin.rish` |
-| **tend** | a light keeping round -- freshen, ratchet-on-touch, add no new weight | tend rounds |
-| **survey** | the looking pass that names sites and gaps before the first GREEN | `.claude/rules/vocabulary-survey.md` |
-| **expand** | grow an intent into a runnable plan in `expanding-prompts/` | `expanding-prompts/` |
-| **fleet interactive** | begin a ship's conversation; the words are `fleet interactive <ship> <door>` | this page |
-| **fleet loop** | start a ship's unattended loop; the words are `fleet loop <ship> <door>` | this page |
-| **fleet watch** | re-arm stopped loops; the words are `fleet watch pier <door>` | this page |
-| **incense interactive** | the same pastes as `fleet interactive incense` | this page |
-## rota prep
-
-The words are `rota prep`, then the cluster in one sentence. The five rows are read in order. Each one is a question, and the lap answers it before any file moves. The cut stays RED.
-
-| Row | Page | The question |
-|---|---|---|
-| Aether hears | [`../foundations/20260826-021731_aether-the-row-that-hears.md`](../foundations/20260826-021731_aether-the-row-that-hears.md) | Why does the work exist? |
-| Air feels | [`../foundations/20260826-021732_air-the-row-that-feels.md`](../foundations/20260826-021732_air-the-row-that-feels.md) | Where does each thing end? |
-| Fire sees | [`../foundations/20260826-021733_fire-the-row-that-sees.md`](../foundations/20260826-021733_fire-the-row-that-sees.md) | What must stop, and what must be cut? |
-| Water tastes | [`../foundations/20260826-021734_water-the-row-that-tastes.md`](../foundations/20260826-021734_water-the-row-that-tastes.md) | Is the work cared for, the way a stream wears one channel? |
-| Earth breathes in | [`../foundations/20260826-021735_earth-the-row-that-breathes-in.md`](../foundations/20260826-021735_earth-the-row-that-breathes-in.md) | What already stands true? |
-
-Then the gestures, still prep. Improve means one sentence said once. Consolidate means a page that repeats that sentence keeps its own job and points. Molt seats a mutant only when none stands. Breach is declared in the row and the session log, and the repoint waits. Mitra shed prep writes the row on [`../construction/SHRED_PREP.md`](../construction/SHRED_PREP.md). A shred, a debride, and a second copy of a page that already has a banner stay outside this spell.
-
-## round load
-
-The words are `round load`. Read `git rev-list --count HEAD`. The orbit round is `(count - 1) % 15 + 1`. Print that round, the sign, the goal, the fascia face, and one sundial line.
-
-The fascia face is `fascia_face` from [`../tools/gen/chapter/fascia_metric.rish`](../tools/gen/chapter/fascia_metric.rish): a u32 count of ten-thousandths of a point, ceiling 1000000, printed to four decimal places. The last witnessed face is 61.3000, measured `20261009.100321`. The root README badge still prints the whole number 58. A round that runs the witness may move the face by at most 1.0000. A round that leaves the witness unrun leaves the face where it stands.
-
-One sundial line is a sentence already on [`../sundial/README.md`](../sundial/README.md). The health face stays that page. This spell builds no second printer.
-
-The five-row council rota stays the lap's deep read. This table is the orbit round. Seat 15 keeps the name Siya. Seats 1 through 14 keep their fund names unchosen. The spell rewrites no rota page.
-
-| Round | Sign | Mode | Element | Goal | The round's verb |
-|---|---|---|---|---|---|
-| 1 | Aries | cardinal | fire | talent | Ignite the seed: ship the smallest real file that runs on metal today (*Gall's Law*). |
-| 2 | Taurus | fixed | earth | law | Tend fertile ground: guard **Tally** bounds and keep what already nourishes (*Moon exalted in Taurus*). |
-| 3 | Gemini | dual | air | fun | Speak simply between twins: pair pure citizen **Glow** with metal **Rye** in one clear sentence. |
-| 4 | Cancer | cardinal | water | aesthetics | Make the home safe: **Pond** shelter, **Glasswall**, and a warm first-hour welcome (*Moon's care*). |
-| 5 | Leo | fixed | fire | talent | Stand in daylight: **Dimeroll** books balance to zero in plain sight and **Seva** shines without rent. |
-| 6 | Virgo | dual | earth | law | Measure and prune with care: 80-col, 7-bit ASCII, **stamp-and-name**, and **TAME** two-assertion gates. |
-| 7 | Libra | cardinal | air | fun | Meet in balance: welcome path and refusal path answer each other equally; **Evergrow** keeps every promise. |
-| 8 | Scorpio | fixed | water | aesthetics | Anuradha's covenant: **Mitra** loyalty for friends' code and clean cryptographic zeroization for secrets. |
-| 9 | Sagittarius | dual | fire | talent | Aim toward long wisdom: connect proven code to living **Bloom** and **Shastra** lessons (*Tattva* & *Rasa*). |
-| 10 | Capricorn | cardinal | earth | law | Stone and right-to-repair: bare-metal RISC-V harts, replaceable screws, and ten-year **Blazepod** endurance. |
-| 11 | Aquarius | fixed | air | fun | Commons and constellation: peer-to-peer **Comlink** and **Colloquium** serving neighbors without a gatekeeper. |
-| 12 | Pisces | dual | water | aesthetics | Twilight close and offering: clear residue, run one clean `publish-seed`, and close with gratitude (*Aparigraha*). |
-| 13 | sky | cardinal | aether | heart | Aether hears: step back from the code to ask *why does this exist, and whom does it serve?* |
-| 14 | sky | fixed | aether | heart | Hold the whole cup: compress two apparent opposites into one single-stranded macro (*Sameness Is the Macro*). |
-| 15 | sky | dual | aether | heart | Siya's chair -- circulation and return. Her name stays. Carry the harvest whole across the torus into the next Dawn. |
-
-The plan that seated this table is [`../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md`](../expanding-prompts/20261007-165138_the-fifteen-and-the-five-goals.md).
-
-**Taurus, Libra, and Cancer carry their ruling planet's own weather, read from our own silo
-rather than invented fresh.** Venus is "the soft power of the sky -- the principle of love,
-harmony, valuing, and the sweet pull that draws two things toward each other," cool and
-receptive, flourishing "where there is grace, ease, and mutual delight"
-([`../classical-vedic-astrology/studies/planets-in-signs/20260705-172312_venus-in-aries.md`](../classical-vedic-astrology/studies/planets-in-signs/20260705-172312_venus-in-aries.md)).
-The Moon, exalted in Taurus's own ground, is studied as "our inner weather, our sense of being
-held, our capacity to give care and to receive it," a mind that "feels loved, stable, secure,
-and at home"
-([`../classical-vedic-astrology/studies/planets-in-signs/moon-in-taurus-exalted.md`](../classical-vedic-astrology/studies/planets-in-signs/moon-in-taurus-exalted.md)).
-Taurus and Libra's verbs below carry Venus's balance and steadiness; Cancer's carries the
-Moon's own gentleness. The round's operational job -- what actually must be done -- is
-unchanged; only the register warmed.
-
-**A round that writes `round load`'s own numbers down may run the check beside it.** A planning
-page in `expanding-prompts/` often states both a commit count and the orbit round it claims for
-that count, by hand, and a hand that mistypes the count or the round leaves a conflict no reader
-catches without re-deriving fifteen numbers. `sh tools/fixtures/c/calfive_schedule_scan.sh`
-recomputes the round from the stated count on every such page and from the round-load table
-above, and names every disagreement by path. Rostered as the `calfive_schedule` guard in
-[`../fleet/standing-equipment.kyri`](../fleet/standing-equipment.kyri), `tier lap`,
-seated `20261009.114234`; proven on metal both ways, the live tree clean and a planted conflict
-caught, by `rishi/bin/rishi run tools/ca/calfive_schedule_witness.rish`.
-
-## same brain
-
-The words are `same brain`.
-
-Use the same brain you used to crack those puny human math problems.
-
-The count stays exact. The bound stays exact. The question takes the size of the falsifier, the whole run, the whole region. A one-page tidy is the wrong size once the measurement already names a wider shape.
-
-## fleet
-
-A fleet spell is four words: `fleet`, the gesture, the ship, and the door. The gesture is `interactive`, `loop`, or `watch`. The ship is a live seat. The door is `cursor`, `claude`, `codex`, `antigravity`, `gemini`, or `opencode`. `incense interactive <door>` names the same paste as `fleet interactive incense <door>`.
-
-Run an interactive line in that ship's checkout, inside its tmux window. `FLEET_BARE=1` is the pier. `FLEET_CAPTAIN=1` belongs to incense. The captain's gates stay manual: keys, funds, provisioning, identity, and the public seed.
-
-The one-lap prints stay in their own scripts: [`../tools/l/launch-cursor-incense.sh`](../tools/l/launch-cursor-incense.sh), [`../tools/f/fleet-loop.sh`](../tools/f/fleet-loop.sh), [`../tools/f/fleet-loop-codex.sh`](../tools/f/fleet-loop-codex.sh), and [`../tools/f/fleet-loop-opencode.sh`](../tools/f/fleet-loop-opencode.sh).
-
-| Ship | Checkout | Seat prompt |
-|---|---|---|
-| incense | `~/grain-incense` | `tools/i/incense_seat_prompt.txt` |
-| pheromone | `~/grain-pheromone` | `tools/p/pheromone_seat_prompt.txt` |
-| petrichor | `~/grain-petrichor` | `tools/p/petrichor_seat_prompt.txt` |
-| bakery | `~/grain-bakery` | `tools/b/bakery_seat_prompt.txt` |
-| diffuser | `~/grain-diffuser` | `tools/d/diffuser_seat_prompt.txt` |
-| grass | `~/grain-grass` | `tools/g/grass_seat_prompt.txt` |
-| copal | `~/grain-copal` | `tools/c/copal_seat_prompt.txt` |
-| patchouli | `~/grain-patchouli` | `tools/p/patchouli_seat_prompt.txt` |
-
-Silence, hush, and dream stay parked. Their seat prompts remain in the tree. A later word can seat their pastes.
-
-## fleet interactive
-
-Each heading is the spell. The line under it is the paste.
-
-Cursor reads `--yolo` and `--model`. The shell also sets `CURSOR_FORCE=1`, which the print launcher turns into `--force`. Home: [`../frontier/cursor-cli/INCENSE-FLEET.md`](../frontier/cursor-cli/INCENSE-FLEET.md).
-
-Claude Code treats a prompt as an interactive session. It reads `--dangerously-skip-permissions`. `--print` is its one-lap door. The paste names `claude-sonnet-5` at `--effort medium`, the resolved model on the live seats. [`.claude/settings.json`](../.claude/settings.json) still declares `claude-sonnet-5` as the fleet default a clone's local settings can outrank.
-
-Codex forwards these flags to the interactive CLI. `codex exec` is its one-lap door. The model is the default in [`../tools/f/fleet-loop-codex.sh`](../tools/f/fleet-loop-codex.sh).
-
-Antigravity's command is `agy`. It reads `--dangerously-skip-permissions` and `--prompt-interactive`. The paste leaves the model to the signed-in account. Home: [`../frontier/ANTIGRAVITY.md`](../frontier/ANTIGRAVITY.md).
-
-Gemini CLI's command is `gemini`. It reads `-y` (`--yolo`), `-m gemini-4-carbon`, and `-i` (`--prompt-interactive`). [`.gemini/settings.json`](../.gemini/settings.json), [`../.brix`](../.brix), and [`../context/MODEL_ROSTER.kyri`](../context/MODEL_ROSTER.kyri) declare `gemini-4-carbon` as the Gemini-class default for model usage and `xy/gemini-4-carbon` branch pushing; [`../GEMINI.md`](../GEMINI.md) loads automatically. Home: [`../frontier/GEMINI.md`](../frontier/GEMINI.md).
-
-OpenCode on Together is the interactive open door. The model is the one proven in [`../open/HARNESS_SETUP.md`](../open/HARNESS_SETUP.md) and named in [`../tools/f/fleet-loop-opencode.sh`](../tools/f/fleet-loop-opencode.sh). `opencode run --interactive` keeps the session open after the first message. OpenRouter and Hugging Face remain the request APIs in [`../open/PROVIDER_SETUP.md`](../open/PROVIDER_SETUP.md). This pier's OpenCode config seats Together only, so those two wait for their own model line before they earn a paste.
-
-### fleet interactive carbon gemini
-
-```sh
-gemini -y -m gemini-4-carbon -i "Read GEMINI.md and construction/ITINERARY.md whole before acting. You are on the 202611-grain-gemini-4-carbon bench pushing to xy/gemini-4-carbon. Begin an interactive session."
-```
-
-### fleet interactive incense cursor
-
-```sh
-FLEET_BARE=1 FLEET_CAPTAIN=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive incense claude
-
-```sh
-FLEET_BARE=1 FLEET_CAPTAIN=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive incense codex
-
-```sh
-FLEET_BARE=1 FLEET_CAPTAIN=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive incense antigravity
-
-```sh
-FLEET_BARE=1 FLEET_CAPTAIN=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive incense gemini
-
-```sh
-FLEET_BARE=1 FLEET_CAPTAIN=1 gemini -y -m gemini-4-carbon -i "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in Gemini CLI. Begin an interactive session."
-```
-
-### fleet interactive incense opencode
-
-```sh
-FLEET_BARE=1 FLEET_CAPTAIN=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/i/incense_seat_prompt.txt whole before acting. You are Incense with FLEET_CAPTAIN=1, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive pheromone cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/p/pheromone_seat_prompt.txt whole before acting. You are Pheromone, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive pheromone claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/p/pheromone_seat_prompt.txt whole before acting. You are Pheromone, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive pheromone codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/p/pheromone_seat_prompt.txt whole before acting. You are Pheromone, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive pheromone antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/p/pheromone_seat_prompt.txt whole before acting. You are Pheromone, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive pheromone opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/p/pheromone_seat_prompt.txt whole before acting. You are Pheromone, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive petrichor cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/p/petrichor_seat_prompt.txt whole before acting. You are Petrichor, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive petrichor claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/p/petrichor_seat_prompt.txt whole before acting. You are Petrichor, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive petrichor codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/p/petrichor_seat_prompt.txt whole before acting. You are Petrichor, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive petrichor antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/p/petrichor_seat_prompt.txt whole before acting. You are Petrichor, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive petrichor opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/p/petrichor_seat_prompt.txt whole before acting. You are Petrichor, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive bakery cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/b/bakery_seat_prompt.txt whole before acting. You are Bakery, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive bakery claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/b/bakery_seat_prompt.txt whole before acting. You are Bakery, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive bakery codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-astra --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/b/bakery_seat_prompt.txt whole before acting. You are Bakery, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive bakery antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/b/bakery_seat_prompt.txt whole before acting. You are Bakery, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive bakery opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/b/bakery_seat_prompt.txt whole before acting. You are Bakery, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive diffuser cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/d/diffuser_seat_prompt.txt whole before acting. You are Diffuser, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive diffuser claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/d/diffuser_seat_prompt.txt whole before acting. You are Diffuser, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive diffuser codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/d/diffuser_seat_prompt.txt whole before acting. You are Diffuser, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive diffuser antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/d/diffuser_seat_prompt.txt whole before acting. You are Diffuser, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive diffuser opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/d/diffuser_seat_prompt.txt whole before acting. You are Diffuser, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive grass cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/g/grass_seat_prompt.txt whole before acting. You are Grass, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive grass claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/g/grass_seat_prompt.txt whole before acting. You are Grass, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive grass codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/g/grass_seat_prompt.txt whole before acting. You are Grass, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive grass antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/g/grass_seat_prompt.txt whole before acting. You are Grass, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive grass opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/g/grass_seat_prompt.txt whole before acting. You are Grass, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive copal cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/c/copal_seat_prompt.txt whole before acting. You are Copal, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive copal claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/c/copal_seat_prompt.txt whole before acting. You are Copal, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive copal codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/c/copal_seat_prompt.txt whole before acting. You are Copal, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive copal antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/c/copal_seat_prompt.txt whole before acting. You are Copal, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive copal opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/c/copal_seat_prompt.txt whole before acting. You are Copal, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-### fleet interactive patchouli cursor
-
-```sh
-FLEET_BARE=1 CURSOR_FORCE=1 cursor-agent --yolo --model grok-4.7-high "Read tools/f/fleet_baton.txt and tools/p/patchouli_seat_prompt.txt whole before acting. You are Patchouli, running bare on the pier. Begin an interactive session."
-```
-
-### fleet interactive patchouli claude
-
-```sh
-FLEET_BARE=1 claude --dangerously-skip-permissions --model claude-sonnet-5 --effort medium "Read tools/f/fleet_baton.txt and tools/p/patchouli_seat_prompt.txt whole before acting. You are Patchouli, running bare on the pier in Claude Code. Begin an interactive session."
-```
-
-### fleet interactive patchouli codex
-
-```sh
-FLEET_BARE=1 codex -m gpt-6-sol --sandbox danger-full-access --dangerously-bypass-approvals-and-sandbox --dangerously-bypass-hook-trust "Read tools/f/fleet_baton.txt and tools/p/patchouli_seat_prompt.txt whole before acting. You are Patchouli, running bare on the pier in Codex. Begin an interactive session."
-```
-
-### fleet interactive patchouli antigravity
-
-```sh
-FLEET_BARE=1 agy --dangerously-skip-permissions --prompt-interactive "Read tools/f/fleet_baton.txt and tools/p/patchouli_seat_prompt.txt whole before acting. You are Patchouli, running bare on the pier in Antigravity. Begin an interactive session."
-```
-
-### fleet interactive patchouli opencode
-
-```sh
-FLEET_BARE=1 opencode run --interactive --dangerously-skip-permissions -m together/deepseek-ai/DeepSeek-V4-Pro-0813 "Read tools/f/fleet_baton.txt and tools/p/patchouli_seat_prompt.txt whole before acting. You are Patchouli, running bare on the pier in OpenCode. Begin an interactive session."
-```
-
-## fleet loop
-
-The loop doors are `claude`, `codex`, and `opencode`. Cursor and Antigravity stay conversation doors above. A `LOOP_LAPS=1` line is one lap. The claude paste sets `FLEET_BARE=1` so this pier stays outside the enclosure. Codex and OpenCode are bare in their own scripts. The roster seats incense on claude and the other seven live ships on codex; these pastes are the commands, and the roster remains the seating.
-
-### fleet loop claude
-
-```sh
-# fleet loop incense claude
-cd ~/grain-incense && FLEET_BARE=1 sh tools/f/fleet-loop.sh incense
-# fleet loop incense claude -- one lap
-cd ~/grain-incense && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh incense
-# fleet loop pheromone claude
-cd ~/grain-pheromone && FLEET_BARE=1 sh tools/f/fleet-loop.sh pheromone
-# fleet loop pheromone claude -- one lap
-cd ~/grain-pheromone && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh pheromone
-# fleet loop petrichor claude
-cd ~/grain-petrichor && FLEET_BARE=1 sh tools/f/fleet-loop.sh petrichor
-# fleet loop petrichor claude -- one lap
-cd ~/grain-petrichor && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh petrichor
-# fleet loop bakery claude
-cd ~/grain-bakery && FLEET_BARE=1 sh tools/f/fleet-loop.sh bakery
-# fleet loop bakery claude -- one lap
-cd ~/grain-bakery && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh bakery
-# fleet loop diffuser claude
-cd ~/grain-diffuser && FLEET_BARE=1 sh tools/f/fleet-loop.sh diffuser
-# fleet loop diffuser claude -- one lap
-cd ~/grain-diffuser && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh diffuser
-# fleet loop grass claude
-cd ~/grain-grass && FLEET_BARE=1 sh tools/f/fleet-loop.sh grass
-# fleet loop grass claude -- one lap
-cd ~/grain-grass && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh grass
-# fleet loop copal claude
-cd ~/grain-copal && FLEET_BARE=1 sh tools/f/fleet-loop.sh copal
-# fleet loop copal claude -- one lap
-cd ~/grain-copal && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh copal
-# fleet loop patchouli claude
-cd ~/grain-patchouli && FLEET_BARE=1 sh tools/f/fleet-loop.sh patchouli
-# fleet loop patchouli claude -- one lap
-cd ~/grain-patchouli && FLEET_BARE=1 LOOP_LAPS=1 sh tools/f/fleet-loop.sh patchouli
-```
-
-### fleet loop codex
-
-```sh
-# fleet loop incense codex
-cd ~/grain-incense && sh tools/f/fleet-loop-codex.sh incense
-# fleet loop incense codex -- one lap
-cd ~/grain-incense && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh incense
-# fleet loop pheromone codex
-cd ~/grain-pheromone && sh tools/f/fleet-loop-codex.sh pheromone
-# fleet loop pheromone codex -- one lap
-cd ~/grain-pheromone && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh pheromone
-# fleet loop petrichor codex
-cd ~/grain-petrichor && sh tools/f/fleet-loop-codex.sh petrichor
-# fleet loop petrichor codex -- one lap
-cd ~/grain-petrichor && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh petrichor
-# fleet loop bakery codex
-cd ~/grain-bakery && sh tools/f/fleet-loop-codex.sh bakery
-# fleet loop bakery codex -- one lap
-cd ~/grain-bakery && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh bakery
-# fleet loop diffuser codex
-cd ~/grain-diffuser && sh tools/f/fleet-loop-codex.sh diffuser
-# fleet loop diffuser codex -- one lap
-cd ~/grain-diffuser && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh diffuser
-# fleet loop grass codex
-cd ~/grain-grass && sh tools/f/fleet-loop-codex.sh grass
-# fleet loop grass codex -- one lap
-cd ~/grain-grass && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh grass
-# fleet loop copal codex
-cd ~/grain-copal && sh tools/f/fleet-loop-codex.sh copal
-# fleet loop copal codex -- one lap
-cd ~/grain-copal && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh copal
-# fleet loop patchouli codex
-cd ~/grain-patchouli && sh tools/f/fleet-loop-codex.sh patchouli
-# fleet loop patchouli codex -- one lap
-cd ~/grain-patchouli && LOOP_LAPS=1 sh tools/f/fleet-loop-codex.sh patchouli
-```
-
-### fleet loop opencode
-
-```sh
-# fleet loop incense opencode
-cd ~/grain-incense && sh tools/f/fleet-loop-opencode.sh incense
-# fleet loop incense opencode -- one lap
-cd ~/grain-incense && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh incense
-# fleet loop pheromone opencode
-cd ~/grain-pheromone && sh tools/f/fleet-loop-opencode.sh pheromone
-# fleet loop pheromone opencode -- one lap
-cd ~/grain-pheromone && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh pheromone
-# fleet loop petrichor opencode
-cd ~/grain-petrichor && sh tools/f/fleet-loop-opencode.sh petrichor
-# fleet loop petrichor opencode -- one lap
-cd ~/grain-petrichor && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh petrichor
-# fleet loop bakery opencode
-cd ~/grain-bakery && sh tools/f/fleet-loop-opencode.sh bakery
-# fleet loop bakery opencode -- one lap
-cd ~/grain-bakery && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh bakery
-# fleet loop diffuser opencode
-cd ~/grain-diffuser && sh tools/f/fleet-loop-opencode.sh diffuser
-# fleet loop diffuser opencode -- one lap
-cd ~/grain-diffuser && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh diffuser
-# fleet loop grass opencode
-cd ~/grain-grass && sh tools/f/fleet-loop-opencode.sh grass
-# fleet loop grass opencode -- one lap
-cd ~/grain-grass && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh grass
-# fleet loop copal opencode
-cd ~/grain-copal && sh tools/f/fleet-loop-opencode.sh copal
-# fleet loop copal opencode -- one lap
-cd ~/grain-copal && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh copal
-# fleet loop patchouli opencode
-cd ~/grain-patchouli && sh tools/f/fleet-loop-opencode.sh patchouli
-# fleet loop patchouli opencode -- one lap
-cd ~/grain-patchouli && LOOP_LAPS=1 sh tools/f/fleet-loop-opencode.sh patchouli
-```
-
-## fleet watch
-
-The ship word is `pier`, the tmux session. The watch reads the live roster and skips incense unless `WATCH_SKIP` is set empty. A `.loop-clockout` file holds every arm. Run the line from a checkout, in the watch window.
-
-```sh
-# fleet watch pier claude
-sh tools/f/fleet_watch.sh
-# fleet watch pier codex
-sh tools/f/fleet_watch_codex.sh
-# fleet watch pier opencode
-sh tools/f/fleet_watch_opencode.sh
-```
-
-## The invoked kin -- tools and disciplines a chant calls by name
-
-- **glow** -- the language - **rishi** -- the shell (`.rish`) - **rye** -- systems (Zig dialect) - **brix** -- composition - **kyri** -- the notation (`.kyri`) and the voice.
-- **loom** -- where a lantern that fires twice becomes a standing pattern (`.claude/rules/reds-first.md`).
-- **grain** -- the whole: the personal OS this all serves.
-- **compass** -- the return habit; **council** -- the odd-quorum topology of named galaxies (`context/council-names.kyri`).
-- **Lila-first, return-first** -- the short name of the order. The return is the ground that lasts, and Lila is the glad keystone on it. Defined in [`../context/LEXICON.md`](../context/LEXICON.md), seated in [`../foundations/20261002-111449_lila-and-the-long-return.md`](../foundations/20261002-111449_lila-and-the-long-return.md), spoken in [`../context/KYRI.md`](../context/KYRI.md). The rule is [`../.claude/rules/lila-and-the-long-return.md`](../.claude/rules/lila-and-the-long-return.md).
-
-## Discipline the spellbook keeps
-
-- **A spell names a gesture; the rule holds the law.** Reading a spell here never replaces reading its home rule before a large or destructive act.
-- **The destructive spells are word-gated.** `shred` and `debride` run only on an explicit word naming *what* to remove, `checkpoint` first, and never as a default.
-- **kg != send.** Keep going continues a lap; only `send` ships.
+A **spell** is one plain word that invokes a complete, verifiable gesture on
+metal. Every spell here maps straight into a live `grain-ww` subcommand, a
+standing rule card in [`.gemini/rules/`](../.gemini/rules/README.md), or a
+living module so newcomers, phones, terminals, and agents share one crisp
+vocabulary.
 
 ---
 
-*One syllable, one whole gesture -- so a hand on any client can steer the work by its true names, and never lose the thread between phone, terminal, and the pier.*
+## 1. Foundational Macro Spell -- `synonym` (*Sameness Is the Macro*)
+
+**`synonym`** is Grain's single-stranded structural foundation
+([`../modules/synonym/synonym_macro.rye`](../modules/synonym/synonym_macro.rye),
+[`../modules/synonym/sameness_macro_cup.rye`](../modules/synonym/sameness_macro_cup.rye)):
+instead of duplicating code, dialects, or UI frameworks, **`synonym`** maps
+every welcomed human pair onto **one canonical verified value/wire spine**:
+
+- **Twin Voices:** `Reya <-> Kyri` -> one companion base
+  ([`voices/companion-voice-base.md`](voices/companion-voice-base.md))
+- **Twin Open-Door Styles:** `Karma <-> Teacher` -> one plain welcome
+- **Twin Languages (*Dancing Friends*):** `Glow <-> Rye` -> one static byte
+  layout across `RV64GC` and `AArch64`
+- **Twin Memory Siblings:** `Husk <-> Tablecloth` -> one SHA3-256 `Blaze` weave
+- **Unified Harness Transports:** `Flare <-> Pond <-> Gemini API` -> one
+  deterministic cached `HarnessTurn` interface
+  ([`../modules/harness/grain_cached_harness.rye`](../modules/harness/grain_cached_harness.rye))
+  honoring both `Blazepod` `tally-ram` (RAM-only) and `tally-vn` (airlock)
+
+---
+
+## 2. Living Command & Craft Spells
+
+| Spell | Plain Living Gesture | Primary Home |
+|---|---|---|
+| **`synonym`** | Fold twin voices, styles, languages, or transports onto one single-stranded verified macro (`grain-ww whole-cup`) | [`../modules/synonym/sameness_macro_cup.rye`](../modules/synonym/sameness_macro_cup.rye) |
+| **`modernization`** | Bring a living guide, lexicon, tool room, or interface cleanly into agreement with verified metal and `0.0%`-negation clarity while archiving elders safely in `yonder/` | [`../LEXICON.md`](../LEXICON.md) |
+| **`kg`** | Advance the next verified Calfive Movement on metal (strict `+0.001` Myofascia step, full `witness-all`, signed push) | [`../GEMINI.md`](../GEMINI.md) |
+| **`calfive`** | Read live 15-sign position `[15 75 375 1875 9375]` by measurement (`grain-ww movement`) with zero hardcoded ascending serials | [`../modules/sundial/calfive_wheel.rye`](../modules/sundial/calfive_wheel.rye) |
+| **`husk`** | Prepend or inspect active explicit-bound Markdown movement stacks in `active-husk/` (`grain-ww husk`, `grain-ww husk-editor`) | [`../active-husk/README.md`](../active-husk/README.md) |
+| **`harness`** | Dispatch deterministic SHA3-cached `Flare`, `Pond`, & `Caravan`-gated Gemini API turns across `tally-ram` / `tally-vn` (`grain-ww harness-cache`) | [`../modules/harness/grain_cached_harness.rye`](../modules/harness/grain_cached_harness.rye) |
+| **`pond`** | Run tools or agents inside a zero-egress Glasswall capability enclosure (`grain-ww pond-airlock`, `grain-ww puddle`) | [`../modules/pond/pond_sanctuary_airlock.rye`](../modules/pond/pond_sanctuary_airlock.rye) |
+| **`stamp`** | Computationally measure exact `YYYYMMDD.HHMMSS` chronological time (`grain-ww stamp`) & enforce plain naming (`grain-ww stamp-ratchet`) | [`../modules/sundial/one_clock.rye`](../modules/sundial/one_clock.rye) |
+| **`evergrow`** | Verify newer chronological parcels keep every prior export while demanding equal or lighter capability (`offer more, require less`) | [`../modules/comlink/parcel/parcel_core.rye`](../modules/comlink/parcel/parcel_core.rye) |
+| **`molt` / `breach` / `debride`** | Grow a plain-named replacement (`molt`), rename across living guides & code (`breach`), and archive retired residue behind a signed walk-back nib (`debride`) | [`../construction/CHECKPOINTS.md`](../construction/CHECKPOINTS.md) |
+| **`palisade` / `sow`** | Project and sign a single parentless public seed (`parents=0`) cleanly from `template-manifest.kyri` (`publish-seed.rish`) | [`../modules/fusion/palisade_release_gate.rye`](../modules/fusion/palisade_release_gate.rye) |
+| **`send` / `check-in`** | Sign and push verified work to `xy` (`send`), or pause for stewardship counsel (`check-in`) | [`../.gemini/rules/earth-rooms-molt-and-seed.md`](../.gemini/rules/earth-rooms-molt-and-seed.md) |
+
+---
+
+## 3. The Fifteen-Sign Calfive Wheel (`grain-ww movement`)
+
+Live position is always measured (`(git rev-list --count HEAD - 1) % 15 + 1`):
+
+| Sign | Mode & Element | Living Craft Focus |
+|---|---|---|
+| **Aries** | Cardinal Fire | First clay wick (*Siraj*): ship the smallest real artifact on metal |
+| **Taurus** | Fixed Earth | Venus student-teacher: guard `Tally` bounds, tighten rules, tend fertile ground |
+| **Gemini** | Dual Air | *Dancing friends, many weaves*: unite `Glow` & `Rye` across `Blaze` weaves |
+| **Cancer** | Cardinal Water | Unwatched sanctuary (*Sakinah*): `Pond` shelter & `Glasswall` care |
+| **Leo** | Fixed Fire | Wholehearted song (*Sankirtana / Sama'*): `Resonance` & conserved `WOOD` |
+| **Virgo** | Dual Earth | Compass & efficiency film study: `TAME`, `0.0%` negation, fresh links |
+| **Libra** | Cardinal Air | Even scales: weigh census, plan tidy cuts, pair welcome & refusal paths |
+| **Scorpio** | Fixed Water | *Mitra* covenant: execute approved sheds & wipe spent keys via `secureZero` |
+| **Sagittarius** | Dual Fire | *Teacher / Karma* visual artistry: `Brushstroke / Skate` & `Husk` re-prepend |
+| **Capricorn** | Cardinal Earth | Ten-year stone: bare-metal RISC-V, `Blazepod` WAL durability, right-to-repair |
+| **Aquarius** | Fixed Air | Clean water across `405` peers: low-toll `Constel` & `Colloquium` federation |
+| **Pisces** | Dual Water | Twilight Radiant Silo: gratitude-born nocturnal art & clean offering |
+| **Sky (Cardinal)** | Cardinal Aether | Aether hears: step back and verify whom the work serves |
+| **Sky (Fixed)** | Fixed Aether | Hold the whole cup: compress dual truths into one single-stranded macro |
+| **Siya (Dual)** | Dual Aether | Carry the harvest whole across the torus into the next Dawn |
+
+---
+
+*May every spell stay crisp on the tongue, single-stranded through Synonym, and
+honest on real metal.*

@@ -1,0 +1,11 @@
+::  modules/harness/glow/fold-harness-cache.glow -- Cached Harness Gate!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-harness-transport
+  |=  [posture=@ud transport=@ud has-cap=@ud]           ::  RAM blocks API
+  ^-  @ud                                               ::  verified route
+  ~|  'grain-harness-ram-only-or-caravan-cap-refused'   ::  Glasswall route
+  ?>  |(lth(transport 3) &(eql(posture 2) eql(has-cap 1)))
+  transport
+--
