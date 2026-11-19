@@ -171,3 +171,7 @@ ascii_7bit active-development/date/20261119/20261119-140021-est_siya-orbit4-harv
 max_cols 80 languages/glow/mill/ring0_dual_silicon.rye
 max_cols 80 languages/glow/compiler/ring0_silicon.glow
 ascii_7bit active-development/date/20261119/20261119-144935-est_orbit5-aries-ring0-dual-silicon-emission.md
+max_cols 80 modules/comlink/vantage/vantage_canvas_bridge.rye
+max_cols 80 modules/comlink/vantage/glow/fold-vantage-canvas.glow
+ascii_7bit languages/glow/README.md
+ascii_7bit active-development/date/20261119/20261119-150122-est_orbit5-taurus-vantage-canvas-glow-readme-and-gpg-guidance.md

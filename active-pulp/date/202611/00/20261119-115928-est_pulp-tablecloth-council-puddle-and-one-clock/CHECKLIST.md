@@ -1,14 +1,15 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.144935` (EST)
+**Stamp:** `20261119.150122` (EST)
 
-## Top of Prepend-to-Front Stack (Active Orbit 5 -- `2-Taurus -> 5-Leo`)
+## Top of Prepend-to-Front Stack (Active Orbit 5 -- `3-Gemini -> 6-Virgo`)
 
-- [ ] **[TOP -- Orbit 5, Movement 2/15 (`Taurus`)] Interactive `Vantage` Desktop & `Carry` Live Canvas Binding (`canopy_watershed_canvas` + `twilight_almanac_art`)** -- expose deterministic FFI frame hooks from `Vantage` for `Brushstroke / Skate` RLCD surfaces & student-teacher Taurus review
-- [ ] **[Orbit 5, Movement 3/15 (`Gemini`)] Finish `murr_core` & `lower_*` Elder Caller Molt under Mitra** -- migrate remaining `linengrow`/`pond` `@import` callers to `WOOD` and `rune_48_lower.rye` cleanly
+- [ ] **[TOP -- Orbit 5, Movement 3/15 (`Gemini`)] Finish `murr_core` & `lower_*` Elder Caller Molt under Mitra** -- migrate remaining `linengrow`/`pond` `@import` callers to `WOOD` and `rune_48_lower.rye` cleanly
+- [ ] **[Orbit 5, Movement 4/15 (`Cancer`)] Wire `grain-ww` Machine Account GPG Verified Badge & Refresh `terrarium/README.md` + `languages/rye/README.md`** -- seat the ToS-permitted `grain-ww` machine account key once Keaton creates it on GitHub and sweep remaining sub-READMEs
 
-## Completed Foundations (Orbit 5 Dawn + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
+## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Taurus Movement 2/15 (`57.056`, `xy/gemini-4-neon`)** -- authored `modules/comlink/vantage/vantage_canvas_bridge.rye` (`grain-ww vantage-canvas`: C-ABI FFI bridge uniting Canopy Watershed Canvas & Twilight Almanac into Vantage Desktop/Carry, Proof `#49`) + `fold-vantage-canvas.glow` (`36/36` Glow desks GREEN!), modernized `languages/glow/README.md` (`0.0%` negation, `48/48` runes, Ring-0, `Pulp`, & `terrarium/`), and documented GitHub Machine Account GPG signing ToS guidance (`20261119.150122`)
 - [x] **Orbit 5 Aries Movement 1/15 (`57.055`, `xy/gemini-4-neon`)** -- authored `languages/glow/mill/ring0_dual_silicon.rye` (`grain-ww ring0-silicon`: lowers all 4 Ring-0 `.glow` kernels `Aurora / Tally / Caravan / Blaze` into `8` verified `RV64GC` + `AArch64` machine-code images with `Stage 1 == Stage 2` SHA3-256 parity, Proof `#48`) and `languages/glow/compiler/ring0_silicon.glow` (`35/35` live Glow Mill desks GREEN!) (`20261119.144935`)
 - [x] **Siya Movement 15/15 (`mov=60`, `orb=4`, `Myofascia 57.054`, `xy/gemini-4-neon` -> `grain-ww/202611-grain`)** -- minted dedicated isolated `grain-ww` Ed25519 signing key (`BF755F6F966AA50CD41A8457232779DABAB6298A`), sealed Orbit 4 (`47/47` metal proofs & `34/34` Glow desks GREEN), and published single parentless commit **`"palisade"`** (`parents=0`, `sig=G` by `grain-ww`) to `grain-ww/202611-grain` (`20261119.140021`)
 - [x] **Aether Fixed Movement 14/15 (`57.053`, `xy/gemini-4-neon`)** -- compressed Orbit 4 harvest sealing (`60` mov, `34` Glow desks, `47` proofs) & single-commit `"palisade"` release invariants into `modules/fusion/palisade_release_gate.rye` (`grain-ww palisade-check`, Proof `#47`) (`20261119.135311`)

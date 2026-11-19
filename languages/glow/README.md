@@ -1,78 +1,123 @@
-# Glow -- Language Tooling, Grown from Real Design
+# Glow -- Self-Hosted Hoon-Rune Systems Language for RISC-V, AArch64, & Rye
 
 **Language:** EN
-**Last updated:** 2026-08-26 (fascia touch; voice carried to Kyri; every claim held exactly)
-**Style:** Gauge (see `../context/GAUGE_STYLE.md`)
-**Voice:** Kyri (carried from Quin on touch, 20260826)
-**Audience:** Acme Corporation employees reading the working Glow pin
-**Status:** Checkable -- **glow-language-31** sixteen heads - `/+` - `|%` - compose - nests - cells - `%` calls - truth - **glow-language-189** bartis - barket - nest/type - citizen **\*-shape** (study `\*-mold` twins in `gen/hoon-study/`) - ShapeSpec API - **glow-language-327** `$:` argv/welcome sameness - **glow-language-330** nest tables - `shape_name` on GateSpec/BarketSpec - **glow-language** glow mode SLC - **glow-language** digraph twin GREEN - **`text_floor`** bounded text GREEN (rung-2 lexer prerequisite). Living law leads with **shape**; mold stays study/Hoon. Rune-module header drift (`*-mold` leading) is **on-touch** -- advisory count **11** on `glow/*.rye` (`20260725.170344` - re-touched commence M2 `20260731.020306`, still **11**); not a campaign.
-**Where this sits:** home is [`../README.md`](../README.md) - a first hour in your hands is
-[`../docs-geode/tutorials/the-first-hour.md`](../docs-geode/tutorials/the-first-hour.md) - the whole
-path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
-**Waymark:** **glow-language** -- compressor [`../docs/glow-language.md`](../docs/glow-language.md) - seat [`../active-designing/yonder/date/20260718/20260718-202730_stoa-glow-language-waymark.md`](../active-designing/yonder/date/20260718/20260718-202730_stoa-glow-language-waymark.md)
-**Ground:** [`active-designing/date/20260716/20260716-033000_sameness-and-the-rune-glow-grammar-riscv.md`](../active-designing/date/20260716/20260716-033000_sameness-and-the-rune-glow-grammar-riscv.md) - [`20260716-093000_glow-and-rye-what-shares-under-the-hood.md`](../active-designing/yonder/date/20260716/20260716-093000_glow-and-rye-what-shares-under-the-hood.md) - truth [`../context/specs/20260717-154943_glow-truth-zig-ambient-nock-loobean-seam.md`](../context/specs/20260717-154943_glow-truth-zig-ambient-nock-loobean-seam.md)
-*Living pointer `20260726.041100` -- Aurora boot fusion and kelvin-as-cold-interop (Vision study, not Glow's internal clock): [`../external-research/date/20260714/20260714-013700_aurora-vere-arvo-boot-fusion-and-kelvin-strategy.md`](../external-research/date/20260714/20260714-013700_aurora-vere-arvo-boot-fusion-and-kelvin-strategy.md). Design pages for the value model and Nock seam: [`../active-designing/docs/glow/`](../active-designing/docs/glow/).*
-**Law:** [`../context/TAME_GUIDANCE.md`](../context/TAME_GUIDANCE.md) (root) - Glow supplement still horizon -- scoping [`../external-research/date/20260713/20260713-225841_glow-supplement-scoping-runes-auras-jet-state.md`](../external-research/date/20260713/20260713-225841_glow-supplement-scoping-runes-auras-jet-state.md)
-**Acme first code:** `../expanding-prompts/yonder/20260717-213242_glow-first-code-beside-glass-and-open-runes.md`
+**Stamp:** `20261119.150122` (EST)
+**Voice:** Kyri / Reya
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Status:** Living (`Room: checkable` -- `48/48` live runes across all `13`
+glyph families, `36/36` self-hosted `.glow` desks passing `Stage 1 == Stage 2`,
+`4/4` Ring-0 `.glow -> .rye -> native metal`, and `8` dual-silicon
+`RV64GC` + `AArch64` binary images verified on metal)
+**Home:** [`../../README.md`](../../README.md) | **Scoped Guide:**
+[`../GEMINI.md`](../GEMINI.md) | **Rune Book:**
+[`../../docs-geode/api/glow-runes.md`](../../docs-geode/api/glow-runes.md) |
+**First Hour:**
+[`../../docs-geode/tutorials/the-first-hour.md`](../../docs-geode/tutorials/the-first-hour.md)
 
 ---
 
-Glow is the **language** (Hoon-parallel). Rishi is the **shell** (Dojo-parallel). **Glow's compilation direction is RV32I assembly** -- the Terrarium boot journey (`20261104`) targets bare-metal RISC-V, with the hosted path emitting ordinary `.rye` through Rye's bridge to Zig. The Nock compilation pipeline is archived at [`../gratitude/glow-nock-archive/`](../gratitude/glow-nock-archive/) as a historical interop artifact; Nock remains an optional verification target rather than the active compilation path. Rishi drives witnesses and `glow_run`. Foundations and TAME stay the unmoved north star; this README is the working surface pin, a seated Glow TAME chapter yet to come.
+## 1. Role in the Native-5 Spine & Truth Law
 
-## Truth
+**Glow** is Grain's high-level, TAME-bounded systems language inspired by Hoon's
+`2`-character rune discipline. **Rye** (`languages/rye/`) owns thin metal,
+SIMD, cryptography, and syscall crusts; **Rishi** (`languages/rishi/`) drives
+pure scripts and witnesses; **Brix** and **Kyri** hold declarative courses and
+canonical records.
 
-**Ambient Glow truth is Zig / Rye** -- `bool`, ordinary `if`, process exit **0** = success. Glow does **not** inherit Hoon/Nock loobeans (0 = yes, 1 = no) as ambient meaning. Loobeans convert only at an explicit Nock/Hoon seam via [`truth_semantics.rye`](truth_semantics.rye) (`loob_to_bool` / `bool_to_loob`). Desk arm decimals such as `1` and `0` are ordinary payloads, not loobean yes/no. Witness: [`../tools/g/glow_truth_semantics_witness.rish`](../tools/g/glow_truth_semantics_witness.rish).
+- **Ambient Truth:** Glow evaluates booleans cleanly in Rye/Zig semantics
+  (`bool`, process exit `0` for success). Any explicit Hoon/Nock loobean
+  conversion (`0 = yes`, `1 = no`) lives strictly inside
+  [`truth_semantics.rye`](truth_semantics.rye).
+- **Hard Desk Bounds:** Every living `.glow` desk stays within `<= 80` columns,
+  strict 7-bit ASCII, inline `::` comments opening at **column 57** (`0`-based
+  index `56`), `<= 32 KiB` source size, and an explicit `/!` `FrameBudget`
+  arena ceiling.
+- **Historical Interop Archive:** The legacy Nock study pipeline rests cleanly
+  in [`../../gratitude/glow-nock-archive/`](../../gratitude/glow-nock-archive/).
 
-## Rune heads
+---
 
-| File | Rune | Proves |
+## 2. Six-Pass Self-Hosted Glow Mill (`48/48` Runes, `13` Families)
+
+All `48` live Glow digraphs across all `13` glyph families (`!`, `$`, `%`, `&`,
+`:`, `;`, `=`, `?`, `^`, `|`, `~`, `+`, `/`) are defined once in
+[`front/rune_book.rye`](front/rune_book.rye) and lowered deterministically
+through the six-pass **Glow Mill**:
+
+| Pass | Role | Primary Sources |
 |---|---|---|
-| [`rune_bounded_trap.rye`](rune_bounded_trap.rye) | `\|-` | Bound shapes + `run_bounded` / `BoundExceeded` |
-| [`rune_cast.rye`](rune_cast.rye) | `^-` | Shape name -- aura or named shape |
-| [`rune_conditional.rye`](rune_conditional.rye) | `?:` | Test expression |
-| [`rune_switch.rye`](rune_switch.rye) | `?-` | Subject wing |
-| [`rune_face.rye`](rune_face.rye) | `=/` | Face + optional shape |
-| [`rune_null.rye`](rune_null.rye) | `?~` | Null-test subject |
-| [`rune_mutate.rye`](rune_mutate.rye) | `=.` | Wing to mutate |
-| [`rune_alias.rye`](rune_alias.rye) | `=*` | Alias face |
-| [`rune_cell.rye`](rune_cell.rye) | `:-` | Pair cell -- two faces (glow-language) |
-| [`rune_triple.rye`](rune_triple.rye) | `:+` | Triple cell -- three faces (glow-language) |
-| [`rune_quad.rye`](rune_quad.rye) | `:^` | Quad cell -- four faces (glow-language) |
-| [`rune_list.rye`](rune_list.rye) | `:~` | List cell -- one to four faces (glow-language) |
-| [`rune_call.rye`](rune_call.rye) | `%-` | One-arg call -- closed demo gate `double` (glow-language) |
-| [`rune_call2.rye`](rune_call2.rye) | `%+` | Two-arg call -- closed demo gate `add` (glow-language) |
-| [`rune_call3.rye`](rune_call3.rye) | `%^` | Three-arg call -- closed demo gate `sum` (glow-language) |
-| [`rune_calln.rye`](rune_calln.rye) | `%*` | Named-arg call -- closed demo gate `mix` (glow-language) |
-| [`rune_core.rye`](rune_core.rye) | `\|%` | Thin core -- bare or `@u32` payload - closed or open `++` arms - `--` (glow-language-21/25) |
+| **1. `Sheaf`** | Content-addressed imports (`/-`, `/+`, `/~`), Doors (`|_`, `~%`), & Wire (`;;`) | [`sheaf/sheaf_resolve.rye`](sheaf/sheaf_resolve.rye), [`sheaf/sheaf_wire_doors.rye`](sheaf/sheaf_wire_doors.rye), [`compiler/sheaf_wire.glow`](compiler/sheaf_wire.glow) |
+| **2. `Thresh`** | Bounded 2-character rune lexer & source spans | [`front/thresh_parse.rye`](front/thresh_parse.rye), [`compiler/front_passes.glow`](compiler/front_passes.glow) |
+| **3. `Trellis`** | Explicit fixed-depth AST parser (`depth <= 64`) | [`front/thresh_parse.rye`](front/thresh_parse.rye), [`compiler/shapes.glow`](compiler/shapes.glow) |
+| **4. `Assay`** | Static `/!` `FrameBudget`, loop ceiling, & shape audit | [`middle/assay_pith.rye`](middle/assay_pith.rye), [`compiler/middle_passes.glow`](compiler/middle_passes.glow) |
+| **5. `Pith`** | Narrow-waist SSA IR (`<= 16` ops) & full `48/48` lowering | [`rune_48_lower.rye`](rune_48_lower.rye), [`compiler/rune_48_dispatch.glow`](compiler/rune_48_dispatch.glow) |
+| **6. `Mill`** | Dual-silicon `RV64GC` + `AArch64` & compilable TAME `.rye` emitter | [`mill/mill_emit.rye`](mill/mill_emit.rye), [`mill/glow_to_rye_emitter.rye`](mill/glow_to_rye_emitter.rye), [`mill/ring0_glow_to_rye.rye`](mill/ring0_glow_to_rye.rye), [`mill/ring0_dual_silicon.rye`](mill/ring0_dual_silicon.rye), [`compiler/millstones.glow`](compiler/millstones.glow), [`compiler/ring0_silicon.glow`](compiler/ring0_silicon.glow) |
 
-## Fixture desks (generator hop)
-
-### Baked input, no argv -- Acme first read
-
-Most files under [`gen/`](gen/) are **fixture desks**. A fixture desk is a small Glow program whose **input** (the value the gate would take) is already written into the file -- faces, literals, and shapes chosen once so the witness always runs the same way. That is the **baked input**. **No argv** means you do not pass numbers or strings on the Rishi command line; the desk carries its own input. You run the path alone, and green means the language hop still lowers and builds:
-
-```bash
-rishi/bin/rishi run tools/g/glow_run.rish glow/gen/c/cast-u32.glow
-```
-
-A **generator** is the sibling idea: the input arrives from outside (Rishi argv today, typed hand-off later). Thin cast example: [`gen/s/sample-u32.glow`](gen/s/sample-u32.glow) wants one `@u32` after the path (`... glow_run.rish glow/gen/s/sample-u32.glow 42`). The matching fixture [`gen/c/cast-u32.glow`](gen/c/cast-u32.glow) stays argv-free beside it. Prefer **fixture desk** when learning a rune; reach for a generator when the proof needs a value you choose at the shell. Longer Acme hand: `../expanding-prompts/date/20260719/20260719-204001_glow-fixture-desks-and-parameterized-generators.md`.
-
-Your own Grain -- voice, desk habits, and the ship that signs under **Kumara** -- can grow personalized later. One of the five OS voice variants (Reya - Riyo - Trey - Triz - Quin) may sit with you in Cursor, or in Zed with Claude Code, or in another LLM editor you choose. That path is **possible**; it is **not proven** until prompts and crafts seat a Grain that is yours under your Kumara key. Until then, these fixture desks are the shared beginner habitat: same input, same green, no private key step in this README.
-
-### Suite pin (G3 onward)
-
-**G3** seats the thin cast **generator** above. **G4** token lower closed: cross-desk parts (glow-language), same-desk mold-body (glow-language), shape-only peek (glow-language), tidy `lower_shape` (glow-language - renamed glow-language), and `rune_shape.parse_source` token->`ShapeSpec` (glow-language - renamed glow-language). **glow-language-105** `|=` **bartis** GREEN: identity - call-body `double`/`inc`/`dec` - TAME tidy (`append_print` - `copy_disjoint` - overflow seat); [`rune_shop_gate.rye`](rune_shop_gate.rye) - [`lower_shop_gate.rye`](lower_shop_gate.rye). Say **Glow gate** / **bartis** for the stated one-arm core. **glow-language** seats `|^` **barket** horizon wording -- brief [`../active-designing/date/20260720/20260720-040700_stoa102-barket-horizon-wording.md`](../active-designing/date/20260720/20260720-040700_stoa102-barket-horizon-wording.md). **glow-language** tokenizes barket as the **27th** digraph (`match_rune2`) -- G1 row [`../active-designing/date/20260720/20260720-151119_glow-barket-g1-row.md`](../active-designing/date/20260720/20260720-151119_glow-barket-g1-row.md) - claim [`../active-designing/date/20260720/20260720-151119_stoa111-barket-tokenize.md`](../active-designing/date/20260720/20260720-151119_stoa111-barket-tokenize.md) - witness [`../tools/g/glow_shop_nest_tokenize_witness.rish`](../tools/g/glow_shop_nest_tokenize_witness.rish). **glow-language** parses stated header/identity (`BarketSpec`; call-body -> `BodyNotYetLowered`) -- claim [`../active-designing/date/20260720/20260720-174115_stoa112-barket-parse.md`](../active-designing/date/20260720/20260720-174115_stoa112-barket-parse.md) - [`rune_shop_nest.rye`](rune_shop_nest.rye) - witness [`../tools/g/glow_shop_nest_parse_witness.rish`](../tools/g/glow_shop_nest_parse_witness.rish). **glow-language** lowers identity to `barket_gate` -- fixture [`gen/g/gate-barket-sample.glow`](gen/g/gate-barket-sample.glow) - [`lower_shop_nest.rye`](lower_shop_nest.rye) - claim [`../active-designing/date/20260720/20260720-175115_stoa113-barket-lower.md`](../active-designing/date/20260720/20260720-175115_stoa113-barket-lower.md). **glow-language** seats argv sample -- generator [`gen/g/gate-barket-sample-u32.glow`](gen/g/gate-barket-sample-u32.glow) - claim [`../active-designing/date/20260720/20260720-175643_stoa114-barket-argv.md`](../active-designing/date/20260720/20260720-175643_stoa114-barket-argv.md). **glow-language** seats call-body `%-  double` -- fixture [`gen/g/gate-barket-double.glow`](gen/g/gate-barket-double.glow) - generator [`gen/g/gate-barket-double-u32.glow`](gen/g/gate-barket-double-u32.glow) - claim [`../active-designing/date/20260720/20260720-180047_stoa115-barket-call-body.md`](../active-designing/date/20260720/20260720-180047_stoa115-barket-call-body.md). **glow-language** widens the closed call-body trio to `inc` / `dec` -- fixtures [`gen/g/gate-barket-inc.glow`](gen/g/gate-barket-inc.glow) - [`gen/g/gate-barket-dec.glow`](gen/g/gate-barket-dec.glow) - generators [`gen/g/gate-barket-inc-u32.glow`](gen/g/gate-barket-inc-u32.glow) - [`gen/g/gate-barket-dec-u32.glow`](gen/g/gate-barket-dec-u32.glow) - claim [`../active-designing/date/20260720/20260720-180445_stoa116-barket-call-body-inc-dec.md`](../active-designing/date/20260720/20260720-180445_stoa116-barket-call-body-inc-dec.md). **glow-language** TAME-tidies barket -- `append_print` - `parse_body` - ban overflow - width list - claim [`../active-designing/date/20260720/20260720-180900_stoa117-barket-tame-tidy.md`](../active-designing/date/20260720/20260720-180900_stoa117-barket-tame-tidy.md). **glow-language** seats named-mold `amount-mold` -- fixture [`gen/g/gate-barket-amount.glow`](gen/g/gate-barket-amount.glow) - refuse [`gen/g/gate-barket-kind-refuse.glow`](gen/g/gate-barket-kind-refuse.glow) - claim [`../active-designing/date/20260720/20260720-181347_stoa118-named-mold-barket.md`](../active-designing/date/20260720/20260720-181347_stoa118-named-mold-barket.md). **glow-language** seats mold-bounded nesting accept -- `assert_sample_nesting_nests` - claim [`../active-designing/date/20260720/20260720-181950_stoa119-wet-accept-under-stated-mold.md`](../active-designing/date/20260720/20260720-181950_stoa119-wet-accept-under-stated-mold.md) - witness [`../tools/g/glow_nest_type_witness.rish`](../tools/g/glow_nest_type_witness.rish). **glow-language** wires that API into barket/bartis expansion -- claim [`../active-designing/date/20260720/20260720-182450_stoa120-wet-nests-barket-wire.md`](../active-designing/date/20260720/20260720-182450_stoa120-wet-nests-barket-wire.md). **glow-language** seats barket nesting-through-nests (`is_nesting=true`) -- claim [`../active-designing/date/20260720/20260720-182915_stoa121-barket-wet-through-nests.md`](../active-designing/date/20260720/20260720-182915_stoa121-barket-wet-through-nests.md). **glow-language** widens closed named molds with `count-mold` -- claim [`../active-designing/date/20260720/20260720-183259_stoa122-count-mold-named.md`](../active-designing/date/20260720/20260720-183259_stoa122-count-mold-named.md) - desks [`gen/hoon-study/mold-count.glow`](gen/hoon-study/mold-count.glow) - [`gen/g/gate-count.glow`](gen/g/gate-count.glow) - [`gen/g/gate-barket-count.glow`](gen/g/gate-barket-count.glow). **glow-language** seats `sample=kind-mold` identity as `KindShape` -- claim [`../active-designing/date/20260720/20260720-183837_stoa123-kind-mold-gate.md`](../active-designing/date/20260720/20260720-183837_stoa123-kind-mold-gate.md) - desks [`gen/g/gate-kind.glow`](gen/g/gate-kind.glow) - [`gen/g/gate-barket-kind.glow`](gen/g/gate-barket-kind.glow). **glow-language** seats `sample=xact-mold` identity as `XactShape` -- claim [`../active-designing/date/20260720/20260720-184304_stoa124-xact-mold-gate.md`](../active-designing/date/20260720/20260720-184304_stoa124-xact-mold-gate.md) - desks [`gen/g/gate-xact.glow`](gen/g/gate-xact.glow) - [`gen/g/gate-barket-xact.glow`](gen/g/gate-barket-xact.glow). **glow-language** seats `sample=xfer-mold` identity as `XferShape` -- claim [`../active-designing/date/20260720/20260720-184953_stoa125-xfer-mold-gate.md`](../active-designing/date/20260720/20260720-184953_stoa125-xfer-mold-gate.md) - desks [`gen/g/gate-xfer.glow`](gen/g/gate-xfer.glow) - [`gen/g/gate-barket-xfer.glow`](gen/g/gate-barket-xfer.glow). **glow-language** seats `sample=pair-mold` identity as `PairShape` -- claim [`../active-designing/date/20260720/20260720-185502_stoa126-pair-mold-gate.md`](../active-designing/date/20260720/20260720-185502_stoa126-pair-mold-gate.md) - desks [`gen/g/gate-pair.glow`](gen/g/gate-pair.glow) - [`gen/g/gate-barket-pair.glow`](gen/g/gate-barket-pair.glow). **glow-language-110** seat **nest/type surface** -- wording - dry-aura - unit `$%` tag nest - named-mold bartis `amount-mold` - nesting refuse (`assert_sample_not_nesting`); ambient nesting/gold accept held -- briefs [`../active-designing/date/20260720/20260720-042931_stoa106-nest-type-surface-wording.md`](../active-designing/date/20260720/20260720-042931_stoa106-nest-type-surface-wording.md) - [`../active-designing/date/20260720/20260720-043251_stoa107-nest-type-thin-implement.md`](../active-designing/date/20260720/20260720-043251_stoa107-nest-type-thin-implement.md) - [`../active-designing/date/20260720/20260720-145814_stoa108-nest-type-tag-nest.md`](../active-designing/date/20260720/20260720-145814_stoa108-nest-type-tag-nest.md) - [`../active-designing/date/20260720/20260720-150155_stoa109-named-mold-bartis.md`](../active-designing/date/20260720/20260720-150155_stoa109-named-mold-bartis.md) - [`../active-designing/date/20260720/20260720-150635_stoa110-wet-refuse-nest.md`](../active-designing/date/20260720/20260720-150635_stoa110-wet-refuse-nest.md). Tidy brief [`../active-designing/date/20260720/20260720-042300_glow-bartis-tame-tidy.md`](../active-designing/date/20260720/20260720-042300_glow-bartis-tame-tidy.md). Alphabet: [`../active-designing/date/20260719/20260719-204001_glow-rune-pronunciation-alphabet-riscv-and-generators.md`](../active-designing/date/20260719/20260719-204001_glow-rune-pronunciation-alphabet-riscv-and-generators.md) - G1 table [`../active-designing/date/20260719/20260719-220814_glow-rune-pronunciation-closed-table.md`](../active-designing/date/20260719/20260719-220814_glow-rune-pronunciation-closed-table.md) - bartis argv brief [`../active-designing/date/20260720/20260720-040200_glow-bartis-argv-sample.md`](../active-designing/date/20260720/20260720-040200_glow-bartis-argv-sample.md) - witnesses [`../tools/g/glow_rune_alphabet_witness.rish`](../tools/g/glow_rune_alphabet_witness.rish) - [`../tools/g/glow_sample_argv_witness.rish`](../tools/g/glow_sample_argv_witness.rish) - [`../tools/g/glow_shop_gate_argv_witness.rish`](../tools/g/glow_shop_gate_argv_witness.rish) - [`../tools/g/glow_nest_type_surface_witness.rish`](../tools/g/glow_nest_type_surface_witness.rish) - [`../tools/g/glow_nest_type_witness.rish`](../tools/g/glow_nest_type_witness.rish) - [`../tools/g/glow_shop_nest_tokenize_witness.rish`](../tools/g/glow_shop_nest_tokenize_witness.rish).
-
-All sixteen single-line heads lower today; multi-line adds compose (face->`|%` closed or open - two faces->`add` - face->payload closed or open - `/+` library), typed faces, and `|%` cores (up to three arms, bare or `@u32` payload, open and nest arm bodies, library emit). Rishi hand: [`../tools/g/glow_run.rish`](../tools/g/glow_run.rish) - desk witness: [`../tools/g/glow_run_desk_witness.rish`](../tools/g/glow_run_desk_witness.rish). Brief: [`../active-designing/yonder/date/20260719/20260719-001148_stoa31-payload-library-compose-brief.md`](../active-designing/yonder/date/20260719/20260719-001148_stoa31-payload-library-compose-brief.md).
-
-```bash
-rishi/bin/rishi run tools/g/glow_run.rish glow/gen/u/use-lib-payload-nest.glow
-rishi/bin/rishi run tools/g/glow_run_desk_witness.rish
-# -> GREEN: glow_run desk -- all fixture desks ...
-```
-
-Each single-line hop lowers one named shape from its front-half parser. Under `|-`, `(lent ...)` still emits a shrinking-list fold under `face.len`. Nest forms parse once through [`expr.rye`](expr.rye). Cell heads - `%` calls - multi-line bare/typed - face->call compose - face->`|%` (`compose-core` - `compose-core-two` - `compose-core-three` - `compose-core-nest` - `compose-core-cue-jam` - `compose-core-cue-jam-nest` - `compose-core-cue-jam-right-nest` - `compose-core-cue-jam-both-nest` - `compose-core-add` - `compose-core-payload` - `compose-core-payload-nest` - `compose-core-payload-cue-jam` - `compose-core-payload-cue-jam-nest` - `compose-core-payload-cue-jam-right-nest` - `compose-core-payload-cue-jam-both-nest`) - `/+` library compose (`use-lib-open` - `use-lib-nest` - `use-lib-payload-nest` - `use-lib-cue-jam` - `use-lib-cue-jam-nest` - `use-lib-cue-jam-right-nest` - `use-lib-cue-jam-both-nest` - `use-lib-payload-cue-jam` - `use-lib-payload-cue-jam-nest` - `use-lib-payload-cue-jam-right-nest` - `use-lib-payload-cue-jam-both-nest` - `use-lib-next-root-cue-jam` - `use-lib-session-root-nest-cue-jam`) - `|%` cores (`core-double` - `core-two` - `core-three` - `core-payload` - `core-payload-typed` - `core-open` - `core-nest`) - library emit (`lib-core-double` - `lib-core-open` - `lib-core-nest` - `lib-core-payload-nest` - `lib-core-cue-jam` - `lib-core-cue-jam-nest` - `lib-core-cue-jam-right-nest` - `lib-core-cue-jam-both-nest` - `lib-core-payload-cue-jam` - `lib-core-payload-cue-jam-nest` - `lib-core-payload-cue-jam-right-nest` - `lib-core-payload-cue-jam-both-nest` - `lib-next-root-cue-jam` - `lib-session-root-nest-cue-jam`, no `main`) are GREEN. `=.` takes optional trailing decimals; `=*` takes an optional source wing. Cast hop covers `@u8` - `@u16` - `@u32` - `@u64`. Open `++` bodies take `sample` / payload face, literals, `(mix ...)` - `(jam ...)` - `(lent ...)` - `(cue ...)` - `^-` cast - one-deep nest jam left - right - both. Nest jam desks: `face-jam-nest` - `face-jam-right-nest` - `face-jam-both-nest` - arm/core nest variants. Cross-line jam->cue: `compose-jam-cue` (glow-language). Bind->jam->cue product multi-line: `compose-bind-jam-cue` (glow-language). Bind->nest-jam->cue: `compose-bind-nest-jam-cue` (glow-language). Bind->nest-right-jam->cue: `compose-bind-nest-right-jam-cue` (glow-language). Bind->nest-both-jam->cue: `compose-bind-nest-both-jam-cue` (glow-language). Three-bind nest-left jam->cue: `compose-bind-nest-three-jam-cue` (glow-language). Four-bind nest-both jam->cue: `compose-bind-nest-four-jam-cue` (glow-language). Bind->inline cue-of-jam: `compose-bind-inline-cue-jam` (glow-language). Bind->inline nest-left cue-of-jam: `compose-bind-inline-nest-cue-jam` (glow-language). Bind->inline nest-right cue-of-jam: `compose-bind-inline-nest-right-cue-jam` (glow-language). Bind->inline nest-both cue-of-jam: `compose-bind-inline-nest-both-cue-jam` (glow-language). Face->`|%` cue-of-jam: `compose-core-cue-jam` (glow-language). Face->nest-left cue-of-jam: `compose-core-cue-jam-nest` (glow-language). Face->nest-right cue-of-jam: `compose-core-cue-jam-right-nest` (glow-language). Face->nest-both cue-of-jam: `compose-core-cue-jam-both-nest` (glow-language). `/+` cue-of-jam: `use-lib-cue-jam` - `lib-core-cue-jam` (glow-language). `/+` nest-left cue-of-jam: `use-lib-cue-jam-nest` - `lib-core-cue-jam-nest` (glow-language). `/+` nest-right cue-of-jam: `use-lib-cue-jam-right-nest` - `lib-core-cue-jam-right-nest` (glow-language). `/+` nest-both cue-of-jam: `use-lib-cue-jam-both-nest` - `lib-core-cue-jam-both-nest` (glow-language). Face->payload cue-of-jam: `compose-core-payload-cue-jam` (glow-language). Face->payload nest-left cue-of-jam: `compose-core-payload-cue-jam-nest` (glow-language). Face->payload nest-right cue-of-jam: `compose-core-payload-cue-jam-right-nest` (glow-language). Face->payload nest-both cue-of-jam: `compose-core-payload-cue-jam-both-nest` (glow-language). `/+` payload cue-of-jam: `use-lib-payload-cue-jam` - `lib-core-payload-cue-jam` (glow-language). `/+` payload nest-left cue-of-jam: `use-lib-payload-cue-jam-nest` - `lib-core-payload-cue-jam-nest` (glow-language). `/+` payload nest-right cue-of-jam: `use-lib-payload-cue-jam-right-nest` - `lib-core-payload-cue-jam-right-nest` (glow-language). `/+` payload nest-both cue-of-jam: `use-lib-payload-cue-jam-both-nest` - `lib-core-payload-cue-jam-both-nest` (glow-language). next-root product desk: `use-lib-next-root-cue-jam` - `lib-next-root-cue-jam` (glow-language). session-root nest-left product desk: `use-lib-session-root-nest-cue-jam` - `lib-session-root-nest-cue-jam` (glow-language). NativeActivity-path import seam: `linengrow/stoa71_glow_import_seam.rye` - `tools/s/stoa71_glow_import_seam_witness.rish` (glow-language -- lowered Rye `@import`, device-free). NativeActivity APK import wire: `glow_native_activity` - `glow_last_product_session_root` - `tools/s/stoa72_glow_apk_import_witness.rish` (glow-language -- pack GREEN, Seva B0 hex kept). product-root write path: `files/glow_product_root.txt` expect **5** - `tools/s/stoa73_product_root_write_witness.rish` (glow-language -- pack GREEN; host install onpath). thin `+$` / `$:` shape API: `mold-amount` study twin - `rune_shape` - `lower_shape` (glow-language - rename glow-language). multi-field: `mold-pair` (glow-language). `$%` tagged: `mold-kind` (glow-language). same-desk named-cast: `cast-named-amount` - `lower_named_cast` (glow-language). `$%` payload arms: `mold-xact` (glow-language). cross-desk named-cast: `cast-import-amount` (glow-language). multi-face `$%` payload: `mold-xfer` (glow-language). tagged named-cast: `cast-named-kind` - `cast-import-kind` (glow-language). payload tagged cast: `cast-named-xact` - `cast-import-xact` (glow-language). Bounded token stream: [`tokens.rye`](tokens.rye) - `tools/g/glow_tokens_witness.rish` (glow-language-86). Named-cast lower: [`lower_named_cast.rye`](lower_named_cast.rye) TAME tidy on style/width roster (glow-language). Assertion runes: [`lower_assert.rye`](lower_assert.rye) - `?>` / `?<` -> Rye `assert` (glow-language; Hoon wutgar/wutgal). Cue of nest jam left: `face-cue-jam-nest` - arm/core `*-cue-jam-nest` (glow-language). Cue of nest jam right: `face-cue-jam-right-nest` - arm/core `*-cue-jam-right-nest` (glow-language). Cue of nest jam both: `face-cue-jam-both-nest` - arm/core `*-cue-jam-both-nest` (glow-language). Implement bartis - Seva B0 stay **glow-language+**. Alphabet G1 **glow-language** - TAME pin G2 **glow-language** - argv G3 **glow-language** - token G4 through ShapeSpec **glow-language-97** - G5 Nock notes **glow-language** - bartis horizon wording **glow-language GREEN**. Grain shape desks (primary, inventary closed glow-language - pin polish glow-language): `shape-amount` - `shape-count` (+ cast twins) - `shape-pair` (+ cast twins glow-language) - `shape-triple` ... `shape-nona` (cast desks after peek widen) - `shape-kind` - `shape-xact` - `shape-xfer` (+ cast twins). Hoon study twins: `mold-amount` - `mold-pair` - `mold-kind` - `mold-xact` - `mold-xfer` - `mold-triple` ... `mold-nona` and mold-path casts (glow-language-82). Cue desks: `face-cue` - `face-cue-jam` - `face-cue-jam-nest` - `face-cue-jam-right-nest` - `face-cue-jam-both-nest` - arm/core cue-of-jam variants. - `null-cue`. Generator welcome/unwelcome paths use Zig/POSIX exits (0 / 1), per the Truth section above.
+Self-hosting parity (`sha3(Stage 1) == sha3(Stage 2)`) runs across all `36/36`
+live Glow Mill `.glow` desks via [`driver/glow_self_host.rye`](driver/glow_self_host.rye).
 
 ---
 
-*May every fixture desk stay a short spelling of ordinary Rye, and may the shell stay the hand that runs it.*
+## 3. Ring-0 `.glow` Kernels & Dual-Silicon Emission
+
+All four Ring-0 Grain foundations compile straight from `.glow` into both
+compilable `.rye` (`grain-ww ring0-glow`) and raw `RV64GC` (`0x0000_8067` ret)
++ `AArch64` (`0xD65F_03C0` ret) machine-code images (`grain-ww ring0-silicon`):
+
+- **Aurora:** [`../../modules/aurora/glow/gate-riscv-hart-boot.glow`](../../modules/aurora/glow/gate-riscv-hart-boot.glow)
+- **Tally:** [`../../modules/tally/glow/gate-tally-arena-bump.glow`](../../modules/tally/glow/gate-tally-arena-bump.glow)
+- **Caravan:** [`../../modules/caravan/glow/gate-vault-lease.glow`](../../modules/caravan/glow/gate-vault-lease.glow)
+- **Blaze:** [`../../modules/blaze/glow/gate-blaze-weave-step.glow`](../../modules/blaze/glow/gate-blaze-weave-step.glow)
+
+---
+
+## 4. Alignment with Active `Pulp` Journeys & `terrarium/` Directory Structure
+
+- **Active `Pulp` Direction:** Glow architecture and prepend-to-front movement
+  stacks live in
+  [`../../active-pulp/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md`](../../active-pulp/date/202611/00/20261114-224402_glow-mill-and-ring-rearchitecture/README.md),
+  [`../../active-pulp/date/202611/00/20261103-184811_glow-language-journey/README.md`](../../active-pulp/date/202611/00/20261103-184811_glow-language-journey/README.md),
+  and the Master Calfive stack in
+  [`../../active-pulp/date/202611/00/20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/CHECKLIST.md`](../../active-pulp/date/202611/00/20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/CHECKLIST.md).
+- **`terrarium/` Directory Structure:** Glow executes on bare-metal RISC-V and
+  post-Glow civic surfaces across `terrarium/`:
+  - `terrarium/glow/` & `terrarium/src/` -- bare-metal `RV32IM` / `RV64GC`
+    QEMU pill & kernel harnesses (`boot_witness_rv64g.rish`,
+    `tame_boot_witness.rish`, `glow_app_witness.rish`)
+  - `terrarium/app/` & `terrarium/carry-tablet/` -- thin Glasswall macOS Swift
+    and Daylight DC-1 Kotlin/JNI pipes over `Vantage`
+  - `terrarium/faa-atc/` -- deterministic pilot's-seat RVSM separation &
+    5-minute multi-track horizon (`atc_separation.rye`,
+    `pilot_sector_horizon.rye`)
+  - `terrarium/civil-engineering/` -- `2.0x` load safety, `WOOD` timber
+    provenance, & `324/405` `Colloquium` bond works (`structural_colloquium.rye`)
+  - `terrarium/web/` & `terrarium/tools/` -- thin browser & QEMU build helpers
+  - Sibling hardware manifest: [`../../blazepod/rv64_glasswall_boot.rye`](../../blazepod/rv64_glasswall_boot.rye)
+
+---
+
+## 5. Live Metal Verification Commands (`tools/glow/` & `grain-ww`)
+
+```sh
+# Run the complete metal witness suite across all 16 semantic tools/ rooms
+languages/rishi/bin/grain-ww witness-all
+
+# Verify 48/48 Glow runes, Sheaf/Doors/Wire, Ring-0 Glow->Rye, & Dual Silicon
+languages/rishi/bin/grain-ww glow-48
+languages/rishi/bin/grain-ww glow-doors
+languages/rishi/bin/grain-ww glow-emit-rye
+languages/rishi/bin/grain-ww ring0-glow
+languages/rishi/bin/grain-ww ring0-silicon
+
+# Run dedicated tools/glow/ Rishi witnesses directly
+languages/rishi/bin/rishi run tools/glow/glow_rune_book_witness.rish
+languages/rishi/bin/rishi run tools/glow/glow_mill_pipeline_witness.rish
+languages/rishi/bin/rishi run tools/glow/glow_citizen_ring_and_selfhost_witness.rish
+```
+
+---
+
+*May every rune stay plain on disk, may every budget stand clear before compile
+time, and may one Glow source lower honestly onto RISC-V, Apple Silicon, and
+Rye alike.*
