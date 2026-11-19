@@ -1,6 +1,6 @@
 # Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Stamp:** `20261119.174519` (EST)
+**Stamp:** `20261119.175014` (EST)
 **Voice:** Kyri / Reya (Gauge, Radiant, Civic, Teacher / Karma, & Twilight)
 **Branch:** `xy/gemini-4-neon` (`publish-seed` -> `grain-ww/202611-grain`)
 
@@ -37,10 +37,12 @@ hidden macros, private dialects, or duplicated platform logic.
 2. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
    versions/headers; `YYYYMMDD-HHMMSS_sprig.ext` for dated records) order work;
    plain descriptive names state meaning.
-2. **Zero ascending serial numbers in living names or headers:** Never mint
-   sequence numbers (`01-`, `_100_`, `Orbit 14`, `v2`, `lap3`, `WAYMARK[0-9]+`)
-   into filenames, function names, or standing file headers. Derive totals by
-   measurement (`git rev-list --count HEAD`, `wc -l`).
+2. **Zero ascending serial numbers in living names or headers (HARD RATCHET):**
+   Never mint ascending sequence counters (`01-`, `_100_`, `<orbit><N>`,
+   `<quest><N>`, `<journey><N>`, `v2`, `lap3`, `WAYMARK<N>`, `Proof #<N>`) into
+   living filenames, CLI subcommands, or standing file headers. Derive totals
+   strictly by measurement (`grain-ww movement`, `git rev-list --count HEAD`,
+   `wc -l`), enforced mechanically by `grain-ww stamp-ratchet`.
 3. **Zero semantic versioning:** Only chronological `YYYYMMDD.HHMMSS` pins
    exist across `.brix`, `.rye`, and `grain-ww` packages (*Evergrow*: updates
    within an epoch name offer more and require less).

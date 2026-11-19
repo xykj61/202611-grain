@@ -189,13 +189,13 @@ ascii_7bit active-development/date/20261119/20261119-152019-est_orbit5-cancer-le
 max_cols 80 modules/resonance/resonance_wood_ledger.rye
 max_cols 80 modules/resonance/glow/fold-resonance-wood.glow
 ascii_7bit active-development/date/20261119/20261119-153338-est_orbit5-leo-resonance-wood-patronage-ledger.md
-max_cols 80 modules/fusion/orbit5_virgo_efficiency.rye
+max_cols 80 modules/fusion/virgo_efficiency_audit.rye
 max_cols 80 modules/fusion/glow/gate-virgo-efficiency.glow
 ascii_7bit modules/README.md
 ascii_7bit libraries/README.md
 ascii_7bit blazepod/README.md
 ascii_7bit active-development/date/20261119/20261119-154211-est_orbit5-virgo-compass-film-study-and-13-hub-modernization.md
-max_cols 80 modules/fusion/orbit5_libra_scales.rye
+max_cols 80 modules/fusion/libra_scales_gate.rye
 max_cols 80 modules/fusion/glow/gate-libra-scales.glow
 ascii_7bit nixos/README.md
 ascii_7bit active-development/date/20261119/20261119-154705-est_orbit5-libra-even-scales-census-and-16-hubs.md
@@ -223,9 +223,13 @@ ascii_7bit active-development/date/20261119/20261119-171652-est_orbit5-sky-husk-
 max_cols 80 modules/synonym/sameness_macro_cup.rye
 max_cols 80 modules/synonym/glow/fold-whole-cup.glow
 ascii_7bit active-development/date/20261119/20261119-173141-est_orbit5-sky14-hold-the-whole-cup-sameness-macro.md
-max_cols 80 modules/sundial/quest1_harvest_seal.rye
-max_cols 80 modules/sundial/glow/fold-quest1-seal.glow
+max_cols 80 modules/sundial/quest_harvest_seal.rye
+max_cols 80 modules/sundial/glow/fold-quest-seal.glow
 ascii_7bit active-development/date/20261119/20261119-173935-est_orbit5-siya-quest1-75-harvest-seal.md
 max_cols 80 modules/comlink/vantage/vantage_studio_deck.rye
 max_cols 80 modules/comlink/vantage/glow/fold-studio-deck.glow
 ascii_7bit active-development/date/20261119/20261119-174519-est_quest2-orbit6-aries-vantage-studio-deck-and-50-glow.md
+max_cols 80 modules/fusion/stamp_no_serial_ratchet.rye
+max_cols 80 modules/comlink/vantage/vantage_husk_editor.rye
+max_cols 80 modules/comlink/vantage/glow/fold-husk-editor.glow
+ascii_7bit active-development/date/20261119/20261119-175014-est_taurus-stamp-no-serial-ratchet-and-vantage-husk-editor.md

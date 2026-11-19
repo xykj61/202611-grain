@@ -1,0 +1,11 @@
+::  modules/comlink/vantage/glow/fold-husk-editor.glow -- Husk Editor!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-husk-editor-bounds
+  |=  [cards=@ud permille=@ud]                          ::  <=32 & ==1000
+  ^-  @ud                                               ::  verified cards
+  ~|  'vantage-husk-editor-card-or-permille-breach'     ::  bounded editor
+  ?>  &(lte(cards 32) eql(permille 1000))
+  cards
+--

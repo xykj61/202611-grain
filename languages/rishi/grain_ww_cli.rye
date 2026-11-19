@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.174519";
-pub const myofascia_reading = "57.070";
+pub const grain_ww_version = "20261119.175014";
+pub const myofascia_reading = "57.071";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -562,20 +562,20 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "virgo-o5")) {
+    if (std.mem.eql(u8, sub, "virgo-efficiency")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/orbit5_virgo_efficiency",
+            "tools/.build/virgo_efficiency_audit",
             null,
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "libra-o5")) {
+    if (std.mem.eql(u8, sub, "libra-scales")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/orbit5_libra_scales",
+            "tools/.build/libra_scales_gate",
             null,
             args[2..],
         );
@@ -643,11 +643,11 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
-    if (std.mem.eql(u8, sub, "quest1-seal")) {
+    if (std.mem.eql(u8, sub, "quest-seal")) {
         return dispatch_exec(
             a,
             io,
-            "tools/.build/quest1_harvest_seal",
+            "tools/.build/quest_harvest_seal",
             null,
             args[2..],
         );
@@ -657,6 +657,24 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/vantage_studio_deck",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "stamp-ratchet")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/stamp_no_serial_ratchet",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "husk-editor")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_husk_editor",
             null,
             args[2..],
         );
