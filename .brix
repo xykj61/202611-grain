@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.171652
-myofascia 57.067
+version 20261119.173141
+myofascia 57.068
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -97,6 +97,8 @@ file modules/market/glow/fold-wood-mint.glow
 file modules/market/glow/fold-wood-weave.glow
 file terrarium/README.md
 file modules/synonym/synonym_macro.rye
+file modules/synonym/sameness_macro_cup.rye
+file modules/synonym/glow/fold-whole-cup.glow
 file terrarium/faa-atc/atc_separation.rye
 file terrarium/civil-engineering/structural_colloquium.rye
 file docs-geode/tutorials/the-second-hour-remotes-clock-and-cadence.md

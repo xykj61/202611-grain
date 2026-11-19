@@ -9,8 +9,8 @@
 ## Priority #0 -- Prepended Active Quest 1 Closure (`Orbit 5, 13-sky -> 15-Siya`)
 
 - [x] **[Orbit 5, 13/15 (`sky`), `57.067`]** Execute `pulp -> husk` & `active-pulp -> active-husk` molt-breach-deep-debride behind walk-back nib `42a9cff1`, prepend this Quest 1 / Journey 1 Husk project at index 0, expand verified Myofascia hubs to `17/17`, & ship **Milestone Proof `#60`** (`libraries/shastra/civic_purpose_audit.rye`, `grain-ww purpose-check`) + `gate-husk-stack.glow` (`47/47` Glow desks!) (`20261119.171652`)
-- [ ] **[TOP -- Orbit 5, 14/15 (`sky` / Hold the Whole Cup)]** Compress two truths into one macro (`Sameness Is the Macro` whole-tree Quest 1 grounding audit, `Proof #61`, `Desk #48`)
-- [ ] **[Orbit 5, 15/15 (`Siya`)]** Seal **Orbit 5 & Complete Quest 1 (`75/75` Movements!)** -- harvest `62/62` proofs, `49/49` Glow desks, `17/17` `LEXICON.md` hubs, & fresh public seed on `grain-ww/202611-grain` (with Machine Account `Verified` badge once bound)
+- [x] **[Orbit 5, 14/15 (`sky`), `57.068`]** Hold the Whole Cup (`Sameness Is the Macro`): authored `modules/synonym/sameness_macro_cup.rye` (`grain-ww whole-cup`, Proof `#61`: folds all 5 twin pairs onto canonical SHA3-256 macro identity & proves `[15..9375]` Calfive ladder) + `fold-whole-cup.glow` (**`48/48` live Glow desks matching `48/48` live Glow runes!**) (`20261119.173141`)
+- [ ] **[TOP -- Orbit 5, 15/15 (`Siya`), `57.069`]** Seal **Orbit 5 & Complete Quest 1 (`75/75` Movements!)** -- harvest `62/62` proofs, `49/49` Glow desks, `17/17` `LEXICON.md` hubs, & fresh public seed on `grain-ww/202611-grain` (with Machine Account `Verified` badge once bound)
 
 ---
 
