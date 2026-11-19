@@ -35,7 +35,7 @@ git clone git@github.com:xykj61/202611-grain.git ~/202611-grain-gemini-4-carbon
 cd ~/202611-grain-gemini-4-carbon
 
 # 1. Fetch and SHA-256-verify Zig 0.17.0 into vendor/zig-toolchain/ (gitignored)
-sh tools/f/fetch-toolchain.sh
+sh tools/rye/fetch-toolchain.sh
 
 # 2. Cold-bootstrap the Rye compiler (languages/rye/bin/rye)
 cd languages/rye && ./bootstrap.sh && cd ../..
@@ -45,7 +45,7 @@ mkdir -p languages/rishi/bin
 languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
 
 # 4. Run a fast health check across the root .brix course
-languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/rishi/bricks_exist_witness.rish
 ```
 
 Every emitted binary (`languages/*/bin/`, `modules/**/bin/`) and `vendor/zig-toolchain/` stays gitignored by design: **source travels in Git; machines build binaries fresh from verified pins.**

@@ -149,3 +149,9 @@ max_cols 80 modules/fusion/libra_preflight.rye
 ascii_7bit active-development/date/20261119/20261119-121259-est_libra-even-scales-pruning-and-tree-plan-for-scorpio.md
 ascii_7bit expanding-prompts/date/20261119/20261119-124637-est_gemini-4-neon-expanding-prompt.md
 ascii_7bit active-development/date/20261119/20261119-130204-est_gemini-4-neon-onboarding-synthesis.md
+max_cols 80 modules/brushstroke/skate/canopy_watershed_canvas.rye
+max_cols 80 modules/brushstroke/glow/fold-canopy-canvas.glow
+max_cols 80 tools/witness_all.rish
+ascii_7bit tools/caravan/README.md
+ascii_7bit tools/terrarium/README.md
+ascii_7bit active-development/date/20261119/20261119-131122-est_sagittarius-tools-reorg-mitra-shed-and-canopy-canvas.md

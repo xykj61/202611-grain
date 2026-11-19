@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.130204";
-pub const myofascia_reading = "57.048";
+pub const grain_ww_version = "20261119.131122";
+pub const myofascia_reading = "57.049";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -460,7 +460,7 @@ pub fn main(init: std.process.Init) !u8 {
             io,
             "languages/rishi/bin/rishi",
             "run",
-            &[_][]const u8{"tools/w/witness_all.rish"},
+            &[_][]const u8{"tools/witness_all.rish"},
         );
     }
     if (std.mem.eql(u8, sub, "carry-apk")) {
@@ -469,7 +469,16 @@ pub fn main(init: std.process.Init) !u8 {
             io,
             "languages/rishi/bin/rishi",
             "run",
-            &[_][]const u8{"tools/c/build_dc1_apk.rish"},
+            &[_][]const u8{"tools/vantage/build_dc1_apk.rish"},
+        );
+    }
+    if (std.mem.eql(u8, sub, "canopy-canvas")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/canopy_watershed_canvas",
+            null,
+            args[2..],
         );
     }
     if (std.mem.eql(u8, sub, "blazepod-check")) {

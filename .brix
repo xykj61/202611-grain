@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.130204
-myofascia 57.048
+version 20261119.131122
+myofascia 57.049
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -54,7 +54,7 @@ binary_antigravity agy
 # Typo and synthesis aliases
 alias Prim Prin
 alias Synthesis Choir
-file tools/l/launch-choir-synthesis-chapter.rish
+file tools/rishi/launch-choir-synthesis-chapter.rish
 
 # Five-language spine (languages/) & Gemini instruction spine
 file GEMINI.md
@@ -128,7 +128,9 @@ file modules/comlink/vantage/vantage_twilight_reader.rye
 file modules/vantage_tablecloth_bridge.rye
 file modules/comlink/vantage/glow/fold-twilight-turn.glow
 file modules/comlink/vantage/glow/fold-vantage-snapshot.glow
-file tools/w/witness_all.rish
+file modules/brushstroke/skate/canopy_watershed_canvas.rye
+file modules/brushstroke/glow/fold-canopy-canvas.glow
+file tools/witness_all.rish
 file blazepod/rv64_glasswall_boot.rye
 file modules/aurora/glow/gate-riscv-hart-boot.glow
 file modules/pond/puddle/puddle_remote.rye
@@ -194,7 +196,7 @@ file modules/fusion/fusion_sow.rye
 file modules/fusion/gate_runner.rye
 
 # Gate witness runner
-file tools/p/parity.rish
+file tools/rishi/parity.rish
 
 # Flare inference faculties & Agentic Harness
 file modules/flare/lattice/lattice_core.rye
@@ -215,7 +217,7 @@ file modules/comlink/vantage/surf_social_grid.rye
 file modules/comlink/vantage/vantage_carry_jni.c
 file modules/comlink/vantage/glow/fold-vantage-carry.glow
 file terrarium/app/vantage_mac_live.swift
-file tools/c/build_dc1_apk.rish
+file tools/vantage/build_dc1_apk.rish
 file modules/resonance/dsp_engine.rye
 file modules/resonance/studio_wav_bounce.rye
 file docs-geode/tutorials/resonance-station-daw.md

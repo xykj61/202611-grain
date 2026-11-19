@@ -41,9 +41,9 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.048** / 100.000 |
+| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.049** / 100.000 |
 | **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **48** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.130204** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.131122** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->
@@ -85,10 +85,10 @@ Brand marks -- featuring **Cavalhatriz** + **Noto Sans Mono** (alongside `Iosevk
 ```sh
 git clone https://github.com/xykj61/202611-grain.git grain
 cd grain
-sh tools/f/fetch-toolchain.sh
+sh tools/rye/fetch-toolchain.sh
 cd languages/rye && ./bootstrap.sh && cd ../..
 mkdir -p languages/rishi/bin && languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/rishi/bin/rishi
-languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
+languages/rishi/bin/rishi run tools/rishi/bricks_exist_witness.rish
 ```
 
 Follow the full guided walkthrough in **[The First Hour](docs-geode/tutorials/the-first-hour.md)**.

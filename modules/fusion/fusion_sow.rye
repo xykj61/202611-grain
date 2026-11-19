@@ -460,7 +460,11 @@ fn run_cold_full(
 ) !void {
     const rishi_bin = "languages/rishi/bin/rishi";
     const sw = try std.process.run(a, io, .{
-        .argv = &[_][]const u8{ rishi_bin, "run", "tools/s/sow_witness.rish" },
+        .argv = &[_][]const u8{
+            rishi_bin,
+            "run",
+            "tools/fusion/sow_witness.rish",
+        },
         .stdout_limit = .limited(4 * 1024 * 1024),
     });
     if (!run_ok(sw) or
