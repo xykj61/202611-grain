@@ -1,0 +1,11 @@
+::  modules/brushstroke/glow/fold-harness-console.glow -- Harness Console!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-harness-console-frame
+  |=  [bytes=@ud hits=@ud turns=@ud]                    ::  <=256K & hits<=t
+  ^-  @ud                                               ::  verified bytes
+  ~|  'vantage-harness-console-frame-or-hits-breach'    ::  Glasswall frame
+  ?>  &(lte(bytes 262144) gth(turns 0) lte(hits turns))
+  bytes
+--

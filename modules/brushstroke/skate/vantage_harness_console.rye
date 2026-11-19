@@ -1,0 +1,159 @@
+//! modules/brushstroke/skate/vantage_harness_console.rye -- Harness Console!
+//!
+//! Stamp: `20261119.183931` -- Sagittarius (*Teacher/Karma visual artistry:
+//! Brushstroke/Skate & re-prepend Husk*), powering `grain-ww harness-console`!
+//! Renders a deterministic `320 x 120` RGB24 (`115,200` B `<= 256 KiB`
+//! Glasswall cap!) `Vantage Station` live visual console framebuffer showing:
+//!   1. Hardware posture lamp (`tally_ram` moss vs `tally_vn` amber) & live
+//!      `Flare` / `Pond` / `Gemini API` transport stripes,
+//!   2. `Blaze` SHA3 cache-hit fill meter (`hits / total_turns`),
+//!   3. Conserved `1000`-permille 4-way `WOOD` stewardship bars,
+//! with deterministic SHA3-256 digest & 3 paired refusal witnesses!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.183931";
+pub const width: u32 = 320;
+pub const height: u32 = 120;
+pub const frame_bytes: usize = width * height * 3; // 115,200 B <= 256 KiB
+const nl: u8 = 10;
+
+pub const ConsoleError = error{
+    ZeroTurnsRefused,
+    HitsExceedTurnsRefused,
+    WoodPermilleNotThousand,
+};
+
+pub const ConsoleState = struct {
+    is_tally_vn: bool,
+    cache_hits: u32,
+    total_turns: u32,
+    wood_permilles: [4]u32,
+};
+
+pub const Rgb = struct { r: u8, g: u8, b: u8 };
+
+const col_oat = Rgb{ .r = 0xF5, .g = 0xEF, .b = 0xE2 };
+const col_moss = Rgb{ .r = 0x2E, .g = 0x4A, .b = 0x36 };
+const col_amber = Rgb{ .r = 0xD9, .g = 0x9B, .b = 0x38 };
+const col_bark = Rgb{ .r = 0x5C, .g = 0x44, .b = 0x30 };
+const col_sky = Rgb{ .r = 0x5B, .g = 0x8D, .b = 0xB8 };
+const col_sage = Rgb{ .r = 0x6F, .g = 0x99, .b = 0x73 };
+
+fn fill_rect(
+    fb: *[frame_bytes]u8,
+    x0: u32,
+    y0: u32,
+    w: u32,
+    h: u32,
+    c: Rgb,
+) void {
+    var y: u32 = y0;
+    while (y < y0 + h and y < height) : (y += 1) {
+        var x: u32 = x0;
+        while (x < x0 + w and x < width) : (x += 1) {
+            const idx: usize = (@as(usize, y) * width + x) * 3;
+            fb[idx] = c.r;
+            fb[idx + 1] = c.g;
+            fb[idx + 2] = c.b;
+        }
+    }
+}
+
+pub fn render_harness_console(
+    st: ConsoleState,
+    fb: *[frame_bytes]u8,
+) ConsoleError![32]u8 {
+    // invariant: valid turn counts, exact 1000-permille WOOD, & <=256 KiB fb.
+    if (st.total_turns == 0) return error.ZeroTurnsRefused;
+    if (st.cache_hits > st.total_turns) return error.HitsExceedTurnsRefused;
+    const sum_pm = st.wood_permilles[0] + st.wood_permilles[1] +
+        st.wood_permilles[2] + st.wood_permilles[3];
+    if (sum_pm != 1000) return error.WoodPermilleNotThousand;
+
+    // Background oat canvas + top header bar
+    fill_rect(fb, 0, 0, width, height, col_oat);
+    fill_rect(fb, 0, 0, width, 18, col_bark);
+
+    // Zone 1: Hardware posture lamp (moss=tally_ram, amber=tally_vn)
+    const lamp = if (st.is_tally_vn) col_amber else col_moss;
+    fill_rect(fb, 12, 28, 84, 78, lamp);
+
+    // Zone 2: Blaze SHA3 cache-hit meter bar
+    fill_rect(fb, 112, 28, 92, 78, col_bark);
+    const fill_w: u32 = (st.cache_hits * 84) / st.total_turns;
+    fill_rect(fb, 116, 36, fill_w, 62, col_sky);
+
+    // Zone 3: Conserved 4-way WOOD stewardship stacked bar
+    const cols = [4]Rgb{ col_moss, col_sage, col_amber, col_sky };
+    var cx: u32 = 220;
+    for (st.wood_permilles, 0..) |pm, idx| {
+        const seg: u32 = (pm * 88) / 1000;
+        fill_rect(fb, cx, 28, seg, 78, cols[idx]);
+        cx += seg;
+    }
+
+    var digest: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-vantage-harness-console-v1:");
+    h.update(fb);
+    h.final(&digest);
+    assert(frame_bytes <= 262_144 and (digest[0] | digest[1]) != 0);
+    return digest;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const fb1 = try a.create([frame_bytes]u8);
+    const fb2 = try a.create([frame_bytes]u8);
+
+    const st = ConsoleState{
+        .is_tally_vn = true,
+        .cache_hits = 6,
+        .total_turns = 8,
+        .wood_permilles = .{ 500, 250, 150, 100 },
+    };
+    const d1 = try render_harness_console(st, fb1);
+    const d2 = try render_harness_console(st, fb2);
+    if (!std.mem.eql(u8, &d1, &d2)) return error.ConsoleNonDeterministic;
+
+    // Refusal 1: zero total turns refused cleanly
+    var bad_zero = st;
+    bad_zero.total_turns = 0;
+    if (render_harness_console(bad_zero, fb1)) |_| {
+        return error.ZeroTurnsAccepted;
+    } else |err| {
+        if (err != error.ZeroTurnsRefused) return err;
+    }
+
+    // Refusal 2: cache hits exceeding total turns refused cleanly
+    var bad_hits = st;
+    bad_hits.cache_hits = 9;
+    if (render_harness_console(bad_hits, fb1)) |_| {
+        return error.ExcessHitsAccepted;
+    } else |err| {
+        if (err != error.HitsExceedTurnsRefused) return err;
+    }
+
+    // Refusal 3: non-1000 permille WOOD bar refused cleanly
+    var bad_wood = st;
+    bad_wood.wood_permilles = .{ 500, 200, 100, 100 };
+    if (render_harness_console(bad_wood, fb1)) |_| {
+        return error.BadWoodBarAccepted;
+    } else |err| {
+        if (err != error.WoodPermilleNotThousand) return err;
+    }
+
+    print(
+        "GREEN: vantage_harness_console -- 320x120 RGB24 ({d} B) ok!{c}",
+        .{ frame_bytes, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

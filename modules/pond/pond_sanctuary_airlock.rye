@@ -90,6 +90,9 @@ pub const hub_doors = [_][]const u8{
     "context/REMOTE_ROSTER.md",
     "context/REDACT_TECHNIQUE.md",
     "context/SILO_TECHNIQUE.md",
+    "context/SIMPLE_LOVABLE_COMPLETE.md",
+    "context/BREACH.md",
+    "context/QUIN.md",
 };
 
 fn verify_myofascia_density(a: std.mem.Allocator, io: std.Io) !u32 {
@@ -116,8 +119,8 @@ fn verify_myofascia_density(a: std.mem.Allocator, io: std.Io) !u32 {
         }
         linked += 1;
     }
-    // invariant: all 35 major repository hubs connect straight into LEXICON.md.
-    assert(linked == 35 and lex.len > 2048);
+    // invariant: all 38 major repository hubs connect straight into LEXICON.md.
+    assert(linked == 38 and lex.len > 2048);
     return linked;
 }
 
@@ -174,7 +177,7 @@ fn run_selftest(init: std.process.Init) !u8 {
     const hubs = try verify_myofascia_density(a, io);
 
     print(
-        "GREEN: pond_sanctuary_airlock -- Glasswall & {d}/35 LEXICON hubs!{c}",
+        "GREEN: pond_sanctuary_airlock -- Glasswall & {d}/38 LEXICON hubs!{c}",
         .{ hubs, nl },
     );
     return 0;
