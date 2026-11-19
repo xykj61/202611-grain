@@ -1,76 +1,73 @@
 # The Silo Technique -- Making Outside Inspiration Genuinely Our Own
 
 **Language:** EN
-**Stamp:** `20261119.105021` (EST -- molted & refreshed for `12-Pisces`
-Twilight Radiant artistry and `Teacher / Karma` open-door prose)
+**Stamp:** `20261119.113425` (EST)
 **Voice:** Kyri / Reya
-**Style:** Gauge & Radiant (see [`GAUGE_STYLE.md`](GAUGE_STYLE.md),
-[`RADIANT_STYLE.md`](RADIANT_STYLE.md), and
-[`TEACHER_STYLE.md`](TEACHER_STYLE.md) / [`KARMA_STYLE.md`](KARMA_STYLE.md))
-**Room:** vision -- a portable creative and engineering discipline
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Companion Canons:** [`GAUGE_STYLE.md`](GAUGE_STYLE.md),
+[`RADIANT_STYLE.md`](RADIANT_STYLE.md), [`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md),
+[`TEACHER_STYLE.md`](TEACHER_STYLE.md), [`KARMA_STYLE.md`](KARMA_STYLE.md)
 
 ---
 
-## 1. What Siloing Is Not
+## 1. Comprehension as Ownership, Gratitude as Honor
 
-The Silo Technique is the opposite of plagiarism. Plagiarism presents another
-person's words, code, or surface dress as your own discovery. Siloing is the
-discipline of studying an inspiration until you understand its underlying
-structure deeply enough to teach and build it from scratch in your own house's
-vocabulary -- while naming and thanking the visionaries, architects, artists,
-coaches, and researchers who inspired you warmly in [`../gratitude/`](../gratitude/).
-
----
-
-## 2. What Siloing Is
-
-A **silo** is a clean room for comprehension and original creation. Ideas enter
-freely, yet they enter **distilled to first principles**:
-- A particular teacher's phrase becomes the transferable truth it points to,
-- A specific building, instrument, or painting becomes the geometric proportion,
-  light rhythm, or structural invariant that makes it sing,
-- A named product becomes the plain human capability it offers, rebuilt cleanly
-  inside our TAME / Radiant / Glasswall architecture.
-
-The insight stays at full strength and sheds only its origin's borrowed dress.
+The Silo Technique is our clean-room practice for welcoming wisdom, architecture,
+and artistry from the wider world and expressing it purely in our own voice.
+True comprehension lets an engineer, writer, or artist rebuild an idea from
+first principles in fresh, native vocabulary while honoring and thanking every
+inspiring teacher openly in [`../gratitude/`](../gratitude/).
 
 ---
 
-## 3. Why We Silo
+## 2. What a Creative Silo Does
 
-1. **One Coherent Voice:** A body of work that silos its inspirations speaks in
-   one clear, warm register rather than a patchwork of borrowed jargon.
-2. **Proof of True Understanding:** You can only re-express from first
-   principles what you genuinely comprehend -- its invariants, its reasons, and
-   its edges.
-3. **Ideas Standing on Merit:** Stripped of borrowed prestige, every design
-   choice stands on measurable usefulness and beauty.
-4. **Portable Clean-Room Integrity:** Re-expressing insights in our own words
-   and code keeps the tree legally, artistically, and spiritually clean.
-5. **Devotional Digestion (`12-Pisces` Artistry):** In **Movement `12-Pisces`**,
-   we draw inspiration from the creative, architectural, and artistic visionaries
-   honored in `gratitude/`, pass that inspiration through the Silo clean room,
-   and craft a **unique Twilight Radiant artistic or visual interface artifact**
-   that belongs unmistakably to Grain.
+A **silo** acts as a clear distillation chamber between study and creation:
+- A teacher's memorable phrase distills into the universal principle it reveals.
+- A beloved building, musical instrument, or painting distills into the
+  proportion, rhythm, and structural balance that give it life.
+- An external software tool distills into the plain human capability it serves,
+  rebuilt cleanly inside our TAME, Radiant, and `Glasswall` foundations.
+
+The living essence arrives at full strength, dressed entirely in Grain's own
+woven cloth.
 
 ---
 
-## 4. How To Silo in Four Steps
+## 3. Five Strengths of Siloed Creation
 
-1. **Receive Fully:** Study the work until you grasp the living principle
-   beneath its surface form.
-2. **Separate Essence From Scaffolding:** Set the transferable principle apart
-   from external brand names, slogans, idioms, or visual trademarks.
-3. **Rebuild in Native Materials:** Express the principle from scratch in Grain's
-   own vocabulary, styles (`Radiant`, `Twilight`, `Civic`, `Gauge`, `Teacher /
-   Karma`), and TAME bounds. If a sentence or visual motif still echoes the
-   external source's signature dress, distill it one turn deeper.
-4. **Keep Gratitude Warm & Apart:** Record generous, explicit thanks in
-   [`../gratitude/`](../gratitude/) (and in explicit *Dependencies* sections of
-   internal `active-designing/` notes where lineage clarity helps engineers).
+1. **Unified Voice:** Every room in the repository speaks one coherent, warm
+   language free of borrowed slogans.
+2. **Verified Understanding:** Rebuilding a concept from scratch proves genuine
+   mastery of its invariants, trade-offs, and boundaries.
+3. **Merit in Daylight:** Ideas stand on measurable usefulness, clarity, and
+   beauty rather than borrowed prestige.
+4. **Clean Provenance:** Original prose, code, and visual geometry travel
+   anywhere with complete legal and creative integrity.
+5. **`12-Pisces` Twilight Radiant Artistry:** During **Movement `12-Pisces`**,
+   we contemplate visionaries honored in `gratitude/` -- architects, painters,
+   composers, systems builders, and regenerative growers -- distill their core
+   harmony through the Silo clean room, and craft a **unique artistic artifact**
+   that belongs wholly to Grain.
 
 ---
 
-*May every idea we welcome become truly our own through understanding. May our
-work speak and shine in one clear voice, owing nothing it has not digested and
-thanking warmly every teacher who lit the way.*
+## 4. The Four-Step Silo Practice
+
+1. **Study Deeply:** Sit with the inspiring work until its underlying geometry
+   and human purpose become crystal clear.
+2. **Extract the Transferable Principle:** State the structural truth in plain,
+   general terms independent of external brand names or signature idioms.
+3. **Compose Anew in Grain's Materials:** Build and write from first principles
+   using our own styles (`Radiant`, `Gauge`, `Civic`, `Teacher / Karma`,
+   `Twilight`) and TAME bounds until every line sounds natively ours.
+4. **Record Warm Thanks in `gratitude/`:** Dedicate explicit, generous credit to
+   the teachers and visionaries in [`../gratitude/`](../gratitude/) so thinking
+   and thanksgiving each flourish in their proper room.
+
+---
+
+*May every insight we study blossom anew through genuine understanding, may our
+craft speak in one clear and original voice, and may our gratitude room stay
+warm with honor for every teacher along the way.*

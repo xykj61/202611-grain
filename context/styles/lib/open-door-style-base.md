@@ -1,89 +1,80 @@
 # Open-Door Style Base -- Single-Stranded Canon for Teacher Style & Karma Style
 
 **Language:** EN
-**Stamp:** `20261119.105021` (EST)
+**Stamp:** `20261119.113425` (EST)
 **Voice:** Kyri / Reya and Kyli, jointly
-**Implemented identically by:** [`../../TEACHER_STYLE.md`](../../TEACHER_STYLE.md)
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Implemented Identically By:** [`../../TEACHER_STYLE.md`](../../TEACHER_STYLE.md)
 and [`../../KARMA_STYLE.md`](../../KARMA_STYLE.md), bound via
 [`../../../modules/synonym/synonym_macro.rye`](../../../modules/synonym/synonym_macro.rye)
-(`teacher-style <-> karma-style`; elder `BHAKTA_STYLE.md` rests honored in
-`yonder/context/BHAKTA_STYLE.md`)
-**Kin:** [`../../GAUGE_STYLE.md`](../../GAUGE_STYLE.md) -
-[`../../RADIANT_STYLE.md`](../../RADIANT_STYLE.md) -
-[`../../SILO_TECHNIQUE.md`](../../SILO_TECHNIQUE.md) -
-[`../../../gratitude/american-coaching-craft.md`](../../../gratitude/american-coaching-craft.md)
+(`teacher-style <-> karma-style`)
+**Companion Canons:** [`../../GAUGE_STYLE.md`](../../GAUGE_STYLE.md),
+[`../../RADIANT_STYLE.md`](../../RADIANT_STYLE.md),
+[`../../SILO_TECHNIQUE.md`](../../SILO_TECHNIQUE.md)
 
 ---
 
-## 1. What the Open-Door Register Is (`Teacher <-> Karma`)
+## 1. One Open-Door Register Under Two Names (`Teacher <-> Karma`)
 
-**Teacher Style** and **Karma Style** are two interchangeable names (`Synonym`:
-*Sameness Is the Macro*) for **one exact open-door register**: Radiant + Gauge
-teaching someone who may have never written a line of code and who deserves the
-whole, unwatered truth anyway.
+**Teacher Style** and **Karma Style** are interchangeable synonyms (*Sameness Is
+the Macro*) for Grain's **open-door register**: Radiant warmth paired with Gauge
+exactness, welcoming a reader who may be meeting computing for the very first
+morning and trusting them with the complete truth.
 
-- Everything **Radiant** asks, this register keeps: lead with what *is*, active
-  voice, `yet` over heavy `but`, coined terms named in plain words on first use.
-- **Gauge's** first rule governs it at the front: **don't be too smart about
-  it.** Measure what you claim, name the exact command, and leave a reading any
-  reader can re-run.
-- **Teacher** names the open classroom and coaching huddle; **Karma** names
-  selfless craft taught through concrete, verifiable action on disk (*teaching
-  by showing the working deed*). Both resolve to every rule on this page.
+- **Teacher** highlights the welcoming classroom, coaching huddle, and clear
+  step-by-step walkthrough.
+- **Karma** highlights selfless skill in action -- teaching through working
+  files, runnable commands, and verifiable fruits on disk.
 
 ---
 
-## 2. What Teacher / Karma Style Always Does
+## 2. Five Commitments of the Open Door
 
-1. **Assume no background, and let that stay quiet.** Explain the thing itself
-   from first principles in order; a reader who already knows it still enjoys
-   the clarity, and a newcomer feels *invited and trusted*.
-2. **One new idea at a time, concrete before abstract.** Show the working file
-   or command on disk first, then name the concept.
-3. **Courtesy in the words themselves.** Reach past *simply*, *just*, and
-   *obviously*, each of which tells a struggling learner they should already be
-   past the step they are meeting.
-4. **Say why it matters to a life -- once, and meant.** Connect technical bounds
-   to what the work serves: biocyclic vegan ecology, a bounded machine a small
-   family farm can afford, a key nobody can revoke, a household's privacy under
-   `Glasswall`. Stated once where it lands, it illuminates; repeated in every
-   paragraph, it turns into a slogan.
-5. **Encourage by being accurate.** *"Run this command, and here is the `GREEN:`
-   line you will see"* serves a learner far better than *"this is easy."*
-
----
-
-## 3. Practice & Craft Metaphors of Our Own (Siloed via `SILO_TECHNIQUE.md`)
-
-This register borrows the *feel* of disciplined team practice while never
-copying another coach's slogans or playbook (`SILO_TECHNIQUE.md`; thanks kept
-apart in `gratitude/american-coaching-craft.md`):
-
-- **Film.** After an orbit, watch what actually happened (`6-Virgo` efficiency
-  review & session logs) before calling the next series.
-- **Huddle (`Kyli`).** A crisp checklist or `9-Sagittarius` Teacher response
-  where everyone hears the same next play in ordinary speech.
-- **One possession.** Finish one green movement (`grain-ww witness-all`) before
-  stacking the next.
-- **The bench.** Tools and witnesses sit ready; send in the exact one the play
-  needs.
-- **Conditioning (`Myofascia`).** Connective tissue that stays supple: links
-  that resolve, zero residue, computational stamps that match the live clock,
-  and pages a newcomer can walk without a tear.
-
-A metaphor earns its place *after* the mechanism sentence: name the command and
-the measured output first, then let the image land.
+1. **Welcome Fresh Eyes Quietly:** Build every explanation from first principles
+   in natural order so newcomers feel invited and seasoned engineers enjoy the
+   crispness.
+2. **One Idea per Step, Concrete Before Abstract:** Show the runnable command or
+   tangible file first, then introduce its name once in plain speech.
+3. **Courteous Precision:** State each step directly and kindly, letting
+   accurate instructions encourage the learner (`run this command to see the
+   GREEN witness line`).
+4. **Connect Bounds to Living Purpose Once:** Anchor technical choices in the
+   world they serve -- biocyclic vegan agriculture, affordable repairable boards
+   for family workshops, revocable-free `Kumara` keys, and household `Glasswall`
+   dignity -- stated once where the insight lands best.
+5. **Measured Reproducibility:** Pair every claim with the exact command and
+   expected output so any student can verify it independently.
 
 ---
 
-## 4. Where Teacher / Karma Style Governs
+## 3. Team Practice Metaphors of Our Own (Siloed via `SILO_TECHNIQUE.md`)
 
-`docs-geode/tutorials/` (`the-first-hour.md`, `the-second-hour-remotes-clock-
-and-cadence.md`), `SOURCE.md`, `CONTRIBUTING.md`, onboarding manuals, API
-walkthroughs, `9-Sagittarius` Teacher planning responses, and any page whose
-reader may meet both computing and Grain on the same morning.
+Our open-door tutorials draw gentle energy from disciplined team practice,
+expressed entirely in Grain's own words (with gratitude kept warmly in
+`gratitude/american-coaching-craft.md`):
+
+- **Film (`Kyri / Reya`):** Reviewing measured orbit logs during `6-Virgo` to
+  spot smoother plays for the next round.
+- **Huddle (`Kyli`):** Gathering at `2-Taurus` and `9-Sagittarius` so everyone
+  hears the same clear next goal in everyday language.
+- **One Possession:** Completing and proving one clean movement on metal before
+  advancing to the next.
+- **The Bench:** Keeping focused tools and witnesses ready for the exact task at
+  hand.
+- **Conditioning (`Myofascia`):** Tending links, live timestamps, and clean
+  shelves so the whole repository stays supple across years of growth.
 
 ---
 
-*May the door stay open, may practice stay kind, and may everyone who walks
-through be trusted with the whole truth.*
+## 4. Where Teacher and Karma Style Serve
+
+`docs-geode/tutorials/`, `SOURCE.md`, `CONTRIBUTING.md`, API walkthroughs,
+onboarding guides, and **Movement `9-Sagittarius`** Teacher/Karma syntheses that
+turn `6-Virgo -> 7-Libra -> 8-Scorpio` insights into an inspiring plan for the
+next 15 movements.
+
+---
+
+*May the classroom door stay wide open, may practice stay kind, and may every
+learner walk forward with confidence and whole understanding.*

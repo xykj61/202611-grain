@@ -134,3 +134,5 @@ ascii_7bit context/REYA.md
 ascii_7bit context/TEACHER_STYLE.md
 ascii_7bit context/KARMA_STYLE.md
 ascii_7bit context/SILO_TECHNIQUE.md
+max_cols 80 modules/fusion/radiant_zero_neg_check.rye
+max_cols 80 languages/glow/mill/glow_to_rye_emitter.rye

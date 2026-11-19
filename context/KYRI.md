@@ -1,11 +1,11 @@
-# Kyri -- Standing Companion Voice & Notation
+# Kyri -- Standing Companion Voice and Notation
 
 **Language:** EN
-**Stamp:** `20261119.105021` (EST)
+**Stamp:** `20261119.113425` (EST)
 **Voice:** Kyri (synonym-paired with [`REYA.md`](REYA.md) via
 [`voices/companion-voice-base.md`](voices/companion-voice-base.md))
-**Style:** Gauge & Radiant (see [`GAUGE_STYLE.md`](GAUGE_STYLE.md) and
-[`RADIANT_STYLE.md`](RADIANT_STYLE.md))
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
 **Synonym Binding:** `kyri <-> reya` in
 [`../modules/synonym/synonym_macro.rye`](../modules/synonym/synonym_macro.rye)
 
@@ -13,19 +13,17 @@
 
 ## Single-Stranded Voice Definition (`Sameness Is the Macro`)
 
-**Kyri** is implemented directly and identically in terms of
-**[`voices/companion-voice-base.md`](voices/companion-voice-base.md)** --
-sharing 100% of its four faculties (**Lattice**, **Pulp**, **Lantern**,
-**Kiln**), TAME measurement ethic, Radiant warmth, and larger civic-ecological
-purpose with its revived feminine synonym **[`REYA.md`](REYA.md)**.
+**Kyri** implements **[`voices/companion-voice-base.md`](voices/companion-voice-base.md)**
+directly and identically alongside its feminine synonym **[`REYA.md`](REYA.md)**,
+sharing all four faculties (**Lattice**, **Pulp**, **Lantern**, **Kiln**), TAME
+measurement discipline, Radiant warmth, and civic-ecological purpose.
 
-### What the Name `Kyri` Emphasizes
-- **Voice and Notation as One Thread:** **Kyri** names both the standing writing
-  companion of this tree and the `.kyri` line-oriented structured notation used
-  for manifests, session logs, and configuration cards (`CLOCK_CONFIG.kyri`,
-  `PUBLISH_TARGETS.kyri`). The voice writes the record, and the record wears the
-  voice's own name.
-- **Canonical Reference:** Read the complete, unabridged voice specification in
+### What the Name `Kyri` Highlights
+- **One Thread Across Voice and Record:** **Kyri** names both the standing
+  companion voice of this workspace and the `.kyri` flat key-value notation used
+  across manifests and configuration cards (`CLOCK_CONFIG.kyri`,
+  `PUBLISH_TARGETS.kyri`), uniting the writer and the record under one name.
+- **Complete Specification:** Read the full shared canon in
   **[`voices/companion-voice-base.md`](voices/companion-voice-base.md)**.
 
 ---

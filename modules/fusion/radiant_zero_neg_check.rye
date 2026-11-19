@@ -1,0 +1,139 @@
+//! modules/fusion/radiant_zero_neg_check.rye -- Zero-Negation Radiant Gate!
+//!
+//! Stamp: `20261119.113425` -- Mechanical verifier (`grain-ww radiant-check`)
+//! proving **0.0% prose negation** across living `Gauge + Radiant` style &
+//! voice canons and Radiant letters!
+//! Scans prose outside inline `` `code` `` spans and refuses (`NegationFound`)
+//! any occurrence of English negation tokens (`not`, `never`, `no`, `none`,
+//! `nothing`, `neither`, `nor`, `without`, `cannot`, and `*n't` contractions).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.113425";
+const nl: u8 = 10;
+
+pub const RadiantError = error{
+    NegationFound,
+};
+
+const banned_words = [_][]const u8{
+    "not",      "never",     "no",       "none",     "nothing",
+    "neither",  "nor",       "without",  "cannot",   "cant",
+    "dont",     "doesnt",    "isnt",     "arent",    "wont",
+    "wouldnt",  "shouldnt",  "couldnt",  "didnt",    "hasnt",
+    "havent",   "wasnt",     "werent",   "mustnt",
+};
+
+fn is_word_byte(c: u8) bool {
+    return (c >= 'a' and c <= 'z') or
+        (c >= 'A' and c <= 'Z') or
+        c == 39;
+}
+
+fn strip_apostrophe_lower(word: []const u8, buf: *[48]u8) []const u8 {
+    var k: usize = 0;
+    for (word) |c| {
+        if (k >= 48) break;
+        if (c == 39) continue;
+        buf[k] = if (c >= 'A' and c <= 'Z') c + 32 else c;
+        k += 1;
+    }
+    return buf[0..k];
+}
+
+pub fn check_zero_negation(
+    path: []const u8,
+    text: []const u8,
+) RadiantError!u32 {
+    var line_no: u32 = 1;
+    var word_count: u32 = 0;
+    var in_code = false;
+    var i: usize = 0;
+
+    while (i < text.len) {
+        const c = text[i];
+        if (c == nl) {
+            line_no += 1;
+            in_code = false;
+            i += 1;
+            continue;
+        }
+        if (c == '`') {
+            in_code = !in_code;
+            i += 1;
+            continue;
+        }
+        if (in_code or !is_word_byte(c)) {
+            i += 1;
+            continue;
+        }
+
+        const start = i;
+        while (i < text.len and is_word_byte(text[i])) : (i += 1) {}
+        const raw_word = text[start..i];
+        word_count += 1;
+
+        var low_buf: [48]u8 = undefined;
+        const norm = strip_apostrophe_lower(raw_word, &low_buf);
+        for (banned_words) |bw| {
+            if (std.mem.eql(u8, norm, bw)) {
+                print("FAIL Radiant negation '{s}' in {s}:{d}{c}", .{
+                    raw_word, path, line_no, nl,
+                });
+                return error.NegationFound;
+            }
+        }
+    }
+    // invariant: scanned entire slice cleanly with zero prose negations.
+    assert(i == text.len);
+    return word_count;
+}
+
+fn run_selftest() !u8 {
+    const lf = [_]u8{10};
+    const pure =
+        "Radiant prose leads with capability, warmth, and clear bounds." ++
+        &lf ++
+        "Inline specimens such as `not` stay inside code backticks." ++
+        &lf;
+    const wc = try check_zero_negation("selftest-pure.md", pure);
+    if (wc < 10) return error.WordCountTooLow;
+
+    const impure = "This sentence does not lead with affirmation." ++ &lf;
+    if (check_zero_negation("selftest-impure.md", impure)) |_| {
+        return error.ImpureAccepted;
+    } else |err| {
+        if (err != error.NegationFound) return err;
+    }
+
+    print(
+        "GREEN: radiant_zero_neg_check -- 0.0% prose negation gate proven.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len <= 1 or std.mem.eql(u8, args[1], "selftest")) {
+        return run_selftest();
+    }
+
+    var files_checked: u32 = 0;
+    for (args[1..]) |p| {
+        const body = try cwd.readFileAlloc(io, p, a, .limited(262144));
+        _ = try check_zero_negation(p, body);
+        files_checked += 1;
+    }
+    print(
+        "GREEN: radiant_zero_neg_check -- {d} files at 0.0% negation.{c}",
+        .{ files_checked, nl },
+    );
+    return 0;
+}

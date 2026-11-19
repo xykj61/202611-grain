@@ -1,33 +1,33 @@
 # Karma Style -- Selfless Craft Taught Through Action
 
 **Language:** EN
-**Stamp:** `20261119.105021` (EST)
+**Stamp:** `20261119.113425` (EST)
 **Voice:** Kyri / Reya and Kyli, jointly
-**Style:** Karma (synonym-paired with [`TEACHER_STYLE.md`](TEACHER_STYLE.md) via
-[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md))
-**Synonym Binding:** `karma-style <-> teacher-style` in
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Synonym Binding:** `karma-style <-> teacher-style` via
+[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md) and
 [`../modules/synonym/synonym_macro.rye`](../modules/synonym/synonym_macro.rye)
 
 ---
 
 ## Single-Stranded Style Definition (`Sameness Is the Macro`)
 
-**Karma Style** is implemented directly and identically in terms of
+**Karma Style** implements
 **[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md)**
--- sharing 100% of its rules, warmth, zero-assumed-background clarity, one-
-sentence life-and-ecology *why*, and Gauge exactness with its exact synonym
-**[`TEACHER_STYLE.md`](TEACHER_STYLE.md)** (carrying forward everything good in
-the retired `yonder/context/BHAKTA_STYLE.md` without division).
+directly and identically alongside its synonym **[`TEACHER_STYLE.md`](TEACHER_STYLE.md)**,
+sharing first-principles clarity, warm hospitality, ecological grounding, and
+verifiable Gauge commands.
 
-### What the Name `Karma` Emphasizes
-- **Teaching by Wholesome Action (*Karma-kauhsalam* -- Yoga is skill in
-  action):** Every specification, manual, or code comment shows the concrete
-  step, names what holds it bounded on a modest machine, and leaves the fruit
-  open and verifiable for the next steward without ego or jargon.
-- Read the complete, unabridged specification in
+### What `Style: Karma` Highlights
+- **Skill in Wholesome Action:** Teaching through concrete deeds on disk --
+  showing the exact bounded structure, stating how it serves a family farm or
+  civic workshop on modest hardware, and leaving clean, reproducible work for
+  the next builder.
+- **Complete Specification:** Read the full shared canon in
   **[`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md)**.
 
 ---
 
-*May every step on disk be clear, selfless, and whole, and may everyone who
-walks through the door be trusted with the whole truth.*
+*May every step on disk stand clear, generous, and whole for the hands that
+follow.*

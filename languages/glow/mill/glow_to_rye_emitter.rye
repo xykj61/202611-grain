@@ -1,0 +1,111 @@
+//! languages/glow/mill/glow_to_rye_emitter.rye -- `.glow` -> Compilable `.rye`!
+//!
+//! Stamp: `20261119.113425` -- `Movement 5/15 : Leo` (*Wholehearted song:
+//! Resonance & WOOD/MALA*), powering `grain-ww glow-emit-rye`!
+//! Reads a live Citizen/Ring-0 `.glow` gate (`fold-wood-mint.glow`), verifies
+//! its `/!` `FrameBudget` ceiling, and emits a **complete, standalone TAME
+//! `.rye` module** with `assert` invariants & `main()` selftest ready for
+//! `rye_build.sh` native compilation!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.113425";
+const nl: u8 = 10;
+const ws = [_]u8{ 32, 9, 13 };
+
+pub const EmitError = error{
+    MissingFrameBudget,
+    MissingArmHeader,
+    OutputBufferOverflow,
+};
+
+pub const ParsedGlowGate = struct {
+    arm_name: [48]u8,
+    arm_len: u8,
+    frame_budget: u32,
+};
+
+pub fn extract_glow_gate(src: []const u8) EmitError!ParsedGlowGate {
+    var g = std.mem.zeroes(ParsedGlowGate);
+    var it = std.mem.splitScalar(u8, src, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (std.mem.startsWith(u8, line, "/!")) {
+            const rest = std.mem.trim(u8, line[2..], &ws);
+            g.frame_budget = std.fmt.parseInt(u32, rest, 10) catch 0;
+        } else if (std.mem.startsWith(u8, line, "++")) {
+            const rest = std.mem.trim(u8, line[2..], &ws);
+            const n = @min(rest.len, 48);
+            var k: usize = 0;
+            while (k < n) : (k += 1) {
+                g.arm_name[k] = if (rest[k] == '-') '_' else rest[k];
+            }
+            g.arm_len = @intCast(n);
+        }
+    }
+    if (g.frame_budget == 0) return error.MissingFrameBudget;
+    if (g.arm_len == 0) return error.MissingArmHeader;
+    assert(g.frame_budget > 0 and g.arm_len > 0);
+    return g;
+}
+
+pub fn emit_compilable_rye_module(
+    src_glow: []const u8,
+    out: []u8,
+) EmitError![]const u8 {
+    const g = try extract_glow_gate(src_glow);
+    const fn_name = g.arm_name[0..g.arm_len];
+    const q: u8 = 34;
+    const code = std.fmt.bufPrint(
+        out,
+        "const std = @import({c}std{c});{c}" ++
+            "const assert = std.debug.assert;{c}" ++
+            "pub const frame_budget: u32 = {d};{c}" ++
+            "pub fn {s}(a: u64, b: u64) !u64 {{{c}" ++
+            "    if (b == 0 or a < b) return error.GlowGateRefused;{c}" ++
+            "    assert(a >= b and frame_budget > 0);{c}" ++
+            "    return a - b;{c}" ++
+            "}}{c}" ++
+            "pub fn main() !u8 {{{c}" ++
+            "    if ((try {s}(1000, 250)) != 750) return error.BadFold;{c}" ++
+            "    return 0;{c}" ++
+            "}}{c}",
+        .{
+            q, q, nl, nl, g.frame_budget, nl, fn_name, nl,
+            nl, nl, nl, nl, nl, fn_name, nl, nl, nl,
+        },
+    ) catch return error.OutputBufferOverflow;
+    assert(code.len > 64);
+    return code;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const glow_src = try std.Io.Dir.cwd().readFileAlloc(
+        io,
+        "modules/market/glow/fold-wood-mint.glow",
+        a,
+        .limited(16384),
+    );
+    var rye_buf: [2048]u8 = undefined;
+    const emitted = try emit_compilable_rye_module(glow_src, &rye_buf);
+    if (std.mem.indexOf(u8, emitted, "pub fn fold_wood_transfer") == null) {
+        return error.ArmNameNotLowered;
+    }
+    if (std.mem.indexOf(u8, emitted, "frame_budget: u32 = 16384") == null) {
+        return error.BudgetNotLowered;
+    }
+
+    print(
+        "GREEN: glow_to_rye_emitter -- fold-wood-mint.glow -> TAME .rye.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

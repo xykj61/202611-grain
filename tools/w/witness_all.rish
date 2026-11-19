@@ -62,6 +62,27 @@ assert (run ["sh" rb s11 o11]).ok else "one_clock build"
 assert (run ["tools/.build/one_clock" "selftest"]).ok else "one_clock selftest"
 assert (run ["tools/.build/one_clock" "verify-brix"]).ok else "stale .brix!"
 
+let s12 = "languages/glow/mill/glow_to_rye_emitter.rye"
+let o12 = "-femit-bin=tools/.build/glow_to_rye_emitter"
+assert (run ["sh" rb s12 o12]).ok else "glow_to_rye_emitter build"
+assert (run ["tools/.build/glow_to_rye_emitter"]).ok else "glow_to_rye_emitter"
+
+let s13 = "modules/fusion/radiant_zero_neg_check.rye"
+let o13 = "-femit-bin=tools/.build/radiant_zero_neg_check"
+assert (run ["sh" rb s13 o13]).ok else "radiant_zero_neg_check build"
+let rc = "tools/.build/radiant_zero_neg_check"
+assert (run [rc "selftest"]).ok else "radiant_zero_neg_check selftest"
+let p_dir = "active-pulp/date/202611/00/"
+let b_dir = "20261115-174500-est_american-bipartisan-civic-planning/"
+let jl = p_dir + b_dir + "letter-to-professor-jiang-xueqin-radiant.md"
+assert (run [rc "context/RADIANT_STYLE.md" "context/GAUGE_STYLE.md"]).ok
+assert (run [rc "context/CIVIC_STYLE.md" "context/TWILIGHT_STYLE.md"]).ok
+assert (run [rc "context/SILO_TECHNIQUE.md" "context/README.md"]).ok
+assert (run [rc "context/KYRI.md" "context/REYA.md"]).ok
+assert (run [rc "context/voices/companion-voice-base.md"]).ok
+assert (run [rc "context/TEACHER_STYLE.md" "context/KARMA_STYLE.md"]).ok
+assert (run [rc "context/styles/lib/open-door-style-base.md" jl]).ok
+
 let w01 = "tools/b/bricks_exist_witness.rish"
 assert (run [rishi "run" w01]).ok else "bricks_exist"
 let w02 = "tools/g/glow_rune_book_witness.rish"
@@ -110,4 +131,4 @@ let w23 = "tools/f/fusion_seed_and_build_witness.rish"
 assert (run [rishi "run" w23]).ok else "fusion_seed_and_build"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial"
 
-say "GREEN: witness_all -- live-clock gate, Glow Doors, & 35 proofs (57.015)!"
+say "GREEN: witness_all -- 0.0% negation, Glow->Rye, & 37 proofs (57.030)!"

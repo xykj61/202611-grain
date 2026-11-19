@@ -1,28 +1,34 @@
 # Context -- Voice, Style, Bounds, and Provenance Canons
 
 **Language:** EN
-**Stamp:** `20261119.105021` (EST)
+**Stamp:** `20261119.113425` (EST)
 **Voice:** Kyri / Reya
-**Style:** Gauge at Door, Radiant warmth
-**Status:** Living (`Room: checkable` -- full-depth restored canons paired with
-single-stranded `Synonym` bases; retired elders preserved in
-[`../yonder/context/`](../yonder/README.md))
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
 
 ---
 
-## Voices & Styles of the Grain Canon
+## Voices and Styles of the Grain Canon
 
-| Canon | Synonym Base / Kin | What It Governs |
+Every living voice and style guide in `context/` is written in **Gauge + Radiant
+Style** (`0.0%` prose negation, mechanically verified on metal by
+`grain-ww radiant-check`):
+
+| Canon | Synonym Base or Scope | Core Responsibility |
 |---|---|---|
-| **[`TAME_GUIDANCE.md`](TAME_GUIDANCE.md)** & **[`TAME_CORE.md`](TAME_CORE.md)** | Ring-0 -> Citizen code law | Bounded capacities, explicit integer widths, pure folds, `80`-col lines, computational `YYYYMMDD.HHMMSS` stamps. |
-| **[`KYRI.md`](KYRI.md)** & **[`REYA.md`](REYA.md)** | [`voices/companion-voice-base.md`](voices/companion-voice-base.md) (`kyri <-> reya`) | Standing companion voice + `.kyri` notation (**Kyri**) and revived sunny feminine voice (**Reya**), sharing Lattice, Pulp, Lantern, & Kiln. |
-| **[`GAUGE_STYLE.md`](GAUGE_STYLE.md)** | Full restored 45 KB canon | *Don't be too smart about it*: measured claims, four QA readings, Door/Field/Bench settings, softening, & storytelling. |
-| **[`RADIANT_STYLE.md`](RADIANT_STYLE.md)** | Full restored 25 KB canon | Affirmative daylight prose, two-axis register lattice, vocabulary of correctness, TTS cadence, & earned benedictions. |
-| **[`CIVIC_STYLE.md`](CIVIC_STYLE.md)** | Full restored `20260628`+`202611` canon | Aligning public rewards with real outcomes: soil, `WOOD` civil works, airspace safety, refuge, & `Glasswall`. |
-| **[`TEACHER_STYLE.md`](TEACHER_STYLE.md)** & **[`KARMA_STYLE.md`](KARMA_STYLE.md)** | [`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md) (`teacher-style <-> karma-style`) | Zero-assumed-background open door (classroom huddle **Teacher** & selfless action **Karma**, superseding retired `BHAKTA_STYLE`). |
-| **[`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md)** | Full restored 10 KB canon | Nocturne register (`Sagittarius <-> Pisces` pendulum & 15 sky-fractal archetypes; inspires `12-Pisces` artistry). |
-| **[`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md)** | Clean-room creative digestion | Understanding outside inspirations to first principles so our words & `12-Pisces` art stand original while `gratitude/` honors teachers. |
+| **[`TAME_GUIDANCE.md`](TAME_GUIDANCE.md)** & **[`TAME_CORE.md`](TAME_CORE.md)** | Ring-0 through Citizen code | Fixed capacities, explicit integer widths, pure folds, `80`-column lines, live computational stamps. |
+| **[`KYRI.md`](KYRI.md)** & **[`REYA.md`](REYA.md)** | [`voices/companion-voice-base.md`](voices/companion-voice-base.md) (`kyri <-> reya`) | Standing companion voice + `.kyri` notation (**Kyri**) and sunny feminine voice (**Reya**), uniting Lattice, Pulp, Lantern, and Kiln. |
+| **[`RADIANT_STYLE.md`](RADIANT_STYLE.md)** | Daylight affirmative register | `100%` affirmative framing, active voice, vocabulary of correctness, spoken cadence, and earned benedictions. |
+| **[`GAUGE_STYLE.md`](GAUGE_STYLE.md)** | Measured analytical register | Plain reader-first clarity, Door/Field/Bench settings, observation-inference-projection separation, and `6-Virgo` QA readings. |
+| **[`CIVIC_STYLE.md`](CIVIC_STYLE.md)** | Public-benefit alignment | Aligning rewards with real outcomes across living soil, `WOOD` civil works, airspace safety, refuge, and `Glasswall`. |
+| **[`TEACHER_STYLE.md`](TEACHER_STYLE.md)** & **[`KARMA_STYLE.md`](KARMA_STYLE.md)** | [`styles/lib/open-door-style-base.md`](styles/lib/open-door-style-base.md) (`teacher-style <-> karma-style`) | First-principles open classroom (**Teacher**) and selfless craft in action (**Karma**). |
+| **[`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md)** | Contemplative nocturne register | `9-Sagittarius <-> 12-Pisces` pendulum and 15 sky-fractal archetypes inspiring evening study and original art. |
+| **[`SILO_TECHNIQUE.md`](SILO_TECHNIQUE.md)** | Clean-room creative distillation | Rebuilding outside inspirations from first principles in Grain's own voice while honoring teachers in `gratitude/`. |
 
-Companion operational cards: [`MODEL_ROSTER.kyri`](MODEL_ROSTER.kyri),
+Operational companions: [`MODEL_ROSTER.kyri`](MODEL_ROSTER.kyri),
 [`REMOTE_ROSTER.md`](REMOTE_ROSTER.md), [`REDACT_TECHNIQUE.md`](REDACT_TECHNIQUE.md),
 and [`TWO_ROOMS.md`](TWO_ROOMS.md).
+
+---
+
+*May our canons stay clear, warm, and harmonious across every movement.*
