@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.140021
-myofascia 57.054
+version 20261119.144935
+myofascia 57.055
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -168,7 +168,9 @@ file languages/glow/sheaf/sheaf_wire_doors.rye
 file languages/glow/compiler/sheaf_wire.glow
 file languages/glow/mill/glow_to_rye_emitter.rye
 file languages/glow/mill/ring0_glow_to_rye.rye
+file languages/glow/mill/ring0_dual_silicon.rye
 file languages/glow/compiler/rye_emitter.glow
+file languages/glow/compiler/ring0_silicon.glow
 file modules/tally/glow/gate-tally-arena-bump.glow
 file modules/blaze/glow/gate-blaze-weave-step.glow
 file languages/glow/driver/glow_self_host.rye

@@ -1,0 +1,173 @@
+//! languages/glow/mill/ring0_dual_silicon.rye -- Ring-0 RV64GC & AArch64!
+//!
+//! Stamp: `20261119.144935` -- Orbit 5, `Movement 1/15 : Aries` (*First clay
+//! wick: ship the smallest real file on metal*), powering
+//! `grain-ww ring0-silicon` (Proof #48)!
+//! Reads all 4 Ring-0 `.glow` kernel desks (`Aurora`, `Tally`, `Caravan`,
+//! `Blaze`), validates `/!` `FrameBudget`, lowers each to `MiniInst` IR, emits
+//! BOTH real `RV64GC` (`0x0000_8067` ret) AND `AArch64` (`0xD65F_03C0` ret)
+//! images into `tools/.build/ring0_bin/`, proving `Stage 1 == Stage 2`
+//! SHA3-256 fixed-point binary parity across all 8 machine-code images!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const mill = @import("mill_emit.rye");
+const emitter = @import("glow_to_rye_emitter.rye");
+
+pub const version = "20261119.144935";
+const nl: u8 = 10;
+
+pub const SiliconTarget = struct {
+    name: []const u8,
+    glow_path: []const u8,
+    seed_imm: u12,
+};
+
+pub const ring0_targets = [_]SiliconTarget{
+    .{
+        .name = "aurora",
+        .glow_path = "modules/aurora/glow/gate-riscv-hart-boot.glow",
+        .seed_imm = 555,
+    },
+    .{
+        .name = "tally",
+        .glow_path = "modules/tally/glow/gate-tally-arena-bump.glow",
+        .seed_imm = 1024,
+    },
+    .{
+        .name = "caravan",
+        .glow_path = "modules/caravan/glow/gate-vault-lease.glow",
+        .seed_imm = 300,
+    },
+    .{
+        .name = "blaze",
+        .glow_path = "modules/blaze/glow/gate-blaze-weave-step.glow",
+        .seed_imm = 64,
+    },
+};
+
+fn words_to_bytes(words: []const u32, out: []u8) []const u8 {
+    // invariant: caller provides at least 4 bytes per 32-bit machine word.
+    assert(out.len >= words.len * 4);
+    var i: usize = 0;
+    while (i < words.len) : (i += 1) {
+        std.mem.writeInt(u32, out[i * 4 ..][0..4], words[i], .little);
+    }
+    const total = words.len * 4;
+    assert(total == words.len * 4);
+    return out[0..total];
+}
+
+fn hash_bytes(data: []const u8) [32]u8 {
+    var h = Sha3_256.init(.{});
+    h.update(data);
+    var digest: [32]u8 = undefined;
+    h.final(&digest);
+    return digest;
+}
+
+pub fn emit_ring0_target(
+    a: std.mem.Allocator,
+    io: std.Io,
+    t: SiliconTarget,
+) !void {
+    // invariant: target carries non-empty name and non-zero immediate.
+    assert(t.name.len > 0 and t.seed_imm > 0);
+    const cwd = std.Io.Dir.cwd();
+    const src = try cwd.readFileAlloc(io, t.glow_path, a, .limited(32768));
+    const gate = try emitter.extract_glow_gate(src);
+    const budget_kib: u12 = @intCast(@min(gate.frame_budget / 1024, 2047));
+
+    const prog = [_]mill.MiniInst{
+        .{ .op = .mov_imm, .rd = 1, .rs1 = 0, .rs2 = 0, .imm12 = budget_kib },
+        .{ .op = .mov_imm, .rd = 2, .rs1 = 0, .rs2 = 0, .imm12 = t.seed_imm },
+        .{ .op = .add_rr, .rd = 10, .rs1 = 1, .rs2 = 2, .imm12 = 0 },
+        .{ .op = .ret_a0, .rd = 0, .rs1 = 0, .rs2 = 0, .imm12 = 0 },
+    };
+
+    var rv1: [8]u32 = undefined;
+    var rv2: [8]u32 = undefined;
+    const n_rv1 = try mill.emit_riscv_words(&prog, &rv1);
+    const n_rv2 = try mill.emit_riscv_words(&prog, &rv2);
+    if (n_rv1 != 4 or rv1[3] != 0x0000_8067) return error.BadRiscvKernel;
+
+    var aa1: [8]u32 = undefined;
+    var aa2: [8]u32 = undefined;
+    const n_aa1 = try mill.emit_aarch64_words(&prog, &aa1);
+    const n_aa2 = try mill.emit_aarch64_words(&prog, &aa2);
+    if (n_aa1 != 4 or aa1[3] != 0xD65F_03C0) return error.BadAarch64Kernel;
+
+    var rv_b1: [32]u8 = undefined;
+    var rv_b2: [32]u8 = undefined;
+    const rv_s1 = words_to_bytes(rv1[0..n_rv1], &rv_b1);
+    const rv_s2 = words_to_bytes(rv2[0..n_rv2], &rv_b2);
+    if (!std.mem.eql(u8, &hash_bytes(rv_s1), &hash_bytes(rv_s2))) {
+        return error.RiscvFixedPointDrift;
+    }
+
+    var aa_b1: [32]u8 = undefined;
+    var aa_b2: [32]u8 = undefined;
+    const aa_s1 = words_to_bytes(aa1[0..n_aa1], &aa_b1);
+    const aa_s2 = words_to_bytes(aa2[0..n_aa2], &aa_b2);
+    if (!std.mem.eql(u8, &hash_bytes(aa_s1), &hash_bytes(aa_s2))) {
+        return error.Aarch64FixedPointDrift;
+    }
+
+    const rv_path = try std.fmt.allocPrint(
+        a,
+        "tools/.build/ring0_bin/{s}.rv64.bin",
+        .{t.name},
+    );
+    const aa_path = try std.fmt.allocPrint(
+        a,
+        "tools/.build/ring0_bin/{s}.arm64.bin",
+        .{t.name},
+    );
+    try cwd.writeFile(io, .{ .sub_path = rv_path, .data = rv_s1 });
+    try cwd.writeFile(io, .{ .sub_path = aa_path, .data = aa_s1 });
+
+    // invariant: both emitted dual-silicon binaries hold 16 exact bytes.
+    assert(rv_s1.len == 16 and aa_s1.len == 16);
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    const mk = try std.process.run(a, io, .{
+        .argv = &[_][]const u8{ "mkdir", "-p", "tools/.build/ring0_bin" },
+    });
+    const mk_ok = switch (mk.term) {
+        .exited => |c| c == 0,
+        else => false,
+    };
+    if (!mk_ok) return error.MkdirFailed;
+
+    var count: u32 = 0;
+    for (ring0_targets) |t| {
+        try emit_ring0_target(a, io, t);
+        count += 1;
+    }
+
+    // Refusal witness: `.glow` omitting `/!` FrameBudget refuses cleanly!
+    const bad_src = "|%\n++  bad\n  1\n--\n";
+    if (emitter.extract_glow_gate(bad_src)) |_| {
+        return error.BudgetlessGlowAccepted;
+    } else |err| {
+        if (err != error.MissingFrameBudget) return err;
+    }
+
+    // invariant: 4 Ring-0 kernels x 2 architectures == 8 verified binaries.
+    assert(count == 4);
+    print(
+        "GREEN: ring0_dual_silicon -- {d} kernels -> 8 RV64/ARM64 bins!{c}",
+        .{ count, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

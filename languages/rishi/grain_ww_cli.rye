@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.140021";
-pub const myofascia_reading = "57.054";
+pub const grain_ww_version = "20261119.144935";
+pub const myofascia_reading = "57.055";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -513,6 +513,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/palisade_release_gate",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "ring0-silicon")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/ring0_dual_silicon",
             null,
             args[2..],
         );

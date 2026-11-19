@@ -168,3 +168,6 @@ ascii_7bit active-development/date/20261119/20261119-134525-est_aether-cardinal-
 max_cols 80 modules/fusion/palisade_release_gate.rye
 ascii_7bit active-development/date/20261119/20261119-135311-est_aether-fixed-palisade-prerelease-macro.md
 ascii_7bit active-development/date/20261119/20261119-140021-est_siya-orbit4-harvest-and-palisade-release.md
+max_cols 80 languages/glow/mill/ring0_dual_silicon.rye
+max_cols 80 languages/glow/compiler/ring0_silicon.glow
+ascii_7bit active-development/date/20261119/20261119-144935-est_orbit5-aries-ring0-dual-silicon-emission.md
