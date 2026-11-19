@@ -1,0 +1,41 @@
+//! modules/fusion/virgo_compass_audit.rye -- 6-Virgo Compass Foundations Gate!
+//!
+//! Stamp: `20261119.115928` -- `Movement 6/15 : Virgo` (*Lantern, Dimeroll,
+//! Linengrow, TAME Guidance, Civic Style, Radiant Style, & Calfive Rota*
+//! unified audit), powering `grain-ww virgo-audit`!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.115928";
+const nl: u8 = 10;
+
+pub const compass_pillars = [_][]const u8{
+    "context/voices/companion-voice-base.md",       // Lantern faculty!
+    "modules/market/dimeroll/dimeroll_core.rye",    // Dimeroll ledger!
+    "modules/apps/linengrow/linengrow_commons.rye", // Linengrow consent!
+    "context/TAME_GUIDANCE.md",               // TAME Guidance!
+    "context/CIVIC_STYLE.md",                 // Civic Style!
+    "context/RADIANT_STYLE.md",               // Radiant Style!
+    "modules/sundial/calfive_wheel.rye",      // Calfive Rota!
+};
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    var verified: u32 = 0;
+    for (compass_pillars) |p| {
+        const body = try cwd.readFileAlloc(io, p, a, .limited(131072));
+        if (body.len < 64) return error.EmptyCompassPillar;
+        verified += 1;
+    }
+    assert(verified == 7);
+    print(
+        "GREEN: virgo_compass_audit -- all 7 Virgo Compass Pillars whole.{c}",
+        .{nl},
+    );
+    return 0;
+}

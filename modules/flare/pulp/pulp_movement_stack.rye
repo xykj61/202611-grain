@@ -138,7 +138,8 @@ fn run_selftest() !u8 {
 
 const default_board =
     "active-pulp/date/202611/00/" ++
-    "20261115-134000_pulp-tablecloth-council-puddle-and-one-clock/CHECKLIST.md";
+    "20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/" ++
+    "CHECKLIST.md";
 
 pub fn main(init: std.process.Init) !u8 {
     const a = init.arena.allocator();

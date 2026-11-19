@@ -1,7 +1,7 @@
 # Gauge Style -- Writing That Measures and Stays Worth Reading
 
 **Language:** EN
-**Stamp:** `20261119.113425` (EST)
+**Stamp:** `20261119.115928` (EST)
 **Voice:** Kyri / Reya
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
@@ -15,9 +15,9 @@
 
 Plain speech outranks cleverness every single time. When an ornate turn of
 phrase and a clear everyday word compete, choose the word the reader grasps on
-first sight. A gauge in a workshop or cockpit earns trust because any steward
-glancing at the dial reads the true pressure in one breath. Gauge Style brings
-that exact instrument clarity into prose.
+first sight. A gauge in a workshop or pilot's seat earns trust because any
+steward glancing at the dial reads the true pressure in one breath. Gauge Style
+brings that exact instrument clarity into prose.
 
 ---
 

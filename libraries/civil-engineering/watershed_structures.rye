@@ -1,0 +1,74 @@
+//! libraries/civil-engineering/watershed_structures.rye -- Permeable Works!
+//!
+//! Stamp: `20261119.115928` -- Powers `grain-ww civil-eng`!
+//! Unites `libraries/civic-ecology/` permeability with `Colloquium` (`324/405`)
+//! and `WOOD` mass-timber structural engineering (`>= 2.0x` safety factor &
+//! `>= 600` permille bioswale rainwater capture)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.115928";
+pub const min_safety_permille: u32 = 2000;
+pub const min_permeable_permille: u32 = 600;
+pub const colloquium_quorum: u32 = 324;
+const nl: u8 = 10;
+
+pub const StructureError = error{
+    SafetyFactorLow,
+    ImpermeableRunoffRisk,
+    ColloquiumQuorumShort,
+    BondEscrowZero,
+};
+
+pub const PermeableWork = struct {
+    safety_permille: u32,
+    permeable_capture_permille: u32,
+    wood_carbon_units: u64,
+    bond_escrow: u64,
+    colloquium_yes: u32,
+};
+
+pub fn verify_permeable_work(w: PermeableWork) StructureError!u64 {
+    if (w.safety_permille < min_safety_permille) return error.SafetyFactorLow;
+    if (w.permeable_capture_permille < min_permeable_permille) {
+        return error.ImpermeableRunoffRisk;
+    }
+    if (w.bond_escrow == 0) return error.BondEscrowZero;
+    if (w.colloquium_yes < colloquium_quorum) {
+        return error.ColloquiumQuorumShort;
+    }
+    // invariant: approved civic work is both >= 2.0x safe & >= 60% permeable!
+    assert(w.safety_permille >= 2000 and w.permeable_capture_permille >= 600);
+    return w.wood_carbon_units;
+}
+
+fn run_selftest() !u8 {
+    const plaza = PermeableWork{
+        .safety_permille = 2500,
+        .permeable_capture_permille = 750,
+        .wood_carbon_units = 6400,
+        .bond_escrow = 50_000,
+        .colloquium_yes = 340,
+    };
+    if ((try verify_permeable_work(plaza)) != 6400) return error.BadWoodTotal;
+
+    var sealed_lot = plaza;
+    sealed_lot.permeable_capture_permille = 150;
+    if (verify_permeable_work(sealed_lot)) |_| {
+        return error.ImpermeableLotAccepted;
+    } else |err| {
+        if (err != error.ImpermeableRunoffRisk) return err;
+    }
+
+    print(
+        "GREEN: watershed_structures -- 2.5x safe, 75% permeable, WOOD ok.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

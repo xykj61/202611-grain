@@ -136,3 +136,12 @@ ascii_7bit context/KARMA_STYLE.md
 ascii_7bit context/SILO_TECHNIQUE.md
 max_cols 80 modules/fusion/radiant_zero_neg_check.rye
 max_cols 80 languages/glow/mill/glow_to_rye_emitter.rye
+max_cols 80 libraries/civic-ecology/canopy_hydrology.rye
+max_cols 80 libraries/civil-engineering/watershed_structures.rye
+max_cols 80 modules/fusion/virgo_compass_audit.rye
+ascii_7bit context/TAME_CORE.md
+ascii_7bit context/TAME_GUIDANCE.md
+ascii_7bit libraries/civic-ecology/README.md
+ascii_7bit libraries/civic-ecology/lessons/canopy-cooling-and-continental-rain.md
+ascii_7bit libraries/civil-engineering/README.md
+ascii_7bit libraries/civil-engineering/lessons/permeable-works-and-timber-craft.md

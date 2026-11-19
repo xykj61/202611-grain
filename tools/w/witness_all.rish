@@ -73,7 +73,7 @@ assert (run ["sh" rb s13 o13]).ok else "radiant_zero_neg_check build"
 let rc = "tools/.build/radiant_zero_neg_check"
 assert (run [rc "selftest"]).ok else "radiant_zero_neg_check selftest"
 let p_dir = "active-pulp/date/202611/00/"
-let b_dir = "20261115-174500-est_american-bipartisan-civic-planning/"
+let b_dir = "20261119-115928-est_american-bipartisan-civic-planning/"
 let jl = p_dir + b_dir + "letter-to-professor-jiang-xueqin-radiant.md"
 assert (run [rc "context/RADIANT_STYLE.md" "context/GAUGE_STYLE.md"]).ok
 assert (run [rc "context/CIVIC_STYLE.md" "context/TWILIGHT_STYLE.md"]).ok
@@ -82,6 +82,33 @@ assert (run [rc "context/KYRI.md" "context/REYA.md"]).ok
 assert (run [rc "context/voices/companion-voice-base.md"]).ok
 assert (run [rc "context/TEACHER_STYLE.md" "context/KARMA_STYLE.md"]).ok
 assert (run [rc "context/styles/lib/open-door-style-base.md" jl]).ok
+assert (run [rc "context/TAME_CORE.md" "context/TAME_GUIDANCE.md"]).ok
+let ce1 = "libraries/civic-ecology/README.md"
+let ce_l = "canopy-cooling-and-continental-rain.md"
+let ce2 = "libraries/civic-ecology/lessons/" + ce_l
+assert (run [rc ce1 ce2]).ok else "civic-ecology negation!"
+let cv1 = "libraries/civil-engineering/README.md"
+let cv_l = "permeable-works-and-timber-craft.md"
+let cv2 = "libraries/civil-engineering/lessons/" + cv_l
+assert (run [rc cv1 cv2]).ok else "civil-engineering negation!"
+let vd = "active-development/date/20261119/20261119-115928-est_"
+let vn = "virgo-compass-audit-and-orbit-efficiency-for-libra.md"
+assert (run [rc (vd + vn)]).ok else "virgo review negation!"
+
+let s14 = "libraries/civic-ecology/canopy_hydrology.rye"
+let o14 = "-femit-bin=tools/.build/canopy_hydrology"
+assert (run ["sh" rb s14 o14]).ok else "canopy_hydrology build"
+assert (run ["tools/.build/canopy_hydrology"]).ok else "canopy_hydrology"
+
+let s15 = "libraries/civil-engineering/watershed_structures.rye"
+let o15 = "-femit-bin=tools/.build/watershed_structures"
+assert (run ["sh" rb s15 o15]).ok else "watershed_structures build"
+assert (run ["tools/.build/watershed_structures"]).ok else "watershed_struct"
+
+let s16 = "modules/fusion/virgo_compass_audit.rye"
+let o16 = "-femit-bin=tools/.build/virgo_compass_audit"
+assert (run ["sh" rb s16 o16]).ok else "virgo_compass_audit build"
+assert (run ["tools/.build/virgo_compass_audit"]).ok else "virgo_compass"
 
 let w01 = "tools/b/bricks_exist_witness.rish"
 assert (run [rishi "run" w01]).ok else "bricks_exist"
@@ -131,4 +158,4 @@ let w23 = "tools/f/fusion_seed_and_build_witness.rish"
 assert (run [rishi "run" w23]).ok else "fusion_seed_and_build"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial"
 
-say "GREEN: witness_all -- 0.0% negation, Glow->Rye, & 37 proofs (57.030)!"
+say "GREEN: witness_all -- Virgo Audit, Canopy Rain, & 40 proofs (57.045)!"
