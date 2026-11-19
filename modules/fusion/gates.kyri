@@ -165,3 +165,5 @@ ascii_7bit active-development/date/20261119/20261119-134045-est_pisces-twilight-
 max_cols 80 terrarium/faa-atc/pilot_sector_horizon.rye
 max_cols 80 modules/apps/colloquium/glow/gate-terrarium-horizon.glow
 ascii_7bit active-development/date/20261119/20261119-134525-est_aether-cardinal-terrarium-horizon-and-heart-check.md
+max_cols 80 modules/fusion/palisade_release_gate.rye
+ascii_7bit active-development/date/20261119/20261119-135311-est_aether-fixed-palisade-prerelease-macro.md
