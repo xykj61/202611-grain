@@ -1,6 +1,6 @@
 # Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Stamp:** `20261119.105021` (EST)
+**Stamp:** `20261119.121259` (EST)
 **Voice:** Kyri / Reya (Gauge, Radiant, Civic, Teacher / Karma, & Twilight)
 **Branch:** `xy/gemini-4-carbon` (`publish-seed` -> `grain-ww/202611-grain`)
 
@@ -77,6 +77,9 @@ hidden macros, private dialects, or duplicated platform logic.
   **`Resonance`** (never the retired DAW name `Lotus`).
 - **Civic Glasswall:** Write-only RLCD framebuffers, hardware-switched +
   bystander-lamp-gated `Earpiece` voice capture, zero ad/telemetry SDKs.
-- **Calfive Rhythm (`15 - 75 - 375 - 1,875 - 9,375`):** Run
-  `languages/rishi/bin/grain-ww round-load` to read the current 15-sign round
-  (`(commit_count - 1) % 15 + 1`), element, goal, and Myofascia reading.
+- **Calfive Rhythm (`15 - 75 - 375 - 1,875 - 9,375`) & Strict `+0.001` Myofascia Law:**
+  Run `languages/rishi/bin/grain-ww movement` to read the current 15-sign
+  movement (`(commit_count - 1) % 15 + 1`). Each completed Movement (1 git
+  commit) advances `Myofascia` by **strictly `+0.001`** (`+1` milli-point;
+  `+0.015` across a full 15-Movement Orbit). Advancing `Myofascia` by `> 0.001`
+  on a single commit is a **HARD RED** refused by `grain-ww preflight`.

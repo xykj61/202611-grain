@@ -1,19 +1,21 @@
 # Elemental Rule Card: Earth -- Rooms, Mitra Molt, Calfive, & Seed Gate
 
 **Element:** Earth (Form, Roots, Durable Custody)
-**Stamp:** `20261115.134000`
+**Stamp:** `20261119.121259` (EST)
 
 ---
 
 ## 1. Flat Root Trinity (`languages/`, `modules/`, `libraries/`, `yonder/`)
-- **`languages/`:** `rye/`, `glow/`, `rishi/`, `brix/`, and `kyri/`.
+- **`languages/`:** `rye/`, `glow/` (`48/48` live runes), `rishi/`, `brix/`, and
+  `kyri/`.
 - **`modules/`:** System-critical TAME faculties (`aurora`, `tally`, `caravan`,
   `pond` + `puddle`, `crypto`, `kumara`, `comlink` + `vantage` + `council_405`,
   `amphora`, `blaze`, `tablecloth`, `harness`, `flare` + `pulp`, `brushstroke`,
-  `resonance`, `market`, `sundial`, `fusion`, and `apps`), each co-locating
-  `.glow` desks in `glow/`.
+  `resonance`, `market` + `wood_token`, `synonym`, `sundial`, `fusion`, and
+  `apps`), each co-locating `.glow` desks in `glow/`.
 - **`libraries/`:** Four-year *Bloom & Shastra* curriculum (`shastra/`),
-  `risala/`, Vedic/Cubist astrology, `books/`, and incubating citizen parcels.
+  `risala/`, `civic-ecology/`, `civil-engineering/`, Vedic/Cubist astrology,
+  and `books/`.
 - **`yonder/`:** Single cold archive vault (`0` scattered archive closets).
 
 ## 2. Mitra Shed (Accrete-Never-Break) & Two Rooms
@@ -35,11 +37,16 @@
   = `405` Council Seats (`modules/comlink/council_405.rye`), enacting routine
   items at **`243/405` (`60.0%`)** and constitutional laws at **`324/405`
   (`80.0%`)**.
+- **Strict `+0.001` Per-Movement Myofascia Step (`HARD RED` if `> +0.001`):**
+  Every completed Movement (1 git commit) advances `Myofascia` by **strictly
+  `+0.001`** (`+1` milli-point; `+0.015` across a full 15-Movement Orbit).
+  Multi-milli jumps (`+0.005`, `+0.015`) on a single commit are forbidden and
+  mechanically refused by `grain-ww preflight`.
 - **Print `Recommend` After Every Movement:** Every Movement closure (`grain-ww
   movement` and agent summary) prints **`Recommend (Next Movement X/15 --
   <Sign>):`** naming the concrete next high-leverage step.
 
-## 4. Single Incremental Public Seed Release
-- Push signed work commits to `xy/gemini-4-carbon`, and run
-  `languages/rishi/bin/rishi run publish-seed.rish --push` **once** at the
-  end of a work wave to publish the clean closure to `grain-ww/202611-grain`.
+## 4. Hearth / Siya / Stream Seed Cadence
+- Push signed work commits to `bench_remote` (`xy`), keep `seed_cadence hearth`
+  for fast bench turns (`SOW_WITNESS_GREEN` proven locally in ~150 ms), and
+  publish to `seed_remote` (`ww`) at `15-Siya` or via `--force-seed`.

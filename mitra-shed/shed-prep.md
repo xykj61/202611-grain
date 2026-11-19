@@ -1,10 +1,10 @@
 # Mitra Shed Prep (`shed-prep.md`) -- Accrete-Never-Break Fossils Awaiting Door Word
 
 **Language:** EN
-**Stamp:** `20261115.152000` (EST)
-**Voice:** Kyri
+**Stamp:** `20261119.121259` (EST)
+**Voice:** Kyri / Reya
 **Style:** Gauge at Bench, Radiant warmth
-**Status:** Living (`Room: checkable` -- plain-named fossil ledger updated in `Movement 8/15 : Scorpio` with `active-pulp/`, `caravan/custody/`, `linengrow_commons.rye`, and `d15-3-9-405` Council Sky)
+**Status:** Living (`Room: checkable` -- plain-named fossil ledger weighed on `7-Libra` scales ahead of `8-Scorpio`)
 
 ---
 
@@ -30,3 +30,5 @@ Under **Mitra** ([`README.md`](README.md)), no living caller is broken in haste:
 | **Terrarium** | Root `terrarium/` C/Swift/Kotlin host adapters | [`../blazepod/`](../blazepod/README.md) (`rv64_pill.rye` + physical RISC-V silicon) | Host shells stay live as thin Glasswall pipes over `Vantage` until physical `Blazepod` + `DC-1` Wave D gate completes | Wave D physical silicon gate GREEN |
 | **Linengrow** | `modules/apps/linengrow/{hearth_lulu*,setu*,seva_jabs*,stoa71*,tube*}.rye` (legacy waymark-named prototypes) | [`../modules/apps/linengrow/linengrow_commons.rye`](../modules/apps/linengrow/linengrow_commons.rye) + [`fold-linengrow-consent.glow`](../modules/apps/linengrow/glow/fold-linengrow-consent.glow) | Plain-named `linengrow_commons.rye` stands GREEN on metal; legacy waymark files wait until elder `tools/` callers repoint | Repoint elder `tools/` callers + door approval |
 | **Topology** | `compass_sky` (`d12 - 60 - 720`) in `modules/comlink/topology.rye` & 14-galaxy `galaxy_testnet.rye` | `council_sky` (**`d15 -> 3 -> 9 -> 405`**), [`council_405.rye`](../modules/comlink/council_405.rye), [`council_mycelium_weave.rye`](../modules/comlink/council_mycelium_weave.rye), & [`council_405_testnet.rye`](../modules/pond/testnet/council_405_testnet.rye) | `d15-3-9-405` aligns 1:1 with the 15 Calfive Signs & 27 Nakshatras with exact integer `243/405` (`60%`) and `324/405` (`80%`) consensus | Repoint elder `pond/apps/` `compass_sky` tests + door approval |
+| **Token (`WOOD`)** | `modules/apps/linengrow/murr*.rye` & `modules/comlink/guest_murr_mint_*.rye` | [`../modules/market/wood_token.rye`](../modules/market/wood_token.rye) + [`fold-wood-mint.glow`](../modules/market/glow/fold-wood-mint.glow) (`grain-ww wood`) | `WOOD` ecological & timber provenance token stands GREEN across Bloom, Blaze, & Vantage | Move `murr*.rye` elders to `yonder/murr-era/` on `8-Scorpio` approval |
+| **Tools (`47 -> 16`)** | `tools/{a..z,ac..ze}/` (`47` alphabetical shards holding ~2,550 waymark-era scripts) | `16` semantic domain folders (`tools/{glow,rye,rishi,fusion,aurora-tally,caravan,pond,comlink,vantage,resonance,pulp,tablecloth,market,sundial,libraries,terrarium}/`) + `tools/witness_all.rish` | All `41` active metal proofs run cleanly via `grain-ww witness-all` | Archive retired waymark scripts to `yonder/tools-waymark-era/` & seat 16 rooms on `8-Scorpio` approval |

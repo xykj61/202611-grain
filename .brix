@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.115928
-myofascia 57.045
+version 20261119.121259
+myofascia 57.046
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -89,6 +89,7 @@ file modules/fusion/twilight_residue_audit.rye
 file modules/fusion/hearth_cadence.rye
 file modules/fusion/radiant_zero_neg_check.rye
 file modules/fusion/virgo_compass_audit.rye
+file modules/fusion/libra_preflight.rye
 file modules/market/wood_token.rye
 file modules/market/glow/fold-wood-mint.glow
 file modules/synonym/synonym_macro.rye
