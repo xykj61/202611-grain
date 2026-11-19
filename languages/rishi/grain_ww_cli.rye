@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261115.174500";
-pub const myofascia_reading = "56.985";
+pub const grain_ww_version = "20261115.180000";
+pub const myofascia_reading = "57.000";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -142,6 +142,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/synonym_macro",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "glow-48")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/rune_48_lower",
             null,
             args[2..],
         );

@@ -50,7 +50,7 @@ fn run_selftest(init: std.process.Init) !u8 {
     // pass all of them in silence; this is the one reading that refuses a table that got smaller.
     // The count is the pairs table's own size and is stated in three places -- here, the fixture
     // file, and match_rune2 itself -- which tools/g/glow_rune_alphabet_worker.sh holds together.
-    assert(count == 30);
+    assert(count == 48);
     print("OK digraph_twin_check {d}\n", .{count});
     return 0;
 }

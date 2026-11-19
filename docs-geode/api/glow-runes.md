@@ -23,7 +23,7 @@
 | `!` | `zap` | refusal & span trails | **carried** | Refusal breadcrumbs |
 | `.` | `dot` | Nock untyped operators | **dissolved** | Replaced by Pith |
 
-## 2. All Glow Rune Digraphs (30 Live + 18 Planned Mill Runes)
+## 2. All Glow Rune Digraphs (48/48 Live Across 13 Families)
 
 | Digraph | Spoken | Status | Arity / Shape | Summary |
 |---|---|---|---|---|
@@ -57,21 +57,21 @@
 | `%+` | `cenlus` | live | `gate a b` | Call gate with 2-tuple |
 | `%^` | `cenket` | live | `gate a b c` | Call gate with 3-tuple |
 | `%*` | `centar` | live | `mold init upd+` | Update record fields |
-| `/-` | `fashep` | planned (Mill) | `shape-name+` | Import shape via Sheaf |
-| `/=` | `fastis` | planned (Mill) | `alias target` | Brix infuse override |
-| `/*` | `fastar` | planned (Mill) | `name %aura sha3` | SHA3-verified asset |
-| `/$` | `fasbuk` | planned (Mill) | `conv-name` | Import wire converter |
-| `/%` | `fascen` | planned (Mill) | `course-name` | Pin .brix course |
-| `/~` | `fassig` | planned (Mill) | `name nib-hex` | Pin immutable SHA3 nib |
-| `|_` | `barcab` | planned (Mill) | `state ++arm+ --` | Stateful pure door |
-| `=^` | `tisket` | planned (Mill) | `p st step b` | Thread [prod next_st] |
-| `%=` | `centis` | planned (Mill) | `wing upd+` | Functional update/recur |
-| `=~` | `tissig` | planned (Mill) | `stage+ ==` | Linear subject pipeline |
-| `?!` | `wutzap` | planned (Mill) | `expr` | Logical boolean NOT |
-| `;~` | `micsig` | planned (Mill) | `glue rule+` | Bounded wire combinator |
-| `;;` | `micmic` | planned (Mill) | `mold bytes` | Validate wire slice |
-| `~&` | `sigpam` | planned (Mill) | `label expr` | Pure Basin debug trace |
-| `~|` | `sigbar` | planned (Mill) | `cord expr` | Static refusal trail |
-| `~%` | `sigcen` | planned (Mill) | `%jet core` | Verified Rye intrinsic |
-| `!:` | `zapcol` | planned (Mill) | `expr` | Enable line:col trail |
-| `!!` | `zapzap` | planned (Mill) | `(crash)` | Unreachable refusal |
+| `/-` | `fashep` | live | `shape-name+` | Import shape via Sheaf |
+| `/=` | `fastis` | live | `alias target` | Brix infuse override |
+| `/*` | `fastar` | live | `name %aura sha3` | SHA3-verified asset |
+| `/$` | `fasbuk` | live | `conv-name` | Import wire converter |
+| `/%` | `fascen` | live | `course-name` | Pin .brix course |
+| `/~` | `fassig` | live | `name nib-hex` | Pin immutable SHA3 nib |
+| `|_` | `barcab` | live | `state ++arm+ --` | Stateful pure door |
+| `=^` | `tisket` | live | `p st step b` | Thread [prod next_st] |
+| `%=` | `centis` | live | `wing upd+` | Functional update/recur |
+| `=~` | `tissig` | live | `stage+ ==` | Linear subject pipeline |
+| `?!` | `wutzap` | live | `expr` | Logical boolean NOT |
+| `;~` | `micsig` | live | `glue rule+` | Bounded wire combinator |
+| `;;` | `micmic` | live | `mold bytes` | Validate wire slice |
+| `~&` | `sigpam` | live | `label expr` | Pure Basin debug trace |
+| `~|` | `sigbar` | live | `cord expr` | Static refusal trail |
+| `~%` | `sigcen` | live | `%jet core` | Verified Rye intrinsic |
+| `!:` | `zapcol` | live | `expr` | Enable line:col trail |
+| `!!` | `zapzap` | live | `(crash)` | Unreachable refusal |

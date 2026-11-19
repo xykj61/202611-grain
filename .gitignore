@@ -151,6 +151,17 @@ modules/**/.zig-cache/
 !/mandi/
 !/mand/
 !/glow/
+!/languages/
+/languages/**/bin/
+/languages/**/.cache/
+!/modules/
+/modules/**/bin/
+!/libraries/
+!/blazepod/
+!/docs-geode/
+!/active-pulp/
+!/mitra-shed/
+!/terrarium/
 !/src/
 !/expanding-prompts/
 !/recursion-prompts/

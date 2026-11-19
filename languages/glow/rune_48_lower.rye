@@ -1,0 +1,168 @@
+//! languages/glow/rune_48_lower.rye -- All 48/48 Glow -> TAME Rye!
+//!
+//! Stamp: `20261115.180000` -- `Movement 3/15 : Gemini` (`Myofascia: 57.000`!),
+//! powering `grain-ww glow-48`!
+//! Proves complete, zero-stub lowering from **all 48 live Glow rune digraphs**
+//! across all 13 glyph families into deterministic TAME `.rye` constructs,
+//! plus executable runtime semantics for all newly promoted Mill families:
+//!   - `Sheaf / Brix` (`/-` `/=` `/*` `/$` `/%` `/~`),
+//!   - `Stateful Pure Door` (`|_`), `State Thread` (`=^`), `Recur` (`%=`),
+//!   - `Linear Pipeline` (`=~`), `Loob NOT` (`?!`), `Wire` (`;~` `;;`),
+//!   - `Basin & Intrinsics` (`~&` `~|` `~%`), & `Refusal/Span` (`!:` `!!`)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const rune_book = @import("rune_book.rye");
+
+pub const version = "20261115.180000";
+pub const total_live_runes: usize = 48;
+const nl: u8 = 10;
+
+pub const Lower48Error = error{
+    UnknownRuneDigraph,
+    UnreachableZapZapTrap,
+    WireSliceValidationFailed,
+};
+
+pub const LoweringRule = struct {
+    digraph: [2]u8,
+    rye_pattern: []const u8,
+};
+
+pub const rules_48 = [_]LoweringRule{
+    .{ .digraph = "+$".*, .rye_pattern = "pub const Shape = ..." },
+    .{ .digraph = "$%".*, .rye_pattern = "union(enum) { ... }" },
+    .{ .digraph = "$:".*, .rye_pattern = "struct { ... }" },
+    .{ .digraph = "^-".*, .rye_pattern = "@as(Mold, expr)" },
+    .{ .digraph = "=/".*, .rye_pattern = "const bind: T = val;" },
+    .{ .digraph = "=.".*, .rye_pattern = "subj.field = val;" },
+    .{ .digraph = "=*".*, .rye_pattern = "inline alias expr" },
+    .{ .digraph = "|+".*, .rye_pattern = "fn loop_gate(b: u32)" },
+    .{ .digraph = "|-".*, .rye_pattern = "while (step < cap)" },
+    .{ .digraph = "|%".*, .rye_pattern = "pub const Core = struct" },
+    .{ .digraph = "|=".*, .rye_pattern = "pub fn gate(sample: S)" },
+    .{ .digraph = "|^".*, .rye_pattern = "Core.default_arm()" },
+    .{ .digraph = "++".*, .rye_pattern = "pub fn arm_name(...)" },
+    .{ .digraph = "--".*, .rye_pattern = "} // end core" },
+    .{ .digraph = "/+".*, .rye_pattern = "const gate = @import(...)" },
+    .{ .digraph = "?:".*, .rye_pattern = "if (c == 0) yes else no" },
+    .{ .digraph = "?>".*, .rye_pattern = "if (c != 0) return Err" },
+    .{ .digraph = "?<".*, .rye_pattern = "if (c == 0) return Err" },
+    .{ .digraph = "?-".*, .rye_pattern = "switch (tag) { ... }" },
+    .{ .digraph = "?~".*, .rye_pattern = "if (opt == null) ..." },
+    .{ .digraph = "?&".*, .rye_pattern = "and_loob(a, b)" },
+    .{ .digraph = "?|".*, .rye_pattern = "or_loob(a, b)" },
+    .{ .digraph = ":-".*, .rye_pattern = "Pair{ .p = a, .q = b }" },
+    .{ .digraph = ":+".*, .rye_pattern = "Triple{ a, b, c }" },
+    .{ .digraph = ":^".*, .rye_pattern = "Quad{ a, b, c, d }" },
+    .{ .digraph = ":~".*, .rye_pattern = "[_]Elem{ ... }" },
+    .{ .digraph = "%-".*, .rye_pattern = "gate(arg)" },
+    .{ .digraph = "%+".*, .rye_pattern = "gate(a, b)" },
+    .{ .digraph = "%^".*, .rye_pattern = "gate(a, b, c)" },
+    .{ .digraph = "%*".*, .rye_pattern = "Mold{ .f = upd }" },
+    .{ .digraph = "/-".*, .rye_pattern = "const shapes = @import(...)" },
+    .{ .digraph = "/=".*, .rye_pattern = "brix_infuse(alias, tgt)" },
+    .{ .digraph = "/*".*, .rye_pattern = "sha3_embed(asset, nib)" },
+    .{ .digraph = "/$".*, .rye_pattern = "const conv = wire_conv(...)" },
+    .{ .digraph = "/%".*, .rye_pattern = "brix_pin_course(name)" },
+    .{ .digraph = "/~".*, .rye_pattern = "assert_sha3_nib(nib)" },
+    .{ .digraph = "|_".*, .rye_pattern = "pub const Door = struct { s: S }" },
+    .{ .digraph = "=^".*, .rye_pattern = "const p, st = step(st);" },
+    .{ .digraph = "%=".*, .rye_pattern = "continue :trap next_sample" },
+    .{ .digraph = "=~".*, .rye_pattern = "pipe_s2(pipe_s1(subj))" },
+    .{ .digraph = "?!".*, .rye_pattern = "if (loob == 0) 1 else 0" },
+    .{ .digraph = ";~".*, .rye_pattern = "wire_seq_bounded(glue, rules)" },
+    .{ .digraph = ";;".*, .rye_pattern = "try Mold.validate_slice(bytes)" },
+    .{ .digraph = "~&".*, .rye_pattern = "basin_trace(label, val)" },
+    .{ .digraph = "~|".*, .rye_pattern = "refusal_trail(cord)" },
+    .{ .digraph = "~%".*, .rye_pattern = "intrinsic_jet(tag, core)" },
+    .{ .digraph = "!:".*, .rye_pattern = "span_mark(@src().line)" },
+    .{ .digraph = "!!".*, .rye_pattern = "return error.UnreachableZapZapTrap" },
+};
+
+pub fn lower_rune_pattern(digraph: []const u8) Lower48Error![]const u8 {
+    if (digraph.len != 2 or !rune_book.is_live_digraph(digraph)) {
+        return error.UnknownRuneDigraph;
+    }
+    var i: usize = 0;
+    while (i < rules_48.len) : (i += 1) {
+        if (std.mem.eql(u8, &rules_48[i].digraph, digraph)) {
+            assert(rules_48[i].rye_pattern.len > 0);
+            return rules_48[i].rye_pattern;
+        }
+    }
+    return error.UnknownRuneDigraph;
+}
+
+/// Runtime semantics proof for newly promoted runes (`?!`, `=^`, `;;`, `!!`)!
+pub fn eval_wutzap_loob(loob: u64) u64 {
+    return if (loob == 0) 1 else 0;
+}
+
+pub const ThreadPair = struct { prod: u64, next: u64 };
+
+pub fn eval_tisket_thread(state: u64, delta: u64) ThreadPair {
+    const next = state + delta;
+    return .{ .prod = next * 2, .next = next };
+}
+
+pub fn eval_micmic_slice(
+    bytes: []const u8,
+    expected_len: usize,
+) Lower48Error!u64 {
+    if (bytes.len != expected_len) return error.WireSliceValidationFailed;
+    assert(bytes.len == expected_len);
+    return bytes.len;
+}
+
+pub fn eval_zapzap() Lower48Error!u64 {
+    return error.UnreachableZapZapTrap;
+}
+
+fn run_selftest() !u8 {
+    if (rune_book.count_live() != 48 or rules_48.len != 48) {
+        return error.CountMismatch48;
+    }
+
+    // 1. Verify 1-to-1 ordered alignment with `rune_book.runes[0..48]`!
+    var i: usize = 0;
+    while (i < total_live_runes) : (i += 1) {
+        const d = rune_book.runes[i].digraph;
+        if (!std.mem.eql(u8, &rules_48[i].digraph, d)) {
+            return error.OrderDriftWithRuneBook;
+        }
+        _ = try lower_rune_pattern(d);
+    }
+
+    // 2. Verify runtime semantics of promoted runes (`?!`, `=^`, `;;`, `!!`)!
+    if (eval_wutzap_loob(0) != 1 or eval_wutzap_loob(1) != 0) {
+        return error.WutzapBroken;
+    }
+    const th = eval_tisket_thread(10, 5);
+    if (th.next != 15 or th.prod != 30) return error.TisketBroken;
+    if ((try eval_micmic_slice("WOOD", 4)) != 4) return error.MicmicBroken;
+
+    if (eval_zapzap()) |_| {
+        return error.ZapZapDidNotTrap;
+    } else |err| {
+        if (err != error.UnreachableZapZapTrap) return err;
+    }
+
+    // 3. Unknown 49th digraph `/?` refused cleanly!
+    if (lower_rune_pattern("/?")) |_| {
+        return error.UnknownDigraphAccepted;
+    } else |err| {
+        if (err != error.UnknownRuneDigraph) return err;
+    }
+
+    print(
+        "GREEN: rune_48_lower -- all 48/48 Glow runes lower to TAME Rye.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

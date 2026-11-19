@@ -52,6 +52,6 @@ That is why, whether today's cascade of financial, cyber, and geopolitical shock
 
 Thank you again for your lectures and for provoking such serious reflection across continents. I would be honored to hear your thoughts whenever time permits.
 
-With grace, kindness, and devotion to The Beautiful,
+With grace, kindness, and devotion to The Beautiful One,
 
 Keaton Dunsford
