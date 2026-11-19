@@ -1,15 +1,15 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.134045` (EST)
+**Stamp:** `20261119.134525` (EST)
 
-## Top of Prepend-to-Front Stack (3-Movement Countdown to `15-Siya` `"palisade"` Release)
+## Top of Prepend-to-Front Stack (2-Movement Countdown to `15-Siya` `"palisade"` Release)
 
 - [ ] **[TOP -- Movement 15/15 (`Siya`, `mov=60`, `Myofascia 57.054`)] Publish Single Parentless Commit `"palisade"` Signed by `grain-ww` to `grain-ww/202611-grain`** -- mint/register dedicated `grain-ww` Ed25519 release signing key (`seed_signing_key` in gitignored `PUBLISH_TARGETS.kyri`), prove `SOW_WITNESS_GREEN`, `parents=0`, `msg=palisade`, `sig=G` by `grain-ww`, seal Orbit 4 via `siya_orbit_harvest.rye`, & run `publish-seed.rish --force-seed`
-- [ ] **[Movement 13/15 (`Aether Cardinal`, `57.052`)] Post-Glow `Terrarium` Expansion (`faa-atc` Pilot's Seat & `civil-engineering` + `civic-ecology` Watershed Bond)** -- deepen deterministic RVSM multi-sector conflict horizon and permeable watershed escrow
-- [ ] **[Movement 14/15 (`Aether Fixed`, `57.053`)] Final Mitra Molt & `"palisade"` Dry-Run Seal** -- verify `publish-seed.rish` dry-run emits `msg=palisade`, `parents=0`, zero personal leaks, & `grain-ww` key readiness ahead of `15-Siya`
+- [ ] **[Movement 14/15 (`Aether Fixed`, `57.053`)] Final Mitra Molt & `"palisade"` Dry-Run Seal** -- compress pre-release verification into one `palisade` dry-run macro (`msg=palisade`, `parents=0`, zero personal leaks, & `grain-ww` key readiness ahead of `15-Siya`)
 
 ## Completed Foundations
 
+- [x] **Aether Cardinal Movement 13/15 (`57.052`, `xy/gemini-4-neon`)** -- deepened post-Glow `Terrarium` with `terrarium/faa-atc/pilot_sector_horizon.rye` (`grain-ww terrarium-horizon`: deterministic 5-min multi-track RVSM lookahead + permeable `324/405` watershed bond, Proof `#46`) and `gate-terrarium-horizon.glow` (`34/34` live Glow Mill desks GREEN!) (`20261119.134525`)
 - [x] **Pisces Movement 12/15 (`57.051`, `xy/gemini-4-neon`)** -- crafted gratitude-born Twilight Dusk & Watershed Almanac (`modules/brushstroke/skate/twilight_almanac_art.rye` + `fold-twilight-almanac.glow`, `grain-ww twilight-art [1..15]`, Proof `#45`) and verified all `33/33` live Glow Mill `.glow` desks GREEN via `glow_self_host` (`20261119.134045`)
 - [x] **Aquarius / Capricorn Ring-0 Glow -> Rye -> Metal (`57.050`, `xy/gemini-4-neon`)** -- authored `gate-tally-arena-bump.glow`, `gate-blaze-weave-step.glow`, & `languages/glow/mill/ring0_glow_to_rye.rye` (`grain-ww ring0-glow`, lowering, compiling, & executing all 4 Ring-0 kernels `Aurora / Tally / Caravan / Blaze` on native metal, `44/44` proofs GREEN!), plus upgraded `publish-seed.rish` & `PUBLISH_TARGETS.template.kyri` for the signed `"palisade"` `15-Siya` release (`20261119.133148`)
 - [x] **Sagittarius Movement 9/15 (`57.049`, `xy/gemini-4-neon`)** -- seated `16` semantic `tools/` rooms + `tools/witness_all.rish`, archived `47` alphabetical waymark shards to `yonder/tools-waymark-era/`, archived `19` pre-`20261115` `active-development/` shelves & zero-caller `Mitra` elders behind walk-back nib `dbc80084`, and shipped `Brushstroke / Skate` `canopy_watershed_canvas.rye` + `fold-canopy-canvas.glow` (`grain-ww canopy-canvas`, `43/43` metal proofs GREEN!) (`20261119.131122`)
