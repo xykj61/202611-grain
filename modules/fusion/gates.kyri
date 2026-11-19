@@ -189,3 +189,9 @@ ascii_7bit active-development/date/20261119/20261119-152019-est_orbit5-cancer-le
 max_cols 80 modules/resonance/resonance_wood_ledger.rye
 max_cols 80 modules/resonance/glow/fold-resonance-wood.glow
 ascii_7bit active-development/date/20261119/20261119-153338-est_orbit5-leo-resonance-wood-patronage-ledger.md
+max_cols 80 modules/fusion/orbit5_virgo_efficiency.rye
+max_cols 80 modules/fusion/glow/gate-virgo-efficiency.glow
+ascii_7bit modules/README.md
+ascii_7bit libraries/README.md
+ascii_7bit blazepod/README.md
+ascii_7bit active-development/date/20261119/20261119-154211-est_orbit5-virgo-compass-film-study-and-13-hub-modernization.md

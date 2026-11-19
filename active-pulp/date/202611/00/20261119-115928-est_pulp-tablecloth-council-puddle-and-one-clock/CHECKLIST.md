@@ -1,14 +1,15 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.153338` (EST)
+**Stamp:** `20261119.154211` (EST)
 
-## Top of Prepend-to-Front Stack (Active Orbit 5 -- `6-Virgo -> 9-Sagittarius`)
+## Top of Prepend-to-Front Stack (Active Orbit 5 -- `7-Libra -> 9-Sagittarius`)
 
-- [ ] **[TOP -- Orbit 5, Movement 6/15 (`Virgo`)] Orbit 5 Compass Film Study & Remaining `README.md` Modernization Sweep** -- run `6-Virgo` orbit-efficiency review, modernize `modules/README.md` + `libraries/README.md` + `blazepod/README.md` (`0.0%` negation & direct `LEXICON.md` Myofascia links), & scout `7-Libra`
-- [ ] **[Orbit 5, Movement 7/15 (`Libra`)] Even Scales Census & Machine Account Verified Seed Readiness** -- weigh Orbit 5 progress & bind Keaton's new GitHub Machine Account email onto `BF755F6F` once ready
+- [ ] **[TOP -- Orbit 5, Movement 7/15 (`Libra`)] Even Scales Census & Machine Account Verified Seed Readiness** -- weigh `murr_core` / `lower_*` caller molt plan for `8-Scorpio` & bind Keaton's new GitHub Machine Account email onto `BF755F6F` once ready
+- [ ] **[Orbit 5, Movement 8/15 (`Scorpio`)] Execute Approved Orbit 5 Sheds & Scout `9-Sagittarius` Artistry** -- run approved `7-Libra` cuts and clear spent keys to zero
 
 ## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Virgo Movement 6/15 (`57.060`, `xy/gemini-4-neon`)** -- modernized `modules/README.md`, `libraries/README.md`, & `blazepod/README.md` (`0.0%` negation, clearing dead pre-reroot links), lifted verified Myofascia density to `13/13` `LEXICON.md` hubs, and shipped `modules/fusion/orbit5_virgo_efficiency.rye` (`grain-ww virgo-o5`, Proof `#53`) + `gate-virgo-efficiency.glow` (`40/40` live Glow Mill desks GREEN!) (`20261119.154211`)
 - [x] **Orbit 5 Leo Movement 5/15 (`57.059`, `xy/gemini-4-neon`)** -- authored `modules/resonance/resonance_wood_ledger.rye` (`grain-ww resonance-wood`: binds 48 kHz 4-track Resonance RIFF WAV SHA3-256 stem digest directly to conserved `1000`-permille `WOOD` collaborator patronage splits sealed with `Kumara` Ed25519, Proof `#52`) and `fold-resonance-wood.glow` (`39/39` live Glow desks GREEN!) (`20261119.153338`)
 - [x] **Orbit 5 Cancer Movement 4/15 (`57.058`, `xy/gemini-4-neon`)** -- elevated revived `0.0%`-negation `LEXICON.md` (seating **`Modernization`** & archiving `20261002` elder to `yonder/lexicon-20261002-elder.md` behind nib `4f96047b`), wired `10/10` cross-hub Myofascia links, modernized `languages/rishi/README.md`, and shipped `modules/pond/pond_sanctuary_airlock.rye` (`grain-ww pond-airlock`, Proof `#51`) + `gate-pond-sanctuary.glow` (`38/38` live Glow desks GREEN!) (`20261119.152019`)
 - [x] **Orbit 5 Gemini Movement 3/15 (`57.057`, `xy/gemini-4-neon`)** -- executed Gemini vocabulary breach (`two tongues -> dancing friends`, `one porch -> many weaves`) across all 5 living wheels & lessons, modernized `languages/rye/README.md` + authored `terrarium/README.md` (`0.0%` negation), and shipped Milestone Proof `#50` (`modules/market/wood_weave_bridge.rye`, `grain-ww wood-weave`) + `fold-wood-weave.glow` (`37/37` live Glow desks GREEN!) (`20261119.150830`)

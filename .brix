@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.153338
-myofascia 57.059
+version 20261119.154211
+myofascia 57.060
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -212,6 +212,8 @@ file modules/fusion/fusion_dag.rye
 file modules/fusion/fusion_sow.rye
 file modules/fusion/gate_runner.rye
 file modules/fusion/palisade_release_gate.rye
+file modules/fusion/orbit5_virgo_efficiency.rye
+file modules/fusion/glow/gate-virgo-efficiency.glow
 
 # Gate witness runner
 file tools/rishi/parity.rish

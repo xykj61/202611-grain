@@ -1,25 +1,40 @@
-# `libraries/` -- Evolving Comlink Parcels, Open Books, Shastra, Risala, & Astrology
+# Libraries -- Study Canons, Civic Ecology, Civil Engineering, & Comlink Parcels
 
 **Language:** EN
-**Stamp:** `20261115.084500` (EST)
-**Voice:** Kyri
-**Style:** Teacher, Civic, & Radiant at Door
-**Status:** Living (`Room: checkable` -- unified home for Creative Commons / public-domain wisdom texts, courses, and evolving permissive open-source Comlink libraries; absorbed root `study/` `20261115.084500`)
+**Stamp:** `20261119.154211` (EST)
+**Voice:** Kyri / Reya
+**Style:** Teacher + Civic + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Status:** Living (`Room: checkable` -- unified home for Creative Commons /
+public-domain study canons, USA civic watershed/engineering libraries, and
+incubating `Evergrow` Comlink parcels)
+**Front Doors:** [`../README.md`](../README.md) |
+[`../LEXICON.md`](../LEXICON.md) | [`../MAP.md`](../MAP.md) |
+[`GEMINI.md`](GEMINI.md)
 
 ---
 
 ## Why Code Libraries and Living Books Share One Roof
 
-In Grain, a library of reusable code and a library of enduring human wisdom serve the same purpose: **handing tested clarity from one generation of readers to the next**. Keeping [`../languages/`](../languages/README.md) (our 5 timeless languages) and [`../modules/`](../modules/README.md) (our core TAME-proven OS faculties) calm and stable at the root lets **`libraries/`** welcome rapid exploration, community Comlink parcels, and multi-year learning texts in one warm, discoverable place.
+In Grain, reusable software libraries and enduring human study texts share one
+mission: handing tested clarity from one generation of builders to the next.
+Keeping [`../languages/`](../languages/README.md) and
+[`../modules/`](../modules/README.md) calm and bounded lets **`libraries/`**
+welcome rapid community exploration, multi-year study spirals, and domain
+simulation kits under one clear door.
 
 ---
 
-## The Three-Part Graduation Rule (`libraries/` -> `modules/`)
+## Three-Part Graduation Rule (`libraries/` -> `modules/`)
 
-A new capability starts life inside **`libraries/`** *unless* it satisfies **1, 2, or both (3)**:
-1. **System-Critical:** Foundational to the hardware/OS/UI spine (such as [`../modules/brushstroke/touch/`](../modules/brushstroke/touch/touch_core.rye), [`../modules/resonance/earpiece/`](../modules/resonance/earpiece/earpiece_core.rye), or [`../modules/pond/`](../modules/pond/pond_cli.rye)),
-2. **Established & TAME-Audited:** Proven on metal with explicit bit widths, bounded static memory, `>= 2` production-active assertions per function, and both welcome + refusal witnesses,
-3. **Both System-Critical and TAME-Established.**
+A capability incubates cleanly inside **`libraries/`** and graduates into
+`modules/` once it fulfills one or both foundational bars:
+
+1. **System-Critical:** Core to the hardware, OS, security, or `Vantage` UI
+   spine (`aurora`, `tally`, `caravan`, `pond`, `vantage`, `earpiece`).
+2. **TAME-Established:** Verified on metal with explicit bit widths, fixed
+   capacities, `>= 2` `// invariant:` assertions per function, and paired
+   welcome + refusal witnesses.
 
 ---
 
@@ -27,9 +42,14 @@ A new capability starts life inside **`libraries/`** *unless* it satisfies **1, 
 
 | Shelf | License & Kind | What Lives Here |
 |---|---|---|
-| **[`shastra/`](shastra/README.md)** & **[`Curriculum`](shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md)** | CC-BY-4.0 / Public Domain | **Multi-Year Bloom & Shastra Curriculum** -- starting with **Andal's** *Tiruppavai* & *Nachiyar Tirumozhi* ([`shastra/tiruppavai/`](shastra/tiruppavai/tiruppavai_dawn.rye)), ascending through **Rupa Goswami's** *Bhakti-rasamrita-sindhu*, to **Jiva Goswami's** six *Sat-Sandarbhas* (`shastra/sandarbhas/`) |
-| **[`risala/`](risala/README.md)** | CC-BY-4.0 | Contemplative letters, Rumi/Hafez/Kabir/Ibn Arabi resonances, and bridge-building devotional prose |
-| **[`cubist-bhakti-astrology/`](cubist-bhakti-astrology/README.md)** | CC-BY-4.0 | Fifty first-principles essays on signs, lunar stars (*nakshatras*), houses, and planetary maturation |
-| **[`classical-vedic-astrology/`](classical-vedic-astrology/cast_chart.rye)** | MIT / Apache-2.0 | Exact integer-arcsecond (`u32`) Jyotish sign, *nakshatra*, *pada*, and Ketu-opposition engine |
-| **[`books/`](books/)** & **[`refusals/`](refusals/)** | CC-BY-4.0 / Public Domain | Open companion readers, primary text notes, biocyclic vegan agriculture guides, and boundary notes |
-| **`parcels/`** | Apache-2.0 / MIT (`Evergrow`) | Community & experimental **Comlink Parcel** packages (`202611-*` immutable epochs governed by `offer-more-require-less`) before graduation into `modules/` |
+| **[`shastra/`](shastra/README.md)** & **[`Curriculum`](MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md)** | CC-BY-4.0 / Public Domain | Four-year *Bloom & Shastra* spiral (*Tiruppavai*, *Rasamrita-sindhu*, *Sikshastakam*, *Gopala-champu*) + `405` sky bridge (`panchanga_shastra_bridge.rye`) |
+| **[`risala/`](risala/README.md)** | CC-BY-4.0 | Multicultural 15-sign *Sandhya / Shafaq* Twilight wheel (`twilight_wheel.rye`) and bridge-building devotional prose |
+| **[`civic-ecology/`](civic-ecology/README.md)** | CC-BY-4.0 / MIT | Multi-story forest canopy cooling, living humus sponge infiltration (`12% -> 88%`), and continental rain draw (`canopy_hydrology.rye`) |
+| **[`civil-engineering/`](civil-engineering/README.md)** | CC-BY-4.0 / MIT | Permeable stormwater works (`>= 60%` capture), `>= 2.0x` load safety, regional mass-timber `WOOD` carbon, & `324/405` `Colloquium` bonds (`watershed_structures.rye`) |
+| **[`cubist-bhakti-astrology/`](cubist-bhakti-astrology/README.md)** & **[`classical-vedic-astrology/`](classical-vedic-astrology/cast_chart.rye)** | CC-BY-4.0 / MIT | Fifty first-principles sky essays and exact integer-arcsecond (`u32`) Jyotish sign, *nakshatra*, and *pada* engine |
+| **[`books/`](books/)** & **[`refusals/`](refusals/)** | CC-BY-4.0 / Public Domain | Open companion readers, biocyclic vegan soil craft, and boundary notes |
+
+---
+
+*May every library shelf nourish both careful hands and generous inquiry across
+generations.*
