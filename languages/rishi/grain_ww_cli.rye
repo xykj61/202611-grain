@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.165127";
-pub const myofascia_reading = "57.065";
+pub const grain_ww_version = "20261119.171038";
+pub const myofascia_reading = "57.066";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -612,6 +612,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/constel_aquarius_federation",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "twilight-svg")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/twilight_nocturne_svg",
             null,
             args[2..],
         );

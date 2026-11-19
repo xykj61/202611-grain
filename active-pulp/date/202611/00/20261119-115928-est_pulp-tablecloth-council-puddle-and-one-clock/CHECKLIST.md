@@ -1,16 +1,16 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.165127` (EST)
+**Stamp:** `20261119.171038` (EST)
 
-## Top of Prepend-to-Front Stack (Quest 1 Final 4 Movements -- `12-Pisces -> 15-Siya`, `q=72..75/75`)
+## Top of Prepend-to-Front Stack (Quest 1 Final 3 Aether Movements -- `13-sky -> 14-land -> 15-Siya`, `q=73..75/75`)
 
-- [ ] **[TOP -- Orbit 5, Movement 12/15 (`Pisces`)] Twilight Radiant Silo Artifact (`Risala` 15-Sign Nocturne SVG & Meter)** -- craft a gratitude-born `15`-sign Twilight Radiant Silo visual/text artifact (`Proof #59`, Desk `#46`)
-- [ ] **[Orbit 5, Movement 13/15 (`Nakshatra`)] `Shastra` 4-Year Curriculum Spiral & `27`-Nakshatra Bridge** (`Proof #60`, Desk `#47`)
-- [ ] **[Orbit 5, Movement 14/15 (`Tithi`)] Quest 1 (`75`-Movement) Closure Audit** (`Proof #61`, Desk `#48`)
-- [ ] **[Orbit 5, Movement 15/15 (`Siya`)] Quest 1 Harvest (`75/75` Movements!), `62/62` Proofs, & Verified Public Seed!**
+- [ ] **[TOP -- Orbit 5, Movement 13/15 (`sky`)] Aether Hears -- Milestone Proof `#60`: `Shastra` 4-Year Curriculum & Civic Purpose Audit** (`Desk #47`)
+- [ ] **[Orbit 5, Movement 14/15 (`land`)] Quest 1 (`75`-Movement) Grounding & Whole-Tree Closure Audit** (`Proof #61`, `Desk #48`)
+- [ ] **[Orbit 5, Movement 15/15 (`Siya`)] Quest 1 Harvest (`75/75` Movements!), `62/62` Proofs, `49/49` Glow Desks, & Public Seed!**
 
 ## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Pisces Movement 12/15 (`57.066`, `xy/gemini-4-neon`)** -- authored `libraries/risala/twilight_nocturne_svg.rye` (`grain-ww twilight-svg [emit]`: pure fixed-point integer `320 x 320` 15-sign *Sandhya / Shafaq* Twilight Mandala SVG sealed by SHA3-256 with paired refusals, Proof `#59`) + `modules/brushstroke/glow/fold-twilight-svg.glow` (`46/46` live Glow desks GREEN!) (`20261119.171038`)
 - [x] **Orbit 5 Aquarius Movement 11/15 (`57.065`, `xy/gemini-4-neon`)** -- authored `modules/comlink/constel_aquarius_federation.rye` (`grain-ww aquarius-405`: deterministic `<= 3`-hop `15 x 3 x 9 = 405`-seat peer gossip convergence at `112`-byte wire toll with `324/405` constitutional SHA3 seal & Sybil/MTU/hop refusals, Proof `#58`) + `gate-aquarius-405.glow` (`45/45` live Glow desks GREEN!) (`20261119.165127`)
 - [x] **Orbit 5 Capricorn Movement 10/15 (`57.064`, `xy/gemini-4-neon`)** -- authored `blazepod/tally_vn_wal_replay.rye` (`grain-ww wal-replay`: SHA3-256 chained `Blazepod` `tally-vn` NVMe WAL ring with deterministic power-loss torn-tail crash recovery & mid-log tamper refusal, Proof `#57`) + `modules/tally/glow/gate-tally-wal.glow` (`44/44` live Glow desks GREEN!) (`20261119.164619`)
 - [x] **Orbit 5 Sagittarius Movement 9/15 (`57.063`, `xy/gemini-4-neon`)** -- authored `modules/brushstroke/skate/studio_triptych_canvas.rye` (`grain-ww triptych-art`: deterministic `360 x 120` RGB24 3-panel `Vantage` frame uniting Canopy Watershed, Twilight Almanac, & `405` Colloquium quorum lattice sealed by SHA3-256, Proof `#56`) + `fold-studio-triptych.glow` (`43/43` live Glow desks GREEN!) and re-prepended `Pulp` for `10-Capricorn -> 15-Siya` (`20261119.162625`)

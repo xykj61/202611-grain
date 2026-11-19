@@ -211,3 +211,6 @@ ascii_7bit active-development/date/20261119/20261119-164619-est_orbit5-capricorn
 max_cols 80 modules/comlink/constel_aquarius_federation.rye
 max_cols 80 modules/comlink/glow/gate-aquarius-405.glow
 ascii_7bit active-development/date/20261119/20261119-165127-est_orbit5-aquarius-constel-405-federation.md
+max_cols 80 libraries/risala/twilight_nocturne_svg.rye
+max_cols 80 modules/brushstroke/glow/fold-twilight-svg.glow
+ascii_7bit active-development/date/20261119/20261119-171038-est_orbit5-pisces-twilight-nocturne-svg-artifact.md
