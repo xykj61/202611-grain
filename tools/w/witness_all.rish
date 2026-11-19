@@ -167,4 +167,4 @@ let w23 = "tools/f/fusion_seed_and_build_witness.rish"
 assert (run [rishi "run" w23]).ok else "fusion_seed_and_build"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial"
 
-say "GREEN: witness_all -- +0.001 gate, Libra Scales, & 42 proofs (57.047)!"
+say "GREEN: witness_all -- +0.001 gate, Libra Scales, & 42 proofs (57.048)!"

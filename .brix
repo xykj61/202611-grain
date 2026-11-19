@@ -7,21 +7,21 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.124637
-myofascia 57.047
+version 20261119.130204
+myofascia 57.048
 
 # Upstream git remote and branch-pushing defaults
 remote xy
 branch_main main
-branch_push_default gemini-4-carbon
+branch_push_default gemini-4-neon
 
-# Active primary bench: Google Gemini CLI (gemini-4-carbon)
+# Active primary bench: Google Gemini CLI (gemini-4-neon)
 provider_gemini Google
 product_gemini Gemini CLI
-model_gemini gemini-4-carbon
-branch_gemini gemini-4-carbon
+model_gemini gemini-4-neon
+branch_gemini gemini-4-neon
 push_remote_gemini xy
-push_branch_gemini gemini-4-carbon
+push_branch_gemini gemini-4-neon
 door_gemini GEMINI.md
 settings_gemini .gemini/settings.json
 rules_gemini .gemini/rules/README.md

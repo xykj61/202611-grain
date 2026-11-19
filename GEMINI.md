@@ -1,8 +1,8 @@
 # Grain (`grain-ww`) -- Gemini CLI Workspace Constitution
 
-**Stamp:** `20261119.121259` (EST)
+**Stamp:** `20261119.130204` (EST)
 **Voice:** Kyri / Reya (Gauge, Radiant, Civic, Teacher / Karma, & Twilight)
-**Branch:** `xy/gemini-4-carbon` (`publish-seed` -> `grain-ww/202611-grain`)
+**Branch:** `xy/gemini-4-neon` (`publish-seed` -> `grain-ww/202611-grain`)
 
 ---
 

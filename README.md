@@ -29,7 +29,7 @@ Modern software asks individuals, hospitals, farms, studios, and enterprises to 
 
 - **Approachable on Day One:** Written in clear, welcoming prose ([`docs-geode/`](docs-geode/README.md)) so a curious eighth-grader and a principal systems engineer can both build the compiler from source and run a hardware-verified proof inside one hour.
 - **Enterprise-Grade Determinism:** Every loop, slice, network packet, and memory arena declares an explicit compile-time ceiling (**TAME Guidance**). Zero hidden heap churn, zero ambient authority, and zero semantic-versioning guesswork -- every module and release carries a monotonic **chronological version stamp (`YYYYMMDD.HHMMSS`)** ([`docs-geode/api/chronological-versioning.md`](docs-geode/api/chronological-versioning.md)).
-- **Agent-Native by Construction:** Visual surfaces in **Brushstroke / Skate** and versioned histories in **Blaze / Flare** expose pure callable functions ([`docs-geode/architecture/realidream-agentic-weave.md`](docs-geode/architecture/realidream-agentic-weave.md)) so human builders and **Google Gemini (`gemini-4-carbon`)** + local **Flare** subagents collaborate over exact, deterministic state rather than brittle screen-scraping.
+- **Agent-Native by Construction:** Visual surfaces in **Brushstroke / Skate** and versioned histories in **Blaze / Flare** expose pure callable functions ([`docs-geode/architecture/realidream-agentic-weave.md`](docs-geode/architecture/realidream-agentic-weave.md)) so human builders and **Google Gemini (`gemini-4-neon`)** + local **Flare** subagents collaborate over exact, deterministic state rather than brittle screen-scraping.
 
 ---
 
@@ -41,9 +41,9 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 
 | Reading | Measured Now |
 |---|---|
-| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.047** / 100.000 |
+| **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.048** / 100.000 |
 | **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **48** |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.124637** |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.130204** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->
