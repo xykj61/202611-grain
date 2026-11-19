@@ -1,8 +1,7 @@
-//! modules/fusion/orbit5_virgo_efficiency.rye -- Orbit 5 Virgo Film Study!
+//! modules/fusion/virgo_efficiency_audit.rye -- Virgo Efficiency Audit!
 //!
-//! Stamp: `20261119.154211` -- Orbit 5, `Movement 6/15 : Virgo` (*Compass
-//! audit & orbit-efficiency review*), powering `grain-ww virgo-o5`
-//! (Proof #53)!
+//! Stamp: `20261119.182424` -- Virgo (*Compass audit & efficiency review*),
+//! powering `grain-ww virgo-efficiency`!
 //! Mechanically audits all `9` modernized front-door guides (`LEXICON.md`,
 //! `languages/{glow,rye,rishi}/README.md`, `terrarium/README.md`,
 //! `modules/README.md`, `libraries/README.md`, `blazepod/README.md`,

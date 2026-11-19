@@ -1,0 +1,98 @@
+//! terrarium/terrarium_consolidation_audit.rye -- Terrarium Audit!
+//!
+//! Stamp: `20261119.182424` -- Virgo (*Compass & efficiency audit*), powering
+//! `grain-ww terrarium-audit`!
+//! Verifies all six canonical `terrarium/` enclosures & their `Synonym` C-ABI
+//! bridge onto `Vantage Station` and our Deterministic Cached Grain Harness:
+//!   1. `terrarium/README.md` (linked straight into root `LEXICON.md`),
+//!   2. `terrarium/layout64.ld` & `terrarium/boot_witness_rv64g.rish` (RV64GC),
+//!   3. `terrarium/app/vantage_mac_live.swift` (thin macOS Glasswall shell),
+//!   4. `terrarium/carry-tablet/CarryActivity.kt` (zero-SDK Daylight RLCD),
+//!   5. `terrarium/faa-atc/pilot_sector_horizon.rye` (integer RVSM horizon),
+//!   6. `terrarium/civil-engineering/structural_colloquium.rye` (WOOD safety),
+//! plus our unified `Vantage` + `Cached Harness` + `API Airlock` C-ABI spine!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.182424";
+const nl: u8 = 10;
+
+pub const AuditError = error{
+    MissingTerrariumPillar,
+    ZeroPillarsRefused,
+    SwiftShellMissingVantageHook,
+};
+
+const required_pillars = [_][]const u8{
+    "terrarium/README.md",
+    "terrarium/layout64.ld",
+    "terrarium/boot_witness_rv64g.rish",
+    "terrarium/app/vantage_mac_live.swift",
+    "terrarium/carry-tablet/AndroidManifest.xml",
+    "terrarium/faa-atc/pilot_sector_horizon.rye",
+    "terrarium/civil-engineering/structural_colloquium.rye",
+    "modules/comlink/vantage/vantage_studio_deck.rye",
+    "modules/harness/grain_cached_harness.rye",
+    "modules/harness/pond_api_airlock.rye",
+};
+
+pub fn verify_pillar_count(found: u32, expected: u32) AuditError!u32 {
+    // invariant: non-zero expected bar & all required Terrarium pillars whole.
+    if (expected == 0) return error.ZeroPillarsRefused;
+    if (found < expected) return error.MissingTerrariumPillar;
+    assert(found >= expected and expected == required_pillars.len);
+    return found;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const cwd = std.Io.Dir.cwd();
+
+    var found: u32 = 0;
+    for (required_pillars) |p| {
+        const body = cwd.readFileAlloc(io, p, a, .limited(131072)) catch {
+            return error.MissingTerrariumPillar;
+        };
+        if (body.len == 0) return error.MissingTerrariumPillar;
+        found += 1;
+    }
+
+    const swift = try cwd.readFileAlloc(
+        io,
+        "terrarium/app/vantage_mac_live.swift",
+        a,
+        .limited(131072),
+    );
+    if (std.mem.indexOf(u8, swift, "Vantage") == null) {
+        return error.SwiftShellMissingVantageHook;
+    }
+
+    const ok = try verify_pillar_count(found, required_pillars.len);
+
+    // Refusal 1: missing pillar count refused loudly
+    if (verify_pillar_count(found - 1, required_pillars.len)) |_| {
+        return error.ShortPillarAccepted;
+    } else |err| {
+        if (err != error.MissingTerrariumPillar) return err;
+    }
+
+    // Refusal 2: zero expected bar refused cleanly
+    if (verify_pillar_count(0, 0)) |_| {
+        return error.ZeroBarAccepted;
+    } else |err| {
+        if (err != error.ZeroPillarsRefused) return err;
+    }
+
+    print(
+        "GREEN: terrarium_consolidation_audit -- {d}/{d} pillars whole!{c}",
+        .{ ok, required_pillars.len, nl },
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

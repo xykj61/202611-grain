@@ -1,8 +1,7 @@
 //! modules/synonym/sameness_macro_cup.rye -- Hold the Whole Cup!
 //!
-//! Stamp: `20261119.173141` -- Orbit 5, `Movement 14/15 : sky` (*Hold the
-//! whole cup: compress two truths into one macro*), powering
-//! `grain-ww whole-cup` (Proof #61)!
+//! Stamp: `20261119.182424` -- Fixed Sky (*Hold the whole cup: compress two
+//! truths into one macro*), powering `grain-ww whole-cup`!
 //! Compresses Grain's five dual-truth pairs (`kyri<->reya`,
 //! `teacher<->karma`, `glow<->rye`, `husk<->tablecloth`, `orbit<->quest`)
 //! onto one canonical SHA3-256 macro identity and proves the exact `5x`

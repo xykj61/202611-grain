@@ -1,5 +1,9 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261119.182424-est` -- Virgo (`Myofascia 57.075`): `Terrarium` Consolidation Audit, 4-File Code Header Modernization, `ORGANIZING` & `CODE_OF_CONDUCT` Radiant Sweep, & `29/29` Hubs.**
+- **Walk-back nib:** `ac4ce594` (`xy/gemini-4-neon` immediately prior to archiving the `20260802` `ORGANIZING.md` elder to `yonder/organizing-20260802-elder.md`).
+- **Seated:** `terrarium/terrarium_consolidation_audit.rye` (`grain-ww terrarium-audit`, 10/10 pillars verified) + `gate-terrarium-audit.glow`, modernized 4 living `.rye` headers (`virgo_efficiency_audit.rye`, `libra_scales_gate.rye`, `quest_harvest_seal.rye`, `sameness_macro_cup.rye`), and swept `ORGANIZING.md` & `CODE_OF_CONDUCT.md` to `0.0%` Radiant & `7-bit ASCII` (`29/29` verified `LEXICON.md` hubs!).
+
 **Checkpoint `20261119.182008-est` -- Leo (`Myofascia 57.074`): `WOOD` Harness Ledger, `0.0%` Radiant Sweep (`STEWARDS`, `CONTRIBUTING`, `APARIGRAHA`, `TWO_ROOMS`), & `26/26` Hubs.**
 - **Walk-back nib:** `ada35e45` (`xy/gemini-4-neon` immediately prior to archiving the `20260916` `context/TWO_ROOMS.md` amendment chronicle to `yonder/two-rooms-20260916-elder.md`).
 - **Seated:** `modules/harness/harness_wood_ledger.rye` (`grain-ww harness-wood`) + `fold-harness-wood.glow`, modernized `modules/harness/harness_core.rye` header comments, and brought `STEWARDS.md`, `CONTRIBUTING.md`, `context/APARIGRAHA.md`, and `context/TWO_ROOMS.md` to `0.0%` Radiant negation & `26/26` verified `LEXICON.md` hubs.

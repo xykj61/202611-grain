@@ -1,0 +1,11 @@
+::  modules/fusion/glow/gate-terrarium-audit.glow -- Terrarium Audit!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-terrarium-pillars
+  |=  [found=@ud expected=@ud]                          ::  all 10 pillars
+  ^-  @ud                                               ::  verified count
+  ~|  'terrarium-consolidation-pillar-missing'          ::  whole enclosure
+  ?>  &(gth(expected 0) gte(found expected))
+  found
+--

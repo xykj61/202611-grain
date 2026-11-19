@@ -1,8 +1,7 @@
-//! modules/fusion/orbit5_libra_scales.rye -- Libra Even Scales Gate!
+//! modules/fusion/libra_scales_gate.rye -- Libra Even Scales Gate!
 //!
-//! Stamp: `20261119.154705` -- Orbit 5, `Movement 7/15 : Libra` (*Weigh
-//! 6-Virgo findings, plan tidy/Mitra list, & ask 8-Scorpio*), powering
-//! `grain-ww libra-o5` (Proof #54)!
+//! Stamp: `20261119.182424` -- Libra (*Weigh Virgo findings, plan Mitra
+//! tidy cuts, & hold even scales*), powering `grain-ww libra-scales`!
 //! Mechanically verifies:
 //!   1. `nixos/README.md` stands present & links `LEXICON.md` (closing
 //!      `MAP.md`'s missing `nixos/README.md` link!),

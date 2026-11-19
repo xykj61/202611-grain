@@ -1,10 +1,9 @@
-//! modules/sundial/quest1_harvest_seal.rye -- Quest 1 (75/75) Harvest Seal!
+//! modules/sundial/quest_harvest_seal.rye -- Quest Harvest Seal!
 //!
-//! Stamp: `20261119.173935` -- Orbit 5, `Movement 15/15 : Siya` (*Carry the
-//! harvest whole into the next Dawn* -- completing all `5 Orbits = 75`
-//! Movements of Calfive Quest 1!), powering `grain-ww quest1-seal`
-//! (Proof #62)!
-//! Seals the exact Quest 1 harvest metrics (`75` movements, `5` orbits,
+//! Stamp: `20261119.182424` -- Siya (*Carry the harvest whole into the next
+//! Dawn* -- sealing a full 75-movement Calfive quest!), powering
+//! `grain-ww quest-seal`!
+//! Seals verified quest harvest metrics (`75` movements, `5` orbits,
 //! `17` LEXICON hubs, `49` Glow desks, `62` metal proofs, `57.069` Myofascia)
 //! with deterministic SHA3-256 & `Kumara` Ed25519 + paired refusal witnesses!
 
