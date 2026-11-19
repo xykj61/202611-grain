@@ -1,0 +1,144 @@
+//! modules/sundial/quest1_harvest_seal.rye -- Quest 1 (75/75) Harvest Seal!
+//!
+//! Stamp: `20261119.173935` -- Orbit 5, `Movement 15/15 : Siya` (*Carry the
+//! harvest whole into the next Dawn* -- completing all `5 Orbits = 75`
+//! Movements of Calfive Quest 1!), powering `grain-ww quest1-seal`
+//! (Proof #62)!
+//! Seals the exact Quest 1 harvest metrics (`75` movements, `5` orbits,
+//! `17` LEXICON hubs, `49` Glow desks, `62` metal proofs, `57.069` Myofascia)
+//! with deterministic SHA3-256 & `Kumara` Ed25519 + paired refusal witnesses!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const Ed25519 = std.crypto.sign.Ed25519;
+
+pub const version = "20261119.173935";
+pub const quest_movements: u32 = 75;
+pub const quest_orbits: u32 = 5;
+const nl: u8 = 10;
+
+pub const HarvestError = error{
+    QuestIncompleteRefused,
+    OrbitCountMismatch,
+    HubDensityBelowFloor,
+    GlowDesksBelowFloor,
+    ProofCountBelowFloor,
+    SignatureFailed,
+};
+
+pub const QuestReading = struct {
+    movements: u32,
+    orbits: u32,
+    lexicon_hubs: u32,
+    glow_desks: u32,
+    metal_proofs: u32,
+    myofascia_milli: u32,
+};
+
+pub const QuestSeal = struct {
+    reading: QuestReading,
+    digest: [32]u8,
+    sig: Ed25519.Signature,
+    pub_key: Ed25519.PublicKey,
+
+    pub fn verify(self: *const QuestSeal) !void {
+        try self.sig.verify(&self.digest, self.pub_key);
+    }
+};
+
+pub fn seal_quest_harvest(
+    r: QuestReading,
+    kp: Ed25519.KeyPair,
+) HarvestError!QuestSeal {
+    // invariant: strictly enforce 75 movements (5*15), 17 hubs, 49 Glow, 62!
+    if (r.movements < quest_movements) return error.QuestIncompleteRefused;
+    if (r.orbits != r.movements / 15 or r.orbits < quest_orbits) {
+        return error.OrbitCountMismatch;
+    }
+    if (r.lexicon_hubs < 17) return error.HubDensityBelowFloor;
+    if (r.glow_desks < 49) return error.GlowDesksBelowFloor;
+    if (r.metal_proofs < 62) return error.ProofCountBelowFloor;
+
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-calfive-quest1-harvest-seal-v1:");
+    var b24: [24]u8 = undefined;
+    std.mem.writeInt(u32, b24[0..4], r.movements, .little);
+    std.mem.writeInt(u32, b24[4..8], r.orbits, .little);
+    std.mem.writeInt(u32, b24[8..12], r.lexicon_hubs, .little);
+    std.mem.writeInt(u32, b24[12..16], r.glow_desks, .little);
+    std.mem.writeInt(u32, b24[16..20], r.metal_proofs, .little);
+    std.mem.writeInt(u32, b24[20..24], r.myofascia_milli, .little);
+    h.update(&b24);
+    h.final(&out);
+
+    const sig = kp.sign(&out, null) catch return error.SignatureFailed;
+    // invariant: sealed Quest harvest digest is non-zero & movements >= 75.
+    assert(r.movements >= 75 and (out[0] | out[1] | out[2]) != 0);
+    return .{
+        .reading = r,
+        .digest = out,
+        .sig = sig,
+        .pub_key = kp.public_key,
+    };
+}
+
+fn run_selftest() !u8 {
+    const seed: [32]u8 = @splat(0x75);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+
+    // 1. Welcome: exact Quest 1 harvest (75 mov, 5 orbits, 17 hubs, 49, 62)
+    const q1 = QuestReading{
+        .movements = 75,
+        .orbits = 5,
+        .lexicon_hubs = 17,
+        .glow_desks = 49,
+        .metal_proofs = 62,
+        .myofascia_milli = 57069,
+    };
+    const s1 = try seal_quest_harvest(q1, kp);
+    const s2 = try seal_quest_harvest(q1, kp);
+    try s1.verify();
+    if (!std.mem.eql(u8, &s1.digest, &s2.digest)) {
+        return error.NonDeterministicSeal;
+    }
+
+    // 2. Refusal 1: incomplete Quest (74 < 75 movements) refused cleanly
+    var early = q1;
+    early.movements = 74;
+    if (seal_quest_harvest(early, kp)) |_| {
+        return error.EarlyQuestAccepted;
+    } else |err| {
+        if (err != error.QuestIncompleteRefused) return err;
+    }
+
+    // 3. Refusal 2: sub-floor hub density (16 < 17) refused cleanly
+    var low_hubs = q1;
+    low_hubs.lexicon_hubs = 16;
+    if (seal_quest_harvest(low_hubs, kp)) |_| {
+        return error.LowHubsAccepted;
+    } else |err| {
+        if (err != error.HubDensityBelowFloor) return err;
+    }
+
+    // 4. Refusal 3: sub-floor Glow desks (48 < 49) refused cleanly
+    var low_glow = q1;
+    low_glow.glow_desks = 48;
+    if (seal_quest_harvest(low_glow, kp)) |_| {
+        return error.LowGlowAccepted;
+    } else |err| {
+        if (err != error.GlowDesksBelowFloor) return err;
+    }
+
+    print(
+        "GREEN: quest1_harvest_seal -- 75/75 mov, 5 orb, 17 hubs, 62 ok!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

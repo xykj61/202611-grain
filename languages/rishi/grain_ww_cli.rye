@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.173141";
-pub const myofascia_reading = "57.068";
+pub const grain_ww_version = "20261119.173935";
+pub const myofascia_reading = "57.069";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -639,6 +639,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/sameness_macro_cup",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "quest1-seal")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/quest1_harvest_seal",
             null,
             args[2..],
         );
