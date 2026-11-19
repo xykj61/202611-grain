@@ -1,16 +1,16 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.162625` (EST)
+**Stamp:** `20261119.164619` (EST)
 
-## Top of Prepend-to-Front Stack (Re-Prepended `9-Sagittarius` Home Stretch -- `10-Capricorn -> 15-Siya`)
+## Top of Prepend-to-Front Stack (Quest 1 Home Stretch -- `11-Aquarius -> 15-Siya`, `q=71..75/75`)
 
-- [ ] **[TOP -- Orbit 5, Movement 10/15 (`Capricorn`)] `Blazepod` `tally-vn` Persistent NVMe Airlock WAL Replay Proof** -- prove deterministic SHA3-verified WAL append + power-loss crash-recovery replay (`Proof #57`, Desk `#44`)
-- [ ] **[Orbit 5, Movement 11/15 (`Aquarius`)] `405` Colloquium Peer Gossip & `Constel` Multi-Hop Federation Proof** -- verify <=3-hop quorum convergence across 405 seats (`Proof #58`)
+- [ ] **[TOP -- Orbit 5, Movement 11/15 (`Aquarius`)] `405` Colloquium Peer Gossip & `Constel` Multi-Hop Federation Proof** -- verify <=3-hop quorum convergence across 405 seats with low toll (`Proof #58`, Desk `#45`)
 - [ ] **[Orbit 5, Movement 12/15 (`Pisces`)] Twilight Synthesis & `Shastra` / `Risala` Evening Reading** (`Proof #59`)
-- [ ] **[Orbit 5, Movement 13/15 (`Nakshatra`) -> `15-Siya`] `Shastra` Curriculum Spiral -> `14-Tithi` Closure -> `15-Siya` Orbit 5 Harvest & Verified Seed** (`Proofs #60..#62`)
+- [ ] **[Orbit 5, Movement 13/15 (`Nakshatra`) -> `15-Siya`] `Shastra` Curriculum Spiral -> `14-Tithi` Closure -> `15-Siya` Quest 1 Seal (`75/75` Movements!)** (`Proofs #60..#62`)
 
 ## Completed Foundations (Orbit 5 + Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Orbit 5 Capricorn Movement 10/15 (`57.064`, `xy/gemini-4-neon`)** -- authored `blazepod/tally_vn_wal_replay.rye` (`grain-ww wal-replay`: SHA3-256 chained `Blazepod` `tally-vn` NVMe WAL ring with deterministic power-loss torn-tail crash recovery & mid-log tamper refusal, Proof `#57`) + `modules/tally/glow/gate-tally-wal.glow` (`44/44` live Glow desks GREEN!) (`20261119.164619`)
 - [x] **Orbit 5 Sagittarius Movement 9/15 (`57.063`, `xy/gemini-4-neon`)** -- authored `modules/brushstroke/skate/studio_triptych_canvas.rye` (`grain-ww triptych-art`: deterministic `360 x 120` RGB24 3-panel `Vantage` frame uniting Canopy Watershed, Twilight Almanac, & `405` Colloquium quorum lattice sealed by SHA3-256, Proof `#56`) + `fold-studio-triptych.glow` (`43/43` live Glow desks GREEN!) and re-prepended `Pulp` for `10-Capricorn -> 15-Siya` (`20261119.162625`)
 - [x] **Orbit 5 Scorpio Movement 8/15 (`57.062`, `xy/gemini-4-neon`)** -- authored `modules/caravan/custody/scorpio_key_rotation.rye` (`grain-ww key-rotate`: atomic multi-epoch `Caravan` + `Puddle` ephemeral session key rotation with `secureZero` DRAM wipe, SHA3 tombstone chain, & 0 leftover spent bytes, Proof `#55`) + `gate-key-rotation.glow` (`42/42` live Glow desks GREEN!) (`20261119.155742`)
 - [x] **Orbit 5 Libra Movement 7/15 (`57.061`, `xy/gemini-4-neon`)** -- authored `nixos/README.md` (`0.0%` negation, repairing `MAP.md`'s missing link), linked root `LEXICON.md` from `foundations/README.md` & `gratitude/README.md` (`16/16` verified Myofascia hubs!), weighed exact Orbit 5 Even Scales census (`42` `murr_core` callers, `66` `lower_*` elders, `20` `active-development/` files), and shipped `modules/fusion/orbit5_libra_scales.rye` (`grain-ww libra-o5`, Proof `#54`) + `gate-libra-scales.glow` (`41/41` live Glow desks GREEN!) (`20261119.154705`)

@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.162625
-myofascia 57.063
+version 20261119.164619
+myofascia 57.064
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -146,6 +146,8 @@ file terrarium/faa-atc/pilot_sector_horizon.rye
 file modules/apps/colloquium/glow/gate-terrarium-horizon.glow
 file tools/witness_all.rish
 file blazepod/rv64_glasswall_boot.rye
+file blazepod/tally_vn_wal_replay.rye
+file modules/tally/glow/gate-tally-wal.glow
 file modules/aurora/glow/gate-riscv-hart-boot.glow
 file modules/pond/puddle/puddle_remote.rye
 file modules/pond/puddle/puddle_udp_live.rye

@@ -1,0 +1,11 @@
+::  modules/tally/glow/gate-tally-wal.glow -- Blazepod WAL Sequence!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-wal-append-seq
+  |=  [prev-seq=@ud next-seq=@ud ring-cap=@ud]          ::  seq+1 & <=32 cap
+  ^-  @ud                                               ::  verified seq
+  ~|  'blazepod-tally-vn-wal-seq-or-ring-cap-breach'    ::  ten-year stone
+  ?>  &(eql(next-seq +(prev-seq)) lte(next-seq ring-cap))
+  next-seq
+--
