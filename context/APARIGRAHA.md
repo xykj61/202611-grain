@@ -1,40 +1,52 @@
-# Aparigraha — the context economy
+# Aparigraha -- The Context Economy
 
-**Language:** EN  
-**Seated:** `20260724.143155`  
-**Voice:** Quin  
-**Status:** Living pin  
-**Subtitle:** named budgets for bytes, tokens, memory, and attention  
+**Language:** EN
+**Now Stamp:** `20261119.182008` (EST)
+**Originally Seated:** `20260724.143155`
+**Voice:** Reya / Kyri / Quin
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
+**Front Doors:** [`../README.md`](../README.md) |
+[`../LEXICON.md`](../LEXICON.md) | [`SPELLBOOK.md`](SPELLBOOK.md)
+**Status:** Living pin (`Room: mixed` -- the vow orients; the byte bound is
+witness-held)
+**Subtitle:** Named budgets for bytes, tokens, memory, and attention
 **Bound:** `living_pin_max_bytes = 24576`
-**Room:** mixed -- the vow orients; the byte bound it names is witness-held
 
 ---
 
-## The vow
+## The Vow
 
-**Aparigraha** — carry only what you use. One law, four currencies:
+**Aparigraha** -- carry strictly what you use. One law governs four currencies:
 
-| Currency | Workshop practice |
-|----------|-------------------|
-| Bytes on the remotes | regenerable output untracked; archives on shelves |
-| Tokens in the prompt | living pins; rules attach when needed |
-| Resident memory in the editor | watcher/search excludes; lane-scoped windows |
-| Attention in the operator | round-close · season-close rest cadence |
+| Currency | Workshop Practice |
+|---|---|
+| **Bytes on remotes** | Regenerable builds stay gitignored; elders rest calmly in `yonder/` |
+| **Tokens in context** | Lean living pins (`GEMINI.md`, `.gemini/rules/`); scoped guides load on entry |
+| **Resident memory** | Bounded `Tally` arenas (`<= 32 KiB` Glow desks); `.geminiignore` skips build caches |
+| **Steward attention** | Steady 15-sign Calfive cadence (`grain-ww movement`) with calm rest at harvest |
 
-## Doctrine (compressed)
+## Doctrine (Compressed)
 
-**Workshop, daily.** Small curated contexts — the pin, the bench card, the lane — budget named before the lap.
+- **Workshop, daily:** Small curated contexts -- the pin, the active `Husk`
+  board, the scoped module -- with budgets declared up front.
+- **Warehouse, on schedule:** Wide-window census at Virgo / Libra / Siya
+  checkpoints as an instrument of clarity.
+- **Pin and ledger:** Every living document keeps present truth lean
+  (`living_pin_max_bytes = 24576`,
+  [`specs/20260724-132812_pin-and-ledger-living-pin-max-bytes.md`](specs/20260724-132812_pin-and-ledger-living-pin-max-bytes.md));
+  historical records roll cleanly to dated testimony or `yonder/`.
+- **Rules routing:** Compact always-on elemental core in `.gemini/rules/`;
+  subdirectory guides attach strictly where needed.
 
-**Warehouse, on schedule.** Wide-window audit at chapter close or monthly — instrument, not daily driver.
+## Cite Ahead of Restating
 
-**Pin and ledger.** A living document keeps the current chapter only; closed chapters roll to dated `archive/` shelves. Bound: `living_pin_max_bytes = 24576` ([spec](specs/20260724-132812_pin-and-ledger-living-pin-max-bytes.md)).
+- Workshop and warehouse doctrine:
+  [`specs/20260724-132812_workshop-and-warehouse-context-economy.md`](specs/20260724-132812_workshop-and-warehouse-context-economy.md)
+- Alternate plain title: `CONTEXT_ECONOMY.md` -- this living pin honors the
+  original Sanskrit word *Aparigraha*.
 
-**Rules routing.** Small always-on core; the rest attaches by glob or description.
+---
 
-## Cite rather than restate
-
-- Workshop/warehouse doctrine: [`specs/20260724-132812_workshop-and-warehouse-context-economy.md`](specs/20260724-132812_workshop-and-warehouse-context-economy.md)  
-- First sitting counsel: `../counsel/date/20260724/20260724-132812_the-workshop-and-the-warehouse.md`  
-- Third sitting (name seat): `../counsel/date/20260724/20260724-141612_names-maps-and-open-questions.md`
-
-Plain-spoken alternate title if ever needed: `CONTEXT_ECONOMY.md` — this pin keeps the Sanskrit name.
+*May every room carry strictly what nourishes the work, leaving ample clear
+breath for the next hand.*

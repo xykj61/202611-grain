@@ -1,0 +1,11 @@
+::  modules/harness/glow/fold-harness-wood.glow -- WOOD Harness Ledger!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-harness-wood-split
+  |=  [wood=@ud permille=@ud hit=@ud]                   ::  ==1000 & 0 on hit
+  ^-  @ud                                               ::  verified wood
+  ~|  'harness-wood-permille-or-cache-hit-breach'       ::  conserved WOOD
+  ?>  &(eql(permille 1000) |(eql(hit 0) eql(wood 0)))
+  wood
+--

@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.180656
-myofascia 57.073
+version 20261119.182008
+myofascia 57.074
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -252,6 +252,8 @@ file modules/harness/grain_cached_harness.rye
 file modules/harness/glow/fold-harness-cache.glow
 file modules/harness/pond_api_airlock.rye
 file modules/harness/glow/gate-api-airlock.glow
+file modules/harness/harness_wood_ledger.rye
+file modules/harness/glow/fold-harness-wood.glow
 file context/SPELLBOOK.md
 
 # Identity, topology, Comlink Parcel, Pond CLI, Touch, and Earpiece

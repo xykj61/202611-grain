@@ -1,7 +1,6 @@
 //! modules/harness/harness_core.rye -- capability router & 3-tier review gate.
 //!
-//! Orbits 20, 22-24 of `20261115-053000` (`20261115.063000`).
-//! Proves:
+//! Stamp: `20261119.182008` -- Core TAME Harness gate proving:
 //!   1. Capability-bitmask tool routing + turn-budget ceiling (`max_turns`),
 //!   2. OmniDiff-inspired 3-Tier semantic diff classification (Tier 0 cosmetic
 //!      early-cutoff, Tier 1 bounded logic, Tier 2 custody/security gate),
@@ -12,7 +11,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
 
-pub const version = "20261115.063000";
+pub const version = "20261119.182008";
 pub const max_turns: u32 = 32;
 pub const max_subagents: u32 = 16;
 const nl: u8 = 10;

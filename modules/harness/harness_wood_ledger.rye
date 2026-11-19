@@ -1,0 +1,159 @@
+//! modules/harness/harness_wood_ledger.rye -- WOOD + Mycelium Harness Ledger!
+//!
+//! Stamp: `20261119.182008` -- Leo (*Wholehearted song: Resonance & WOOD*):
+//! Composes directly over `grain_cached_harness.rye` (`grain-ww harness-wood`),
+//! binding every verified Harness turn (`Flare`, `Pond`, `Gemini API`) into
+//! conserved `1000`-permille `WOOD` compute stewardship & `Resonance` studio
+//! patronage:
+//!   1. Cache hits settle at `0` incremental `WOOD` spend while preserving
+//!      deterministic `Mycelium` sequence ordering,
+//!   2. Fresh turns split `wood_cost` strictly across four civic beneficiaries
+//!      (`Creator / Steward / Civic Pond / Commons Reserve`) with exact sum
+//!      conservation (`sum(shares) == wood_cost`),
+//!   3. Pairs refusal witnesses for non-1000 permille totals, zero fresh pool,
+//!      and zeroed turn digests!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const ch = @import("grain_cached_harness.rye");
+const hc = @import("harness_core.rye");
+
+pub const version = "20261119.182008";
+const nl: u8 = 10;
+
+pub const LedgerError = error{
+    PermilleSumWrong,
+    ZeroFreshPoolRefused,
+    EmptyTurnDigestRefused,
+};
+
+pub const WoodReceipt = struct {
+    receipt_sha3: [32]u8,
+    mycelium_seq: u32,
+    wood_settled: u64,
+    shares: [4]u64,
+};
+
+fn is_all_zero(buf: []const u8) bool {
+    for (buf) |b| {
+        if (b != 0) return false;
+    }
+    return true;
+}
+
+pub fn settle_harness_turn_wood(
+    outcome: ch.TurnOutcome,
+    permilles: [4]u32,
+) LedgerError!WoodReceipt {
+    // invariant: permilles sum strictly to 1000 & turn digest is non-zero.
+    const sum_pm = permilles[0] + permilles[1] + permilles[2] + permilles[3];
+    if (sum_pm != 1000) return error.PermilleSumWrong;
+    if (is_all_zero(&outcome.response_sha3)) {
+        return error.EmptyTurnDigestRefused;
+    }
+
+    var shares = [4]u64{ 0, 0, 0, 0 };
+    if (outcome.cache_hit) {
+        // Cache hit settles cleanly at zero incremental WOOD compute burn!
+        var r_hit: [32]u8 = undefined;
+        var h = Sha3_256.init(.{});
+        h.update("grain-harness-wood-hit-v1:");
+        h.update(&outcome.response_sha3);
+        h.final(&r_hit);
+        assert((r_hit[0] | r_hit[1] | r_hit[2]) != 0);
+        return .{
+            .receipt_sha3 = r_hit,
+            .mycelium_seq = outcome.mycelium_seq,
+            .wood_settled = 0,
+            .shares = shares,
+        };
+    }
+
+    if (outcome.wood_spent == 0) return error.ZeroFreshPoolRefused;
+    var acc: u64 = 0;
+    for (permilles, 0..) |pm, idx| {
+        shares[idx] = (outcome.wood_spent * @as(u64, pm)) / 1000;
+        acc += shares[idx];
+    }
+    shares[0] += (outcome.wood_spent - acc);
+
+    var r_fresh: [32]u8 = undefined;
+    var hf = Sha3_256.init(.{});
+    hf.update("grain-harness-wood-fresh-v1:");
+    hf.update(&outcome.response_sha3);
+    hf.final(&r_fresh);
+
+    const check = shares[0] + shares[1] + shares[2] + shares[3];
+    // invariant: exact conservation across all four WOOD stewardship accounts.
+    assert(check == outcome.wood_spent and (r_fresh[0] | r_fresh[1]) != 0);
+    return .{
+        .receipt_sha3 = r_fresh,
+        .mycelium_seq = outcome.mycelium_seq,
+        .wood_settled = outcome.wood_spent,
+        .shares = shares,
+    };
+}
+
+fn run_selftest() !u8 {
+    var h = ch.CachedHarness.init();
+    const split = [4]u32{ 500, 250, 150, 100 };
+
+    // 1. Fresh turn settles strictly conserved WOOD across 4 beneficiaries
+    const turn = ch.HarnessTurn{
+        .transport = .gemini_api_bridge,
+        .posture = .tally_vn,
+        .granted_caps = hc.cap_vault_gemini_key | hc.cap_resonance_audio,
+        .prompt = "master resonance stem mix in wood ledger",
+        .wood_cost = 1007,
+    };
+    const o1 = try h.dispatch(turn);
+    const r1 = try settle_harness_turn_wood(o1, split);
+    const s1 = r1.shares[0] + r1.shares[1] + r1.shares[2] + r1.shares[3];
+    if (s1 != 1007 or r1.wood_settled != 1007) {
+        return error.WoodConservationBroken;
+    }
+
+    // 2. Identical repeat hits Blaze cache & settles at 0 incremental WOOD!
+    const o2 = try h.dispatch(turn);
+    const r2 = try settle_harness_turn_wood(o2, split);
+    if (r2.wood_settled != 0 or r2.mycelium_seq != 2) {
+        return error.CacheHitChargedWood;
+    }
+
+    // 3. Refusal 1: permille sum != 1000 refused cleanly
+    if (settle_harness_turn_wood(o1, .{ 500, 200, 100, 100 })) |_| {
+        return error.BadPermilleAccepted;
+    } else |err| {
+        if (err != error.PermilleSumWrong) return err;
+    }
+
+    // 4. Refusal 2: zeroed turn digest refused cleanly
+    var bad_digest = o1;
+    bad_digest.response_sha3 = @splat(0);
+    if (settle_harness_turn_wood(bad_digest, split)) |_| {
+        return error.ZeroDigestAccepted;
+    } else |err| {
+        if (err != error.EmptyTurnDigestRefused) return err;
+    }
+
+    // 5. Refusal 3: fresh uncached turn with 0 WOOD pool refused cleanly
+    var bad_zero = o1;
+    bad_zero.wood_spent = 0;
+    if (settle_harness_turn_wood(bad_zero, split)) |_| {
+        return error.ZeroFreshPoolAccepted;
+    } else |err| {
+        if (err != error.ZeroFreshPoolRefused) return err;
+    }
+
+    print(
+        "GREEN: harness_wood_ledger -- {d} WOOD fresh, 0 hit, 4-way ok!{c}",
+        .{ s1, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

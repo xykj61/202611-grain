@@ -244,3 +244,10 @@ ascii_7bit SOURCE.md
 ascii_7bit SAFE.md
 ascii_7bit SECURITY.md
 ascii_7bit active-development/date/20261119/20261119-180656-est_cancer-pond-api-airlock-and-radiant-sweep.md
+max_cols 80 modules/harness/harness_wood_ledger.rye
+max_cols 80 modules/harness/glow/fold-harness-wood.glow
+ascii_7bit STEWARDS.md
+ascii_7bit CONTRIBUTING.md
+ascii_7bit context/APARIGRAHA.md
+ascii_7bit context/TWO_ROOMS.md
+ascii_7bit active-development/date/20261119/20261119-182008-est_leo-harness-wood-ledger-and-radiant-modernization.md

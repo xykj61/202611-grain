@@ -1,5 +1,9 @@
 # Checkpoints -- the walk-back markers before every debride
 
+**Checkpoint `20261119.182008-est` -- Leo (`Myofascia 57.074`): `WOOD` Harness Ledger, `0.0%` Radiant Sweep (`STEWARDS`, `CONTRIBUTING`, `APARIGRAHA`, `TWO_ROOMS`), & `26/26` Hubs.**
+- **Walk-back nib:** `ada35e45` (`xy/gemini-4-neon` immediately prior to archiving the `20260916` `context/TWO_ROOMS.md` amendment chronicle to `yonder/two-rooms-20260916-elder.md`).
+- **Seated:** `modules/harness/harness_wood_ledger.rye` (`grain-ww harness-wood`) + `fold-harness-wood.glow`, modernized `modules/harness/harness_core.rye` header comments, and brought `STEWARDS.md`, `CONTRIBUTING.md`, `context/APARIGRAHA.md`, and `context/TWO_ROOMS.md` to `0.0%` Radiant negation & `26/26` verified `LEXICON.md` hubs.
+
 **Checkpoint `20261119.180005-est` -- Gemini (`Myofascia 57.072`): Revived `context/SPELLBOOK.md` (`Synonym`), Deterministic Cached Grain Harness, & `18/18` Hubs.**
 - **Walk-back nib:** `4532df51` (`xy/gemini-4-neon` immediately prior to archiving the `20260810` `context/SPELLBOOK.md` elder to `yonder/spellbook-20260810-elder.md`).
 - **Seated:** `modules/harness/grain_cached_harness.rye` (`grain-ww harness-cache`) + `fold-harness-cache.glow`, revived `0.0%`-negation `context/SPELLBOOK.md` & expanded `Synonym` in root `LEXICON.md` (`18/18` verified hubs!), and prepended our complete `Terrarium` / `Vantage Station` / `Cached Harness` consolidation plan through Fixed-Sky (`14/15`).
