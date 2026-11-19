@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.152019";
-pub const myofascia_reading = "57.058";
+pub const grain_ww_version = "20261119.153338";
+pub const myofascia_reading = "57.059";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -549,6 +549,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/pond_sanctuary_airlock",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "resonance-wood")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/resonance_wood_ledger",
             null,
             args[2..],
         );

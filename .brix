@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.152019
-myofascia 57.058
+version 20261119.153338
+myofascia 57.059
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -238,6 +238,8 @@ file terrarium/app/vantage_mac_live.swift
 file tools/vantage/build_dc1_apk.rish
 file modules/resonance/dsp_engine.rye
 file modules/resonance/studio_wav_bounce.rye
+file modules/resonance/resonance_wood_ledger.rye
+file modules/resonance/glow/fold-resonance-wood.glow
 file docs-geode/tutorials/resonance-station-daw.md
 file modules/fusion/sow_native_gates.rye
 file modules/pond/testnet/galaxy_testnet.rye

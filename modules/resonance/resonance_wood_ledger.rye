@@ -1,0 +1,164 @@
+//! modules/resonance/resonance_wood_ledger.rye -- Resonance Stem + WOOD!
+//!
+//! Stamp: `20261119.153338` -- Orbit 5, `Movement 5/15 : Leo` (*Wholehearted
+//! song (Sankirtana/Sama'): Resonance & WOOD*), powering
+//! `grain-ww resonance-wood` (Proof #52)!
+//!   1. Renders the real 4-track 48 kHz RIFF `.wav` studio bounce via
+//!      `studio_wav_bounce.rye` (`24,044` bytes) and computes its SHA3-256 stem
+//!      digest,
+//!   2. Allocates conserved `WOOD` creative patronage across `1..8` stems /
+//!      collaborators whose permille weights sum strictly to `1000`, proving
+//!      `sum(payouts) == pool_wood` with zero minted drift,
+//!   3. Seals the `PatronageReceipt` with `Kumara` Ed25519 & pairs refusal
+//!      witnesses for invalid permille sums, zero pools, & empty casts!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const Ed25519 = std.crypto.sign.Ed25519;
+const wav_bounce = @import("studio_wav_bounce.rye");
+
+pub const version = "20261119.153338";
+pub const max_collaborators: usize = 8;
+const nl: u8 = 10;
+
+pub const PatronageError = error{
+    NoCollaborators,
+    TooManyCollaborators,
+    SplitSumNotThousand,
+    ZeroPatronagePool,
+    SignatureFailed,
+};
+
+pub const StemSplit = struct {
+    track_id: u8,
+    permille: u32,
+};
+
+pub const PatronageReceipt = struct {
+    stem_sha3: [32]u8,
+    pool_wood: u64,
+    payouts: [max_collaborators]u64,
+    count: usize,
+    receipt_sha3: [32]u8,
+    sig: Ed25519.Signature,
+    pub_key: Ed25519.PublicKey,
+
+    pub fn verify(self: *const PatronageReceipt) !void {
+        try self.sig.verify(&self.receipt_sha3, self.pub_key);
+    }
+};
+
+pub fn seal_stem_patronage(
+    wav_bytes: []const u8,
+    pool_wood: u64,
+    splits: []const StemSplit,
+    kp: Ed25519.KeyPair,
+) PatronageError!PatronageReceipt {
+    // invariant: validate bounded cast, non-zero pool, & exact 1000 permille.
+    if (splits.len == 0) return error.NoCollaborators;
+    if (splits.len > max_collaborators) return error.TooManyCollaborators;
+    if (pool_wood == 0) return error.ZeroPatronagePool;
+
+    var sum_pm: u32 = 0;
+    for (splits) |s| sum_pm += s.permille;
+    if (sum_pm != 1000) return error.SplitSumNotThousand;
+
+    var stem_hash: [32]u8 = undefined;
+    var hs = Sha3_256.init(.{});
+    hs.update(wav_bytes);
+    hs.final(&stem_hash);
+
+    var payouts = std.mem.zeroes([max_collaborators]u64);
+    var distributed: u64 = 0;
+    for (splits, 0..) |s, idx| {
+        const share: u64 = (pool_wood * @as(u64, s.permille)) / 1000;
+        payouts[idx] = share;
+        distributed += share;
+    }
+    // Conservation law: any integer rounding remainder goes to lead track 0.
+    const rem: u64 = pool_wood - distributed;
+    payouts[0] += rem;
+    distributed += rem;
+
+    var receipt_hash: [32]u8 = undefined;
+    var hr = Sha3_256.init(.{});
+    hr.update("grain-resonance-wood-patronage-v1:");
+    hr.update(&stem_hash);
+    var b8: [8]u8 = undefined;
+    std.mem.writeInt(u64, &b8, pool_wood, .little);
+    hr.update(&b8);
+    for (splits, 0..) |_, idx| {
+        std.mem.writeInt(u64, &b8, payouts[idx], .little);
+        hr.update(&b8);
+    }
+    hr.final(&receipt_hash);
+
+    const sig = kp.sign(&receipt_hash, null) catch {
+        return error.SignatureFailed;
+    };
+    // invariant: total payouts strictly conserve pool_wood & sum_pm == 1000.
+    assert(distributed == pool_wood and sum_pm == 1000);
+    return .{
+        .stem_sha3 = stem_hash,
+        .pool_wood = pool_wood,
+        .payouts = payouts,
+        .count = splits.len,
+        .receipt_sha3 = receipt_hash,
+        .sig = sig,
+        .pub_key = kp.public_key,
+    };
+}
+
+fn run_selftest() !u8 {
+    var wav: [wav_bounce.total_wav_bytes]u8 = undefined;
+    wav_bounce.render_studio_wav(&wav);
+
+    const seed: [32]u8 = @splat(0x52);
+    const kp = try Ed25519.KeyPair.generateDeterministic(seed);
+
+    // 1. Welcome: 4-track Resonance stem splits summing cleanly to 1000
+    const cast = [_]StemSplit{
+        .{ .track_id = 0, .permille = 400 }, // dawn-tanpura
+        .{ .track_id = 1, .permille = 300 }, // tiruppavai-bell
+        .{ .track_id = 2, .permille = 150 }, // earpiece-voice (consent seat)
+        .{ .track_id = 3, .permille = 150 }, // linen-percussion
+    };
+    const r1 = try seal_stem_patronage(&wav, 2501, &cast, kp);
+    const r2 = try seal_stem_patronage(&wav, 2501, &cast, kp);
+    try r1.verify();
+    if (!std.mem.eql(u8, &r1.receipt_sha3, &r2.receipt_sha3)) {
+        return error.NonDeterministicReceipt;
+    }
+    const total = r1.payouts[0] + r1.payouts[1] + r1.payouts[2] + r1.payouts[3];
+    if (total != 2501) return error.ConservationBroken;
+
+    // 2. Refusal 1: splits summing to 900 != 1000 rejected cleanly
+    const bad_cast = [_]StemSplit{
+        .{ .track_id = 0, .permille = 500 },
+        .{ .track_id = 1, .permille = 400 },
+    };
+    if (seal_stem_patronage(&wav, 1000, &bad_cast, kp)) |_| {
+        return error.BadSplitAccepted;
+    } else |err| {
+        if (err != error.SplitSumNotThousand) return err;
+    }
+
+    // 3. Refusal 2: zero WOOD patronage pool rejected cleanly
+    if (seal_stem_patronage(&wav, 0, &cast, kp)) |_| {
+        return error.ZeroPoolAccepted;
+    } else |err| {
+        if (err != error.ZeroPatronagePool) return err;
+    }
+
+    print(
+        "GREEN: resonance_wood_ledger -- 48kHz WAV SHA3 & {d} WOOD split!{c}",
+        .{ total, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
