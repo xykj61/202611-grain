@@ -155,3 +155,7 @@ max_cols 80 tools/witness_all.rish
 ascii_7bit tools/caravan/README.md
 ascii_7bit tools/terrarium/README.md
 ascii_7bit active-development/date/20261119/20261119-131122-est_sagittarius-tools-reorg-mitra-shed-and-canopy-canvas.md
+max_cols 80 languages/glow/mill/ring0_glow_to_rye.rye
+max_cols 80 modules/tally/glow/gate-tally-arena-bump.glow
+max_cols 80 modules/blaze/glow/gate-blaze-weave-step.glow
+ascii_7bit active-development/date/20261119/20261119-133148-est_ring0-glow-to-rye-and-palisade-siya-plan.md

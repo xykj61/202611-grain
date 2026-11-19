@@ -26,6 +26,11 @@ seed_cadence hearth
 seed_remote_url git@github.com:YOUR-PUBLIC-ORG/202611-grain.git
 seed_author_name your-public-handle
 seed_author_email your-public-handle@users.noreply.github.com
+seed_commit_message palisade
+
+# Optional dedicated public-org OpenPGP signing key fingerprint for `15-Siya`
+# public seed releases (keep distinct from personal keys; `NONE` = dry-run):
+seed_signing_key NONE
 
 # Optional legacy pointer-repo redirects used by `publish-redirect.rish`:
 redirect_target git@github.com:YOUR-HANDLE/grain.git

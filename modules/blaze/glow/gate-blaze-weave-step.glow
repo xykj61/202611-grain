@@ -1,0 +1,10 @@
+::  modules/blaze/glow/gate-blaze-weave-step.glow -- Monotonic Weave Step!
+/!  16384
+|%
+++  gate-blaze-weave-step
+  |=  [next-gen=@ud prev-gen=@ud]                       ::  monotonic weave
+  ^-  @ud                                               ::  strict step delta
+  ~|  'blaze-weave-generation-rollback-refused'         ::  append-only fold
+  ?>  (gth next-gen prev-gen)                           ::  strictly forward
+  (sub next-gen prev-gen)
+--
