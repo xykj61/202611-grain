@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.155742
-myofascia 57.062
+version 20261119.162625
+myofascia 57.063
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -140,6 +140,8 @@ file modules/brushstroke/skate/canopy_watershed_canvas.rye
 file modules/brushstroke/glow/fold-canopy-canvas.glow
 file modules/brushstroke/skate/twilight_almanac_art.rye
 file modules/brushstroke/glow/fold-twilight-almanac.glow
+file modules/brushstroke/skate/studio_triptych_canvas.rye
+file modules/brushstroke/glow/fold-studio-triptych.glow
 file terrarium/faa-atc/pilot_sector_horizon.rye
 file modules/apps/colloquium/glow/gate-terrarium-horizon.glow
 file tools/witness_all.rish

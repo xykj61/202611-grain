@@ -1,0 +1,170 @@
+//! modules/brushstroke/skate/studio_triptych_canvas.rye -- 3-Panel Studio!
+//!
+//! Stamp: `20261119.162625` -- Orbit 5, `Movement 9/15 : Sagittarius`
+//! (*Teacher/Karma Brushstroke/Skate artistry & Pulp re-prepend*), powering
+//! `grain-ww triptych-art` (Proof #56)!
+//! Renders a deterministic `360 x 120` RGB24 (`129,600`-byte) `Vantage`
+//! triptych uniting three living Grain panels into one Glasswall frame:
+//!   - Panel 1 (`x = 0..119`)   : Canopy Watershed (4-story forest + humus),
+//!   - Panel 2 (`x = 120..239`) : Twilight Almanac (Sandhya dusk + 15 signs),
+//!   - Panel 3 (`x = 240..359`) : `405` Colloquium Quorum lattice (`15x27`)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.162625";
+pub const frame_w: u32 = 360;
+pub const frame_h: u32 = 120;
+pub const panel_w: u32 = 120;
+pub const rgb_bytes: usize = frame_w * frame_h * 3;
+const nl: u8 = 10;
+
+pub const TriptychError = error{
+    ViewportTooSmall,
+    SignOutOfRange,
+    QuorumOutOfRange,
+};
+
+pub const TriptychSpec = struct {
+    width: u32,
+    height: u32,
+    canopy_layers: u32, // 0..4
+    sign_1_to_15: u32,  // 1..15 Calfive sign highlight
+    quorum_yes: u32,    // 0..405 Colloquium seat approvals
+};
+
+fn put_px(buf: *[rgb_bytes]u8, x: u32, y: u32, rgb: u32) void {
+    if (x >= frame_w or y >= frame_h) return;
+    const off: usize = (@as(usize, y) * frame_w + @as(usize, x)) * 3;
+    buf[off + 0] = @intCast((rgb >> 16) & 0xFF);
+    buf[off + 1] = @intCast((rgb >> 8) & 0xFF);
+    buf[off + 2] = @intCast(rgb & 0xFF);
+}
+
+fn fill_rect(
+    buf: *[rgb_bytes]u8,
+    x0: u32,
+    y0: u32,
+    w: u32,
+    h: u32,
+    rgb: u32,
+) void {
+    var dy: u32 = 0;
+    while (dy < h) : (dy += 1) {
+        var dx: u32 = 0;
+        while (dx < w) : (dx += 1) {
+            put_px(buf, x0 + dx, y0 + dy, rgb);
+        }
+    }
+}
+
+pub fn render_triptych(
+    spec: TriptychSpec,
+    out: *[rgb_bytes]u8,
+) TriptychError![32]u8 {
+    // invariant: validate exact viewport, 1..15 sign, & 0..405 seat bounds.
+    if (spec.width < frame_w or spec.height < frame_h) {
+        return error.ViewportTooSmall;
+    }
+    if (spec.sign_1_to_15 < 1 or spec.sign_1_to_15 > 15) {
+        return error.SignOutOfRange;
+    }
+    if (spec.quorum_yes > 405) return error.QuorumOutOfRange;
+
+    // 1. Panel 1 (0..119): Canopy Watershed (Oat sky, Emerald layers, Humus)
+    fill_rect(out, 0, 0, panel_w, frame_h, 0xF5F3EE);
+    fill_rect(out, 0, 0, panel_w, 12, 0x4A148C);
+    const layers: u32 = if (spec.canopy_layers > 4) 4 else spec.canopy_layers;
+    var ly: u32 = 0;
+    while (ly < layers) : (ly += 1) {
+        const shade: u32 = if (ly % 2 == 0) 0x1B5E20 else 0x2E7D32;
+        fill_rect(out, 12 + ly * 6, 26 + ly * 14, 96 - ly * 12, 12, shade);
+    }
+    fill_rect(out, 0, 92, panel_w, 28, 0x4E342E);
+
+    // 2. Panel 2 (120..239): Twilight Almanac (Indigo -> Violet -> Saffron)
+    fill_rect(out, 120, 0, panel_w, 40, 0x1A103D);
+    fill_rect(out, 120, 40, panel_w, 40, 0x4A148C);
+    fill_rect(out, 120, 80, panel_w, 40, 0xE65100);
+    var s: u32 = 1;
+    while (s <= 15) : (s += 1) {
+        const px: u32 = 126 + (s - 1) * 7;
+        const dot: u32 = if (s == spec.sign_1_to_15) 0xFFD54F else 0xF5F3EE;
+        fill_rect(out, px, 56, 4, 8, dot);
+    }
+
+    // 3. Panel 3 (240..359): 405 Colloquium Lattice (15 rows x 27 cols)
+    fill_rect(out, 240, 0, panel_w, frame_h, 0x0A0A0A);
+    var seat: u32 = 0;
+    while (seat < 405) : (seat += 1) {
+        const row: u32 = seat / 27;
+        const col: u32 = seat % 27;
+        const color: u32 = if (seat < spec.quorum_yes)
+            (if (spec.quorum_yes >= 324) 0xFFD54F else 0x2E7D32)
+        else
+            0x424242;
+        fill_rect(out, 246 + col * 4, 14 + row * 7, 3, 5, color);
+    }
+
+    // Crisp 2px Oat dividers separating the three studio panels
+    fill_rect(out, 119, 0, 2, frame_h, 0xF5F3EE);
+    fill_rect(out, 239, 0, 2, frame_h, 0xF5F3EE);
+
+    var digest: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-brushstroke-studio-triptych-v1:");
+    h.update(out);
+    h.final(&digest);
+
+    // invariant: 3 panels fill exactly 360x120 RGB24 & yield non-zero digest.
+    assert(out.len == rgb_bytes and (digest[0] | digest[1] | digest[2]) != 0);
+    return digest;
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const buf1 = try a.create([rgb_bytes]u8);
+    const buf2 = try a.create([rgb_bytes]u8);
+
+    // 1. Welcome: Sagittarius (sign 9) with 4-story canopy & 324/405 quorum
+    const spec = TriptychSpec{
+        .width = 360,
+        .height = 120,
+        .canopy_layers = 4,
+        .sign_1_to_15 = 9,
+        .quorum_yes = 324,
+    };
+    const d1 = try render_triptych(spec, buf1);
+    const d2 = try render_triptych(spec, buf2);
+    if (!std.mem.eql(u8, &d1, &d2)) return error.NonDeterministicTriptych;
+
+    // 2. Refusal 1: undersized viewport rejected cleanly
+    var tiny = spec;
+    tiny.width = 200;
+    if (render_triptych(tiny, buf1)) |_| {
+        return error.TinyViewportAccepted;
+    } else |err| {
+        if (err != error.ViewportTooSmall) return err;
+    }
+
+    // 3. Refusal 2: out-of-range Colloquium quorum (> 405) rejected cleanly
+    var bad_q = spec;
+    bad_q.quorum_yes = 406;
+    if (render_triptych(bad_q, buf1)) |_| {
+        return error.OverQuorumAccepted;
+    } else |err| {
+        if (err != error.QuorumOutOfRange) return err;
+    }
+
+    print(
+        "GREEN: studio_triptych_canvas -- 360x120 RGB24 3-panel SHA3 ok!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}
