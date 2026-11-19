@@ -60,7 +60,7 @@ pub const dusk_wheel = [15]DuskEntry{
         .sign_num = 3,
         .sign_name = "Gemini",
         .shastra_risala = "Mithuna / al-Jawza",
-        .dusk_line = "Keep twin tongues clear and plain on disk.",
+        .dusk_line = "Welcome dancing friends across many weaves.",
         .canopy_stories = 3,
         .dew_cool_deci_c = 55,
     },

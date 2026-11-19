@@ -41,7 +41,7 @@ pub const cards = [sign_count]TwilightCard{
         .sign = "Gemini",
         .shastra_term = "Mithuna / Satsanga (truthful fellowship)",
         .risala_term = "al-Jawza' / Suhbah (companionship)",
-        .dusk_counsel = "Bridge two tongues without erasing either voice.",
+        .dusk_counsel = "Welcome dancing friends across many weaves.",
     },
     .{
         .movement = 4,

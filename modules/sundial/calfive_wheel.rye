@@ -54,7 +54,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "air",
         .goal = "fun",
         .craft_verb =
-            "Two tongues, one porch (Satsanga/Suhbah): pair Glow & Rye.",
+            "Dancing friends, many weaves (Satsanga/Suhbah): Glow & Rye.",
     },
     .{
         .movement = 4,

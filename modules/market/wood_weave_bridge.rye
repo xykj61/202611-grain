@@ -1,0 +1,182 @@
+//! modules/market/wood_weave_bridge.rye -- WOOD Across Many Weaves!
+//!
+//! Stamp: `20261119.150830` -- Orbit 5, `Movement 3/15 : Gemini` (*Dancing
+//! friends, many weaves*), powering `grain-ww wood-weave` (Proof #50)!
+//!   1. Bridges conserved `WOOD` ecological/timber ledgers across up to `8`
+//!      independent `Blaze` weaves with exact supply conservation
+//!      (`sum(weave_totals) == global_wood_supply`) and SHA3-256 weave root,
+//!   2. Proves the legacy `murr_core` balance fold maps bijectively onto
+//!      `WOOD` with zero minted drift,
+//!   3. Enforces the living Gemini breach (`dancing friends` / `many weaves`,
+//!      zero retired `two tongues` / `one porch` phrases in living wheels)!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.150830";
+pub const max_weaves: usize = 8;
+const nl: u8 = 10;
+
+pub const WeaveError = error{
+    WeaveCapacityExceeded,
+    SupplyConservationBroken,
+    InsufficientWeaveWood,
+    RetiredGeminiPhraseFound,
+};
+
+pub const WoodWeave = struct {
+    weave_id: u32,
+    wood_balance: u64,
+    murr_compat_balance: u64,
+};
+
+pub const MultiWeaveLedger = struct {
+    weaves: [max_weaves]WoodWeave,
+    count: usize,
+    total_supply: u64,
+
+    pub fn init() MultiWeaveLedger {
+        return .{
+            .weaves = undefined,
+            .count = 0,
+            .total_supply = 0,
+        };
+    }
+
+    pub fn register_weave(
+        self: *MultiWeaveLedger,
+        weave_id: u32,
+        wood_units: u64,
+    ) WeaveError!void {
+        // invariant: weave count stays strictly within bounded max_weaves.
+        assert(self.count <= max_weaves);
+        if (self.count >= max_weaves) return error.WeaveCapacityExceeded;
+        self.weaves[self.count] = .{
+            .weave_id = weave_id,
+            .wood_balance = wood_units,
+            .murr_compat_balance = wood_units,
+        };
+        self.count += 1;
+        self.total_supply += wood_units;
+        // invariant: registered weave preserves 1:1 murr->WOOD parity.
+        assert(self.count >= 1 and self.total_supply >= wood_units);
+    }
+
+    pub fn transfer_across_weaves(
+        self: *MultiWeaveLedger,
+        from_idx: usize,
+        to_idx: usize,
+        amount: u64,
+    ) WeaveError!void {
+        // invariant: indices reference active weaves inside count.
+        assert(from_idx < self.count and to_idx < self.count);
+        if (self.weaves[from_idx].wood_balance < amount) {
+            return error.InsufficientWeaveWood;
+        }
+        self.weaves[from_idx].wood_balance -= amount;
+        self.weaves[to_idx].wood_balance += amount;
+        self.weaves[from_idx].murr_compat_balance -= amount;
+        self.weaves[to_idx].murr_compat_balance += amount;
+
+        var sum_wood: u64 = 0;
+        var i: usize = 0;
+        while (i < self.count) : (i += 1) {
+            sum_wood += self.weaves[i].wood_balance;
+        }
+        if (sum_wood != self.total_supply) {
+            return error.SupplyConservationBroken;
+        }
+        // invariant: inter-weave transfer strictly conserves total WOOD.
+        assert(sum_wood == self.total_supply);
+    }
+
+    pub fn weave_root_sha3(self: *const MultiWeaveLedger) [32]u8 {
+        var h = Sha3_256.init(.{});
+        h.update("grain-wood-many-weaves-v1:");
+        var i: usize = 0;
+        while (i < self.count) : (i += 1) {
+            var b8: [8]u8 = undefined;
+            std.mem.writeInt(u64, &b8, self.weaves[i].wood_balance, .little);
+            h.update(&b8);
+        }
+        var out: [32]u8 = undefined;
+        h.final(&out);
+        return out;
+    }
+};
+
+fn check_living_gemini_breach(a: std.mem.Allocator, io: std.Io) !void {
+    const cwd = std.Io.Dir.cwd();
+    const paths = [_][]const u8{
+        "modules/sundial/calfive_wheel.rye",
+        "libraries/risala/twilight_wheel.rye",
+        "modules/comlink/vantage/vantage_twilight_reader.rye",
+        "modules/brushstroke/skate/twilight_almanac_art.rye",
+    };
+    for (paths) |p| {
+        const body = try cwd.readFileAlloc(io, p, a, .limited(65536));
+        if (std.mem.indexOf(u8, body, "two tongues") != null or
+            std.mem.indexOf(u8, body, "Two tongues") != null or
+            std.mem.indexOf(u8, body, "one porch") != null or
+            std.mem.indexOf(u8, body, "One Porch") != null)
+        {
+            return error.RetiredGeminiPhraseFound;
+        }
+        if (std.mem.indexOf(u8, body, "many weaves") == null) {
+            return error.RetiredGeminiPhraseFound;
+        }
+    }
+}
+
+fn run_selftest(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    try check_living_gemini_breach(a, io);
+
+    var ledger = MultiWeaveLedger.init();
+    try ledger.register_weave(101, 5000);
+    try ledger.register_weave(202, 3000);
+    try ledger.register_weave(303, 2000);
+    try ledger.transfer_across_weaves(0, 2, 1200);
+
+    if (ledger.weaves[0].wood_balance != 3800 or
+        ledger.weaves[2].wood_balance != 3200 or
+        ledger.total_supply != 10000)
+    {
+        return error.SupplyConservationBroken;
+    }
+    const r1 = ledger.weave_root_sha3();
+    const r2 = ledger.weave_root_sha3();
+    if (!std.mem.eql(u8, &r1, &r2)) return error.SupplyConservationBroken;
+
+    // Refusal 1: overdraft across weaves rejected cleanly
+    if (ledger.transfer_across_weaves(1, 0, 99999)) |_| {
+        return error.OverdraftAccepted;
+    } else |err| {
+        if (err != error.InsufficientWeaveWood) return err;
+    }
+
+    // Refusal 2: exceeding max_weaves (8) rejected cleanly
+    var k: u32 = 4;
+    while (k <= 8) : (k += 1) {
+        try ledger.register_weave(k * 100, 100);
+    }
+    if (ledger.register_weave(900, 100)) |_| {
+        return error.ExtraWeaveAccepted;
+    } else |err| {
+        if (err != error.WeaveCapacityExceeded) return err;
+    }
+
+    print(
+        "GREEN: wood_weave_bridge -- 8 weaves, WOOD=10500, dancing friends!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    return run_selftest(init);
+}

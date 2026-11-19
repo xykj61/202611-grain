@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.150122";
-pub const myofascia_reading = "57.056";
+pub const grain_ww_version = "20261119.150830";
+pub const myofascia_reading = "57.057";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -531,6 +531,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/vantage_canvas_bridge",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "wood-weave")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/wood_weave_bridge",
             null,
             args[2..],
         );

@@ -37,7 +37,7 @@ pub const entries = [15]DuskEntry{
         .sign = "Gemini",
         .shastra = "Mithuna / Satsanga",
         .risala = "al-Jawza' / Suhbah",
-        .counsel = "Bridge two tongues without erasing either voice.",
+        .counsel = "Welcome dancing friends across many weaves.",
     },
     .{
         .sign = "Cancer",

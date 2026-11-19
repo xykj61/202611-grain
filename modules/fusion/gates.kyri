@@ -175,3 +175,8 @@ max_cols 80 modules/comlink/vantage/vantage_canvas_bridge.rye
 max_cols 80 modules/comlink/vantage/glow/fold-vantage-canvas.glow
 ascii_7bit languages/glow/README.md
 ascii_7bit active-development/date/20261119/20261119-150122-est_orbit5-taurus-vantage-canvas-glow-readme-and-gpg-guidance.md
+max_cols 80 modules/market/wood_weave_bridge.rye
+max_cols 80 modules/market/glow/fold-wood-weave.glow
+ascii_7bit languages/rye/README.md
+ascii_7bit terrarium/README.md
+ascii_7bit active-development/date/20261119/20261119-150830-est_orbit5-gemini-dancing-friends-many-weaves-and-50-proofs.md
