@@ -237,3 +237,10 @@ max_cols 80 modules/harness/grain_cached_harness.rye
 max_cols 80 modules/harness/glow/fold-harness-cache.glow
 ascii_7bit context/SPELLBOOK.md
 ascii_7bit active-development/date/20261119/20261119-180005-est_gemini-cached-harness-synonym-spellbook-and-terrarium-plan.md
+max_cols 80 modules/harness/pond_api_airlock.rye
+max_cols 80 modules/harness/glow/gate-api-airlock.glow
+ascii_7bit context/LINENGROW_MAGAZINE_VOICE.md
+ascii_7bit SOURCE.md
+ascii_7bit SAFE.md
+ascii_7bit SECURITY.md
+ascii_7bit active-development/date/20261119/20261119-180656-est_cancer-pond-api-airlock-and-radiant-sweep.md

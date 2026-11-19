@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.180005";
-pub const myofascia_reading = "57.072";
+pub const grain_ww_version = "20261119.180656";
+pub const myofascia_reading = "57.073";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -684,6 +684,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/grain_cached_harness",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "api-airlock")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/pond_api_airlock",
             null,
             args[2..],
         );

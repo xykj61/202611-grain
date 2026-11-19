@@ -1,14 +1,14 @@
 # The Spellbook -- Grain's Living Operator Words & `Synonym` Foundation
 
 **Language:** EN
-**Stamp:** `20261119.180005` (EST)
+**Now Stamp:** `20261119.180656` (EST)
+**Originally Seated:** `20260810.145033` (elder preserved whole in
+[`../yonder/spellbook-20260810-elder.md`](../yonder/spellbook-20260810-elder.md)
+behind walk-back nib `4532df51`)
 **Voice:** Reya / Kyri (`Synonym` twin voices sharing one companion base)
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
-**Status:** Living (`Room: checkable` -- revived & modernized from the
-`20260810` elder preserved whole in
-[`../yonder/spellbook-20260810-elder.md`](../yonder/spellbook-20260810-elder.md)
-behind walk-back nib `4532df51`)
+**Status:** Living (`Room: checkable`)
 **Front Doors:** [`../README.md`](../README.md) |
 [`../LEXICON.md`](../LEXICON.md) | [`../MAP.md`](../MAP.md) |
 [`../GEMINI.md`](../GEMINI.md) | [`../docs-geode/README.md`](../docs-geode/README.md)

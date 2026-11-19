@@ -1,0 +1,141 @@
+//! modules/harness/pond_api_airlock.rye -- Pond + Caravan Gemini Airlock!
+//!
+//! Stamp: `20261119.180656` -- Cancer (*Unwatched sanctuary: Pond shelter &
+//! Glasswall care*), powering `grain-ww api-airlock`!
+//! Enforces ephemeral TTL Gemini API key injection inside `Pond` + `Caravan`
+//! for `Vantage Station` & `Blazepod` `tally-vn`:
+//!   1. Permits outbound HTTPS solely to `generativelanguage.googleapis.com`
+//!      when running in `tally_vn` with an active unexpired TTL lease,
+//!   2. Immediately wipes the 32-byte ephemeral API key buffer to `0x00` via
+//!      `std.crypto.secureZero` before returning from the turn,
+//!   3. Strictly refuses `tally_ram`, disallowed hosts, plain HTTP, & expired
+//!      TTL leases via paired refusal witnesses!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const ch = @import("grain_cached_harness.rye");
+
+pub const version = "20261119.180656";
+pub const allowed_host = "generativelanguage.googleapis.com";
+const nl: u8 = 10;
+
+pub const AirlockError = error{
+    RamOnlyAirlockRefused,
+    PlainHttpRefused,
+    DisallowedHostRefused,
+    LeaseExpiredRefused,
+    EmptyKeyRefused,
+};
+
+pub const ApiAirlockRequest = struct {
+    posture: ch.HardwarePosture,
+    use_https: bool,
+    host: []const u8,
+    now_epoch: u64,
+    expires_epoch: u64,
+    prompt: []const u8,
+};
+
+pub const AirlockReceipt = struct {
+    turn_sha3: [32]u8,
+    key_wiped_zero: bool,
+};
+
+fn is_all_zero(buf: []const u8) bool {
+    for (buf) |b| {
+        if (b != 0) return false;
+    }
+    return true;
+}
+
+pub fn execute_ephemeral_api_turn(
+    req: ApiAirlockRequest,
+    ephemeral_key: *[32]u8,
+) AirlockError!AirlockReceipt {
+    // invariant: always wipe ephemeral key in DRAM on every exit path!
+    defer std.crypto.secureZero(u8, ephemeral_key);
+
+    if (req.posture == .tally_ram) return error.RamOnlyAirlockRefused;
+    if (!req.use_https) return error.PlainHttpRefused;
+    if (!std.mem.eql(u8, req.host, allowed_host)) {
+        return error.DisallowedHostRefused;
+    }
+    if (req.now_epoch >= req.expires_epoch) return error.LeaseExpiredRefused;
+    if (is_all_zero(ephemeral_key)) return error.EmptyKeyRefused;
+
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-pond-caravan-api-airlock-v1:");
+    h.update(req.host);
+    h.update(req.prompt);
+    h.update(ephemeral_key);
+    h.final(&out);
+
+    std.crypto.secureZero(u8, ephemeral_key);
+    const wiped = is_all_zero(ephemeral_key);
+    // invariant: key buffer reads strictly 0x00 across all 32 bytes post-turn.
+    assert(wiped and (out[0] | out[1] | out[2]) != 0);
+    return .{ .turn_sha3 = out, .key_wiped_zero = wiped };
+}
+
+fn run_selftest() !u8 {
+    // 1. Welcome: tally-vn HTTPS to generativelanguage.googleapis.com + wipe!
+    var key: [32]u8 = @splat(0x7A);
+    const ok_req = ApiAirlockRequest{
+        .posture = .tally_vn,
+        .use_https = true,
+        .host = allowed_host,
+        .now_epoch = 1000,
+        .expires_epoch = 1060,
+        .prompt = "verify vantage station sanctuary",
+    };
+    const rec = try execute_ephemeral_api_turn(ok_req, &key);
+    if (!rec.key_wiped_zero or !is_all_zero(&key)) {
+        return error.EphemeralKeyLingering;
+    }
+
+    // 2. Refusal 1: RAM-only Blazepod refuses airlock & still wipes key!
+    var k1: [32]u8 = @splat(0x5B);
+    var ram_req = ok_req;
+    ram_req.posture = .tally_ram;
+    if (execute_ephemeral_api_turn(ram_req, &k1)) |_| {
+        return error.RamAirlockAccepted;
+    } else |err| {
+        if (err != error.RamOnlyAirlockRefused) return err;
+    }
+    if (!is_all_zero(&k1)) return error.KeyNotWipedOnRefusal;
+
+    // 3. Refusal 2: disallowed third-party host refused & wiped!
+    var k2: [32]u8 = @splat(0x6C);
+    var bad_host = ok_req;
+    bad_host.host = "tracker.example.com";
+    if (execute_ephemeral_api_turn(bad_host, &k2)) |_| {
+        return error.BadHostAccepted;
+    } else |err| {
+        if (err != error.DisallowedHostRefused) return err;
+    }
+    if (!is_all_zero(&k2)) return error.KeyNotWipedOnBadHost;
+
+    // 4. Refusal 3: expired TTL lease refused & wiped!
+    var k3: [32]u8 = @splat(0x7D);
+    var expired = ok_req;
+    expired.now_epoch = 1060;
+    if (execute_ephemeral_api_turn(expired, &k3)) |_| {
+        return error.ExpiredLeaseAccepted;
+    } else |err| {
+        if (err != error.LeaseExpiredRefused) return err;
+    }
+    if (!is_all_zero(&k3)) return error.KeyNotWipedOnExpiry;
+
+    print(
+        "GREEN: pond_api_airlock -- HTTPS allowlist & 0-byte key wipe ok!{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

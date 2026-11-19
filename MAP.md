@@ -1,9 +1,10 @@
 # MAP -- Room-by-Room Guide to the Consolidated Grain Tree
 
 **Language:** EN
-**Stamp:** `20261119.152019` (EST)
-**Voice:** Kyri / Reya
-**Style:** Gauge at Door, Radiant warmth
+**Now Stamp:** `20261119.180656` (EST)
+**Voice:** Reya / Kyri
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`)
 **Status:** Living (`Room: checkable` -- reflects the `languages/` + `modules/`
 + `libraries/` + `docs-geode/` + `blazepod/` + `mitra-shed/` + `yonder/` tree)
 
@@ -27,5 +28,5 @@
 | **[`nixos/`](nixos/README.md)** | Declarative NixOS pier closures and [`grain-ww` 5-distro recipes](nixos/grain-ww-packaging/README.md) (`brew`, `nix`, `apt`, `pacman`, `apk`) |
 | **[`tools/`](tools/)** | Plain-named Rishi witnesses (`*_witness.rish`) and deterministic build scripts |
 | **[`gratitude/`](gratitude/README.md)** | Clean-room upstream acknowledgments and full license texts |
-| **[`mitra-shed/`](mitra-shed/README.md)** | Anuradha/Mitra *accrete-never-break* fossil preparation ledger ([`shed-prep.md`](mitra-shed/shed-prep.md)) |
+| **[`mitra-shed/`](mitra-shed/README.md)** | Anuradha/Mitra *Accrete-Keep-Whole* fossil preparation ledger ([`shed-prep.md`](mitra-shed/shed-prep.md)) |
 | **[`yonder/`](yonder/README.md)** | Single cold archive vault (`0` scattered archive closets outside `yonder/`) |

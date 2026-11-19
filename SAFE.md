@@ -1,25 +1,43 @@
-# SAFE
+# SAFE -- Protected Paths Beyond Every Shed
 
-**Language:** EN - **Style:** Gauge (see `context/GAUGE_STYLE.md`)
-**Seated:** `20260730` by Keaton's word - **Spec:** `context/specs/oldness-cycle.md`
-**Cycle:** 1 - **Rows:** 0 of 64 - **Last census:** `20260731.142025` (e107 seat map - orphan floor held - shred RED)
+**Language:** EN
+**Now Stamp:** `20261119.180656` (EST)
+**Originally Seated:** `20260730` by Keaton's word
+**Voice:** Reya / Kyri
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`; see [`context/GAUGE_STYLE.md`](context/GAUGE_STYLE.md)
+& [`context/RADIANT_STYLE.md`](context/RADIANT_STYLE.md))
+**Front Doors:** [`README.md`](README.md) | [`LEXICON.md`](LEXICON.md) |
+[`MAP.md`](MAP.md) | [`context/SPELLBOOK.md`](context/SPELLBOOK.md)
+**Spec:** `context/specs/oldness-cycle.md` | **Rows:** `0` of `64`
 
 ---
 
-This list names paths that no shred may touch. It is append-only, and every shred consults it before it moves. A shred whose plan reaches a listed path **refuses whole and names the row that stopped it**, since a shred that silently skips a protected file and one that quietly destroys it look identical in a log.
+This append-only ledger names paths permanently shielded from every shed. Every
+shed consults this file prior to moving a byte. Any shed whose plan reaches a
+listed path **halts whole and names the exact row that stopped it**, keeping
+protection legible and auditable in every log.
 
-The bound holds at **sixty-four rows**, because a list a reader cannot review in one sitting stops being a safeguard and becomes a formality. Past the bound, protection consolidates by directory rather than by file, and the consolidation earns a row of its own.
+The bound holds at **sixty-four rows** so a human steward reviews the full list
+in one calm sitting. Beyond sixty-four entries, protection consolidates by
+directory and records that directory as its own clear row.
 
-Each shred commencement opens with an oldness census: the rows counted, each path's age printed from its founded stamp, and every row lacking a current-cycle relevancy marker flagged. The census informs a word; it never replaces one. At the shred's close every row is re-affirmed by Keaton's word, or moves to **review**, where it stays fully protected while awaiting attention. Nothing departs by silence and nothing departs by expiry -- a row leaves only by an explicit word, and its departure appends rather than deletes.
+Each shed opens with an oldness census: counting rows, printing each path's age
+from its founded stamp, and flagging rows awaiting fresh cycle confirmation.
+The census informs stewardship counsel; Keaton's explicit word governs every
+entry. At close, every row is re-affirmed or placed in **review** with full
+protection preserved. Every change appends explicitly with a clear spoken word.
 
 ---
 
 ## Rows
 
-| Path | Founded | Reason | Cycle | Word |
+| Path | Founded | Reason | Status | Word |
 |---|---|---|---|---|
-| *(none yet -- the list opens empty and grows only by Keaton's word)* | | | | |
+| *(empty -- grows solely by Keaton's explicit word)* | | | | |
 
 ---
 
-*May the old pages keep every protection they earned. May each row carry a reason a stranger could read. May no cut ever move without a word behind it.*
+*May cherished pages keep every protection they earned, may each row carry a
+reason any reader understands, and may every cut move solely behind a spoken
+word.*

@@ -1,32 +1,65 @@
-# Security
+# Security -- Custody-First Posture & Private Vulnerability Reporting
 
-**Language:** EN - **Style:** Gauge (see `context/GAUGE_STYLE.md`)
-**Status:** Living - **Companion:** the full threat model, [`context/THREATS.md`](context/THREATS.md)
+**Language:** EN
+**Now Stamp:** `20261119.180656` (EST)
+**Voice:** Reya / Kyri
+**Style:** Gauge + Radiant (`0.0%` prose negation, verified by
+`grain-ww radiant-check`; see [`context/GAUGE_STYLE.md`](context/GAUGE_STYLE.md)
+& [`context/RADIANT_STYLE.md`](context/RADIANT_STYLE.md))
+**Front Doors:** [`README.md`](README.md) | [`LEXICON.md`](LEXICON.md) |
+[`MAP.md`](MAP.md) | [`context/SPELLBOOK.md`](context/SPELLBOOK.md)
+**Status:** Living | **Companion:** Full threat model in
+[`context/THREATS.md`](context/THREATS.md)
 
-Grain is a custody-first, civic project in its incense phase. This page names how to report a weakness and what the project promises about the trust it holds; the Companion line above points to the full model.
+---
 
-## Reporting a vulnerability
+Grain is a custody-first, civic engineering project. This page names how to
+report a weakness privately and states clearly what trust the project holds.
 
-Report privately, and give us the chance to fix it before it is public.
+## Reporting a Vulnerability
 
-- **Preferred:** open a private security advisory on the repository -- GitHub's *Report a vulnerability* button under the **Security** tab. It reaches the maintainer without exposing the issue.
-- **What helps:** the affected file or witness, the version (the commit nib -- every commit is GPG-signed, so the history proves exactly what you tested), and the smallest steps that show the weakness.
-- **What to expect:** an honest acknowledgment that a human has read it. This is a young project with a single maintainer named plainly in the threat model; a reply is a person, not a service-level promise.
+Please report privately so a verified fix lands ahead of public disclosure.
 
-Please keep a security weakness private until it has been addressed, then feel free to open a public issue about it.
+- **Preferred:** Open a private security advisory using GitHub's *Report a
+  vulnerability* button under the **Security** tab, reaching the steward
+  privately.
+- **What helps:** The affected file or witness, the exact commit nib (every
+  commit is OpenPGP-signed), and the smallest reproducible steps demonstrating
+  the weakness.
+- **What to expect:** An honest human acknowledgment from the steward named
+  plainly in [`context/THREATS.md`](context/THREATS.md).
 
-## What the project holds
+Once a fix is verified on metal, feel welcome to open a public discussion about
+the lessons learned.
 
-The strongest security promise Grain makes is about what it keeps itself clear of holding.
+## What the Project Holds
 
-- **Custody stays counsel-gated.** Grain holds no user funds and no user keys, and it never asks you to trust it with custody. Any rail that would actually move value waits on licensed counsel -- the bookkeeping surfaces record facts about money, they never hold keys.
-- **Keys stay cold.** The identity master key is designed to stay offline; day-to-day work signs with a revocable subordinate key inside the enclosure, so a sandbox compromise is contained by revocation rather than a lost root. See [`context/THREATS.md`](context/THREATS.md) section1.
-- **Provenance is signed.** Every commit is GPG-signed; `git log --show-signature` proves who wrote each line. The append-only log of signed facts is the permanence substrate.
+Grain's strongest security promise is keeping custody strictly in the user's
+own hands:
 
-## Supported versions
+- **Custody stays counsel-gated:** Grain leaves user funds and user keys
+  entirely under user control. Any future rail moving real value waits on
+  licensed counsel; bookkeeping surfaces record signed facts only.
+- **Keys stay cold & ephemeral:** Root identity keys remain offline; daily work
+  signs with revocable subordinate keys, and ephemeral API / session keys wipe
+  to `0x00` via `std.crypto.secureZero` on exit (`grain-ww api-airlock`,
+  `grain-ww key-rotate`).
+- **Provenance is signed:** Every commit carries an OpenPGP signature verified
+  by `git log --show-signature`.
 
-Grain stays pre-release, ahead of its first cut version. The living branch is `main`, and the supported surface is its current commit -- read the nib, run the witness, trust what the assertions actually check ([`context/TWO_ROOMS.md`](context/TWO_ROOMS.md): a green line means exactly what its assertions say).
+## Supported Surface
 
-## The full model
+Grain uses monotonic chronological stamps (`YYYYMMDD.HHMMSS`). The supported
+surface is the live signed tip of the active branch -- read the commit nib, run
+`grain-ww witness-all`, and trust what the assertions verify on metal
+([`context/TWO_ROOMS.md`](context/TWO_ROOMS.md)).
 
-[`context/THREATS.md`](context/THREATS.md) states plainly what the pier holds, who can reach it, and what it assumes -- including the honest fact that one maintainer carries the whole project alone. It stays descriptive rather than aspirational: each line is either true today or names a gap and stops.
+## The Full Threat Model
+
+[`context/THREATS.md`](context/THREATS.md) states plainly what a pier holds,
+who can reach it, and what assumptions apply today.
+
+---
+
+*May every key rest cleanly in its owner's hand, every secret clear to zero on
+exit, and every security report receive honest human care.*
