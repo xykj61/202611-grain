@@ -1,0 +1,17 @@
+::  modules/brushstroke/glow/fold-twilight-almanac.glow -- Dusk Almanac!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-twilight-sign
+  |=  sign-num=@ud                                      ::  1..15 Calfive sky
+  ^-  @ud                                               ::  verified sign
+  ~|  'twilight-almanac-sign-out-of-fifteen-wheel'      ::  strict 15-sign cap
+  ?>  &(gte(sign-num 1) lte(sign-num 15))
+  sign-num
+++  gate-almanac-tensegrity
+  |=  [stories=@ud dew-cool=@ud]                        ::  canopy + dusk dew
+  ^-  @ud                                               ::  balance index
+  ~|  'almanac-canopy-exceeds-four-story-bound'         ::  four-story forest
+  ?>  (lte stories 4)
+  %+  add  (mul stories 25)  dew-cool
+--

@@ -1,0 +1,341 @@
+//! modules/brushstroke/skate/twilight_almanac_art.rye -- Twilight Almanac!
+//!
+//! Stamp: `20261119.134045` -- `Movement 12/15 : Pisces` (*Twilight Radiant
+//! Silo art: gratitude-born artifact*), powering `grain-ww twilight-art`!
+//! Distills gratitude for quiet soil stewardship, tensegrity balance, live
+//! visual craft, living watersheds, and the 15-sign *Sandhya / Shafaq* dusk
+//! sky into one deterministic Glasswall RLCD/RGB24 almanac card (`max_cmds=96`,
+//! SHA3-256 frame seal, zero telemetry, paired welcome + refusal witnesses).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.134045";
+pub const max_cmds: u32 = 96;
+
+// Grain Dusk Palette: Deep Indigo, Sandhya Saffron, Oat, Emerald, Violet
+pub const color_indigo: u32 = 0x1A237E;
+pub const color_saffron: u32 = 0xE65100;
+pub const color_oat: u32 = 0xF5F3EE;
+pub const color_emerald: u32 = 0x1B5E20;
+pub const color_violet: u32 = 0x6A1B9A;
+pub const color_ink: u32 = 0x0A0A0A;
+const nl: u8 = 10;
+
+pub const AlmanacError = error{
+    SignOutOfRange,
+    ViewportTooSmall,
+    CmdLimitExceeded,
+};
+
+pub const DuskEntry = struct {
+    sign_num: u8,
+    sign_name: []const u8,
+    shastra_risala: []const u8,
+    dusk_line: []const u8,
+    canopy_stories: u8,
+    dew_cool_deci_c: u8,
+};
+
+pub const dusk_wheel = [15]DuskEntry{
+    .{
+        .sign_num = 1,
+        .sign_name = "Aries",
+        .shastra_risala = "Mesha / al-Hamal",
+        .dusk_line = "Kindle one steady seed lamp at dusk.",
+        .canopy_stories = 2,
+        .dew_cool_deci_c = 45,
+    },
+    .{
+        .sign_num = 2,
+        .sign_name = "Taurus",
+        .shastra_risala = "Vrishabha / ath-Thawr",
+        .dusk_line = "Tend living soil that feeds every neighbor.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 70,
+    },
+    .{
+        .sign_num = 3,
+        .sign_name = "Gemini",
+        .shastra_risala = "Mithuna / al-Jawza",
+        .dusk_line = "Keep twin tongues clear and plain on disk.",
+        .canopy_stories = 3,
+        .dew_cool_deci_c = 55,
+    },
+    .{
+        .sign_num = 4,
+        .sign_name = "Cancer",
+        .shastra_risala = "Karka / as-Saratan",
+        .dusk_line = "Hold an unwatched harbor beneath calm roofs.",
+        .canopy_stories = 3,
+        .dew_cool_deci_c = 65,
+    },
+    .{
+        .sign_num = 5,
+        .sign_name = "Leo",
+        .shastra_risala = "Simha / al-Asad",
+        .dusk_line = "Offer generous song and balanced WOOD ledgers.",
+        .canopy_stories = 3,
+        .dew_cool_deci_c = 60,
+    },
+    .{
+        .sign_num = 6,
+        .sign_name = "Virgo",
+        .shastra_risala = "Kanya / as-Sunbulah",
+        .dusk_line = "Study honest film so next steps flow light.",
+        .canopy_stories = 3,
+        .dew_cool_deci_c = 58,
+    },
+    .{
+        .sign_num = 7,
+        .sign_name = "Libra",
+        .shastra_risala = "Tula / al-Mizan",
+        .dusk_line = "Weigh every shelf on even scales first.",
+        .canopy_stories = 3,
+        .dew_cool_deci_c = 62,
+    },
+    .{
+        .sign_num = 8,
+        .sign_name = "Scorpio",
+        .shastra_risala = "Vrishchika / al-Aqrab",
+        .dusk_line = "Clear spent keys to zero and keep Mitra whole.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 72,
+    },
+    .{
+        .sign_num = 9,
+        .sign_name = "Sagittarius",
+        .shastra_risala = "Dhanus / al-Qaws",
+        .dusk_line = "Draw bright horizons inviting learners home.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 76,
+    },
+    .{
+        .sign_num = 10,
+        .sign_name = "Capricorn",
+        .shastra_risala = "Makara / al-Jady",
+        .dusk_line = "Cut ten-year stone fit for a small screwdriver.",
+        .canopy_stories = 3,
+        .dew_cool_deci_c = 64,
+    },
+    .{
+        .sign_num = 11,
+        .sign_name = "Aquarius",
+        .shastra_risala = "Kumbha / ad-Dalw",
+        .dusk_line = "Share clean water across 405 peers with little toll.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 78,
+    },
+    .{
+        .sign_num = 12,
+        .sign_name = "Pisces",
+        .shastra_risala = "Meena / al-Hut (Sandhya & Shafaq)",
+        .dusk_line = "Rest in dusk gratitude; craft one enduring gift.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 84,
+    },
+    .{
+        .sign_num = 13,
+        .sign_name = "Aether Cardinal",
+        .shastra_risala = "Brahman / Nur al-Anwar",
+        .dusk_line = "Step back in stillness and ask whom craft serves.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 86,
+    },
+    .{
+        .sign_num = 14,
+        .sign_name = "Aether Fixed",
+        .shastra_risala = "Paramatman / Shahid al-Qalb",
+        .dusk_line = "Compress two proven truths into one plain macro.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 88,
+    },
+    .{
+        .sign_num = 15,
+        .sign_name = "Siya (Dual Aether)",
+        .shastra_risala = "Bhagavan & Prema-Bhakti / al-Wadud",
+        .dusk_line = "Carry the harvest whole and sign palisade clean.",
+        .canopy_stories = 4,
+        .dew_cool_deci_c = 90,
+    },
+};
+
+pub const AlmanacTile = struct {
+    x: u16,
+    y: u16,
+    w: u16,
+    h: u16,
+    rgb24: u32,
+};
+
+pub const TwilightCard = struct {
+    entry: DuskEntry,
+    tiles: [max_cmds]AlmanacTile,
+    count: u32,
+    tensegrity_balance: u32,
+    card_sha3: [32]u8,
+};
+
+fn push_tile(c: *TwilightCard, t: AlmanacTile) AlmanacError!void {
+    // invariant: tile count remains strictly bounded by max_cmds.
+    assert(c.count <= max_cmds);
+    if (c.count >= max_cmds) return error.CmdLimitExceeded;
+    c.tiles[c.count] = t;
+    c.count += 1;
+    // invariant: tile insertion advances monotonically within bounds.
+    assert(c.count >= 1 and c.count <= max_cmds);
+}
+
+pub fn compose_twilight_card(
+    sign_1_to_15: u8,
+    width_px: u16,
+    height_px: u16,
+) AlmanacError!TwilightCard {
+    // invariant: validate Calfive sign 1..15 and legible viewport floor.
+    if (sign_1_to_15 < 1 or sign_1_to_15 > 15) return error.SignOutOfRange;
+    if (width_px < 120 or height_px < 60) return error.ViewportTooSmall;
+
+    const entry = dusk_wheel[sign_1_to_15 - 1];
+    var card = TwilightCard{
+        .entry = entry,
+        .tiles = undefined,
+        .count = 0,
+        .tensegrity_balance = @as(u32, entry.canopy_stories) * 25 +
+            @as(u32, entry.dew_cool_deci_c),
+        .card_sha3 = std.mem.zeroes([32]u8),
+    };
+
+    const sky_h: u16 = height_px / 2;
+    const band_h: u16 = @max(@as(u16, 6), height_px / 10);
+
+    // 1. Dusk Indigo upper vault + Sandhya Saffron glow + Vegan Oat ground
+    try push_tile(&card, .{
+        .x = 0,
+        .y = 0,
+        .w = width_px,
+        .h = sky_h,
+        .rgb24 = color_indigo,
+    });
+    try push_tile(&card, .{
+        .x = 0,
+        .y = sky_h -| band_h,
+        .w = width_px,
+        .h = band_h,
+        .rgb24 = color_saffron,
+    });
+    try push_tile(&card, .{
+        .x = 0,
+        .y = sky_h,
+        .w = width_px,
+        .h = height_px -| sky_h,
+        .rgb24 = color_oat,
+    });
+
+    // 2. Layered canopy silhouette + tensegrity strut accent
+    var i: u8 = 0;
+    while (i < entry.canopy_stories) : (i += 1) {
+        const inset: u16 = @as(u16, i) * 8;
+        try push_tile(&card, .{
+            .x = inset,
+            .y = sky_h -| (@as(u16, i + 1) * 6),
+            .w = width_px -| (inset * 2),
+            .h = 5,
+            .rgb24 = color_emerald,
+        });
+    }
+    try push_tile(&card, .{
+        .x = 8,
+        .y = height_px -| 14,
+        .w = width_px -| 16,
+        .h = 6,
+        .rgb24 = color_violet,
+    });
+
+    // 3. Glasswall SHA3-256 deterministic card seal
+    var h = Sha3_256.init(.{});
+    h.update("grain-twilight-almanac-v1:");
+    h.update(&[_]u8{ entry.sign_num, entry.canopy_stories });
+    h.update(entry.sign_name);
+    h.update(entry.dusk_line);
+    h.final(&card.card_sha3);
+
+    // invariant: emitted card has >= 5 tiles and non-zero tensegrity score.
+    assert(card.count >= 5 and card.tensegrity_balance > 0);
+    return card;
+}
+
+fn print_card(c: *const TwilightCard) void {
+    print("+----------------------------------------------------------+{c}", .{
+        nl,
+    });
+    print("| GRAIN TWILIGHT ALMANAC -- Sign {d}/15: {s}{c}", .{
+        c.entry.sign_num,
+        c.entry.sign_name,
+        nl,
+    });
+    print("| Sky   : {s}{c}", .{ c.entry.shastra_risala, nl });
+    print("| Craft : {s}{c}", .{ c.entry.dusk_line, nl });
+    print("| Canopy: {d} stories | Dew cool: {d}.{d} C | Tiles: {d}{c}", .{
+        c.entry.canopy_stories,
+        c.entry.dew_cool_deci_c / 10,
+        c.entry.dew_cool_deci_c % 10,
+        c.count,
+        nl,
+    });
+    print("+----------------------------------------------------------+{c}", .{
+        nl,
+    });
+}
+
+fn run_selftest(show_sign: ?u8) !u8 {
+    // Welcome: compose all 15 signs deterministically
+    var s: u8 = 1;
+    while (s <= 15) : (s += 1) {
+        const c1 = try compose_twilight_card(s, 320, 180);
+        const c2 = try compose_twilight_card(s, 320, 180);
+        if (!std.mem.eql(u8, &c1.card_sha3, &c2.card_sha3)) {
+            return error.NonDeterministicCard;
+        }
+    }
+
+    // Refusal 1: sign 0 and sign 16 rejected cleanly
+    if (compose_twilight_card(0, 320, 180)) |_| {
+        return error.ZeroSignAccepted;
+    } else |err| {
+        if (err != error.SignOutOfRange) return err;
+    }
+    if (compose_twilight_card(16, 320, 180)) |_| {
+        return error.HighSignAccepted;
+    } else |err| {
+        if (err != error.SignOutOfRange) return err;
+    }
+
+    // Refusal 2: sub-floor viewport rejected cleanly
+    if (compose_twilight_card(12, 80, 40)) |_| {
+        return error.SmallViewportAccepted;
+    } else |err| {
+        if (err != error.ViewportTooSmall) return err;
+    }
+
+    if (show_sign) |sn| {
+        const card = try compose_twilight_card(sn, 320, 180);
+        print_card(&card);
+    }
+
+    print(
+        "GREEN: twilight_almanac_art -- 15/15 dusk cards & Glasswall seal.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const args = try init.minimal.args.toSlice(init.arena.allocator());
+    if (args.len >= 2) {
+        const parsed = std.fmt.parseInt(u8, args[1], 10) catch 12;
+        return run_selftest(parsed);
+    }
+    return run_selftest(null);
+}
