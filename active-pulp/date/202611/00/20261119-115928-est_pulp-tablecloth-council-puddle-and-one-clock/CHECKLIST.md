@@ -1,13 +1,15 @@
 # Checklist -- Master Calfive Prepend-to-Front Stack (`[15 75 375 1875 9375]`)
 
-**Stamp:** `20261119.135311` (EST)
+**Stamp:** `20261119.140021` (EST)
 
-## Top of Prepend-to-Front Stack (NEXT MOVEMENT -- `15-Siya` `"palisade"` Release!)
+## Top of Prepend-to-Front Stack (Opening Orbit 5 -- `1-Aries` Dawn Ahead!)
 
-- [ ] **[TOP -- Movement 15/15 (`Siya`, `mov=60`, `Myofascia 57.054`)] Publish Single Parentless Commit `"palisade"` Signed by `grain-ww` to `grain-ww/202611-grain`** -- mint/register dedicated `grain-ww` Ed25519 release signing key (`seed_signing_key` in gitignored `PUBLISH_TARGETS.kyri`), prove `SOW_WITNESS_GREEN`, `parents=0`, `msg=palisade`, `sig=G` by `grain-ww`, seal Orbit 4 via `siya_orbit_harvest.rye`, & run `publish-seed.rish --force-seed`
+- [ ] **[TOP -- Orbit 5, Movement 1/15 (`Aries`)] Native Glow Mill Direct RV64GC & AArch64 Executable Emission + Full `murr_core` / `lower_*` Caller Molt** -- lower Ring-0 `.glow` directly into runnable machine code on metal and finish molting remaining elder `@import` callers under Mitra
+- [ ] **[Orbit 5, Movements 2..5 (`Taurus -> Leo`)] Interactive `Vantage` Desktop & `Carry` Live Canvas Binding (`canopy_watershed_canvas` + `twilight_almanac_art`) & Wave D `Blazepod` Hardware Prep** -- wire our new `Brushstroke / Skate` canvases live into `Vantage` Swift/Kotlin RLCD surfaces
 
-## Completed Foundations
+## Completed Foundations (Orbit 4 Sealed at `15-Siya` `"palisade"`!)
 
+- [x] **Siya Movement 15/15 (`mov=60`, `orb=4`, `Myofascia 57.054`, `xy/gemini-4-neon` -> `grain-ww/202611-grain`)** -- minted dedicated isolated `grain-ww` Ed25519 signing key (`BF755F6F966AA50CD41A8457232779DABAB6298A`), sealed Orbit 4 (`47/47` metal proofs & `34/34` Glow desks GREEN), and published single parentless commit **`"palisade"`** (`parents=0`, `sig=G` by `grain-ww`) to `grain-ww/202611-grain` (`20261119.140021`)
 - [x] **Aether Fixed Movement 14/15 (`57.053`, `xy/gemini-4-neon`)** -- compressed Orbit 4 harvest sealing (`60` mov, `34` Glow desks, `47` proofs) & single-commit `"palisade"` release invariants into `modules/fusion/palisade_release_gate.rye` (`grain-ww palisade-check`, Proof `#47`) (`20261119.135311`)
 - [x] **Aether Cardinal Movement 13/15 (`57.052`, `xy/gemini-4-neon`)** -- deepened post-Glow `Terrarium` with `terrarium/faa-atc/pilot_sector_horizon.rye` (`grain-ww terrarium-horizon`: deterministic 5-min multi-track RVSM lookahead + permeable `324/405` watershed bond, Proof `#46`) and `gate-terrarium-horizon.glow` (`34/34` live Glow Mill desks GREEN!) (`20261119.134525`)
 - [x] **Pisces Movement 12/15 (`57.051`, `xy/gemini-4-neon`)** -- crafted gratitude-born Twilight Dusk & Watershed Almanac (`modules/brushstroke/skate/twilight_almanac_art.rye` + `fold-twilight-almanac.glow`, `grain-ww twilight-art [1..15]`, Proof `#45`) and verified all `33/33` live Glow Mill `.glow` desks GREEN via `glow_self_host` (`20261119.134045`)
