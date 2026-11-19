@@ -7,8 +7,8 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261119.182424
-myofascia 57.075
+version 20261119.182903
+myofascia 57.076
 
 # Upstream git remote and branch-pushing defaults
 remote xy
@@ -239,6 +239,8 @@ file modules/fusion/glow/gate-libra-scales.glow
 file modules/fusion/stamp_no_serial_ratchet.rye
 file terrarium/terrarium_consolidation_audit.rye
 file modules/fusion/glow/gate-terrarium-audit.glow
+file terrarium/vantage_station_consolidation_menu.rye
+file modules/comlink/vantage/glow/fold-station-menu.glow
 file nixos/README.md
 
 # Gate witness runner

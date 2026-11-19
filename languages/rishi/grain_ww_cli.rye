@@ -26,8 +26,8 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261119.182424";
-pub const myofascia_reading = "57.075";
+pub const grain_ww_version = "20261119.182903";
+pub const myofascia_reading = "57.076";
 const nl: u8 = 10;
 
 pub fn format_banner(out: []u8) ![]const u8 {
@@ -711,6 +711,15 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/terrarium_consolidation_audit",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "station-menu")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_station_consolidation_menu",
             null,
             args[2..],
         );
