@@ -262,3 +262,9 @@ ascii_7bit context/OPEN_QUESTIONS.md
 ascii_7bit context/THREATS.md
 ascii_7bit context/README.md
 ascii_7bit active-development/date/20261119/20261119-182903-est_libra-vantage-station-consolidation-menu-and-radiant-sweep.md
+max_cols 80 modules/harness/scorpio_session_zeroize.rye
+max_cols 80 modules/harness/glow/gate-session-zeroize.glow
+ascii_7bit context/REMOTE_ROSTER.md
+ascii_7bit context/REDACT_TECHNIQUE.md
+ascii_7bit context/SILO_TECHNIQUE.md
+ascii_7bit active-development/date/20261119/20261119-183452-est_scorpio-session-zeroize-spellbook-sync-and-radiant-sweep.md

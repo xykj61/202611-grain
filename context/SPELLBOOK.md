@@ -1,7 +1,7 @@
 # The Spellbook -- Grain's Living Operator Words & `Synonym` Foundation
 
 **Language:** EN
-**Now Stamp:** `20261119.180656` (EST)
+**Now Stamp:** `20261119.183452` (EST)
 **Originally Seated:** `20260810.145033` (elder preserved whole in
 [`../yonder/spellbook-20260810-elder.md`](../yonder/spellbook-20260810-elder.md)
 behind walk-back nib `4532df51`)
@@ -54,6 +54,10 @@ every welcomed human pair onto **one canonical verified value/wire spine**:
 | **`calfive`** | Read live 15-sign position `[15 75 375 1875 9375]` by measurement (`grain-ww movement`) with zero hardcoded ascending serials | [`../modules/sundial/calfive_wheel.rye`](../modules/sundial/calfive_wheel.rye) |
 | **`husk`** | Prepend or inspect active explicit-bound Markdown movement stacks in `active-husk/` (`grain-ww husk`, `grain-ww husk-editor`) | [`../active-husk/README.md`](../active-husk/README.md) |
 | **`harness`** | Dispatch deterministic SHA3-cached `Flare`, `Pond`, & `Caravan`-gated Gemini API turns across `tally-ram` / `tally-vn` (`grain-ww harness-cache`) | [`../modules/harness/grain_cached_harness.rye`](../modules/harness/grain_cached_harness.rye) |
+| **`airlock`** | Route ephemeral TTL Gemini API keys strictly to HTTPS allowlist & wipe DRAM to `0x00` on exit (`grain-ww api-airlock`) | [`../modules/harness/pond_api_airlock.rye`](../modules/harness/pond_api_airlock.rye) |
+| **`wood-ledger`** | Settle fresh Harness turns into conserved 4-way `1000`-permille `WOOD` receipts & `0` spend on cache hits (`grain-ww harness-wood`) | [`../modules/harness/harness_wood_ledger.rye`](../modules/harness/harness_wood_ledger.rye) |
+| **`terrarium`** | Audit all `10/10` bare-metal / native `Vantage Station` enclosures & weigh Even Scales consolidation (`grain-ww terrarium-audit`, `grain-ww station-menu`) | [`../terrarium/terrarium_consolidation_audit.rye`](../terrarium/terrarium_consolidation_audit.rye) |
+| **`zeroize`** | Clear spent `Caravan` session keys & prompt buffers cleanly to `0x00` while preserving `SAFE.md` (`grain-ww session-zeroize`, `grain-ww key-rotate`) | [`../modules/harness/scorpio_session_zeroize.rye`](../modules/harness/scorpio_session_zeroize.rye) |
 | **`pond`** | Run tools or agents inside a zero-egress Glasswall capability enclosure (`grain-ww pond-airlock`, `grain-ww puddle`) | [`../modules/pond/pond_sanctuary_airlock.rye`](../modules/pond/pond_sanctuary_airlock.rye) |
 | **`stamp`** | Computationally measure exact `YYYYMMDD.HHMMSS` chronological time (`grain-ww stamp`) & enforce plain naming (`grain-ww stamp-ratchet`) | [`../modules/sundial/one_clock.rye`](../modules/sundial/one_clock.rye) |
 | **`evergrow`** | Verify newer chronological parcels keep every prior export while demanding equal or lighter capability (`offer more, require less`) | [`../modules/comlink/parcel/parcel_core.rye`](../modules/comlink/parcel/parcel_core.rye) |

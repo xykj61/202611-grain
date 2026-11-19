@@ -1,0 +1,11 @@
+::  modules/harness/glow/gate-session-zeroize.glow -- Session Zeroize!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-session-zeroize
+  |=  [cleared=@ud residual=@ud safe-ok=@ud]            ::  160 B, 0 left
+  ^-  @ud                                               ::  verified bytes
+  ~|  'scorpio-session-zeroize-residual-or-safe-breach' ::  clean DRAM
+  ?>  &(gte(cleared 160) eql(residual 0) eql(safe-ok 1))
+  cleared
+--

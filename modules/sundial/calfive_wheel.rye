@@ -108,7 +108,7 @@ pub const wheel = [sign_count]SignSeat{
         .element = "fire",
         .goal = "talent",
         .craft_verb =
-            "Teacher/Karma response: Brushstroke/Skate art & re-prepend Pulp.",
+            "Teacher/Karma response: Brushstroke/Skate art & re-prepend Husk.",
     },
     .{
         .movement = 10,

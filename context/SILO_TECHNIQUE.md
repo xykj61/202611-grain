@@ -1,10 +1,12 @@
 # The Silo Technique -- Making Outside Inspiration Genuinely Our Own
 
 **Language:** EN
-**Stamp:** `20261119.113425` (EST)
-**Voice:** Kyri / Reya
+**Now Stamp:** `20261119.183452` (EST)
+**Voice:** Reya / Kyri
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
+**Front Doors:** [`../README.md`](../README.md) |
+[`../LEXICON.md`](../LEXICON.md) | [`SPELLBOOK.md`](SPELLBOOK.md)
 **Companion Canons:** [`GAUGE_STYLE.md`](GAUGE_STYLE.md),
 [`RADIANT_STYLE.md`](RADIANT_STYLE.md), [`TWILIGHT_STYLE.md`](TWILIGHT_STYLE.md),
 [`TEACHER_STYLE.md`](TEACHER_STYLE.md), [`KARMA_STYLE.md`](KARMA_STYLE.md)

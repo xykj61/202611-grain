@@ -1,0 +1,130 @@
+//! modules/harness/scorpio_session_zeroize.rye -- Scorpio Session Zeroize!
+//!
+//! Stamp: `20261119.183452` -- Scorpio (*Run approved sheds & clear spent
+//! keys to zero*), powering `grain-ww session-zeroize`!
+//! Proves full `Caravan` + `Terrarium` + `Cached Harness` session-key and
+//! prompt-scratch zeroization via `std.crypto.secureZero`:
+//!   1. Wipes active `32`-byte session key & `128`-byte prompt buffer cleanly
+//!      to all `0x00` bytes on close, recording a deterministic SHA3-256
+//!      zeroization receipt without exposing plaintext secrets,
+//!   2. Enforces `SAFE.md` guard before any approved shed target executes,
+//!   3. Pairs refusal witnesses for empty session IDs, `SAFE.md` path touches,
+//!      and non-zero residual verification checks!
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.183452";
+const nl: u8 = 10;
+
+pub const ZeroizeError = error{
+    EmptySessionRefused,
+    SafePathShedRefused,
+    ResidualBytesDetected,
+};
+
+pub const SessionScratch = struct {
+    session_id: []const u8,
+    api_key: [32]u8,
+    prompt_buf: [128]u8,
+};
+
+pub const ZeroizeReceipt = struct {
+    receipt_sha3: [32]u8,
+    bytes_cleared: u32,
+    all_zero: bool,
+};
+
+fn verify_all_zero(buf: []const u8) ZeroizeError!void {
+    for (buf) |b| {
+        if (b != 0) return error.ResidualBytesDetected;
+    }
+}
+
+pub fn close_and_zeroize_session(
+    scratch: *SessionScratch,
+    shed_target: []const u8,
+) ZeroizeError!ZeroizeReceipt {
+    // invariant: validate non-empty session & SAFE guard before wiping buffers.
+    if (scratch.session_id.len == 0) return error.EmptySessionRefused;
+    if (std.mem.eql(u8, shed_target, "SAFE.md") or
+        std.mem.eql(u8, shed_target, "PUBKEYS.md") or
+        std.mem.eql(u8, shed_target, "LEXICON.md"))
+    {
+        return error.SafePathShedRefused;
+    }
+
+    std.crypto.secureZero(u8, &scratch.api_key);
+    std.crypto.secureZero(u8, &scratch.prompt_buf);
+    try verify_all_zero(&scratch.api_key);
+    try verify_all_zero(&scratch.prompt_buf);
+
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-scorpio-session-zeroize-v1:");
+    h.update(scratch.session_id);
+    h.update(shed_target);
+    h.final(&out);
+
+    const total: u32 = @intCast(
+        scratch.api_key.len + scratch.prompt_buf.len,
+    );
+    // invariant: all 160 secret bytes zeroized & non-zero SHA3 receipt forged.
+    assert(total == 160 and (out[0] | out[1] | out[2]) != 0);
+    return .{
+        .receipt_sha3 = out,
+        .bytes_cleared = total,
+        .all_zero = true,
+    };
+}
+
+fn run_selftest() !u8 {
+    // 1. Welcome: wipe 32-byte key + 128-byte prompt scratch cleanly to 0x00!
+    var sc = SessionScratch{
+        .session_id = "vantage-station-scorpio-turn",
+        .api_key = @splat(0xA5),
+        .prompt_buf = @splat(0x5A),
+    };
+    const rec = try close_and_zeroize_session(&sc, "terrarium/tmp_scratch");
+    if (!rec.all_zero or rec.bytes_cleared != 160) {
+        return error.ZeroizeCountWrong;
+    }
+    try verify_all_zero(&sc.api_key);
+    try verify_all_zero(&sc.prompt_buf);
+
+    // 2. Refusal 1: empty session ID refused cleanly
+    var bad_id = sc;
+    bad_id.session_id = "";
+    if (close_and_zeroize_session(&bad_id, "terrarium/tmp")) |_| {
+        return error.EmptyIdAccepted;
+    } else |err| {
+        if (err != error.EmptySessionRefused) return err;
+    }
+
+    // 3. Refusal 2: SAFE.md shed target refused whole!
+    if (close_and_zeroize_session(&sc, "SAFE.md")) |_| {
+        return error.SafeShedAccepted;
+    } else |err| {
+        if (err != error.SafePathShedRefused) return err;
+    }
+
+    // 4. Refusal 3: non-zero residual byte caught loudly by verifier!
+    const dirty = [_]u8{ 0, 0, 1, 0 };
+    if (verify_all_zero(&dirty)) |_| {
+        return error.ResidualByteMissed;
+    } else |err| {
+        if (err != error.ResidualBytesDetected) return err;
+    }
+
+    print(
+        "GREEN: scorpio_session_zeroize -- {d} B wiped & SAFE intact!{c}",
+        .{ rec.bytes_cleared, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
