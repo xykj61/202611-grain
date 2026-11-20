@@ -1,0 +1,284 @@
+//! modules/comlink/vantage/carry_hearth_mold.rye -- Aether!
+//!
+//! Stamp: `20261119.223000` -- Aries 1/15 Orbit 9: Vantage
+//! Carry hearth display mold. A hearth is the home surface
+//! a person sees when they pick up their Carry device.
+//!
+//! Each hearth has a two-letter home_id, a closed DisplayPreset
+//! enum, a Kyri text serialization, and bounded persistence
+//! under `files/{id}/hearth.kyri`.
+//!
+//! Elder: `hearth_lulu0`..`hearth_lulu5`
+//!        (yonder/linengrow-waymarks/)
+//! Fixes: plain name, >= 2 invariants, no serial numbers,
+//!        bounded path + text buffers, paired refusal.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.223000";
+
+pub const max_home_id_len: u32 = 2;
+pub const max_hearth_text_len: u32 = 512;
+pub const max_hearth_path_len: u32 = 32;
+pub const max_hearths: u32 = 16;
+
+pub const DisplayPreset = enum(u8) {
+    blazepod_floor = 1,
+    scaled_540 = 2,
+    scaled_720 = 3,
+    panel_max = 4,
+};
+
+pub const WireLane = enum(u8) {
+    local = 1,
+    usb = 2,
+    wifi = 3,
+};
+
+pub const HearthMold = struct {
+    home_id: [max_home_id_len]u8,
+    preset: DisplayPreset,
+    lane: WireLane,
+    cellular: bool,
+    stamp: [15]u8,
+
+    pub fn init(
+        home_id: [max_home_id_len]u8,
+        preset: DisplayPreset,
+        lane: WireLane,
+        stamp: [15]u8,
+    ) HearthMold {
+        // invariant: stamp is chronological
+        assert(stamp[8] == '.');
+        // invariant: home_id is printable ASCII
+        assert(home_id[0] >= 0x20 and home_id[0] <= 0x7e);
+        assert(home_id[1] >= 0x20 and home_id[1] <= 0x7e);
+        return .{
+            .home_id = home_id,
+            .preset = preset,
+            .lane = lane,
+            .cellular = false,
+            .stamp = stamp,
+        };
+    }
+
+    pub fn serialize(
+        self: *const HearthMold,
+        buf: []u8,
+    ) u32 {
+        // invariant: buffer fits max hearth text
+        assert(buf.len >= max_hearth_text_len);
+        var pos: u32 = 0;
+
+        const header = "format hearth-mold\n";
+        @memcpy(buf[pos .. pos + header.len], header);
+        pos += @intCast(header.len);
+
+        const id_line = "home_id ";
+        @memcpy(buf[pos .. pos + id_line.len], id_line);
+        pos += @intCast(id_line.len);
+        buf[pos] = self.home_id[0];
+        pos += 1;
+        buf[pos] = self.home_id[1];
+        pos += 1;
+        buf[pos] = '\n';
+        pos += 1;
+
+        const preset_line = "display_preset ";
+        @memcpy(
+            buf[pos .. pos + preset_line.len],
+            preset_line,
+        );
+        pos += @intCast(preset_line.len);
+
+        const preset_name = switch (self.preset) {
+            .blazepod_floor => "blazepod_floor",
+            .scaled_540 => "scaled_540",
+            .scaled_720 => "scaled_720",
+            .panel_max => "panel_max",
+        };
+        @memcpy(
+            buf[pos .. pos + preset_name.len],
+            preset_name,
+        );
+        pos += @intCast(preset_name.len);
+        buf[pos] = '\n';
+        pos += 1;
+
+        const lane_line = "wire_lane ";
+        @memcpy(buf[pos .. pos + lane_line.len], lane_line);
+        pos += @intCast(lane_line.len);
+
+        const lane_name = switch (self.lane) {
+            .local => "local",
+            .usb => "usb",
+            .wifi => "wifi",
+        };
+        @memcpy(buf[pos .. pos + lane_name.len], lane_name);
+        pos += @intCast(lane_name.len);
+        buf[pos] = '\n';
+        pos += 1;
+
+        // invariant: serialized text fits buffer
+        assert(pos <= max_hearth_text_len);
+        return pos;
+    }
+
+    pub fn persistence_path(
+        self: *const HearthMold,
+        buf: []u8,
+    ) u32 {
+        // invariant: path buffer fits max path
+        assert(buf.len >= max_hearth_path_len);
+        const prefix = "files/";
+        @memcpy(buf[0..prefix.len], prefix);
+        var pos: u32 = @intCast(prefix.len);
+        buf[pos] = self.home_id[0];
+        pos += 1;
+        buf[pos] = self.home_id[1];
+        pos += 1;
+        const suffix = "/hearth.kyri";
+        @memcpy(buf[pos .. pos + suffix.len], suffix);
+        pos += @intCast(suffix.len);
+        // invariant: path fits bounded buffer
+        assert(pos <= max_hearth_path_len);
+        return pos;
+    }
+};
+
+pub const HearthRegistry = struct {
+    hearths: [max_hearths]HearthMold,
+    count: u32,
+    active: u32,
+
+    pub fn init() HearthRegistry {
+        return .{
+            .hearths = undefined,
+            .count = 0,
+            .active = 0,
+        };
+    }
+
+    pub fn add(self: *HearthRegistry, mold: HearthMold) !void {
+        // invariant: registry stays bounded
+        if (self.count >= max_hearths) {
+            return error.RegistryFull;
+        }
+        // invariant: no duplicate home_id
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (self.hearths[i].home_id[0] == mold.home_id[0] and
+                self.hearths[i].home_id[1] == mold.home_id[1])
+            {
+                return error.DuplicateHomeId;
+            }
+        }
+        self.hearths[self.count] = mold;
+        self.count += 1;
+    }
+
+    pub fn switch_active(
+        self: *HearthRegistry,
+        idx: u32,
+    ) !void {
+        // invariant: index within bounds
+        if (idx >= self.count) {
+            return error.HearthNotFound;
+        }
+        self.active = idx;
+    }
+};
+
+fn run_selftest() !u8 {
+    const stamp = "20261119.223000".*;
+    const nl: u8 = 10;
+
+    // Welcome: create mold and serialize
+    {
+        const mold = HearthMold.init(
+            "kd".*,
+            .scaled_540,
+            .local,
+            stamp,
+        );
+        var buf: [max_hearth_text_len]u8 = @splat(0);
+        const len = mold.serialize(&buf);
+        assert(len > 0);
+        assert(len <= max_hearth_text_len);
+
+        var path: [max_hearth_path_len]u8 = @splat(0);
+        const plen = mold.persistence_path(&path);
+        assert(plen > 0);
+        const expected = "files/kd/hearth.kyri";
+        assert(std.mem.eql(
+            u8,
+            path[0..plen],
+            expected,
+        ));
+    }
+
+    // Welcome: registry with two hearths
+    {
+        var reg = HearthRegistry.init();
+        try reg.add(HearthMold.init(
+            "kd".*, .scaled_540, .local, stamp,
+        ));
+        try reg.add(HearthMold.init(
+            "bz".*, .blazepod_floor, .usb, stamp,
+        ));
+        assert(reg.count == 2);
+        try reg.switch_active(1);
+        assert(reg.active == 1);
+    }
+
+    // Refusal: duplicate home_id
+    {
+        var reg = HearthRegistry.init();
+        try reg.add(HearthMold.init(
+            "kd".*, .scaled_540, .local, stamp,
+        ));
+        const dup = reg.add(HearthMold.init(
+            "kd".*, .scaled_720, .wifi, stamp,
+        ));
+        assert(dup == error.DuplicateHomeId);
+    }
+
+    // Refusal: registry overflow
+    {
+        var reg = HearthRegistry.init();
+        var i: u32 = 0;
+        while (i < max_hearths) : (i += 1) {
+            const id: [2]u8 = .{
+                @intCast(0x41 + (i / 26)),
+                @intCast(0x41 + (i % 26)),
+            };
+            try reg.add(HearthMold.init(
+                id, .scaled_540, .local, stamp,
+            ));
+        }
+        const overflow = reg.add(HearthMold.init(
+            "zz".*, .panel_max, .local, stamp,
+        ));
+        assert(overflow == error.RegistryFull);
+    }
+
+    // Refusal: switch to nonexistent hearth
+    {
+        var reg = HearthRegistry.init();
+        const bad = reg.switch_active(5);
+        assert(bad == error.HearthNotFound);
+    }
+
+    print("GREEN: carry_hearth_mold -- " ++
+        "2 welcome + 3 refusal, bounded registry " ++
+        "({d} hearths max), Kyri serialization.{c}", .{
+        max_hearths, nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

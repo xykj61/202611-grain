@@ -1,0 +1,11 @@
+::  vantage/glow/fold-carry-hearth-mold.glow -- Aether!
+/-  compiler-shapes
+/!  32768
+|%
+++  fold-carry-hearth-mold
+  |=  [count=@ud active=@ud text=@ud path=@ud]         ::  registry state
+  ^-  @ud                                               ::  active hearth idx
+  ~|  'carry-hearth-mold-invariant-broken'               ::  Aether refusal
+  ?>  &(gth(count 0) lth(active count) lte(text 512))   ::  bounded registry
+  active
+--
