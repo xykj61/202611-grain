@@ -6,7 +6,7 @@
 //! walk history with up/down -- recalling an older line INTO the editable line to run or edit again. It is
 //! pure composition over both modules' public APIs (neither is touched), and held pure: no raw terminal, no
 //! escape codes, and no network. The live TTY that reads real keystrokes is the last rung; this is its floor.
-//! Pattern elder: pond/apps/quin_host.rye -- one bounded entry gathering the pieces beneath it.
+//! Pattern elder: pond/apps/harness_host.rye -- one bounded entry gathering the pieces beneath it.
 //!
 //! The crux is the honest recall round-trip, with a draft never lost:
 //!   - Submit remembers and clears. submit commits the current line to history and empties the line, exactly

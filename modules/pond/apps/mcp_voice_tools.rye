@@ -1,7 +1,7 @@
 //! pond/apps/mcp_voice_tools.rye - compass-surface Journey 9, Rung 2: the voices as distinct MCP tools.
 //!
 //! Rung one made the whole intelligence reachable as one MCP tool (`ask`) over the
-//! gathered Q-vane host. This rung gives each voice its own name at the protocol surface:
+//! gathered harness host. This rung gives each voice its own name at the protocol surface:
 //! a caller **discovers** the intelligence by listing five typed tools - `lattice`,
 //! `husk`, `flare`, `graph`, `artifact` - and **invokes** one by name. The tool name
 //! is a typed assertion of which voice should answer: `serve_voice` dispatches the prompt
@@ -16,7 +16,7 @@
 //! rendering and error mapping. Both are composition; no new transport, no new parser.
 //!
 //! Additive by construction: it imports mcp_kyri, mcp_manifest, mcp_list, mcp_voice, and
-//! quin_host_artifact and calls only their public functions. Every module stays its own
+//! harness_host_artifact and calls only their public functions. Every module stays its own
 //! green binary. It reads no network - the real fetch and the Comlink-served transport
 //! stay the held custody/serve gates.
 //!
@@ -34,7 +34,7 @@ const mcp = @import("mcp_kyri.rye");
 const man = @import("mcp_manifest.rye");
 const lst = @import("mcp_list.rye");
 const mv = @import("mcp_voice.rye"); // rung one: render_ok / render_error / error_name
-const qha = @import("quin_host_artifact.rye"); // the five-voice Q-vane host
+const qha = @import("harness_host_artifact.rye"); // the five-voice harness host
 
 const mcp_voice_tools_version = "20260812.151500";
 

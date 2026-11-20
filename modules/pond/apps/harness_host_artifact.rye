@@ -1,6 +1,6 @@
-//! pond/apps/quin_host_artifact.rye - compass-surface Journey 8, Rung 3: the artifact voice, gathered.
+//! pond/apps/harness_host_artifact.rye - compass-surface Journey 8, Rung 3: the artifact voice, gathered.
 //!
-//! Journey 1's Q-vane host gathered three voices (Lattice, Husk, Flare); Journey 6
+//! Journey 1's harness host gathered three voices (Lattice, Husk, Flare); Journey 6
 //! gathered a fourth whose corpus is the living Blaze graph. This rung gathers a fifth,
 //! the voice whose corpus is a named Tablecloth artifact (`artifact_query`) - so a single
 //! Lantern-shaped request routes to whichever voice recognizes the prompt: arithmetic,
@@ -10,12 +10,12 @@
 //! bytes that proved themselves against their content address, a tampered bead refusing
 //! before the host returns a word.
 //!
-//! Additive by construction: it wraps `quin_host_graph.dispatch` unchanged (trying the
+//! Additive by construction: it wraps `harness_host_graph.dispatch` unchanged (trying the
 //! four voices first) and falls through to `artifact_query` only on UnknownOp - a real
 //! request fault (bad budget, model not allowed) surfaces at once. The four-voice host and
 //! the artifact query stay their own green binaries; no contract changes.
 //!
-//!   rye build pond/apps/quin_host_artifact.rye -femit-bin=pond/bin/quin-host-artifact
+//!   rye build pond/apps/harness_host_artifact.rye -femit-bin=pond/bin/quin-host-artifact
 //!   pond/bin/quin-host-artifact selftest
 //!
 //! Scope: active-designing/date/20260812/20260812-144916_buhr-journey8-voice-reads-artifact-store-exploration.md
@@ -24,10 +24,10 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
-const qhg = @import("quin_host_graph.rye"); // the four-voice host: Lattice, Husk, Flare, graph
+const qhg = @import("harness_host_graph.rye"); // the four-voice host: Lattice, Husk, Flare, graph
 const aq = @import("artifact_query.rye"); // the artifact voice - reads a named Tablecloth artifact
 
-const quin_host_artifact_version = "20260812.150200";
+const harness_host_artifact_version = "20260812.150200";
 
 const max_result_text: u32 = lc.max_completion_len;
 
@@ -58,7 +58,7 @@ fn lift(voice: qhg.Voice) Voice {
     };
 }
 
-/// The gathered Q-vane host: dispatch one bounded request across five voices. Try the
+/// The gathered harness host: dispatch one bounded request across five voices. Try the
 /// four-voice host first (Lattice, Husk, Flare, graph); on UnknownOp, try the artifact
 /// voice; any other error is a real request fault and surfaces at once rather than being
 /// retried. The artifact voice is last, so a prompt no voice recognizes refuses UnknownOp
@@ -90,7 +90,7 @@ fn welcome_arithmetic_still_routes() !void {
     // invariant: gathering the artifact voice never displaces the four that came before.
     assert(served.voice == .lattice);
     assert(std.mem.eql(u8, served.response.text, "19 22 43 50"));
-    print("quin_host_artifact: matmul still routes to Lattice - text '{s}'\n", .{served.response.text});
+    print("harness_host_artifact: matmul still routes to Lattice - text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_graph_still_routes() !void {
@@ -103,7 +103,7 @@ fn welcome_graph_still_routes() !void {
     // invariant: the fourth voice (the living graph) still answers under the wider host.
     assert(served.voice == .graph);
     assert(std.mem.eql(u8, served.response.text, "3"));
-    print("quin_host_artifact: lane_count still routes to the graph voice - text '{s}'\n", .{served.response.text});
+    print("harness_host_artifact: lane_count still routes to the graph voice - text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_artifact_words_routes() !void {
@@ -118,7 +118,7 @@ fn welcome_artifact_words_routes() !void {
     // notes.txt's verified content is sixteen words, the reading artifact_query witnesses.
     assert(std.mem.eql(u8, served.response.text, "16"));
     assert(served.response.stopped_reason == .eos);
-    print("quin_host_artifact: words dispatched to the artifact voice - notes.txt has {s} words\n", .{served.response.text});
+    print("harness_host_artifact: words dispatched to the artifact voice - notes.txt has {s} words\n", .{served.response.text});
 }
 
 fn welcome_artifact_line_routes() !void {
@@ -131,7 +131,7 @@ fn welcome_artifact_line_routes() !void {
     assert(served.voice == .artifact);
     // The first line of the verified content - read only through the content-addressed fetch.
     assert(std.mem.eql(u8, served.response.text, "linen holds the warp then hemp the weft"));
-    print("quin_host_artifact: line dispatched to the artifact voice - '{s}'\n", .{served.response.text});
+    print("harness_host_artifact: line dispatched to the artifact voice - '{s}'\n", .{served.response.text});
 }
 
 fn welcome_artifact_length_carries_through() !void {
@@ -146,7 +146,7 @@ fn welcome_artifact_length_carries_through() !void {
     assert(served.voice == .artifact);
     assert(served.response.tokens_out == 3);
     assert(served.response.stopped_reason == .length);
-    print("quin_host_artifact: length stop carried through from the artifact voice - tokens {d}\n", .{served.response.tokens_out});
+    print("harness_host_artifact: length stop carried through from the artifact voice - tokens {d}\n", .{served.response.tokens_out});
 }
 
 fn unwelcome_model_not_allowed() !void {
@@ -162,7 +162,7 @@ fn unwelcome_model_not_allowed() !void {
     } else |err| {
         assert(err == error.ModelNotAllowed);
     }
-    print("quin_host_artifact: disallowed model refused at once (no fall-through)\n", .{});
+    print("harness_host_artifact: disallowed model refused at once (no fall-through)\n", .{});
 }
 
 fn unwelcome_unknown_artifact_name() !void {
@@ -178,7 +178,7 @@ fn unwelcome_unknown_artifact_name() !void {
     } else |err| {
         assert(err == error.UnknownArtifact);
     }
-    print("quin_host_artifact: unknown artifact name refused - the host reads no artifact it cannot name\n", .{});
+    print("harness_host_artifact: unknown artifact name refused - the host reads no artifact it cannot name\n", .{});
 }
 
 fn unwelcome_no_voice() !void {
@@ -192,7 +192,7 @@ fn unwelcome_no_voice() !void {
     } else |err| {
         assert(err == error.UnknownOp);
     }
-    print("quin_host_artifact: no voice recognized the prompt - refused (no fake answer)\n", .{});
+    print("harness_host_artifact: no voice recognized the prompt - refused (no fake answer)\n", .{});
 }
 
 pub fn main(init: std.process.Init) !u8 {
@@ -207,9 +207,9 @@ pub fn main(init: std.process.Init) !u8 {
         try unwelcome_model_not_allowed();
         try unwelcome_unknown_artifact_name();
         try unwelcome_no_voice();
-        print("quin_host_artifact: five voices under one bounded entry - arithmetic, reading, corpus, graph, artifact\n", .{});
-        print("quin_host_artifact: version {s}\n", .{quin_host_artifact_version});
-        print("GREEN: compass-surface-J8r3 quin_host_artifact - the whole of Surface and Intelligence answers under one host.\n", .{});
+        print("harness_host_artifact: five voices under one bounded entry - arithmetic, reading, corpus, graph, artifact\n", .{});
+        print("harness_host_artifact: version {s}\n", .{harness_host_artifact_version});
+        print("GREEN: compass-surface-J8r3 harness_host_artifact - the whole of Surface and Intelligence answers under one host.\n", .{});
         return 0;
     }
     print("usage: quin-host-artifact selftest\n", .{});

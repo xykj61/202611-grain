@@ -1,6 +1,6 @@
-//! pond/apps/quin_host_graph.rye -- compass-surface Journey 6, Rung 3: the surface voice, gathered.
+//! pond/apps/harness_host_graph.rye -- compass-surface Journey 6, Rung 3: the surface voice, gathered.
 //!
-//! Journey 1's Q-vane host (`quin_host`) gathers three voices under one bounded entry:
+//! Journey 1's harness host (`harness_host`) gathers three voices under one bounded entry:
 //! Lattice for arithmetic, Husk for reading, Flare for corpus craft. Journey 6
 //! grew a fourth kind of voice -- one whose corpus is the living Blaze graph itself
 //! (`graph_query`). This rung gathers that surface-reading voice beside the other
@@ -9,22 +9,22 @@
 //! Lantern-contract Response returns, tagged with the serving voice. Surface and
 //! Intelligence, the two halves the equinox is named for, now answer under one entry.
 //!
-//! Additive by construction: it wraps `quin_host.dispatch` unchanged (trying the three
+//! Additive by construction: it wraps `harness_host.dispatch` unchanged (trying the three
 //! voices first) and falls through to `graph_query` only on UnknownOp -- a real request
 //! fault (bad budget, model not allowed) surfaces at once. The three-voice host and
 //! the graph query stay their own green binaries; no contract changes.
 //!
-//!   rye build pond/apps/quin_host_graph.rye -femit-bin=pond/bin/quin-host-graph
+//!   rye build pond/apps/harness_host_graph.rye -femit-bin=pond/bin/quin-host-graph
 //!   pond/bin/quin-host-graph selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
-const qh = @import("quin_host.rye"); // the three-voice host: Lattice, Husk, Flare
+const qh = @import("harness_host.rye"); // the three-voice host: Lattice, Husk, Flare
 const gq = @import("graph_query.rye"); // the surface voice — reads the living graph
 
-const quin_host_graph_version = "20260812.140813";
+const harness_host_graph_version = "20260812.140813";
 
 const max_result_text: u32 = lc.max_completion_len;
 
@@ -53,7 +53,7 @@ fn lift(voice: qh.Voice) Voice {
     };
 }
 
-/// The gathered Q-vane host: dispatch one bounded request across four voices. Try the
+/// The gathered harness host: dispatch one bounded request across four voices. Try the
 /// three-voice host first (Lattice, Husk, Flare); on UnknownOp, try the graph
 /// voice; any other error is a real request fault and surfaces at once rather than
 /// being retried. The graph voice is last, so a prompt no voice recognizes refuses
@@ -89,7 +89,7 @@ fn welcome_arithmetic_still_routes() !void {
     // invariant: gathering the graph voice never displaces the three that came before.
     assert(served.voice == .lattice);
     assert(std.mem.eql(u8, served.response.text, "19 22 43 50"));
-    print("quin_host_graph: matmul still routes to Lattice — text '{s}'\n", .{served.response.text});
+    print("harness_host_graph: matmul still routes to Lattice — text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_reading_still_routes() !void {
@@ -105,7 +105,7 @@ fn welcome_reading_still_routes() !void {
     const served = try dispatch(req, allow, &buf);
     assert(served.voice == .husk);
     assert(std.mem.eql(u8, served.response.text, "Grain Voices Detail"));
-    print("quin_host_graph: outline still routes to Husk — text '{s}'\n", .{served.response.text});
+    print("harness_host_graph: outline still routes to Husk — text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_corpus_still_routes() !void {
@@ -121,7 +121,7 @@ fn welcome_corpus_still_routes() !void {
     const served = try dispatch(req, allow, &buf);
     assert(served.voice == .flare);
     assert(std.mem.eql(u8, served.response.text, "160"));
-    print("quin_host_graph: sum_lines still routes to Flare — text '{s}'\n", .{served.response.text});
+    print("harness_host_graph: sum_lines still routes to Flare — text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_graph_routes() !void {
@@ -139,7 +139,7 @@ fn welcome_graph_routes() !void {
     assert(served.voice == .graph);
     assert(std.mem.eql(u8, served.response.text, "3"));
     assert(served.response.stopped_reason == .eos);
-    print("quin_host_graph: lane_count dispatched to the graph voice — text '{s}'\n", .{served.response.text});
+    print("harness_host_graph: lane_count dispatched to the graph voice — text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_graph_head_routes() !void {
@@ -156,7 +156,7 @@ fn welcome_graph_head_routes() !void {
     assert(served.voice == .graph);
     // The demo graph's a.txt lane stands at r2 -- the head the browser paints.
     assert(std.mem.eql(u8, served.response.text, "2"));
-    print("quin_host_graph: head dispatched to the graph voice — a.txt at r{s}\n", .{served.response.text});
+    print("harness_host_graph: head dispatched to the graph voice — a.txt at r{s}\n", .{served.response.text});
 }
 
 fn welcome_graph_length_carries_through() !void {
@@ -174,7 +174,7 @@ fn welcome_graph_length_carries_through() !void {
     assert(served.voice == .graph);
     assert(served.response.tokens_out == 1);
     assert(served.response.stopped_reason == .length);
-    print("quin_host_graph: length stop carried through from the graph voice — tokens {d}\n", .{served.response.tokens_out});
+    print("harness_host_graph: length stop carried through from the graph voice — tokens {d}\n", .{served.response.tokens_out});
 }
 
 fn unwelcome_model_not_allowed() !void {
@@ -194,7 +194,7 @@ fn unwelcome_model_not_allowed() !void {
     } else |err| {
         assert(err == error.ModelNotAllowed);
     }
-    print("quin_host_graph: disallowed model refused at once (no fall-through)\n", .{});
+    print("harness_host_graph: disallowed model refused at once (no fall-through)\n", .{});
 }
 
 fn unwelcome_no_voice() !void {
@@ -212,7 +212,7 @@ fn unwelcome_no_voice() !void {
     } else |err| {
         assert(err == error.UnknownOp);
     }
-    print("quin_host_graph: no voice recognized the prompt — refused (no fake answer)\n", .{});
+    print("harness_host_graph: no voice recognized the prompt — refused (no fake answer)\n", .{});
 }
 
 pub fn main(init: std.process.Init) !u8 {
@@ -227,7 +227,7 @@ pub fn main(init: std.process.Init) !u8 {
         try welcome_graph_length_carries_through();
         try unwelcome_model_not_allowed();
         try unwelcome_no_voice();
-        print("quin_host_graph {s} — GREEN\n", .{quin_host_graph_version});
+        print("harness_host_graph {s} — GREEN\n", .{harness_host_graph_version});
         return 0;
     }
     print("usage: quin-host-graph selftest\n", .{});
