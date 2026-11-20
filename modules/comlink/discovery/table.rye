@@ -10,7 +10,7 @@
 //! Region garden when a caller wants contiguous export bytes. Mycelium stays
 //! untouched -- this table finds peers and never orders them.
 //! Check shape: claim<->reach both ways - bound bitten - tally stack LIFO untouched.
-//! Gossip and introduce wait their own rounds (narrow-scope - fascia < 80).
+//! Gossip and introduce wait their own rounds (narrow-scope - myofascia < 80).
 //!
 //!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye run comlink/discovery/table.rye
 

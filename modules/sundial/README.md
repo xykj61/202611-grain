@@ -27,8 +27,8 @@ Add a module reading with `add(name, green, unit, date, source)`. An empty sourc
 - **`green_count()`** -- how many modules stand green
 - **`all_green()`** -- whether every one does
 - **`health_percent()`** -- the health of the day, green of total (an empty face reads 0)
-- **`fascia`** -- the connective-health percent, 0 to 100, set by the caller
-- **`fascia_units`** -- the same reading in ten-thousandths of a point, 0 to 1000000. `init` fills it from a whole percent (`41` becomes `410000`). `init_face` stores a finer reading beside that percent, so `99` may sit beside `995000`
+- **`myofascia`** -- the connective-health percent, 0 to 100
+- **`myofascia_milli`** -- thousandths of a point, 0 to 100000 (`56500` = `56.500` baseline + `0.001` per completed Movement)
 
 Bounded by `max_modules`, asserted at every edge, zero heap.
 
@@ -49,8 +49,8 @@ archetype ledgerworks
 member vault green unit witness-status date 20260829 source vault-split
 member basin green unit witness-status date 20260829 source basin-suite
 roll 4 of 5 green
-health 80% fascia 41
-fascia_face 41.0000
+health 80% myofascia 57
+myofascia_milli 57084
 next keep watch
 ```
 
