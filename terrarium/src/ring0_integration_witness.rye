@@ -1,0 +1,192 @@
+//! terrarium/src/ring0_integration_witness.rye -- Aether!
+//!
+//! Stamp: `20261119.211959` -- Pisces 12/15 Orbit 9: Ring-0
+//! Integration witness. Proves the full freestanding path:
+//! boot -> aurora_framebuf -> pond_wire -> puddle session.
+//!
+//! This witness exercises each Ring-0 module in sequence,
+//! verifying that a bare-metal system can:
+//! 1. Initialize a bounded framebuffer (aurora)
+//! 2. Frame a packet over UART wire (pond_wire)
+//! 3. Establish a Puddle peer session (puddle)
+//! 4. Exchange messages with sequence ordering
+//!
+//! All assertions use sifive_test 0x0001_3333 fail-stop.
+//! No std, no allocator, no OS.
+//!
+//! Target: freestanding RV64GC / AArch64
+
+const assert = struct {
+    fn check(ok: bool) void {
+        if (!ok) fail_stop();
+    }
+    fn fail_stop() noreturn {
+        const sifive_test: *volatile u32 =
+            @ptrFromInt(0x10_0000);
+        sifive_test.* = 0x0001_3333;
+        while (true) {}
+    }
+};
+
+const fb = @import("aurora_framebuf_ring0.rye");
+const wire = @import("pond_wire_ring0.rye");
+const puddle = @import("puddle_ring0.rye");
+
+pub const version = "20261119.211959";
+
+fn make_key(seed: u8) [puddle.pubkey_len]u8 {
+    return @splat(seed);
+}
+
+fn make_checksum(seed: u8) [wire.checksum_len]u8 {
+    return @splat(seed);
+}
+
+pub fn witness_aurora_framebuf() void {
+    // Stage 1: init bounded framebuffer
+    const display = fb.FrameBuf.init(
+        0x8020_0000, 320, 240,
+    );
+    // invariant: dimensions stored correctly
+    assert.check(display.width == 320);
+    assert.check(display.height == 240);
+    assert.check(
+        display.total_bytes == 320 * 240 * 4,
+    );
+    assert.check(display.stride == 320 * 4);
+
+    // Welcome: pixel within bounds
+    const off = display.pixel_offset(0, 0);
+    assert.check(off != null);
+    assert.check(off.? == 0);
+
+    const mid = display.pixel_offset(160, 120);
+    assert.check(mid != null);
+
+    // Refusal: pixel out of bounds
+    const oob_x = display.pixel_offset(320, 0);
+    assert.check(oob_x == null);
+    const oob_y = display.pixel_offset(0, 240);
+    assert.check(oob_y == null);
+}
+
+pub fn witness_pond_wire() void {
+    // Stage 2: frame packets over wire
+    var queue = wire.SendQueue.init();
+    assert.check(queue.count == 0);
+
+    // Welcome: enqueue a valid frame
+    const payload = "hello blazepod";
+    const ck = make_checksum(0xaa);
+    const r1 = queue.enqueue(payload, ck);
+    assert.check(r1 == .none);
+    assert.check(queue.count == 1);
+
+    // Welcome: dequeue returns the frame
+    const frame = queue.dequeue();
+    assert.check(frame != null);
+    assert.check(queue.count == 0);
+
+    // Refusal: empty payload
+    const r2 = queue.enqueue("", ck);
+    assert.check(r2 == .payload_empty);
+
+    // Refusal: queue overflow
+    var i: u32 = 0;
+    while (i < wire.max_queued_frames) : (i += 1) {
+        const r = queue.enqueue("x", ck);
+        assert.check(r == .none);
+    }
+    const r3 = queue.enqueue("overflow", ck);
+    assert.check(r3 == .queue_full);
+
+    // Welcome: length encoding round-trip
+    var len_buf: [2]u8 = undefined;
+    wire.encode_length(1200, &len_buf);
+    const decoded = wire.decode_length(&len_buf);
+    assert.check(decoded == 1200);
+
+    // Welcome: frame validation
+    const good_ck = make_checksum(0xbb);
+    var fake_frame: [wire.max_frame_bytes]u8 = @splat(0);
+    wire.encode_length(100, fake_frame[0..2]);
+    const vr = wire.validate_frame(
+        &fake_frame,
+        wire.frame_total_len(100),
+        good_ck,
+        good_ck,
+    );
+    assert.check(vr.refusal == .none);
+    assert.check(vr.payload_len == 100);
+
+    // Refusal: checksum mismatch
+    const bad_ck = make_checksum(0xcc);
+    const vr2 = wire.validate_frame(
+        &fake_frame,
+        wire.frame_total_len(100),
+        good_ck,
+        bad_ck,
+    );
+    assert.check(vr2.refusal == .checksum_mismatch);
+}
+
+pub fn witness_puddle_session() void {
+    // Stage 3: establish Puddle peer session
+    const local = make_key(0x01);
+    const peer = make_key(0x02);
+    const stranger = make_key(0x03);
+
+    var sess = puddle.PuddleSession.init(local, peer);
+    assert.check(sess.state == .established);
+    assert.check(sess.local_seq == 0);
+
+    // Welcome: prepare and accept messages
+    const s1 = sess.prepare_send(100);
+    assert.check(s1 == .none);
+    assert.check(sess.local_seq == 1);
+    assert.check(sess.sent_count == 1);
+
+    const r1 = sess.accept_recv(peer, 1, 200, true);
+    assert.check(r1 == .none);
+    assert.check(sess.peer_seq == 1);
+    assert.check(sess.recv_count == 1);
+
+    // Welcome: second message with advancing seq
+    const r2 = sess.accept_recv(peer, 2, 150, true);
+    assert.check(r2 == .none);
+    assert.check(sess.peer_seq == 2);
+
+    // Refusal: wrong peer
+    const r3 = sess.accept_recv(stranger, 3, 50, true);
+    assert.check(r3 == .wrong_peer);
+
+    // Refusal: sequence replay
+    const r4 = sess.accept_recv(peer, 1, 50, true);
+    assert.check(r4 == .sequence_replay);
+
+    // Refusal: invalid signature
+    const r5 = sess.accept_recv(peer, 3, 50, false);
+    assert.check(r5 == .signature_invalid);
+
+    // Refusal: empty payload
+    const r6 = sess.accept_recv(peer, 3, 0, true);
+    assert.check(r6 == .payload_empty);
+
+    // Welcome: drain inbox
+    const drained = sess.drain_inbox();
+    assert.check(drained == sess.inbox_count + drained);
+
+    // Welcome: close session
+    sess.close();
+    assert.check(sess.state == .closed);
+
+    // Refusal: not established after close
+    const r7 = sess.prepare_send(50);
+    assert.check(r7 == .not_established);
+}
+
+pub fn witness_full_path() void {
+    witness_aurora_framebuf();
+    witness_pond_wire();
+    witness_puddle_session();
+}
