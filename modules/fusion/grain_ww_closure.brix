@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261119.221001
-# Scorpio (8/15 Orbit 10): added 6 Conifer CLI modules, Ring-0
-# cross-compile witness, tutorial sync, manifest cover fix.
+# Stamp: 20261120.115341
+# Virgo (6/15 Orbit 11): husk_template + husk_lower (.husk ->
+# .md lowering), grain-ww help + husk-lower + 6 Carry wired.
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261119.221001
+version 20261120.115341
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---
@@ -51,6 +51,8 @@ vantage carry-device modules/comlink/vantage/carry_device_setup.rye
 flare husk modules/flare/husk/husk_core.rye
 flare husk-stack modules/flare/husk/husk_movement_stack.rye
 flare husk-recall modules/flare/husk/husk_object_recall.rye
+flare husk-template modules/flare/husk/husk_template.rye
+flare husk-lower modules/flare/husk/husk_lower.rye
 
 # --- Comlink + Council 405 + Mycelium ---
 comlink council modules/comlink/council_405.rye

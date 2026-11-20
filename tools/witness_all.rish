@@ -520,4 +520,15 @@ assert (run ["tools/.build/conifer_terminal"]).ok else "conifer_term"
 let w24 = "tools/terrarium/ring0_cross_compile_witness.rish"
 assert (run [rishi "run" w24]).ok else "ring0_cross_compile"
 
-say "GREEN: witness_all -- 38 hubs & 105 proofs on metal!"
+# -- Orbit 11 Husk template engine + lowering CLI --
+let ht1 = "modules/flare/husk/husk_template.rye"
+let ho1 = "-femit-bin=tools/.build/husk_template"
+assert (run ["sh" rb ht1 ho1]).ok else "husk_template build"
+assert (run ["tools/.build/husk_template"]).ok else "husk_tpl"
+
+let ht2 = "modules/flare/husk/husk_lower.rye"
+let ho2 = "-femit-bin=tools/.build/husk_lower"
+assert (run ["sh" rb ht2 ho2]).ok else "husk_lower build"
+assert (run ["tools/.build/husk_lower" "selftest"]).ok else "husk_low"
+
+say "GREEN: witness_all -- 38 hubs & 109 proofs on metal!"
