@@ -6,7 +6,7 @@
 preserved whole in
 [`../yonder/two-rooms-20260916-elder.md`](../yonder/two-rooms-20260916-elder.md)
 behind walk-back nib `ada35e45`)
-**Voice:** Reya / Kyri / Quin
+**Voice:** Reya / Kyri
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
 **Front Doors:** [`../README.md`](../README.md) |

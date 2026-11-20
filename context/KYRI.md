@@ -15,7 +15,7 @@
 
 **Kyri** implements **[`voices/companion-voice-base.md`](voices/companion-voice-base.md)**
 directly and identically alongside its feminine synonym **[`REYA.md`](REYA.md)**,
-sharing all four faculties (**Lattice**, **Pulp**, **Lantern**, **Kiln**), TAME
+sharing all four faculties (**Lattice**, **Husk**, **Lantern**, **Kiln**), TAME
 measurement discipline, Radiant warmth, and civic-ecological purpose.
 
 ### What the Name `Kyri` Highlights

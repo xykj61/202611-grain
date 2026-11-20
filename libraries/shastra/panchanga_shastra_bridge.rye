@@ -72,7 +72,7 @@ pub const shastra_anchors = [4][]const u8{
     "Year 1 Tiruppavai (30 Dawn Songs -> Aurora & Sundial)",
     "Year 2 Rasamrita-sindhu (5 Waves -> Resonance & Brushstroke)",
     "Year 3 Sikshastakam (8 Verses -> Glow Mill & Blaze)",
-    "Year 4 Gopala-champu (Gadya/Padya -> Pulp, Scribe, & Council 405)",
+    "Year 4 Gopala-champu (Gadya/Padya -> Husk, Scribe, & Council 405)",
 };
 
 pub const SeatReading = struct {

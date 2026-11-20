@@ -18,7 +18,7 @@ Pond holds **applications** that compose Rye OS modules above the kernel and com
 
 **Customs (landed `20260710.161125`):** [`customs.rye`](customs.rye) -- first policy concept. At receipt, each Tile mark earns **place**, **hold**, or **refuse**. Root allow-list: `plain-bytes` may be placed; `await-word` waits for a human word; unknown marks refuse whole. Amphora cold scrub calls `customs inspect` on the cellar manifest before restore. Witness: `tools/p/pond_customs.rish` (parity **230**).
 
-**First application:** [`apps/drawn_terminal.rye`](apps/drawn_terminal.rye) -- SLC-2a, the drawn terminal (Rishi session mirrored in a Brushstroke/Skate window). Granary weave view (`granaryviewtest`) folds resolve + Pulp onto Skate (parity **233**). Inference and commerce folds share that same glass.
+**First application:** [`apps/drawn_terminal.rye`](apps/drawn_terminal.rye) -- SLC-2a, the drawn terminal (Rishi session mirrored in a Brushstroke/Skate window). Granary weave view (`granaryviewtest`) folds resolve + Husk onto Skate (parity **233**). Inference and commerce folds share that same glass.
 
 **Enclosure policy (written `20260828.002135`, landed `20260828.144500`):** [`enclosure_policy.rye`](enclosure_policy.rye) -- the enclosure written as a value rather than assembled as launch flags. One Kyri record per line names what is mapped in, what may be written, whether the home dissolves at exit, and whether the network reaches out; each declaration is marked **place**, **hold**, or **refuse** at receipt, and a refusing policy **names the declaration** so an operator reads which line to open. The refusal roster is the seated one from [`../docs/ENCLOSURE.md`](../docs/ENCLOSURE.md) -- *what not to widen in ai-jail* -- so a ruling becomes a thing a program checks. Today's lap reads at [`enclosure_policy.kyri`](enclosure_policy.kyri). Witness: [`../tools/p/pond_enclosure_policy_witness.rish`](../tools/p/pond_enclosure_policy_witness.rish), which plants one forbidden mount and then removes it, so the refusal is proven from both sides. This is orbit one of the quest that retires ai-jail, whose plan stands in `expanding-prompts/` as `20260826-033051_pond-completes-the-enclosure.md` -- named rather than linked, because the seed carries that room under a scrub rather than an allow; the declarations are read here and driven in orbit two.
 
@@ -36,7 +36,7 @@ Rye resolves modules from the compile directory. Under `pond/apps/`:
 |------|-----------|
 | `rishi` | `../../rishi/src` |
 | `brushstroke` | `../../brushstroke` |
-| `granary/` | `../../../granary` core + Kumara / Tally / Pulp seams |
+| `granary/` | `../../../granary` core + Kumara / Tally / Husk seams |
 
 These symlinks let `drawn_terminal.rye` import `rishi/main.rye` and `brushstroke/wayland_seed.rye`.
 

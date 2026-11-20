@@ -57,7 +57,7 @@ Counsel reports state and names gates; the rhythm belongs to Keaton.
 - **Where a lap wants fresh attention for engineering reasons**, name the technical reason once, plainly, and leave the timing alone.
 - **A twice-repeated unasked suggestion is a red** to own out loud, rather than an argument to press harder.
 
-Standing practice also lives in the collaboration rule and in [`../context/QUIN.md`](../context/QUIN.md).
+Standing practice also lives in the collaboration rule and in [`../context/KYRI.md`](../context/KYRI.md).
 
 ---
 

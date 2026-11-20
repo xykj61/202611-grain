@@ -9,7 +9,7 @@
 - **`languages/`:** `rye/`, `glow/`, `rishi/`, `brix/`, and `kyri/`.
 - **`modules/`:** System-critical TAME faculties (`aurora`, `tally`, `caravan`,
   `pond` + `puddle`, `crypto`, `kumara`, `comlink` + `vantage` + `council_405`,
-  `amphora`, `blaze`, `tablecloth`, `harness`, `flare` + `pulp`, `brushstroke`,
+  `amphora`, `blaze`, `tablecloth`, `harness`, `flare` + `husk`, `brushstroke`,
   `resonance`, `market`, `sundial`, `fusion`, and `apps`), each co-locating
   `.glow` desks in `glow/`.
 - **`libraries/`:** Four-year *Bloom & Shastra* curriculum (`shastra/`),

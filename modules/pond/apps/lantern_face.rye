@@ -1,7 +1,7 @@
 //! lantern_face.rye -- the first Lantern face: an asking-voice exchange on the Skate grid.
 //!
 //! Lantern is the asking voice -- the honest question and the honest "i don't know"
-//! (context/QUIN.md). This face paints one bounded exchange onto the 40x8 proof grid:
+//! (context/KYRI.md). This face paints one bounded exchange onto the 40x8 proof grid:
 //! the question row, the answer row, and a marker row naming how settled the answer is.
 //! The face's own law is the voice's contract made structural: **an unknown that
 //! carries an answer refuses** (AnswerWithUnknown), so uncertainty is named rather

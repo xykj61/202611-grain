@@ -92,7 +92,7 @@ pub const hub_doors = [_][]const u8{
     "context/SILO_TECHNIQUE.md",
     "context/SIMPLE_LOVABLE_COMPLETE.md",
     "context/BREACH.md",
-    "context/QUIN.md",
+    "context/KYRI.md",
 };
 
 fn verify_myofascia_density(a: std.mem.Allocator, io: std.Io) !u32 {

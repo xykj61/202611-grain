@@ -6,7 +6,7 @@
 **Registers:** Gauge - Civic - TAME
 **Voice:** Kyri
 **Status:** Living -- a foundation, written for a complete beginner -- **Vision room**: a faculty of the writing voice; its figures stand as illustration rather than as claim.
-**Kin:** [`../context/KYRI.md`](../context/KYRI.md) - the four voices: [Lattice](20260823-212603_the-lattice-voice.md) - [Pulp](20260823-212604_the-pulp-voice.md) - [Lantern](20260823-212605_the-lantern-voice.md) - [Kiln](20260827-195316_the-kiln-voice.md)
+**Kin:** [`../context/KYRI.md`](../context/KYRI.md) - the four voices: [Lattice](20260823-212603_the-lattice-voice.md) - [Husk](20260823-212604_the-husk-voice.md) - [Lantern](20260823-212605_the-lantern-voice.md) - [Kiln](20260827-195316_the-kiln-voice.md)
 
 ---
 

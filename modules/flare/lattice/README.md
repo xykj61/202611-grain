@@ -5,7 +5,7 @@
 **Where this sits:** home is [`../README.md`](../README.md) - a first hour in your hands is
 [`../docs-geode/tutorials/the-first-hour.md`](../docs-geode/tutorials/the-first-hour.md) - the whole
 path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
-**Kin:** [`Lantern`](../lantern/README.md) serves what Lattice counts, [`Flare`](../flare/README.md) forges the corpus, [`Pulp`](../pulp/README.md) reads it -- the four faculties of the **Q-vane** (`context/QUIN.md`) (the card seated **Lumen** as this module's name on `20260816` and 80 living pages still say Q-vane -- **REDS %300**, open and gated) - the trinity essay [`Lantern, Lattice, Kiln`](../foundations/20260827-025117_lantern-lattice-kiln.md) - the bounds law [`tame-guidance`](../.claude/rules/tame-guidance.md), which is why every op asserts its shape
+**Kin:** [`Lantern`](../lantern/README.md) serves what Lattice counts, [`Flare`](../flare/README.md) forges the corpus, [`Husk`](../husk/README.md) reads it -- the four faculties of **Flare** (the card seated **Lumen** as this module's name on `20260816` and 80 living pages still say Q-vane -- **REDS %300**, open and gated) - the trinity essay [`Lantern, Lattice, Kiln`](../foundations/20260827-025117_lantern-lattice-kiln.md) - the bounds law [`tame-guidance`](../.claude/rules/tame-guidance.md), which is why every op asserts its shape
 
 ---
 

@@ -3,7 +3,7 @@
 **Language:** EN
 **Now Stamp:** `20261119.182903` (EST)
 **Originally Seated:** `20260724.143155`
-**Voice:** Reya / Kyri / Quin
+**Voice:** Reya / Kyri
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
 **Front Doors:** [`../README.md`](../README.md) |

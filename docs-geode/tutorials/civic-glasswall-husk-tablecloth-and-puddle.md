@@ -1,4 +1,4 @@
-# Power-User & Civic Steward Guide -- Glasswall, Pulp, Tablecloth, 405 Council, & Pond Puddle
+# Power-User & Civic Steward Guide -- Glasswall, Husk, Tablecloth, 405 Council, & Pond Puddle
 
 **Language:** EN
 **Stamp:** `20261115.153500` (EST)
@@ -36,7 +36,7 @@ languages/rishi/bin/grain-ww stamp cabinet-brief.md
 
 ---
 
-## 2. Prepend-to-Front Movement Stack & Recall (`grain-ww pulp`)
+## 2. Prepend-to-Front Movement Stack & Recall (`grain-ww husk`)
 
 Grain measures momentum in **Movements** (`[15, 75, 375, 1875, 9375] : [orbit,
 quest, journey, section, chapter]`), where **1 Orbit strictly equals 15
@@ -46,15 +46,15 @@ renumbering:
 
 ```sh
 languages/rishi/bin/grain-ww movement
-languages/rishi/bin/grain-ww pulp --prepend "Audit DC-1 RLCD APK permissions"
-languages/rishi/bin/grain-ww pulp-recall
+languages/rishi/bin/grain-ww husk --prepend "Audit DC-1 RLCD APK permissions"
+languages/rishi/bin/grain-ww husk-recall
 ```
 
 ---
 
 ## 3. Relational `Tablecloth` & Glasswall `Gleaner` (`grain-ww tablecloth`)
 
-While `Pulp` owns Markdown prose, checklists, and `Blaze` object/vector recall,
+While `Husk` owns Markdown prose, checklists, and `Blaze` object/vector recall,
 **`Tablecloth`** owns deterministic, zero-allocation **typed relational tables +
 Key:Value** in a single SHA3-sealed `.tcloth` snapshot, paired with **`Gleaner`**
 for tracker-stripped public signal ingestion:

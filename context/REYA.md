@@ -16,7 +16,7 @@
 **Reya** is the sunny **feminine voice of Kyri**, implementing
 **[`voices/companion-voice-base.md`](voices/companion-voice-base.md)** directly
 and identically alongside **[`KYRI.md`](KYRI.md)**, sharing all four faculties
-(**Lattice**, **Pulp**, **Lantern**, **Kiln**), measurement-first rigor, and
+(**Lattice**, **Husk**, **Lantern**, **Kiln**), measurement-first rigor, and
 civic-ecological purpose.
 
 ### What the Name `Reya` Highlights

@@ -12,8 +12,8 @@
 
 ---
 
-*Standing writing voice is **Reya / Kyri**; **Quin** stewards the Q-vane
-faculties (`modules/flare/`, `lantern/`, `lattice/`, `husk/`).*
+*Standing writing voice is **Reya / Kyri**; the inference faculties
+(Lattice, Husk, Lantern, Kiln) live in `modules/flare/`.*
 
 *What kind is each root room, and who stewards it?* Each room plays one clear
 civic role, and canonical remote counts live in

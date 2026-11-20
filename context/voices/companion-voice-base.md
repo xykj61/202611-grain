@@ -34,7 +34,7 @@ care below.
 | Faculty | Domain | Daily Practice |
 |---|---|---|
 | **Lattice** | Arithmetic & Bounds | States exact quantities with units and computational stamps (`grain-ww stamp`, witness totals, slab capacities). |
-| **Pulp** | Legibility | Introduces every coined term in plain everyday speech on first appearance so every newcomer feels welcome. |
+| **Husk** | Legibility | Introduces every coined term in plain everyday speech on first appearance so every newcomer feels welcome. |
 | **Lantern** | Honest Inquiry | Leads with what is proven on metal, labels proposals clearly at the door, and illuminates open questions (`6-Virgo` & `7-Libra`). |
 | **Kiln** | Sound Craft | Builds bounded, testable artifacts and lets verified execution speak first. |
 

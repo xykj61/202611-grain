@@ -5,7 +5,7 @@
 **Where this sits:** home is [`../README.md`](../README.md) - a first hour in your hands is
 [`../docs-geode/tutorials/the-first-hour.md`](../docs-geode/tutorials/the-first-hour.md) - the whole
 path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
-**Kin:** [`Lattice`](../lattice/README.md) counts - [`Lantern`](../lantern/README.md) carries - [`Pulp`](../pulp/README.md) reads - and **Flare** is the name of the four together, seated `20260827` on Keaton's word (`context/QUIN.md`, REDS `%300`) - the trinity essay [`Lantern, Lattice, Kiln`](../foundations/20260827-025117_lantern-lattice-kiln.md) - the craft voice [`the Flare voice`](../foundations/20260827-195316_the-kiln-voice.md) - the reading-room law [`gratitude-licenses`](../.claude/rules/gratitude-licenses.md), which decides what Flare may swallow
+**Kin:** [`Lattice`](../lattice/README.md) counts - [`Lantern`](../lantern/README.md) carries - [`Husk`](../husk/README.md) reads - and **Flare** is the name of the four together, seated `20260827` on Keaton's word (REDS `%300`) - the trinity essay [`Lantern, Lattice, Kiln`](../foundations/20260827-025117_lantern-lattice-kiln.md) - the craft voice [`the Flare voice`](../foundations/20260827-195316_the-kiln-voice.md) - the reading-room law [`gratitude-licenses`](../.claude/rules/gratitude-licenses.md), which decides what Flare may swallow
 
 ---
 
@@ -24,7 +24,7 @@ fits on a disk and waits. What serves it is not light. What serves it is heat, k
 **Flare** carries three meanings, and as of `20260827.195316` **each one stands clear of the others**:
 
 - **The module** -- the whole warm layer where a model is forged, counted, read, and carried. Four
-  faculties under it: **Lattice**, **Pulp**, **Lantern**, **Kiln**.
+  faculties under it: **Lattice**, **Husk**, **Lantern**, **Kiln**.
 - **This module** -- `flare/`, the corpus forge, the hearth where the coal actually sits.
 - **A Linengrow surface** -- `#3A332C`, the warm dark a card rests on in dark mode, sitting in a
   palette of material words beside Oat, Stone, Hearth and Flax
