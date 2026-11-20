@@ -22,13 +22,13 @@ the foundation and brings deferred molts forward.*
 - [x] **[Virgo, `20261119.220812`, `57.120`]** Ring-0 cross-compile witness: all 4 modules compile to riscv64-freestanding ELF. Deferred molts (murr_core, compass_sky) audited -- both deeply entangled, need door approval
 - [x] **[Libra, `20261119.221001`, `57.121`]** Add 6 Conifer CLI terminal modules to witness_all (105 proofs). All compile and pass selftests: history, key, line, prompt, shell, terminal
 - [x] **[Scorpio, `20261119.221059`, `57.122`]** Update grain_ww_closure.brix with 6 Conifer + Ring-0 witness. Version stamp 20261119.221001. Fusion sow GREEN
-- [ ] **[Sagittarius]** Refresh ITINERARY with Orbit 10 final state
-- [ ] **[Capricorn]** Final witness_all run + publish-seed
-- [ ] **[Aquarius]** Refresh this checklist with final stamps
-- [ ] **[Pisces]** Verify 208 assertions across witness_all
-- [ ] **[Cardinal Sky]** Final audit-clean + manifest-cover check
-- [ ] **[Fixed Sky]** Publish-seed with 105 proofs
-- [ ] **[Siya]** Seal Orbit 10 -- standfast complete, 105 proofs on metal
+- [x] **[Sagittarius, `20261119.221141`, `57.123`]** Refresh ITINERARY (622 movements, Myofascia 57.122) + checklist with all 8 stamps
+- [x] **[Capricorn, `20261119.221326`, `57.124`]** Final witness_all GREEN (105 proofs, 208 assertions). audit-clean GREEN (9872 files). manifest-cover OK. publish-seed GREEN (c9d9ac9e -> grain-ww/202611-grain)
+- [x] **[Aquarius, `20261119.221326`, `57.125`]** Refresh checklist with final stamps
+- [x] **[Pisces, `20261119.221326`, `57.126`]** 208 assertions verified across witness_all
+- [x] **[Cardinal Sky, `20261119.221326`, `57.127`]** audit-clean + manifest-cover both GREEN
+- [x] **[Fixed Sky, `20261119.221326`, `57.128`]** Publish-seed GREEN with 105 proofs
+- [x] **[Siya, `20261119.221326`, `57.129`]** Sealed Orbit 10: STANDFAST complete. Toolchain bootstrapped (rye + rishi + grain-ww + digraph_twin_check + fusion_sow). 3 compile errors fixed. 14 modules added to witness_all (8 Carry + 6 Conifer). 4 Ring-0 modules cross-compile to riscv64-freestanding ELF. First-hour tutorial synced. Manifest cover fixed. 105 proofs, 208 assertions on metal. publish-seed GREEN x3
 
 ---
 
