@@ -2,7 +2,7 @@
 //!
 //! Chapter G (Open Media Primitives) -- the bridge rung. The tree grew two families side by side and never let them
 //! meet on metal. One is the terminal grid: scooter_view.rye folds a channel into a fixed 24x80 grid of character
-//! CELLS (bytes), dexter_line.rye edits a bounded line, scooter_compose.rye joins them into a composed frame -- all
+//! CELLS (bytes), conifer_line.rye edits a bounded line, scooter_compose.rye joins them into a composed frame -- all
 //! held as BYTES a keeper reads. The other is the open-media paint family: font5x7_ascii.rye draws every printable
 //! ASCII glyph, text_paint.rye composites a laid line's coverage into an RGBA grid, qoi.rye owns the pixel target.
 //! This module is the join -- it paints a monospace grid of character bytes into a real image, so a terminal face is

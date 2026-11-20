@@ -8,9 +8,9 @@
 //! drives with a single keyboard. This module is that join: it holds one compose Session and one read View over
 //! the same channel, and routes each decoded keystroke to the half it belongs to.
 //!
-//! The routing is a clean partition of dexter_key's KeyKind, so every key has exactly one home:
+//! The routing is a clean partition of conifer_key's KeyKind, so every key has exactly one home:
 //!   - Editing keys (a printable byte, Backspace, forward-Delete, Left/Right, Home/End) edit the PROMPT line
-//!     through dexter_key.apply -- Home and End are the input line's own start/end, the readline motion a typist
+//!     through conifer_key.apply -- Home and End are the input line's own start/end, the readline motion a typist
 //!     expects, so the prompt keeps its full editing model unchanged.
 //!   - Navigation keys (Up/Down, Page Up/Page Down) scroll the read VIEW through scooter_nav.apply_key -- the
 //!     scrollback affordance a reader expects, disjoint from the editing set so no key means two things.
@@ -37,7 +37,7 @@ const read = @import("scooter_read.rye");
 const scroll = @import("scooter_scroll.rye");
 const view = @import("scooter_view.rye");
 const nav = @import("scooter_nav.rye");
-const key = @import("dexter_key.rye");
+const key = @import("conifer_key.rye");
 
 pub const scooter_session_version = "20260817.113000";
 

@@ -1,8 +1,8 @@
-//! pond/apps/dexter_terminal.rye -- Dexter, the full terminal: a channel's journal above, a prompt below.
+//! pond/apps/conifer_terminal.rye -- Conifer, the full terminal: a channel's journal above, a prompt below.
 //!
 //! Chapter G (Open Media Primitives) -- the terminal family, the capstone of its drawn surface. The pieces
-//! all stand green on their own: scooter_view.rye folds a channel's journal into a bounded grid; dexter_line
-//! holds an editable line; dexter_prompt draws that line into a row with the caret always visible. This rung
+//! all stand green on their own: scooter_view.rye folds a channel's journal into a bounded grid; conifer_line
+//! holds an editable line; conifer_prompt draws that line into a row with the caret always visible. This rung
 //! joins them into ONE terminal a keeper reads at a glance -- the conversation filling the rows above, the
 //! prompt they are typing on the last row -- exactly the shape of a chat client at the command line. It is
 //! pure composition (each piece called through its public API, none touched) and held pure: no raw terminal,
@@ -13,27 +13,27 @@
 //! The crux is one screen composed cleanly, the two regions disjoint:
 //!   - The journal fills the rows above the prompt. render_terminal draws the channel into the top rows
 //!     with scooter_view.render_within, given a body budget one row short so the prompt has its own row.
-//!   - The prompt is the last row. dexter_prompt draws the editable line there; the caret's absolute place
+//!   - The prompt is the last row. conifer_prompt draws the editable line there; the caret's absolute place
 //!     on the screen (its row and column) is tracked, always the last row and always within the width.
 //!   - The regions never overlap. The journal writes only rows 0..term_rows-2, the prompt only the last row.
 //!   - The whole screen is exactly term_rows x term_cols, and the fold is referentially transparent.
 //!
 //! Facts only, custody-first: it draws a conversation and a prompt and holds nothing else -- no network, no key.
 //!
-//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/dexter_terminal.rye -femit-bin=pond/bin/dexter-terminal
-//!   pond/bin/dexter-terminal selftest
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/conifer_terminal.rye -femit-bin=pond/bin/conifer-terminal
+//!   pond/bin/conifer-terminal selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const channel = @import("scooter_channel.rye");
 const view = @import("scooter_view.rye");
-const line = @import("dexter_line.rye");
-const prompt = @import("dexter_prompt.rye");
+const line = @import("conifer_line.rye");
+const prompt = @import("conifer_prompt.rye");
 
-pub const dexter_terminal_version = "20260817.044800";
+pub const conifer_terminal_version = "20260817.044800";
 
-/// The terminal is the same fixed grid scooter_view and dexter_prompt draw in -- 24 rows of 80 columns.
+/// The terminal is the same fixed grid scooter_view and conifer_prompt draw in -- 24 rows of 80 columns.
 pub const term_rows: u32 = view.frame_rows;
 pub const term_cols: u32 = view.frame_cols;
 
@@ -127,7 +127,7 @@ fn journal_above_prompt_below() !void {
     // The caret sits on the prompt row, just past the typed text.
     assert(term.caret_row == prompt_row);
     assert(term.caret_col == 7); // prefix 2 + cursor 5
-    print("dexter_terminal: the journal fills the rows above and the prompt is the last row, the caret on it.\n", .{});
+    print("conifer_terminal: the journal fills the rows above and the prompt is the last row, the caret on it.\n", .{});
 }
 
 fn the_regions_never_overlap() !void {
@@ -148,7 +148,7 @@ fn the_regions_never_overlap() !void {
     assert(above.len >= 2);
     assert(above[0] == '(');
     assert(above[1] == '+');
-    print("dexter_terminal: even a full journal leaves the last row for the prompt; the regions never overlap.\n", .{});
+    print("conifer_terminal: even a full journal leaves the last row for the prompt; the regions never overlap.\n", .{});
 }
 
 fn structurally_exact_and_deterministic() !void {
@@ -167,22 +167,22 @@ fn structurally_exact_and_deterministic() !void {
     // Determinism: the same channel and line render the same screen.
     const again = try render_terminal(&ch, "$ ", &l);
     assert(std.mem.eql(u8, &term.cells, &again.cells));
-    print("dexter_terminal: the screen is exactly 24x80, every row the true width, and the fold is deterministic.\n", .{});
+    print("conifer_terminal: the screen is exactly 24x80, every row the true width, and the fold is deterministic.\n", .{});
 }
 
 fn run_selftest() !u8 {
     try journal_above_prompt_below();
     try the_regions_never_overlap();
     try structurally_exact_and_deterministic();
-    print("dexter_terminal: version {s}\n", .{dexter_terminal_version});
-    print("GREEN: dexter_terminal; a channel's journal and an editable line composed into one {d}x{d} screen -- the conversation above, the prompt on the last row, the two regions disjoint and the caret always on the prompt.\n", .{ term_rows, term_cols });
+    print("conifer_terminal: version {s}\n", .{conifer_terminal_version});
+    print("GREEN: conifer_terminal; a channel's journal and an editable line composed into one {d}x{d} screen -- the conversation above, the prompt on the last row, the two regions disjoint and the caret always on the prompt.\n", .{ term_rows, term_cols });
     return 0;
 }
 
 pub fn main(init: std.process.Init) !u8 {
     const garden = init.arena.allocator();
     const args = try init.minimal.args.toSlice(garden);
-    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "dexter-terminal"))) {
+    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "conifer-terminal"))) {
         return run_selftest();
     }
     return run_selftest();

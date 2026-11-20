@@ -1,14 +1,14 @@
 //! pond/apps/scooter_nav.rye -- Scooter, the read binding: navigation keys drive a held view.
 //!
-//! Chapter G (Open Media Primitives) -- the terminal family. Three proven floors now stand: dexter_key names a
+//! Chapter G (Open Media Primitives) -- the terminal family. Three proven floors now stand: conifer_key names a
 //! keeper's navigation keys (nav_up/nav_down/page_up/page_down, plus Home/End), scooter_read holds one bounded
 //! scroll position with paging verbs, and scooter_view.render_window draws the slice at that position. This
 //! module is the small binding that joins them: it maps a decoded Key to the read view's matching paging verb,
 //! so a run of keyboard bytes scrolls a held view and each step is drawable. It is the READ-side twin of
 //! scooter_input, which drove keystroke bytes into the WRITE prompt; this drives them into the read position.
-//! Held PURE -- it reads a byte SLICE a caller already has (via dexter_key's pure decode), owns no view or
+//! Held PURE -- it reads a byte SLICE a caller already has (via conifer_key's pure decode), owns no view or
 //! channel of its own, and touches no pixel: the caller holds the View, this only moves its position.
-//! Pattern elder: pond/apps/scooter_input.rye -- the same bounded drive over dexter_key's decode, write-side.
+//! Pattern elder: pond/apps/scooter_input.rye -- the same bounded drive over conifer_key's decode, write-side.
 //!
 //! The crux is one faithful binding held strictly bounded:
 //!   - nav_up steps one post older, nav_down one newer; page_up/page_down move a whole page; Home jumps to the
@@ -30,11 +30,11 @@ const print = std.debug.print;
 const channel = @import("scooter_channel.rye");
 const read = @import("scooter_read.rye");
 const view = @import("scooter_view.rye");
-const key = @import("dexter_key.rye");
+const key = @import("conifer_key.rye");
 
 pub const scooter_nav_version = "20260817.111500";
 
-/// A decoded byte run holds at most this many bytes -- the same bound dexter_key reads under, so a navigation
+/// A decoded byte run holds at most this many bytes -- the same bound conifer_key reads under, so a navigation
 /// read never grows unbounded. A caller with more feeds the binding in slices.
 pub const max_input: u32 = key.max_input;
 

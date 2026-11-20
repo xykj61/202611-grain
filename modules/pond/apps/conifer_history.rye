@@ -1,6 +1,6 @@
-//! pond/apps/dexter_history.rye -- Dexter, the bounded history ring: recall of past lines at a prompt.
+//! pond/apps/conifer_history.rye -- Conifer, the bounded history ring: recall of past lines at a prompt.
 //!
-//! Chapter G (Open Media Primitives) -- the terminal family. dexter_line.rye holds one editable line (the
+//! Chapter G (Open Media Primitives) -- the terminal family. conifer_line.rye holds one editable line (the
 //! input half); this module remembers the lines already committed, so a keeper walks back through what they
 //! typed -- the up-and-down-arrow recall every shell prompt carries. It is the second half of the terminal
 //! family's plan round 5 (the editable line, then its history), held pure: no raw terminal, no escape codes,
@@ -18,19 +18,19 @@
 //!
 //! Facts only, custody-first: it remembers lines of text and holds nothing else -- no network, no key, no funds.
 //!
-//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/dexter_history.rye -femit-bin=pond/bin/dexter-history
-//!   pond/bin/dexter-history selftest
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/conifer_history.rye -femit-bin=pond/bin/conifer-history
+//!   pond/bin/conifer-history selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const dexter_history_version = "20260817.043000";
+pub const conifer_history_version = "20260817.043000";
 
 /// The ring remembers at most this many past lines -- power of two, bounded so history never grows unbounded.
 pub const max_history: u32 = 64;
 
-/// Each remembered line holds at most this many bytes -- matches dexter_line's max_line, so any line the
+/// Each remembered line holds at most this many bytes -- matches conifer_line's max_line, so any line the
 /// editor holds can be committed whole. A longer line is refused rather than truncated.
 pub const max_entry: u32 = 256;
 
@@ -168,7 +168,7 @@ fn commit_remembers_newest() !void {
     assert(std.mem.eql(u8, h.entry(0).text(), "one"));
     assert(std.mem.eql(u8, h.entry(1).text(), "two"));
     assert(std.mem.eql(u8, h.entry(2).text(), "three"));
-    print("dexter_history: commit remembers each finished line, oldest first, byte-for-byte.\n", .{});
+    print("conifer_history: commit remembers each finished line, oldest first, byte-for-byte.\n", .{});
 }
 
 fn recall_walks_the_cursor() !void {
@@ -200,7 +200,7 @@ fn recall_walks_the_cursor() !void {
     assert(!h.is_browsing());
     const past_live = h.recall_next();
     assert(past_live == error.NoLater);
-    print("dexter_history: recall_prev walks toward older lines, recall_next toward newer, off the newest is the live edge.\n", .{});
+    print("conifer_history: recall_prev walks toward older lines, recall_next toward newer, off the newest is the live edge.\n", .{});
 }
 
 fn ring_drops_the_oldest() !void {
@@ -219,7 +219,7 @@ fn ring_drops_the_oldest() !void {
     assert(std.mem.eql(u8, h.entry(0).text(), oldest));
     const newest = std.fmt.bufPrint(&buf, "line{d}", .{total - 1}) catch unreachable;
     assert(std.mem.eql(u8, h.entry(max_history - 1).text(), newest));
-    print("dexter_history: at the cap the ring drops the oldest, holding the most recent {d} lines.\n", .{max_history});
+    print("conifer_history: at the cap the ring drops the oldest, holding the most recent {d} lines.\n", .{max_history});
 }
 
 fn commit_resets_to_live_edge() !void {
@@ -237,7 +237,7 @@ fn commit_resets_to_live_edge() !void {
     const refused = h.commit(long[0..]);
     assert(refused == error.EntryTooLong);
     assert(h.len() == 3);
-    print("dexter_history: a commit drops back to the live edge, and an over-long line is refused not truncated.\n", .{});
+    print("conifer_history: a commit drops back to the live edge, and an over-long line is refused not truncated.\n", .{});
 }
 
 fn run_selftest() !u8 {
@@ -245,15 +245,15 @@ fn run_selftest() !u8 {
     try recall_walks_the_cursor();
     try ring_drops_the_oldest();
     try commit_resets_to_live_edge();
-    print("dexter_history: version {s}\n", .{dexter_history_version});
-    print("GREEN: dexter_history; a bounded ring of at most {d} past lines -- commit remembers the newest, recall walks a cursor over the kept lines, and the ring drops the oldest at the cap, deterministic every time.\n", .{max_history});
+    print("conifer_history: version {s}\n", .{conifer_history_version});
+    print("GREEN: conifer_history; a bounded ring of at most {d} past lines -- commit remembers the newest, recall walks a cursor over the kept lines, and the ring drops the oldest at the cap, deterministic every time.\n", .{max_history});
     return 0;
 }
 
 pub fn main(init: std.process.Init) !u8 {
     const garden = init.arena.allocator();
     const args = try init.minimal.args.toSlice(garden);
-    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "dexter-history"))) {
+    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "conifer-history"))) {
         return run_selftest();
     }
     return run_selftest();

@@ -66,11 +66,11 @@ paired welcome/refusal. Seed publishes at Siya 15/15.*
 - [x] **[Libra, `20261119.205848`, `57.106`]** `carry_device_setup.rye` -- 5-stage USB pipeline bounded (2 welcome + 5 refusal)
 - [x] **[Scorpio, `20261119.210207`, `57.107`]** `aurora_framebuf_ring0.rye` -- TAME Ring-0 framebuffer (bounded pixel writes, Glasswall write-only, sifive_test 0x0001_3333 fail-stop)
 - [x] **[Sagittarius, `20261119.210207`, `57.108`]** `pond_wire_ring0.rye` -- Ring-0 Pond wire protocol (length-prefixed SHA3-checksummed frames over UART, 16-frame bounded SendQueue)
-- [ ] **[TOP -- Capricorn, `57.109`]** `puddle_ring0.rye` -- Ring-0 Puddle session over pond_wire (packet exchange, session stamp, CRDT-ready)
-- [ ] **[Aquarius, `57.110`]** Update `grain_ww_closure.brix` with all new Carry + Ring-0 modules
-- [ ] **[Pisces, `57.111`]** Ring-0 integration witness -- boot -> aurora_framebuf -> pond_wire -> puddle session path
-- [ ] **[Cardinal Sky, `57.112`]** Sweep retired terms + retire non-TAME desk_hold/dexter_keyboard stubs from plan
-- [ ] **[Fixed Sky, `57.113`]** Refresh all checklists + Myofascia vector
+- [x] **[Capricorn, `20261119.210344`, `57.109`]** `puddle_ring0.rye` -- Ring-0 Puddle session over pond_wire (CRDT monotonic seq, peer auth, 16-msg inbox)
+- [x] **[Aquarius, `20261119.210709`, `57.110`]** Updated `grain_ww_closure.brix` with 8 Carry + 3 Ring-0 + 3 Glow desks
+- [x] **[Pisces, `20261119.211959`, `57.111`]** `ring0_integration_witness.rye` -- boot -> aurora_framebuf -> pond_wire -> puddle full path proof
+- [x] **[Cardinal Sky, `20261119.212359`, `57.112`]** Molt dexter -> conifer (6 files renamed, 5 importers repointed, shed-prep + study updated, linengrow glass entangled logged)
+- [ ] **[TOP -- Fixed Sky, `57.113`]** Refresh all checklists + Myofascia vector
 - [ ] **[Siya, `57.114`]** Seal Orbit 9 + `publish-seed.rish --push`
 
 ---

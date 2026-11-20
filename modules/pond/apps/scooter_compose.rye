@@ -4,10 +4,10 @@
 //!   - scooter_channel.rye keeps a permissioned, append-only journal,
 //!   - scooter_keyed.rye binds each post to a Kumara identity,
 //!   - scooter_view.rye folds a channel into a bounded 24x80 terminal frame a keeper reads,
-//!   - dexter_line.rye holds a bounded editable line, the input half.
+//!   - conifer_line.rye holds a bounded editable line, the input half.
 //! This rung joins them into one act: a keeper types a line and watches it land in the conversation. It was
 //! designed for from both sides -- scooter_view.render_within reserves its last row "for a prompt" and passes
-//! the journal a smaller budget so the prompt has room; dexter_line holds the editable line the prompt draws.
+//! the journal a smaller budget so the prompt has room; conifer_line holds the editable line the prompt draws.
 //! Design read: active-designing/date/20260817/20260817-085923_scooter-compose-crux.md
 //! Pattern elder: pond/apps/scooter_view.rye -- the same bounded fold, held pure over the family's public API.
 //!
@@ -21,7 +21,7 @@
 //!
 //! Facts only, custody-first: it edits a line and appends a post to a channel a member already holds -- no
 //! network, no key held, no funds. The wire between two Constel piers reaches the serve gate (the maintainer's
-//! hand), and the raw TTY with escape codes is Dexter's own later rung.
+//! hand), and the raw TTY with escape codes is Conifer's own later rung.
 //!
 //!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/scooter_compose.rye -femit-bin=pond/bin/scooter-compose
 //!   pond/bin/scooter-compose selftest
@@ -31,7 +31,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const channel = @import("scooter_channel.rye");
 const view = @import("scooter_view.rye");
-const line = @import("dexter_line.rye");
+const line = @import("conifer_line.rye");
 
 pub const scooter_compose_version = "20260817.085923";
 
@@ -69,7 +69,7 @@ pub const Session = struct {
         return s;
     }
 
-    /// The editable prompt line -- a caller edits it through dexter_line's own proven API (insert, backspace,
+    /// The editable prompt line -- a caller edits it through conifer_line's own proven API (insert, backspace,
     /// cursor motion) rather than through re-wrapped copies, so the line's bounds are enforced in one place.
     pub fn prompt(self: *Session) *line.Line {
         // invariant: the held prompt is always within the line bound.

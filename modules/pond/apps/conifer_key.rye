@@ -1,17 +1,17 @@
-//! pond/apps/dexter_key.rye -- Dexter, the keystroke decoder: raw input bytes to bounded key events.
+//! pond/apps/conifer_key.rye -- Conifer, the keystroke decoder: raw input bytes to bounded key events.
 //!
-//! Chapter G (Open Media Primitives) -- the terminal family. dexter_line.rye holds a bounded editable line
+//! Chapter G (Open Media Primitives) -- the terminal family. conifer_line.rye holds a bounded editable line
 //! (insert, delete, cursor motion) and scooter_compose.rye joins it to a channel; both act on already-named
 //! actions. Between them and a real terminal sits one missing floor: a keeper's keyboard hands a terminal
 //! BYTES, and a printable byte is one thing while an arrow key is the three bytes ESC '[' 'D'. This module is
 //! that decoder -- bytes in, a bounded run of decoded Key events out, then a driver that edits a line.
 //! Held pure on purpose: it reads a byte SLICE a caller already has, never a raw TTY and never the network,
 //! so a headless witness replays any keystroke path without a terminal. The raw TTY read (cbreak, escape
-//! timing) and the Comlink wire between two Constel piers are Dexter's later rungs -- they reach the serve
+//! timing) and the Comlink wire between two Constel piers are Conifer's later rungs -- they reach the serve
 //! gate, the maintainer's hand. This byte-to-key floor is what those rungs stand on.
-//! Pattern elder: pond/apps/dexter_line.rye -- the same bounded state machine, named errors, >=2 asserts.
+//! Pattern elder: pond/apps/conifer_line.rye -- the same bounded state machine, named errors, >=2 asserts.
 //! Value-model kin: pond/apps/window_input.rye -- the glass-keyboard glass keyboard's pre-decoded Action; this is the
-//! Dexter terminal's own byte-level decoder with a real cursor, arrows, home/end, and forward-delete.
+//! Conifer terminal's own byte-level decoder with a real cursor, arrows, home/end, and forward-delete.
 //!
 //! The crux is one faithful mapping held strictly bounded:
 //!   - A printable ASCII byte (0x20..0x7e) decodes to a printable key carrying that byte.
@@ -29,15 +29,15 @@
 //!
 //! Facts only, custody-first: it decodes bytes and edits a line of text -- no network, no key held, no funds.
 //!
-//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/dexter_key.rye -femit-bin=pond/bin/dexter-key
-//!   pond/bin/dexter-key selftest
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/conifer_key.rye -femit-bin=pond/bin/conifer-key
+//!   pond/bin/conifer-key selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
-const line = @import("dexter_line.rye");
+const line = @import("conifer_line.rye");
 
-pub const dexter_key_version = "20260817.110900";
+pub const conifer_key_version = "20260817.110900";
 
 /// A decoded byte run holds at most this many bytes -- bounded so a keystroke read never grows unbounded.
 /// A power of two comfortably past a paste of one line; a caller with more feeds the decoder in slices.
@@ -164,7 +164,7 @@ pub fn decode(bytes: []const u8) Step {
     return .{ .key = .{ .kind = .ignored }, .used = 1 };
 }
 
-/// Apply one decoded key to a line. A motion or edit runs through dexter_line's own proven API; a boundary
+/// Apply one decoded key to a line. A motion or edit runs through conifer_line's own proven API; a boundary
 /// refusal (Left at the start, Backspace on an empty line, a full line) is swallowed to a harmless no-op, the
 /// way a live terminal treats a key at the edge -- it does nothing rather than dying. Enter and ignored touch
 /// no bytes here (the caller submits on Enter). Returns the kind applied so a caller can act on Enter.
@@ -206,7 +206,7 @@ pub const Drive = struct {
 };
 
 /// Decode and apply a byte run into a line, stopping at the first Enter so a caller can submit between lines.
-/// Every keystroke edits within dexter_line's bounds; a boundary key is a no-op, so the drive never fails.
+/// Every keystroke edits within conifer_line's bounds; a boundary key is a no-op, so the drive never fails.
 pub fn drive(l: *line.Line, bytes: []const u8) Drive {
     // invariant: the driven run is bounded, and the line starts within its own bound.
     assert(bytes.len <= max_input);
@@ -242,7 +242,7 @@ fn printable_bytes_build_the_line() !void {
     assert(d.used == 5);
     assert(std.mem.eql(u8, l.text(), "hello"));
     assert(l.cursor == 5);
-    print("dexter_key: printable bytes decode to keys that build the line at the cursor.\n", .{});
+    print("conifer_key: printable bytes decode to keys that build the line at the cursor.\n", .{});
 }
 
 fn an_arrow_moves_the_cursor_and_splices() !void {
@@ -255,7 +255,7 @@ fn an_arrow_moves_the_cursor_and_splices() !void {
     _ = drive(&l, "\x1b[D"); // cursor now between 'l' and 'o'
     _ = drive(&l, "l");
     assert(std.mem.eql(u8, l.text(), "hello"));
-    print("dexter_key: a CSI left arrow moves the cursor, so a later byte splices mid-line.\n", .{});
+    print("conifer_key: a CSI left arrow moves the cursor, so a later byte splices mid-line.\n", .{});
 }
 
 fn home_end_and_delete_decode() !void {
@@ -275,7 +275,7 @@ fn home_end_and_delete_decode() !void {
     assert(end.key.kind == .end);
     _ = drive(&l, "\x1b[F");
     assert(l.cursor == 3);
-    print("dexter_key: Home, End, and the Delete key decode and drive the line as named.\n", .{});
+    print("conifer_key: Home, End, and the Delete key decode and drive the line as named.\n", .{});
 }
 
 fn backspace_and_enter_decode() !void {
@@ -289,7 +289,7 @@ fn backspace_and_enter_decode() !void {
     // A carriage return decodes to Enter, and drive stops on it reporting the bytes consumed.
     const cr = decode("\r");
     assert(cr.key.kind == .enter);
-    print("dexter_key: a DEL byte backspaces and a carriage return decodes to Enter.\n", .{});
+    print("conifer_key: a DEL byte backspaces and a carriage return decodes to Enter.\n", .{});
 }
 
 fn drive_stops_at_enter_between_lines() !void {
@@ -304,7 +304,7 @@ fn drive_stops_at_enter_between_lines() !void {
     const second = drive(&l, "two");
     assert(second.stop == .drained);
     assert(std.mem.eql(u8, l.text(), "two"));
-    print("dexter_key: drive stops at the first Enter, so a caller submits between lines.\n", .{});
+    print("conifer_key: drive stops at the first Enter, so a caller submits between lines.\n", .{});
 }
 
 fn boundary_keys_are_harmless_no_ops() !void {
@@ -319,7 +319,7 @@ fn boundary_keys_are_harmless_no_ops() !void {
     _ = drive(&l, "hi");
     _ = drive(&l, "\x1b[C"); // already at end
     assert(l.cursor == 2);
-    print("dexter_key: a key at the edge (Left at start, Backspace when empty, Right at end) is a harmless no-op.\n", .{});
+    print("conifer_key: a key at the edge (Left at start, Backspace when empty, Right at end) is a harmless no-op.\n", .{});
 }
 
 fn navigation_keys_decode() !void {
@@ -343,7 +343,7 @@ fn navigation_keys_decode() !void {
     _ = drive(&l, "\x1b[A\x1b[B\x1b[5~\x1b[6~");
     assert(std.mem.eql(u8, l.text(), "ab"));
     assert(l.cursor == 2);
-    print("dexter_key: Up/Down arrows and Page Up/Down decode to bounded navigation keys the line editor ignores.\n", .{});
+    print("conifer_key: Up/Down arrows and Page Up/Down decode to bounded navigation keys the line editor ignores.\n", .{});
 }
 
 fn unknown_sequences_are_ignored() !void {
@@ -362,7 +362,7 @@ fn unknown_sequences_are_ignored() !void {
     assert(tab.key.kind == .ignored);
     _ = drive(&l, "\x1b[Z\t");
     assert(std.mem.eql(u8, l.text(), "ab"));
-    print("dexter_key: an unknown escape, a lone ESC, and a tab all decode to ignored, no byte landing.\n", .{});
+    print("conifer_key: an unknown escape, a lone ESC, and a tab all decode to ignored, no byte landing.\n", .{});
 }
 
 fn decoding_is_deterministic() !void {
@@ -374,7 +374,7 @@ fn decoding_is_deterministic() !void {
     _ = drive(&b, run);
     assert(std.mem.eql(u8, a.text(), b.text()));
     assert(a.cursor == b.cursor);
-    print("dexter_key: the same byte run drives the same line every time.\n", .{});
+    print("conifer_key: the same byte run drives the same line every time.\n", .{});
 }
 
 fn run_selftest() !u8 {
@@ -387,15 +387,15 @@ fn run_selftest() !u8 {
     try navigation_keys_decode();
     try unknown_sequences_are_ignored();
     try decoding_is_deterministic();
-    print("dexter_key: version {s}\n", .{dexter_key_version});
-    print("GREEN: dexter_key; a keeper's keyboard bytes decode to bounded key events -- printable, backspace, forward-delete, arrows, Home/End, navigation (Up/Down, Page Up/Down), Enter -- and drive a bounded line, boundary keys a harmless no-op, navigation a line no-op, unknown sequences ignored, all pure and deterministic.\n", .{});
+    print("conifer_key: version {s}\n", .{conifer_key_version});
+    print("GREEN: conifer_key; a keeper's keyboard bytes decode to bounded key events -- printable, backspace, forward-delete, arrows, Home/End, navigation (Up/Down, Page Up/Down), Enter -- and drive a bounded line, boundary keys a harmless no-op, navigation a line no-op, unknown sequences ignored, all pure and deterministic.\n", .{});
     return 0;
 }
 
 pub fn main(init: std.process.Init) !u8 {
     const garden = init.arena.allocator();
     const args = try init.minimal.args.toSlice(garden);
-    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "dexter-key"))) {
+    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "conifer-key"))) {
         return run_selftest();
     }
     return run_selftest();

@@ -1,7 +1,7 @@
-//! pond/apps/dexter_shell.rye -- Dexter, the prompt session: an editable line married to its history.
+//! pond/apps/conifer_shell.rye -- Conifer, the prompt session: an editable line married to its history.
 //!
-//! Chapter G (Open Media Primitives) -- the terminal family. dexter_line.rye holds one editable line; the
-//! dexter_history.rye ring remembers the committed ones. This module weds them into the prompt state machine
+//! Chapter G (Open Media Primitives) -- the terminal family. conifer_line.rye holds one editable line; the
+//! conifer_history.rye ring remembers the committed ones. This module weds them into the prompt state machine
 //! a keeper actually drives: type into the line, submit it (remember it, clear the line for the next), and
 //! walk history with up/down -- recalling an older line INTO the editable line to run or edit again. It is
 //! pure composition over both modules' public APIs (neither is touched), and held pure: no raw terminal, no
@@ -19,16 +19,16 @@
 //!
 //! Facts only, custody-first: it holds a line and its history and nothing else -- no network, no key, no funds.
 //!
-//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/dexter_shell.rye -femit-bin=pond/bin/dexter-shell
-//!   pond/bin/dexter-shell selftest
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/conifer_shell.rye -femit-bin=pond/bin/conifer-shell
+//!   pond/bin/conifer-shell selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
-const line = @import("dexter_line.rye");
-const history = @import("dexter_history.rye");
+const line = @import("conifer_line.rye");
+const history = @import("conifer_history.rye");
 
-pub const dexter_shell_version = "20260817.043600";
+pub const conifer_shell_version = "20260817.043600";
 
 /// Replace an editable line's contents with the bytes of a remembered entry, cursor at the end. The bytes
 /// come from a committed line, so they are printable by construction; insert still refuses any that are not.
@@ -140,7 +140,7 @@ fn submit_remembers_and_clears() !void {
     assert(std.mem.eql(u8, p.current(), ""));
     assert(p.hist.len() == 1);
     assert(std.mem.eql(u8, p.hist.entry(0).text(), "echo hi"));
-    print("dexter_shell: submit remembers the line in history and clears it for the next.\n", .{});
+    print("conifer_shell: submit remembers the line in history and clears it for the next.\n", .{});
 }
 
 fn up_down_recall_into_the_line() !void {
@@ -163,7 +163,7 @@ fn up_down_recall_into_the_line() !void {
     assert(std.mem.eql(u8, p.current(), "second"));
     try p.down();
     assert(std.mem.eql(u8, p.current(), ""));
-    print("dexter_shell: up and down recall committed lines into the editable line, history untouched.\n", .{});
+    print("conifer_shell: up and down recall committed lines into the editable line, history untouched.\n", .{});
 }
 
 fn the_draft_is_stashed() !void {
@@ -177,7 +177,7 @@ fn the_draft_is_stashed() !void {
     // Step back down to the live edge: the draft returns exactly.
     try p.down();
     assert(std.mem.eql(u8, p.current(), "in progress"));
-    print("dexter_shell: an in-progress draft is stashed on up and restored on the way back down.\n", .{});
+    print("conifer_shell: an in-progress draft is stashed on up and restored on the way back down.\n", .{});
 }
 
 fn recall_bounds_are_named() !void {
@@ -192,7 +192,7 @@ fn recall_bounds_are_named() !void {
     assert(std.mem.eql(u8, p.current(), "only"));
     const past_oldest = p.up();
     assert(past_oldest == error.NoEarlier);
-    print("dexter_shell: a step past the oldest or past the live edge is refused by name.\n", .{});
+    print("conifer_shell: a step past the oldest or past the live edge is refused by name.\n", .{});
 }
 
 fn run_selftest() !u8 {
@@ -200,15 +200,15 @@ fn run_selftest() !u8 {
     try up_down_recall_into_the_line();
     try the_draft_is_stashed();
     try recall_bounds_are_named();
-    print("dexter_shell: version {s}\n", .{dexter_shell_version});
-    print("GREEN: dexter_shell; an editable line married to its history -- submit remembers and clears, up/down recall committed lines into the line, and an in-progress draft is stashed and restored, deterministic every time.\n", .{});
+    print("conifer_shell: version {s}\n", .{conifer_shell_version});
+    print("GREEN: conifer_shell; an editable line married to its history -- submit remembers and clears, up/down recall committed lines into the line, and an in-progress draft is stashed and restored, deterministic every time.\n", .{});
     return 0;
 }
 
 pub fn main(init: std.process.Init) !u8 {
     const garden = init.arena.allocator();
     const args = try init.minimal.args.toSlice(garden);
-    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "dexter-shell"))) {
+    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "conifer-shell"))) {
         return run_selftest();
     }
     return run_selftest();

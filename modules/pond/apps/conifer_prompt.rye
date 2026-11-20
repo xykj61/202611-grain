@@ -1,11 +1,11 @@
-//! pond/apps/dexter_prompt.rye -- Dexter, the drawn prompt: an editable line rendered into a terminal row.
+//! pond/apps/conifer_prompt.rye -- Conifer, the drawn prompt: an editable line rendered into a terminal row.
 //!
-//! Chapter G (Open Media Primitives) -- the terminal family. dexter_line.rye holds one editable line; this
+//! Chapter G (Open Media Primitives) -- the terminal family. conifer_line.rye holds one editable line; this
 //! module DRAWS it: it folds a prompt prefix and the line's bytes into a single bounded terminal row of the
 //! same 80-column width scooter_view.rye draws its journal in, tracking the column the caret sits at. When
 //! the line is wider than the row it scrolls horizontally, keeping the cursor always visible -- the way a
 //! shell prompt slides a long command left so the caret never leaves the screen. It is the OUTPUT of the
-//! input half, the bridge between dexter_line/dexter_shell and scooter_view's drawn frame, and held pure:
+//! input half, the bridge between conifer_line/conifer_shell and scooter_view's drawn frame, and held pure:
 //! no raw terminal, no escape codes, no network. A live TTY that reads keystrokes is the last rung; this
 //! draws the row that rung will show.
 //! Pattern elder: pond/apps/scooter_view.rye -- the same fold from a model into a fixed-width character row.
@@ -19,16 +19,16 @@
 //!
 //! Facts only, custody-first: it draws a line of text into a row and holds nothing else -- no network, no key.
 //!
-//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/dexter_prompt.rye -femit-bin=pond/bin/dexter-prompt
-//!   pond/bin/dexter-prompt selftest
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/conifer_prompt.rye -femit-bin=pond/bin/conifer-prompt
+//!   pond/bin/conifer-prompt selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
-const line = @import("dexter_line.rye");
+const line = @import("conifer_line.rye");
 const view = @import("scooter_view.rye");
 
-pub const dexter_prompt_version = "20260817.044200";
+pub const conifer_prompt_version = "20260817.044200";
 
 /// A prompt row is the same width scooter_view draws its journal in -- the classic 80-column terminal.
 pub const row_cols: u32 = view.frame_cols;
@@ -106,7 +106,7 @@ fn short_line_fits_with_the_caret() !void {
     assert(std.mem.eql(u8, r[0..7], "> hello"));
     assert(r[7] == ' '); // padded beyond the text
     assert(rendered.cursor_col == 7); // prefix 2 + cursor 5
-    print("dexter_prompt: a short line draws prefix then text, padded to the full width, the caret past the text.\n", .{});
+    print("conifer_prompt: a short line draws prefix then text, padded to the full width, the caret past the text.\n", .{});
 }
 
 fn long_line_scrolls_to_keep_the_caret() !void {
@@ -125,7 +125,7 @@ fn long_line_scrolls_to_keep_the_caret() !void {
     const home = try render_prompt("> ", &l);
     assert(home.cursor_col == 2); // prefix 2 + cursor 0
     assert(home.cells[2] == 'a'); // the line's first byte shows at the window start
-    print("dexter_prompt: a line wider than the row scrolls so the caret is always visible, at the end or at home.\n", .{});
+    print("conifer_prompt: a line wider than the row scrolls so the caret is always visible, at the end or at home.\n", .{});
 }
 
 fn empty_line_draws_the_prompt() !void {
@@ -139,7 +139,7 @@ fn empty_line_draws_the_prompt() !void {
     // Determinism: the same prefix and line render the same row.
     const again = try render_prompt("$ ", &l);
     assert(std.mem.eql(u8, rendered.text(), again.text()));
-    print("dexter_prompt: an empty line still draws its prompt with the caret waiting, deterministic every time.\n", .{});
+    print("conifer_prompt: an empty line still draws its prompt with the caret waiting, deterministic every time.\n", .{});
 }
 
 fn an_overwide_prefix_refuses() !void {
@@ -152,7 +152,7 @@ fn an_overwide_prefix_refuses() !void {
     // A prefix exactly at the bound (one column left) is accepted.
     const ok = try render_prompt(wide[0..max_prefix], &l);
     assert(ok.text().len == row_cols);
-    print("dexter_prompt: a prefix that leaves no room for the line is refused (PrefixTooWide), one column is enough.\n", .{});
+    print("conifer_prompt: a prefix that leaves no room for the line is refused (PrefixTooWide), one column is enough.\n", .{});
 }
 
 fn run_selftest() !u8 {
@@ -160,15 +160,15 @@ fn run_selftest() !u8 {
     try long_line_scrolls_to_keep_the_caret();
     try empty_line_draws_the_prompt();
     try an_overwide_prefix_refuses();
-    print("dexter_prompt: version {s}\n", .{dexter_prompt_version});
-    print("GREEN: dexter_prompt; an editable line drawn into a {d}-column terminal row -- prefix then a horizontally-scrolled window that keeps the caret always visible, exactly the row width, deterministic every time.\n", .{row_cols});
+    print("conifer_prompt: version {s}\n", .{conifer_prompt_version});
+    print("GREEN: conifer_prompt; an editable line drawn into a {d}-column terminal row -- prefix then a horizontally-scrolled window that keeps the caret always visible, exactly the row width, deterministic every time.\n", .{row_cols});
     return 0;
 }
 
 pub fn main(init: std.process.Init) !u8 {
     const garden = init.arena.allocator();
     const args = try init.minimal.args.toSlice(garden);
-    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "dexter-prompt"))) {
+    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "conifer-prompt"))) {
         return run_selftest();
     }
     return run_selftest();

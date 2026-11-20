@@ -1,8 +1,8 @@
-//! pond/apps/dexter_line.rye -- Dexter, the bounded line editor: the input half of the terminal.
+//! pond/apps/conifer_line.rye -- Conifer, the bounded line editor: the input half of the terminal.
 //!
 //! Chapter G (Open Media Primitives) -- the terminal family. scooter_view.rye draws a channel's journal
-//! into a bounded 24x80 frame (the OUTPUT half a keeper reads); this module gives Dexter its INPUT half:
-//! one editable line with a cursor, the primitive every prompt stands on. It is Dexter's own module, the
+//! into a bounded 24x80 frame (the OUTPUT half a keeper reads); this module gives Conifer its INPUT half:
+//! one editable line with a cursor, the primitive every prompt stands on. It is Conifer's own module, the
 //! live-TTY rung the drawn frame named "later" -- yet held pure, so no escape codes, no raw terminal, and
 //! no network enter here. A caller feeds it keystrokes; it holds a bounded, edited line and hands the text
 //! back. The wire and the raw TTY are later rungs; the editable line is the floor beneath them.
@@ -20,14 +20,14 @@
 //!
 //! Facts only, custody-first: it edits a line of text and holds nothing else -- no network, no key, no funds.
 //!
-//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/dexter_line.rye -femit-bin=pond/bin/dexter-line
-//!   pond/bin/dexter-line selftest
+//!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye build pond/apps/conifer_line.rye -femit-bin=pond/bin/conifer-line
+//!   pond/bin/conifer-line selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const dexter_line_version = "20260817.042243";
+pub const conifer_line_version = "20260817.042243";
 
 /// A line holds at most this many bytes -- power of two, bounded so an input line never grows unbounded.
 pub const max_line: u32 = 256;
@@ -234,7 +234,7 @@ fn insert_builds_at_cursor() !void {
     // before/after split the line at the cursor.
     assert(std.mem.eql(u8, l.before(), "X"));
     assert(std.mem.eql(u8, l.after(), "hello"));
-    print("dexter_line: a printable byte enters at the cursor, shifting the tail right.\n", .{});
+    print("conifer_line: a printable byte enters at the cursor, shifting the tail right.\n", .{});
 }
 
 fn delete_around_the_cursor() !void {
@@ -249,7 +249,7 @@ fn delete_around_the_cursor() !void {
     try l.delete_forward();
     assert(std.mem.eql(u8, l.text(), "ell"));
     assert(l.cursor == 0);
-    print("dexter_line: backspace and delete each remove one byte around the cursor, shifting the tail left.\n", .{});
+    print("conifer_line: backspace and delete each remove one byte around the cursor, shifting the tail left.\n", .{});
 }
 
 fn cursor_motion_is_bounded() !void {
@@ -269,7 +269,7 @@ fn cursor_motion_is_bounded() !void {
     assert(std.mem.eql(u8, l.text(), "hi"));
     l.move_end();
     assert(l.cursor == 2);
-    print("dexter_line: the cursor walks over 0..len; a step past either edge is refused by name.\n", .{});
+    print("conifer_line: the cursor walks over 0..len; a step past either edge is refused by name.\n", .{});
 }
 
 fn capacity_is_bounded() !void {
@@ -282,7 +282,7 @@ fn capacity_is_bounded() !void {
     assert(overflow == error.LineFull);
     // The held line is unchanged by the refused insert.
     assert(l.len == max_line);
-    print("dexter_line: a full line refuses a further byte (LineFull) rather than dropping one.\n", .{});
+    print("conifer_line: a full line refuses a further byte (LineFull) rather than dropping one.\n", .{});
 }
 
 fn only_printable_enters() !void {
@@ -299,7 +299,7 @@ fn only_printable_enters() !void {
     try l.insert(0x20);
     try l.insert(0x7e);
     assert(std.mem.eql(u8, l.text(), " ~"));
-    print("dexter_line: only printable ASCII enters; a control byte is refused, no byte landing.\n", .{});
+    print("conifer_line: only printable ASCII enters; a control byte is refused, no byte landing.\n", .{});
 }
 
 fn clear_empties_the_line() !void {
@@ -314,7 +314,7 @@ fn clear_empties_the_line() !void {
     // The same keystrokes rebuild the same bytes -- referential transparency.
     try l.type_str("draft");
     assert(std.mem.eql(u8, l.text(), "draft"));
-    print("dexter_line: clear empties the line to the start, and the same keystrokes rebuild the same bytes.\n", .{});
+    print("conifer_line: clear empties the line to the start, and the same keystrokes rebuild the same bytes.\n", .{});
 }
 
 fn run_selftest() !u8 {
@@ -324,15 +324,15 @@ fn run_selftest() !u8 {
     try capacity_is_bounded();
     try only_printable_enters();
     try clear_empties_the_line();
-    print("dexter_line: version {s}\n", .{dexter_line_version});
-    print("GREEN: dexter_line; a bounded editable line of at most {d} bytes -- insert, delete, and cursor motion all held within 0..len, only printable ASCII, deterministic every time.\n", .{max_line});
+    print("conifer_line: version {s}\n", .{conifer_line_version});
+    print("GREEN: conifer_line; a bounded editable line of at most {d} bytes -- insert, delete, and cursor motion all held within 0..len, only printable ASCII, deterministic every time.\n", .{max_line});
     return 0;
 }
 
 pub fn main(init: std.process.Init) !u8 {
     const garden = init.arena.allocator();
     const args = try init.minimal.args.toSlice(garden);
-    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "dexter-line"))) {
+    if (args.len >= 2 and (std.mem.eql(u8, args[1], "selftest") or std.mem.eql(u8, args[1], "conifer-line"))) {
         return run_selftest();
     }
     return run_selftest();

@@ -136,7 +136,8 @@ across three layers, following Vantage-owns-all-UI:
 | `tube_manifest*` | `vantage/carry_manifest_emit.rye` | Android manifest from capabilities |
 | `seva_jabs2_*` | `vantage/carry_audience_session.rye` | Multi-signer broadcast + chat |
 | `setu0`..`setu6` | `vantage/carry_device_setup.rye` | USB-to-desk pipeline (bounded) |
-| `setu_desk_*` | `vantage/carry_desk_hold.rye` | Wayland/X11 desk surface hold |
+| `setu_desk_*` | RETIRED -- platform-glass, not TAME-ready | (deferred to future orbit) |
+| `dexter_glass_*` | RETIRED -- entangled with linengrow | (molt: dexter -> conifer in pond/apps) |
 
 ### Layer 3: Shared Faculties (already exist)
 
