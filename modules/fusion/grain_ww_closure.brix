@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261119.204000
-# Fixed Sky (14/15): compress Terrarium, Vantage Station, Blazepod,
-# and Cached Harness through Synonym into one verified package.
+# Stamp: 20261119.210709
+# Aquarius (11/15 Orbit 9): updated with 8 Carry modules, 3 Ring-0
+# terrarium modules, and 3 Carry Glow desks from Orbit 9.
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261119.204000
+version 20261119.210709
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---
@@ -38,6 +38,14 @@ vantage mutations modules/comlink/vantage/vantage_mutations.rye
 vantage council modules/comlink/vantage/vantage_council_puddle.rye
 vantage twilight modules/comlink/vantage/vantage_twilight_reader.rye
 vantage carry modules/comlink/vantage/carry.rye
+vantage carry-admission modules/comlink/vantage/carry_admission_gate.rye
+vantage carry-hearth modules/comlink/vantage/carry_hearth_mold.rye
+vantage carry-pointer modules/comlink/vantage/carry_hearth_pointer.rye
+vantage carry-pub-gate modules/comlink/vantage/carry_publish_gate.rye
+vantage carry-pipeline modules/comlink/vantage/carry_publish_pipeline.rye
+vantage carry-manifest modules/comlink/vantage/carry_manifest_emit.rye
+vantage carry-audience modules/comlink/vantage/carry_audience_session.rye
+vantage carry-device modules/comlink/vantage/carry_device_setup.rye
 
 # --- Flare (Four Faculties) ---
 flare husk modules/flare/husk/husk_core.rye
@@ -72,10 +80,13 @@ blaze store modules/blaze/store.rye
 sundial clock modules/sundial/one_clock.rye
 sundial calfive modules/sundial/calfive_wheel.rye
 
-# --- Terrarium Host Glass ---
+# --- Terrarium Host Glass + Ring-0 ---
 terrarium swift terrarium/app/
 terrarium kotlin terrarium/carry-tablet/
 terrarium wasm terrarium/wasm/
+terrarium ring0-framebuf terrarium/src/aurora_framebuf_ring0.rye
+terrarium ring0-pond-wire terrarium/src/pond_wire_ring0.rye
+terrarium ring0-puddle terrarium/src/puddle_ring0.rye
 
 # --- Glow Citizen Ring (verified desks) ---
 glow_desk fold-harness-cache modules/harness/glow/
@@ -85,6 +96,9 @@ glow_desk gate-session-zeroize modules/harness/glow/
 glow_desk gate-constituency modules/harness/glow/
 glow_desk gate-boot-matrix blazepod/glow/
 glow_desk fold-mycelium-cache modules/comlink/glow/
+glow_desk gate-carry-admission modules/comlink/vantage/glow/
+glow_desk gate-carry-publish modules/comlink/vantage/glow/
+glow_desk fold-carry-hearth modules/comlink/vantage/glow/
 
 # --- Civic Glasswall Invariants ---
 glasswall display write-only-rlcd
