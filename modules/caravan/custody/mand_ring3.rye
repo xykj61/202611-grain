@@ -1,4 +1,4 @@
-//! mand/mand_ring3.rye -- Mand ring-3: destroying ring (test-only reach).
+//! modules/caravan/custody/mand_ring3.rye -- Mand ring-3: destroying ring (test-only reach).
 //!
 //! Seam (SLC): destroy a per-subject key after recording exactly one removal
 //! fact -- never edit ciphertext bytes; fail closed on hold - malformed authority.
@@ -7,7 +7,7 @@
 //! would read ELIGIBLE, with hold re-asserted on this path. Test namespace only
 //! until production key custody seats (decision 5 - counsel 20260725.001200 § Five).
 //!
-//!   rye build mand/mand_ring3_witness.rye -femit-bin=mand/bin/mand_ring3_witness
+//!   rye build modules/caravan/custody/mand_ring3_witness.rye -femit-bin=modules/caravan/custody/bin/mand_ring3_witness
 
 const std = @import("std");
 const assert = std.debug.assert;

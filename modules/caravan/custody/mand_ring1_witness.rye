@@ -1,7 +1,7 @@
-//! mand/mand_ring1_witness.rye -- Mand ring-1 grant and refuse paths.
+//! modules/caravan/custody/mand_ring1_witness.rye -- Mand ring-1 grant and refuse paths.
 //!
-//!   rye build mand/mand_ring1_witness.rye -femit-bin=mand/bin/mand_ring1_witness
-//!   mand/bin/mand_ring1_witness
+//!   rye build modules/caravan/custody/mand_ring1_witness.rye -femit-bin=modules/caravan/custody/bin/mand_ring1_witness
+//!   modules/caravan/custody/bin/mand_ring1_witness
 //!
 //! Claims:
 //!   1. Granted path -- named authority with right_read over record sees the

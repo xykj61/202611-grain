@@ -1,7 +1,7 @@
-//! mand/mand_ring3_witness.rye -- Mand ring-3 erasure witness (test-only reach).
+//! modules/caravan/custody/mand_ring3_witness.rye -- Mand ring-3 erasure witness (test-only reach).
 //!
-//!   rye build mand/mand_ring3_witness.rye -femit-bin=mand/bin/mand_ring3_witness
-//!   mand/bin/mand_ring3_witness
+//!   rye build modules/caravan/custody/mand_ring3_witness.rye -femit-bin=modules/caravan/custody/bin/mand_ring3_witness
+//!   modules/caravan/custody/bin/mand_ring3_witness
 //!
 //! Claims (counsel 20260725.001200 § Five):
 //!   1. Key destroyed -> ciphertext unreadable.

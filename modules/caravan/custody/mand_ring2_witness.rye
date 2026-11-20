@@ -1,7 +1,7 @@
-//! mand/mand_ring2_witness.rye -- Mand ring-2 retention eligibility.
+//! modules/caravan/custody/mand_ring2_witness.rye -- Mand ring-2 retention eligibility.
 //!
-//!   rye build mand/mand_ring2_witness.rye -femit-bin=mand/bin/mand_ring2_witness
-//!   mand/bin/mand_ring2_witness
+//!   rye build modules/caravan/custody/mand_ring2_witness.rye -femit-bin=modules/caravan/custody/bin/mand_ring2_witness
+//!   modules/caravan/custody/bin/mand_ring2_witness
 //!
 //! Claims:
 //!   1. Inside window -> KEEP + one audit line.

@@ -8,8 +8,8 @@
 ::  Surface Chapter p22 -- second pedestal in src/sec (security room).
 ::  Names Mand's three rings already GREEN (ring-1 capability check -
 ::  ring-2 - ring-3 test-only reach). Does not invent Mand policy -
-::  a fourth ring - or move Mand out of mand/.
-::  Source: mand/mand_ring1.rye - mand_ring2.rye - mand_ring3.rye -- one module
+::  a fourth ring - or move Mand out of caravan/custody/.
+::  Source: modules/caravan/custody/mand_ring1.rye - mand_ring2.rye - mand_ring3.rye -- one module
 ::  per
 ::  ring, witnesses aside.
 ::
