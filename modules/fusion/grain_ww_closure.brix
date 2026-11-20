@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261120.115341
-# Virgo (6/15 Orbit 11): husk_template + husk_lower (.husk ->
-# .md lowering), grain-ww help + husk-lower + 6 Carry wired.
+# Stamp: 20261120.134437
+# Virgo (6/15 Orbit 12): single-source README from .husk,
+# libra_preflight + readme_metrics_patch in witness_all.
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261120.115341
+version 20261120.134437
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---

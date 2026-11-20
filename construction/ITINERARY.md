@@ -43,9 +43,9 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
-### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261120.115811-est`, `Myofascia: 56.654`)
+### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261120.134437-est`, `Myofascia: 57.078`)
 
-- **Calfive Vector (`639` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 2, Orbit 11 (`15/15 Siya sealed`)** -- .husk markdown build system: husk_template (bounded {{ expr }} lowering, 4 welcome + 2 refusal), husk_lower CLI (live bindings from git + .brix), grain-ww help subcommand, 6 Carry + conifer + husk-lower wired into CLI, .husk documented as sixth file type in language docs + Air rule. 109 proofs, 220 assertions on metal. publish-seed GREEN x4.
+- **Calfive Vector (`642` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 2, Orbit 12 (`7/15 Libra`)** -- Single-source README from .husk proven end-to-end: .brix owns myofascia -> husk_lower reads it -> readme_metrics.husk templates it -> readme_patch.sh patches README.md. libra_preflight + readme_metrics_patch wired into witness_all. 113 proofs, 222 assertions on metal.
 - **Completed Software & Civic Foundations in [`../active-husk/`](../active-husk/README.md):**
   - **5 Elemental Rule Cards & `GEMINI.md` Spine:** `aether`, `air`, `fire`, `water`, `earth` in `.gemini/rules/`; `active-tablecloth/` molted to `active-husk/`.
   - **Glow Mill & Citizen Ring (`Stage 1 == Stage 2`):** 6-pass native `.glow` compiler (`grain-ww glow`) + 17 col-57 Citizen `.glow` gates across `Aurora`, `Pond`, `Caravan`, `Comlink`, `Tablecloth`, `Husk`, `Vantage`, `Resonance`, `Dimeroll`, `Colloquium`, and `Linengrow`.
