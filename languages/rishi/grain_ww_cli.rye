@@ -62,6 +62,50 @@ fn run_doctor(io: std.Io) !u8 {
     return 0;
 }
 
+fn print_help() u8 {
+    const h =
+        "grain-ww -- Grain Worldwide CLI\n\n" ++
+        "USAGE: grain-ww <command> [args...]\n\n" ++
+        "TOOLCHAIN\n" ++
+        "  version        print version + myofascia\n" ++
+        "  doctor         verify toolchain health\n" ++
+        "  selftest       run CLI self-checks\n" ++
+        "  witness-all    run all metal witnesses\n\n" ++
+        "CLOCK & CALFIVE\n" ++
+        "  stamp [file]   print chronological stamp\n" ++
+        "  cadence        bench/seed remote config\n" ++
+        "  movement       current calfive position\n" ++
+        "  orbit-harvest  siya orbit harvest seal\n" ++
+        "  round-load     full calfive round reading\n\n" ++
+        "VANTAGE CARRY\n" ++
+        "  carry-gate     admission gate selftest\n" ++
+        "  carry-publish  3-door publish gate\n" ++
+        "  carry-device   5-stage USB pipeline\n" ++
+        "  carry-session  multi-signer session\n" ++
+        "  carry-hearth   hearth display mold\n" ++
+        "  carry-manifest android manifest emission\n\n" ++
+        "CONIFER & HARNESS\n" ++
+        "  conifer        CLI terminal (journal+prompt)\n" ++
+        "  harness-cache  cached harness dispatch\n" ++
+        "  harness-console visual console\n" ++
+        "  harness-wood   WOOD compute ledger\n\n" ++
+        "STUDIO & RESONANCE\n" ++
+        "  studio-deck    vantage studio deck\n" ++
+        "  husk-editor    husk movement editor\n" ++
+        "  triptych-art   triptych canvas\n\n" ++
+        "AUDIT & WITNESS\n" ++
+        "  audit-clean    residue-free file check\n" ++
+        "  virgo-audit    compass topology audit\n" ++
+        "  libra-scales   scales gate\n" ++
+        "  pond-airlock   sanctuary airlock\n" ++
+        "  whole-cup      sameness macro cup\n" ++
+        "  stamp-ratchet  stamp-no-serial ratchet\n\n" ++
+        "Run grain-ww <command> with no args for its\n" ++
+        "selftest. See grain_ww_cli.rye for all 81.\n";
+    print("{s}", .{h});
+    return 0;
+}
+
 fn dispatch_exec(
     a: std.mem.Allocator,
     io: std.Io,
@@ -109,6 +153,12 @@ pub fn main(init: std.process.Init) !u8 {
     }
     const sub = args[1];
     if (std.mem.eql(u8, sub, "selftest")) return run_selftest(io);
+    if (std.mem.eql(u8, sub, "help") or
+        std.mem.eql(u8, sub, "--help") or
+        std.mem.eql(u8, sub, "-h"))
+    {
+        return print_help();
+    }
     if (std.mem.eql(u8, sub, "doctor")) return run_doctor(io);
     if (std.mem.eql(u8, sub, "stamp")) {
         return dispatch_exec(
