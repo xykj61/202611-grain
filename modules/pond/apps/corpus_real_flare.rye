@@ -1,6 +1,6 @@
 //! pond/apps/corpus_real_flare.rye -- harvest-yield Journey 5 (Real corpora), Rung 2.
 //!
-//! Rung one carried the reading voice (Pulp) onto a real tree document. This
+//! Rung one carried the reading voice (Husk) onto a real tree document. This
 //! rung carries the **craft voice** (Flare) onto a real corpus: a Kyri catalog of
 //! chunks (path - kind - line count). Flare's demo read a hand-written catalog whose
 //! line counts were invented numbers; this catalog is **derived at compile time from
@@ -60,7 +60,7 @@ const allow_line = "model_hash sha3-256-rye-forge-lap0";
 /// Count newlines in a real file's bytes -- the same line sense `wc -l` uses, so the
 /// derived count matches the witness's independent cross-check exactly.
 fn count_lines(bytes: []const u8) u32 {
-    // invariant: the corpus member fits Pulp's whole-document bound
+    // invariant: the corpus member fits Husk's whole-document bound
     assert(bytes.len <= 8192);
     var n: u32 = 0;
     var i: u32 = 0;

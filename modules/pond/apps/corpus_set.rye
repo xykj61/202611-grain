@@ -6,11 +6,11 @@
 //! corpus, each embedded at compile time through a symlink in pond/apps/corpora/
 //! (no network, no runtime filesystem -- the @embedFile idiom already lived-with):
 //! context/TAME_CORE.md - context/TWO_ROOMS.md - CODE_OF_CONDUCT.md - SECURITY.md -
-//! CHANGELOG.md. The reading voice (Pulp, through reading_query's Lantern
+//! CHANGELOG.md. The reading voice (Husk, through reading_query's Lantern
 //! contract) reads each member's outline for real -- the same code path rung one ran
 //! over a single file, now run over the whole body.
 //!
-//! The crux is **the bounds proven against the largest real member**. Each Pulp
+//! The crux is **the bounds proven against the largest real member**. Each Husk
 //! bound (whole-document bytes - block count - block text - heading count) is stressed
 //! most by whichever member is extreme on that axis; the set is proven by proving its
 //! extreme. The set's largest single block measures ~1312 B -- past the 512-byte bound
@@ -23,7 +23,7 @@
 //! signal that the bound needs raising, booked before the next durable round.
 //!
 //! Additive by construction: it reuses reading_query's public answer_over over each
-//! embedded member and Pulp's public parse_markdown / extract_headings to measure
+//! embedded member and Husk's public parse_markdown / extract_headings to measure
 //! them; reading_query's demo over pinned_doc stays its own GREEN binary.
 //!
 //!   rye build pond/apps/corpus_set.rye -femit-bin=pond/bin/corpus-set
@@ -73,7 +73,7 @@ const old_max_block_text: u32 = 512;
 
 const allow_line = "model_hash sha3-256-rye-forge-lap0";
 
-// What a single real member costs against each Pulp bound.
+// What a single real member costs against each Husk bound.
 const Stats = struct {
     doc_bytes: u32,
     blocks: u32,
@@ -81,18 +81,18 @@ const Stats = struct {
     headings: u32,
 };
 
-/// Measure one real member against every Pulp bound. A member that overran a
+/// Measure one real member against every Husk bound. A member that overran a
 /// bound would refuse here (the Yield red the journey exists to surface); a member
 /// that fits returns its honest cost.
 fn measure(doc: []const u8) sc.ParseError!Stats {
-    // invariant: the member fits Pulp's whole-document bound before we parse it
+    // invariant: the member fits Husk's whole-document bound before we parse it
     assert(doc.len <= sc.max_doc_bytes);
     // invariant: a real corpus member carries at least one byte
     assert(doc.len > 0);
 
     var blocks: [sc.max_blocks]sc.Block = undefined;
     const block_count = try sc.parse_markdown(doc, &blocks);
-    // invariant: the parse stays inside Pulp's block budget
+    // invariant: the parse stays inside Husk's block budget
     assert(block_count <= sc.max_blocks);
 
     var largest: u32 = 0;
@@ -106,7 +106,7 @@ fn measure(doc: []const u8) sc.ParseError!Stats {
 
     var headings: [sc.max_headings]sc.Heading = undefined;
     const heading_count = try sc.extract_headings(blocks[0..block_count], &headings);
-    // invariant: the outline stays inside Pulp's heading budget
+    // invariant: the outline stays inside Husk's heading budget
     assert(heading_count <= sc.max_headings);
 
     return .{
@@ -184,20 +184,20 @@ fn welcome_every_member_reads() !void {
     }
 }
 
-/// The crux: every Pulp bound proven against the largest real member of the set.
+/// The crux: every Husk bound proven against the largest real member of the set.
 /// The extreme on each axis fits with headroom, and the set's largest single block
 /// exceeds the old 512-byte bound -- so the body genuinely exercises the raised bound.
 fn welcome_bounds_hold_against_largest() !void {
     const ex = try set_extremes();
 
-    // invariant: the largest member fits Pulp's whole-document bound
+    // invariant: the largest member fits Husk's whole-document bound
     assert(ex.max_bytes <= sc.max_doc_bytes);
     assert(ex.max_bytes > 0);
-    // invariant: the block-heaviest member fits Pulp's block budget
+    // invariant: the block-heaviest member fits Husk's block budget
     assert(ex.max_blocks <= sc.max_blocks);
     // invariant: the largest single block fits the raised block-text bound
     assert(ex.max_block_text <= sc.max_block_text);
-    // invariant: the outline-heaviest member fits Pulp's heading budget
+    // invariant: the outline-heaviest member fits Husk's heading budget
     assert(ex.max_headings <= sc.max_headings);
     // invariant: the set's extreme block exceeds the old bound -- a real body, not a toy
     assert(ex.max_block_text > old_max_block_text);

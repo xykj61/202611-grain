@@ -13,7 +13,7 @@
 Most user interfaces trap visual state inside opaque GPU callbacks that an AI collaborator can only guess at through screenshots. Grain's **Realidream** architecture turns that upside down:
 
 1. **Blaze** holds every text line, session graph, and UI state history as an immutable, content-addressed **weave** of beads.
-2. **Flare** (`flare/{lattice,pulp,lantern}/`) indexes and reasons over those beads within strict gratitude-clean license bounds.
+2. **Flare** (`flare/{lattice,husk,lantern}/`) indexes and reasons over those beads within strict gratitude-clean license bounds.
 3. **Brushstroke and Skate** (`brushstroke/` and `brushstroke/skate/`) render any Blaze or Flare state as an explicit, deterministic **`FrameGrid`** of typed cells, glyphs, and QOI sprites (`brushstroke/image/`).
 
 When **every visual view, diff, hit-test, and edit gesture is a pure callable function** in **Glow**, **Rishi**, and **Rye**, humans and AI agents share the **exact same eyes and hands**!

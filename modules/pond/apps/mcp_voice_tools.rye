@@ -68,7 +68,7 @@ const m_lattice =
 const m_pulp =
     \\format mcp-tool-v1
     \\tool pulp
-    \\summary a reading over the Pulp voice
+    \\summary a reading over the Husk voice
     \\arg model str
     \\arg prompt str
     \\result str

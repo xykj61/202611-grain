@@ -19,7 +19,7 @@ assert r_sw.ok else "grain-ww shastra-wheel 205 failed"
 assert (r_sw.err contains "Anuradha") else "seat 205 did not resolve to Anuradha!"
 
 # 3. Verify `docs-geode/` tutorial & `README.md` link hygiene (`0` numbered `00-` links!)
-let doc_chk = run ["sh" "-c" "test -s docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md && ! grep -q '00-your-mac' docs-geode/README.md"]
+let doc_chk = run ["sh" "-c" "test -s docs-geode/tutorials/civic-glasswall-husk-tablecloth-and-puddle.md && ! grep -q '00-your-mac' docs-geode/README.md"]
 assert doc_chk.ok else "docs-geode tutorial missing or stale 00- link in docs-geode/README.md!"
 
 say "GREEN: shastra_panchanga_and_geode_tutorial_witness -- 405 Shastra/Nakshatra wheel & docs-geode power-user tutorial proven."

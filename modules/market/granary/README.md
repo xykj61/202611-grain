@@ -13,7 +13,7 @@ path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
 
 | Lap | What |
 |-----|------|
-| **1 (landed)** | Signed name-fact registry; resolve `person/weave`; fold-clone; Pulp frame; lying sig refused |
+| **1 (landed)** | Signed name-fact registry; resolve `person/weave`; fold-clone; Husk frame; lying sig refused |
 | **Weave view (landed)** | Skate `granaryviewtest` -- seven-line citizen's window |
 | **2 (landed)** | Write gate -- durable `publish` + reload |
 | **3 (landed)** | Sharing in-process -- host serve + mirror clone |

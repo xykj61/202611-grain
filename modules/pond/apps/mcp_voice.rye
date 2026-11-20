@@ -2,7 +2,7 @@
 //!
 //! Journey 3 spoke MCP in Kyri - the owned `format mcp-call-v1` / `mcp-result-v1` shape,
 //! a JSON host bridge, the whole tools/list envelope. Journey 8 gathered the five voices
-//! (Lattice, Pulp, Flare, the living graph, a named Tablecloth artifact) under one
+//! (Lattice, Husk, Flare, the living graph, a named Tablecloth artifact) under one
 //! bounded Q-vane host. Those two halves never met: the MCP host's tools/call dispatched
 //! only to Journey 3's toy `add`/`join`. This rung joins them - an MCP call naming the
 //! intelligence tool crosses into a Lantern request, dispatches through

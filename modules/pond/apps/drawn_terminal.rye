@@ -36,26 +36,26 @@
 //!   pond/bin/drawn-terminal corpustoolsprefixviewtest # Flare tools/ prefix -> Skate
 //!   pond/bin/drawn-terminal corpuscandyprefixviewtest # Flare dimeroll/ prefix -> Skate
 //!   pond/bin/drawn-terminal corpusappsprefixviewtest # Flare pond/apps/ prefix -> Skate
-//!   pond/bin/drawn-terminal pulpviewtest # Pulp outline headings -> Skate
-//!   pond/bin/drawn-terminal pulpparaviewtest # Pulp paragraphs -> Skate
-//!   pond/bin/drawn-terminal pulpfenceviewtest # Pulp fence kinds -> Skate
-//!   pond/bin/drawn-terminal pulpplainviewtest # Pulp plain snippets -> Skate
-//!   pond/bin/drawn-terminal pulpryeviewtest # Pulp rye snippets -> Skate
-//!   pond/bin/drawn-terminal pulprishviewtest # Pulp rish snippets -> Skate
-//!   pond/bin/drawn-terminal pulph1viewtest # Pulp h1 headings -> Skate
-//!   pond/bin/drawn-terminal pulph2viewtest # Pulp h2 headings -> Skate
-//!   pond/bin/drawn-terminal pulph3viewtest # Pulp h3 headings -> Skate
-//!   pond/bin/drawn-terminal pulpdepthviewtest # Pulp h1/h2/h3 depth tallies -> Skate
-//!   pond/bin/drawn-terminal pulptallyviewtest # Pulp headings+paragraphs tally -> Skate
-//!   pond/bin/drawn-terminal pulpblocksviewtest # Pulp block count -> Skate
-//!   pond/bin/drawn-terminal pulpfenceheadingviewtest # Pulp fence+heading combo -> Skate
-//!   pond/bin/drawn-terminal pulptallyblocksviewtest # Pulp tally+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulpparablocksviewtest # Pulp paragraphs+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulph1blocksviewtest # Pulp h1+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulph2blocksviewtest # Pulp h2+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulph3blocksviewtest # Pulp h3+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulpryeblocksviewtest # Pulp rye+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulprishblocksviewtest # Pulp rish+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulpviewtest # Husk outline headings -> Skate
+//!   pond/bin/drawn-terminal pulpparaviewtest # Husk paragraphs -> Skate
+//!   pond/bin/drawn-terminal pulpfenceviewtest # Husk fence kinds -> Skate
+//!   pond/bin/drawn-terminal pulpplainviewtest # Husk plain snippets -> Skate
+//!   pond/bin/drawn-terminal pulpryeviewtest # Husk rye snippets -> Skate
+//!   pond/bin/drawn-terminal pulprishviewtest # Husk rish snippets -> Skate
+//!   pond/bin/drawn-terminal pulph1viewtest # Husk h1 headings -> Skate
+//!   pond/bin/drawn-terminal pulph2viewtest # Husk h2 headings -> Skate
+//!   pond/bin/drawn-terminal pulph3viewtest # Husk h3 headings -> Skate
+//!   pond/bin/drawn-terminal pulpdepthviewtest # Husk h1/h2/h3 depth tallies -> Skate
+//!   pond/bin/drawn-terminal pulptallyviewtest # Husk headings+paragraphs tally -> Skate
+//!   pond/bin/drawn-terminal pulpblocksviewtest # Husk block count -> Skate
+//!   pond/bin/drawn-terminal pulpfenceheadingviewtest # Husk fence+heading combo -> Skate
+//!   pond/bin/drawn-terminal pulptallyblocksviewtest # Husk tally+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulpparablocksviewtest # Husk paragraphs+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulph1blocksviewtest # Husk h1+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulph2blocksviewtest # Husk h2+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulph3blocksviewtest # Husk h3+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulpryeblocksviewtest # Husk rye+blocks combo -> Skate
+//!   pond/bin/drawn-terminal pulprishblocksviewtest # Husk rish+blocks combo -> Skate
 //!   pond/bin/drawn-terminal corpusryecandyprefixviewtest # Flare rye + dimeroll/ -> Skate
 //!   pond/bin/drawn-terminal corpusrishtoolsprefixviewtest # Flare rish + tools/ -> Skate
 //!   pond/bin/drawn-terminal corpusryeappsprefixviewtest # Flare rye + pond/apps/ -> Skate
@@ -73,7 +73,7 @@
 //!   pond/bin/drawn-terminal memoprefixviewtest # Dimeroll memo prefix filter -> Skate
 //!   pond/bin/drawn-terminal cashflowviewtest # Dimeroll cash flow fold -> Skate
 //!   pond/bin/drawn-terminal sumamountsviewtest # Dimeroll sum amounts -> Skate
-//!   pond/bin/drawn-terminal granaryviewtest # Granary weave view -- resolve + Pulp -> Skate
+//!   pond/bin/drawn-terminal granaryviewtest # Granary weave view -- resolve + Husk -> Skate
 //!   pond/bin/drawn-terminal exchangeviewtest # Granary Exchange view -- weave listing -> Skate
 //!   pond/bin/drawn-terminal mandiviewtest   # Mandi floor view -- vessel listing -> Skate
 //!   pond/bin/drawn-terminal mandisettletest # Mandi settle view -- vessel settle -> Skate
@@ -613,7 +613,7 @@ fn count_corpus_kinds(text: []const u8) struct { rye: u32, rish: u32 } {
     return .{ .rye = rye, .rish = rish };
 }
 
-/// Inference assist -- Flare corpus + Pulp snippets + Lantern + journal on one Skate frame.
+/// Inference assist -- Flare corpus + Husk snippets + Lantern + journal on one Skate frame.
 fn count_pulp_fence_kinds(text: []const u8) struct { rye: u32, rish: u32 } {
     var rye: u32 = 0;
     var rish: u32 = 0;
@@ -697,7 +697,7 @@ const AssistFenceBand = struct {
     fence_rye: u32,
 };
 
-/// Pulp fence tally shared by assist view and assist sight.
+/// Husk fence tally shared by assist view and assist sight.
 fn count_assist_fence_band(snippets: []const u8, fence_kinds_text: []const u8) !AssistFenceBand {
     const fences = count_pulp_fence_kinds(snippets);
     // invariant: the assist golden locks the snippet fence counts, so a pulp parse that
@@ -1547,7 +1547,7 @@ fn run_forge_query_device_view_witness(garden: std.mem.Allocator, io: std.Io) !u
     return 0;
 }
 
-/// Pulp paragraphs view -- paragraph extract folded onto a Skate frame.
+/// Husk paragraphs view -- paragraph extract folded onto a Skate frame.
 fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -1556,7 +1556,7 @@ fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     const n = try husk.parse_markdown(text, &blocks);
     var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (pn != 3) return error.BadPulpFixture;
+    if (pn != 3) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_para_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp paragraphs view") };
@@ -1585,7 +1585,7 @@ fn run_pulp_para_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const golden = [_][]const u8{
         "pulp paragraphs view",
         "paragraphs 3",
-        "p0 Lattice before Lantern; Pulp feeds the corpus.",
+        "p0 Lattice before Lantern; Husk feeds the corpus.",
         "p1 Matmul, add, reshape, reduce — parity before weights.",
         "paragraphs fold green",
     };
@@ -1656,7 +1656,7 @@ fn run_bs_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp fence-kinds view -- rye/rish/plain counts on Skate.
+/// Husk fence-kinds view -- rye/rish/plain counts on Skate.
 fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -1664,7 +1664,7 @@ fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     var blocks: [husk.max_blocks]husk.Block = undefined;
     const n = try husk.parse_markdown(text, &blocks);
     const kinds = husk.count_fence_kinds(blocks[0..n]);
-    if (kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadPulpFixture;
+    if (kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_fence_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp fence kinds view") };
@@ -1709,7 +1709,7 @@ fn run_pulp_fence_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp plain-snippets view -- unmarked fence bodies on Skate.
+/// Husk plain-snippets view -- unmarked fence bodies on Skate.
 fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -1718,7 +1718,7 @@ fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const n = try husk.parse_markdown(text, &blocks);
     var snippets: [husk.max_blocks]husk.Snippet = undefined;
     const sn = try husk.extract_plain_snippets(blocks[0..n], &snippets);
-    if (sn != 1) return error.BadPulpFixture;
+    if (sn != 1) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_plain_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp plain snippets view") };
@@ -1768,7 +1768,7 @@ fn pulp_first_line(text: []const u8) []const u8 {
     return text;
 }
 
-/// Pulp rye-snippets view -- rye fence first lines on Skate.
+/// Husk rye-snippets view -- rye fence first lines on Skate.
 fn compose_pulp_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -1777,7 +1777,7 @@ fn compose_pulp_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface
     const n = try husk.parse_markdown(text, &blocks);
     var snippets: [husk.max_snippets]husk.Snippet = undefined;
     const sn = try husk.extract_rye_snippets(blocks[0..n], &snippets);
-    if (sn != 2) return error.BadPulpFixture;
+    if (sn != 2) return error.BadHuskFixture;
     // invariant: the golden rye snippets are matched by content rather than by index, so a
     // reordered extractor reds here instead of drawing the wrong two
     assert(std.mem.indexOf(u8, snippets[0].text_slice(), "init.minimal.args") != null);
@@ -1826,7 +1826,7 @@ fn run_pulp_rye_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp rish-snippets view -- rish fence first lines on Skate.
+/// Husk rish-snippets view -- rish fence first lines on Skate.
 fn compose_pulp_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -1835,7 +1835,7 @@ fn compose_pulp_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     const n = try husk.parse_markdown(text, &blocks);
     var snippets: [husk.max_snippets]husk.Snippet = undefined;
     const sn = try husk.extract_rish_snippets(blocks[0..n], &snippets);
-    if (sn != 2) return error.BadPulpFixture;
+    if (sn != 2) return error.BadHuskFixture;
     // invariant: the golden rish snippets are matched by content rather than by index, so a
     // reordered extractor reds here instead of drawing the wrong two
     assert(std.mem.indexOf(u8, snippets[0].text_slice(), "lantern lap") != null);
@@ -2869,7 +2869,7 @@ fn run_pnl_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp outline view -- heading extract folded onto a Skate frame.
+/// Husk outline view -- heading extract folded onto a Skate frame.
 fn compose_pulp_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -2878,7 +2878,7 @@ fn compose_pulp_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.Ska
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const hn = try husk.extract_headings(blocks[0..n], &headings);
-    if (hn != 3) return error.BadPulpFixture;
+    if (hn != 3) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp outline view") };
@@ -2910,7 +2910,7 @@ fn run_pulp_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
         "headings 3",
         "h1 Forge outline",
         "h2 Lattice first",
-        "h2 Pulp next",
+        "h2 Husk next",
         "pulp fold green",
     };
     assert(lines_equal(&golden, frame));
@@ -2925,7 +2925,7 @@ fn run_pulp_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp h1 view -- depth-1 headings on Skate.
+/// Husk h1 view -- depth-1 headings on Skate.
 fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -2934,7 +2934,7 @@ fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const hn = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
-    if (hn != 1) return error.BadPulpFixture;
+    if (hn != 1) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h1_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h1 view") };
@@ -2979,7 +2979,7 @@ fn run_pulp_h1_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp h2 view -- depth-2 headings on Skate.
+/// Husk h2 view -- depth-2 headings on Skate.
 fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -2988,7 +2988,7 @@ fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const hn = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
-    if (hn != 2) return error.BadPulpFixture;
+    if (hn != 2) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h2_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h2 view") };
@@ -3018,7 +3018,7 @@ fn run_pulp_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
         "pulp h2 view",
         "h2 2",
         "h2 Lattice first",
-        "h2 Pulp next",
+        "h2 Husk next",
         "h2 fold green",
     };
     assert(lines_equal(&golden, frame));
@@ -3033,7 +3033,7 @@ fn run_pulp_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp h3 view -- depth-3 headings on Skate.
+/// Husk h3 view -- depth-3 headings on Skate.
 fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3042,7 +3042,7 @@ fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const hn = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
-    if (hn != 1) return error.BadPulpFixture;
+    if (hn != 1) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h3_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h3 view") };
@@ -3195,7 +3195,7 @@ fn run_corpus_rish_tools_prefix_view_witness(garden: std.mem.Allocator, io: std.
     return 0;
 }
 
-/// Pulp depth tally view -- h1/h2/h3 counts on Skate.
+/// Husk depth tally view -- h1/h2/h3 counts on Skate.
 fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3206,7 +3206,7 @@ fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const h1 = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
     const h2 = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
     const h3 = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
-    if (h1 != 1 or h2 != 1 or h3 != 1) return error.BadPulpFixture;
+    if (h1 != 1 or h2 != 1 or h3 != 1) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_depth_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp depth view") };
@@ -3523,7 +3523,7 @@ fn run_corpus_sum_lines_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
     return 0;
 }
 
-/// Pulp tally view -- heading + paragraph counts on Skate.
+/// Husk tally view -- heading + paragraph counts on Skate.
 fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3534,7 +3534,7 @@ fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const hn = try husk.extract_headings(blocks[0..n], &headings);
     var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (hn != 3 or pn != 3) return error.BadPulpFixture;
+    if (hn != 3 or pn != 3) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_tally_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp tally view") };
@@ -3579,14 +3579,14 @@ fn run_pulp_tally_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp blocks view -- total parsed blocks on Skate.
+/// Husk blocks view -- total parsed blocks on Skate.
 fn compose_pulp_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
     var blocks: [husk.max_blocks]husk.Block = undefined;
     const n = try husk.parse_markdown(text, &blocks);
-    if (n != 6) return error.BadPulpFixture;
+    if (n != 6) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp blocks view") };
@@ -3631,7 +3631,7 @@ fn run_pulp_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp fence+heading combo -- fence kinds and heading count on one Skate frame.
+/// Husk fence+heading combo -- fence kinds and heading count on one Skate frame.
 fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var fence_buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3641,7 +3641,7 @@ fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) 
     const kinds = husk.count_fence_kinds(fence_blocks[0..fence_n]);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const hn = try husk.extract_headings(fence_blocks[0..fence_n], &headings);
-    if (hn != 1 or kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadPulpFixture;
+    if (hn != 1 or kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_fence_heading_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp fence heading view") };
@@ -3686,7 +3686,7 @@ fn run_pulp_fence_heading_view_witness(garden: std.mem.Allocator, io: std.Io) !u
     return 0;
 }
 
-/// Pulp tally+blocks combo -- headings/paragraphs tally and block count on one Skate frame.
+/// Husk tally+blocks combo -- headings/paragraphs tally and block count on one Skate frame.
 fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3697,7 +3697,7 @@ fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) !
     const hn = try husk.extract_headings(blocks[0..n], &headings);
     var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (hn != 3 or pn != 3 or n != 6) return error.BadPulpFixture;
+    if (hn != 3 or pn != 3 or n != 6) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_tally_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp tally blocks view") };
@@ -3742,7 +3742,7 @@ fn run_pulp_tally_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8
     return 0;
 }
 
-/// Pulp paragraphs+blocks combo -- paragraph count and block count on one Skate frame.
+/// Husk paragraphs+blocks combo -- paragraph count and block count on one Skate frame.
 fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3751,7 +3751,7 @@ fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     const n = try husk.parse_markdown(text, &blocks);
     var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
-    if (pn != 3 or n != 6) return error.BadPulpFixture;
+    if (pn != 3 or n != 6) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_para_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp para blocks view") };
@@ -3796,7 +3796,7 @@ fn run_pulp_para_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
     return 0;
 }
 
-/// Pulp h1+blocks combo -- depth-1 heading count and block count on one Skate frame.
+/// Husk h1+blocks combo -- depth-1 heading count and block count on one Skate frame.
 fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3805,7 +3805,7 @@ fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const h1 = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
-    if (h1 != 1 or n != 6) return error.BadPulpFixture;
+    if (h1 != 1 or n != 6) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h1_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h1 blocks view") };
@@ -3850,7 +3850,7 @@ fn run_pulp_h1_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp h2+blocks combo -- depth-2 heading count and block count on one Skate frame.
+/// Husk h2+blocks combo -- depth-2 heading count and block count on one Skate frame.
 fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3859,7 +3859,7 @@ fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const h2 = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
-    if (h2 != 2 or n != 6) return error.BadPulpFixture;
+    if (h2 != 2 or n != 6) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h2_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h2 blocks view") };
@@ -3904,7 +3904,7 @@ fn run_pulp_h2_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp h3+blocks combo -- depth-3 heading count and block count on one Skate frame.
+/// Husk h3+blocks combo -- depth-3 heading count and block count on one Skate frame.
 fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3913,7 +3913,7 @@ fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const n = try husk.parse_markdown(text, &blocks);
     var headings: [husk.max_headings]husk.Heading = undefined;
     const h3 = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
-    if (h3 != 1 or n != 6) return error.BadPulpFixture;
+    if (h3 != 1 or n != 6) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h3_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp h3 blocks view") };
@@ -3958,7 +3958,7 @@ fn run_pulp_h3_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp rye+blocks combo -- rye fence count and block count on one Skate frame.
+/// Husk rye+blocks combo -- rye fence count and block count on one Skate frame.
 fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -3967,7 +3967,7 @@ fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]
     const n = try husk.parse_markdown(text, &blocks);
     var snippets: [husk.max_snippets]husk.Snippet = undefined;
     const rye_n = try husk.extract_rye_snippets(blocks[0..n], &snippets);
-    if (rye_n != 1 or n != 4) return error.BadPulpFixture;
+    if (rye_n != 1 or n != 4) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_rye_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp rye blocks view") };
@@ -4012,7 +4012,7 @@ fn run_pulp_rye_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     return 0;
 }
 
-/// Pulp rish+blocks combo -- rish fence count and block count on one Skate frame.
+/// Husk rish+blocks combo -- rish fence count and block count on one Skate frame.
 fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
@@ -4021,7 +4021,7 @@ fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     const n = try husk.parse_markdown(text, &blocks);
     var snippets: [husk.max_snippets]husk.Snippet = undefined;
     const rish_n = try husk.extract_rish_snippets(blocks[0..n], &snippets);
-    if (rish_n != 1 or n != 4) return error.BadPulpFixture;
+    if (rish_n != 1 or n != 4) return error.BadHuskFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_rish_blocks_view_max_lines);
     lines[0] = .{ .text = try garden.dupe(u8, "pulp rish blocks view") };
@@ -4066,7 +4066,7 @@ fn run_pulp_rish_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
     return 0;
 }
 
-/// Granary weave view -- resolve person/weave, fold-clone resin, Pulp -> Skate.
+/// Granary weave view -- resolve person/weave, fold-clone resin, Husk -> Skate.
 fn compose_granary_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var md_buf: [granary.max_resin_bytes]u8 = undefined;

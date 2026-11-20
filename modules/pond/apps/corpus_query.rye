@@ -6,7 +6,7 @@
 //! real -- counting a kind, summing lines, listing the rye paths -- and this app
 //! wraps the true result in a Lantern-contract-bounded Response: the same
 //! validate_request gate, the same allow-list, the same tokens/stopped_reason
-//! metering that governs rung one (Lattice) and rung two (Pulp).
+//! metering that governs rung one (Lattice) and rung two (Husk).
 //!
 //! Additive by construction: it imports lantern_core and flare_core and calls
 //! only their public functions. Neither contract changes; rungs one and two are

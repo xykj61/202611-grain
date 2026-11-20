@@ -1,8 +1,8 @@
 //! pond/apps/reading_query.rye -- compass-surface Journey 1, Rung 2.
 //!
 //! The Q-vane host pattern, carried to the reading voice: a bounded Lantern-shaped
-//! request is routed to Pulp and returned as a bounded Lantern-shaped response.
-//! When the prompt names a reading operation, Pulp parses a pinned markdown
+//! request is routed to Husk and returned as a bounded Lantern-shaped response.
+//! When the prompt names a reading operation, Husk parses a pinned markdown
 //! document for real -- headings, fence kinds, a depth-two outline -- and this app
 //! wraps the true result in a Lantern-contract-bounded Response: the same
 //! validate_request gate, the same allow-list, the same tokens/stopped_reason
@@ -26,7 +26,7 @@ const reading_query_version = "20260812.120000";
 const max_result_text: u32 = lc.max_completion_len; // never exceed Lantern's completion bound
 
 // The pinned document the reading voice agrees on -- a deterministic markdown
-// slice well inside Pulp's own max_doc_bytes (8192). A fixed document means
+// slice well inside Husk's own max_doc_bytes (8192). A fixed document means
 // a fixed, reproducible reading: three headings at descending depth, a prose
 // paragraph, and one fence of each kind (rye - rish - plain).
 const pinned_doc =
@@ -47,7 +47,7 @@ const pinned_doc =
 ;
 
 /// The reading operations the router recognizes by name in the prompt.
-/// Each routes to a real Pulp call; unknown prompts refuse (no fake answer).
+/// Each routes to a real Husk call; unknown prompts refuse (no fake answer).
 pub const Op = enum(u8) {
     outline,
     headings2,
@@ -76,7 +76,7 @@ pub fn route_op(prompt: []const u8) QueryError!Op {
 /// Append `src` into `out_buf` at `written`, bounded by the caller's buffer.
 /// Byte-by-byte within a named bound -- no `@memcpy`, no unbounded copy.
 fn append(out_buf: []u8, written: *u32, src: []const u8) QueryError!void {
-    // invariant: the source respects Pulp's block bound
+    // invariant: the source respects Husk's block bound
     assert(src.len <= sc.max_block_text);
     if (src.len > out_buf.len - written.*) return error.ResultTooLong;
     var i: u32 = 0;
@@ -91,7 +91,7 @@ fn append(out_buf: []u8, written: *u32, src: []const u8) QueryError!void {
     assert(written.* <= out_buf.len);
 }
 
-/// Parse the pinned document with Pulp, run the routed reading operation for a
+/// Parse the pinned document with Husk, run the routed reading operation for a
 /// real result, and format it into `out_buf` as space-separated words. Returns the
 /// written slice -- the true reading, never a guess.
 pub fn compute(op: Op, out_buf: []u8) (sc.ParseError || QueryError || error{NoSpaceLeft})![]const u8 {
@@ -107,12 +107,12 @@ pub fn compute_over(op: Op, doc: []const u8, out_buf: []u8) (sc.ParseError || Qu
     assert(out_buf.len <= max_result_text);
     // invariant: there is room for at least one byte
     assert(out_buf.len > 0);
-    // invariant: the document respects Pulp's whole-document bound
+    // invariant: the document respects Husk's whole-document bound
     assert(doc.len <= sc.max_doc_bytes);
 
     var blocks: [sc.max_blocks]sc.Block = undefined;
     const block_count = try sc.parse_markdown(doc, &blocks);
-    // invariant: the parse stays inside Pulp's block budget
+    // invariant: the parse stays inside Husk's block budget
     assert(block_count <= sc.max_blocks);
 
     var written: u32 = 0;
@@ -120,7 +120,7 @@ pub fn compute_over(op: Op, doc: []const u8, out_buf: []u8) (sc.ParseError || Qu
         .outline => {
             var headings: [sc.max_headings]sc.Heading = undefined;
             const n = try sc.extract_headings(blocks[0..block_count], &headings);
-            // invariant: the outline stays inside Pulp's heading budget
+            // invariant: the outline stays inside Husk's heading budget
             assert(n <= sc.max_headings);
             var i: u32 = 0;
             while (i < n) : (i += 1) {
@@ -131,7 +131,7 @@ pub fn compute_over(op: Op, doc: []const u8, out_buf: []u8) (sc.ParseError || Qu
         .headings2 => {
             var headings: [sc.max_headings]sc.Heading = undefined;
             const n = try sc.extract_headings_at_depth(blocks[0..block_count], 2, &headings);
-            // invariant: the depth fold stays inside Pulp's heading budget
+            // invariant: the depth fold stays inside Husk's heading budget
             assert(n <= sc.max_headings);
             var i: u32 = 0;
             while (i < n) : (i += 1) {
@@ -180,7 +180,7 @@ pub fn count_words(text: []const u8) u32 {
 }
 
 /// The Q-vane host, end to end: validate the request against Lantern's contract,
-/// gate the model through the allow-list, route the prompt to Pulp for a real
+/// gate the model through the allow-list, route the prompt to Husk for a real
 /// reading, and return a Lantern Response bounded by max_tokens (length stop when
 /// the budget bites). The model is never trusted before the allow-list clears.
 pub fn answer(req: lc.Request, allow_text: []const u8, out_buf: []u8) (lc.LanternError || sc.ParseError || QueryError || error{NoSpaceLeft})!lc.Response {
@@ -264,7 +264,7 @@ fn welcome_outline_query() !void {
     assert(resp.tokens_out == 3);
     assert(resp.tokens_in == 3);
     assert(resp.stopped_reason == .eos);
-    print("reading_query: outline routed to Pulp — text '{s}' eos\n", .{resp.text});
+    print("reading_query: outline routed to Husk — text '{s}' eos\n", .{resp.text});
 }
 
 fn welcome_headings2_query() !void {
@@ -282,7 +282,7 @@ fn welcome_headings2_query() !void {
     assert(std.mem.eql(u8, resp.text, "Voices"));
     assert(resp.tokens_out == 1);
     assert(resp.stopped_reason == .eos);
-    print("reading_query: headings2 routed to Pulp — text '{s}' eos\n", .{resp.text});
+    print("reading_query: headings2 routed to Husk — text '{s}' eos\n", .{resp.text});
 }
 
 fn welcome_fences_query() !void {
@@ -300,7 +300,7 @@ fn welcome_fences_query() !void {
     assert(std.mem.eql(u8, resp.text, "rye 1 rish 1 plain 1"));
     assert(resp.tokens_out == 6);
     assert(resp.stopped_reason == .eos);
-    print("reading_query: fences routed to Pulp — text '{s}' eos\n", .{resp.text});
+    print("reading_query: fences routed to Husk — text '{s}' eos\n", .{resp.text});
 }
 
 fn welcome_length_budget() !void {

@@ -1,4 +1,4 @@
-//! granary/granary_core.rye -- Granary: name-facts, resolve, resin fold, Pulp, write gate, mirror.
+//! granary/granary_core.rye -- Granary: name-facts, resolve, resin fold, Husk, write gate, mirror.
 //!
 //! Four doors open through Exchange listing; WOV settlement waits; Mandi is its own room.
 //!
@@ -494,7 +494,7 @@ fn push_frame_line(frame: *Frame, text: []const u8) NameFactError!void {
     frame.line_count += 1;
 }
 
-/// Fold Pulp blocks into a drawn frame (text lines -- citizen's window).
+/// Fold Husk blocks into a drawn frame (text lines -- citizen's window).
 pub fn render_front_page(markdown: []const u8, frame: *Frame) NameFactError!void {
     frame.* = .{};
     var blocks: [pulp.max_blocks]pulp.Block = undefined;

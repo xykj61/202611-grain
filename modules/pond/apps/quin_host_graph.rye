@@ -1,7 +1,7 @@
 //! pond/apps/quin_host_graph.rye -- compass-surface Journey 6, Rung 3: the surface voice, gathered.
 //!
 //! Journey 1's Q-vane host (`quin_host`) gathers three voices under one bounded entry:
-//! Lattice for arithmetic, Pulp for reading, Flare for corpus craft. Journey 6
+//! Lattice for arithmetic, Husk for reading, Flare for corpus craft. Journey 6
 //! grew a fourth kind of voice -- one whose corpus is the living Blaze graph itself
 //! (`graph_query`). This rung gathers that surface-reading voice beside the other
 //! three, so a single Lantern-shaped request routes to whichever voice recognizes the
@@ -21,7 +21,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
-const qh = @import("quin_host.rye"); // the three-voice host: Lattice, Pulp, Flare
+const qh = @import("quin_host.rye"); // the three-voice host: Lattice, Husk, Flare
 const gq = @import("graph_query.rye"); // the surface voice — reads the living graph
 
 const quin_host_graph_version = "20260812.140813";
@@ -54,7 +54,7 @@ fn lift(voice: qh.Voice) Voice {
 }
 
 /// The gathered Q-vane host: dispatch one bounded request across four voices. Try the
-/// three-voice host first (Lattice, Pulp, Flare); on UnknownOp, try the graph
+/// three-voice host first (Lattice, Husk, Flare); on UnknownOp, try the graph
 /// voice; any other error is a real request fault and surfaces at once rather than
 /// being retried. The graph voice is last, so a prompt no voice recognizes refuses
 /// UnknownOp rather than inventing an answer.
@@ -105,7 +105,7 @@ fn welcome_reading_still_routes() !void {
     const served = try dispatch(req, allow, &buf);
     assert(served.voice == .pulp);
     assert(std.mem.eql(u8, served.response.text, "Grain Voices Detail"));
-    print("quin_host_graph: outline still routes to Pulp — text '{s}'\n", .{served.response.text});
+    print("quin_host_graph: outline still routes to Husk — text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_corpus_still_routes() !void {

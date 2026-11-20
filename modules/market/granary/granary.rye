@@ -72,7 +72,7 @@ fn welcome_registry_resolve_clone_frame(io: std.Io) !void {
         if (std.mem.indexOf(u8, frame.lines[i].slice(), "# rio/greeting") != null) saw_heading = true;
     }
     assert(saw_heading);
-    print("granary: Pulp front page drawn — lines={d}\n", .{frame.line_count});
+    print("granary: Husk front page drawn — lines={d}\n", .{frame.line_count});
     i = 0;
     while (i < frame.line_count) : (i += 1) {
         print("  {s}\n", .{frame.lines[i].slice()});

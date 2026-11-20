@@ -2,13 +2,13 @@
 //!
 //! Rungs one through three let the graph voice *count* the living surface (lanes,
 //! bolts, a head) and gathered it under the Q-vane host. This rung brings the reading
-//! voice to bear on the same surface: Pulp folds a markdown render of the graph,
+//! voice to bear on the same surface: Husk folds a markdown render of the graph,
 //! so the voice reads the very structure the browser shows -- a title, the bolts as
 //! headings, the lanes as their content. `outline` names the title and every bolt;
 //! `bolts` folds to just the depth-two bolt headings.
 //!
 //! The crux carried from Journey 2: the voice reads the same bytes the browser paints.
-//! `blaze_browser.render_markdown` is the one source; Pulp parses exactly those
+//! `blaze_browser.render_markdown` is the one source; Husk parses exactly those
 //! bytes, so the reading can never drift from the graph the reader sees. All bounded
 //! and metered by the same Lantern contract every other voice obeys.
 //!
@@ -31,7 +31,7 @@ const graph_reading_query_version = "20260812.141145";
 const max_result_text: u32 = lc.max_completion_len; // never exceed Lantern's completion bound
 
 /// The reading operations the router recognizes by name in the prompt. Each routes to
-/// a real Pulp fold of the graph's markdown; unknown prompts refuse (no guess).
+/// a real Husk fold of the graph's markdown; unknown prompts refuse (no guess).
 pub const Op = enum(u8) {
     outline,
     bolts,
@@ -58,7 +58,7 @@ pub fn route_op(prompt: []const u8) QueryError!Op {
 /// Append `src` into `out_buf` at `written`, bounded by the caller's buffer. Byte by
 /// byte within a named bound -- no `@memcpy`, no unbounded copy.
 fn append(out_buf: []u8, written: *u32, src: []const u8) QueryError!void {
-    // invariant: the source respects Pulp's block bound
+    // invariant: the source respects Husk's block bound
     assert(src.len <= sc.max_block_text);
     if (src.len > out_buf.len - written.*) return error.ResultTooLong;
     var i: u32 = 0;
@@ -73,7 +73,7 @@ fn append(out_buf: []u8, written: *u32, src: []const u8) QueryError!void {
     assert(written.* <= out_buf.len);
 }
 
-/// Render the live graph as markdown, parse it with Pulp, run the routed fold for
+/// Render the live graph as markdown, parse it with Husk, run the routed fold for
 /// a real result, and format it as space-separated words into `out_buf`. The graph's
 /// own bytes are the corpus -- never a pinned document.
 pub fn compute(op: Op, catalog: *const mn_catalog, out_buf: []u8) (sc.ParseError || mb.RenderError || QueryError || error{NoSpaceLeft})![]const u8 {
@@ -84,12 +84,12 @@ pub fn compute(op: Op, catalog: *const mn_catalog, out_buf: []u8) (sc.ParseError
 
     var md_buf: [mb.max_render_bytes]u8 = undefined;
     const md = try mb.render_markdown(catalog, &md_buf);
-    // invariant: the markdown render stays inside Pulp's document budget
+    // invariant: the markdown render stays inside Husk's document budget
     assert(md.len <= sc.max_doc_bytes);
 
     var blocks: [sc.max_blocks]sc.Block = undefined;
     const block_count = try sc.parse_markdown(md, &blocks);
-    // invariant: the parse stays inside Pulp's block budget
+    // invariant: the parse stays inside Husk's block budget
     assert(block_count <= sc.max_blocks);
 
     var written: u32 = 0;
@@ -97,7 +97,7 @@ pub fn compute(op: Op, catalog: *const mn_catalog, out_buf: []u8) (sc.ParseError
         .outline => {
             var headings: [sc.max_headings]sc.Heading = undefined;
             const n = try sc.extract_headings(blocks[0..block_count], &headings);
-            // invariant: the outline stays inside Pulp's heading budget
+            // invariant: the outline stays inside Husk's heading budget
             assert(n <= sc.max_headings);
             var i: u32 = 0;
             while (i < n) : (i += 1) {
@@ -108,7 +108,7 @@ pub fn compute(op: Op, catalog: *const mn_catalog, out_buf: []u8) (sc.ParseError
         .bolts => {
             var headings: [sc.max_headings]sc.Heading = undefined;
             const n = try sc.extract_headings_at_depth(blocks[0..block_count], 2, &headings);
-            // invariant: the depth fold stays inside Pulp's heading budget
+            // invariant: the depth fold stays inside Husk's heading budget
             assert(n <= sc.max_headings);
             var i: u32 = 0;
             while (i < n) : (i += 1) {
@@ -150,7 +150,7 @@ pub fn count_words(text: []const u8) u32 {
 
 /// The Q-vane reading query over the live graph: validate the request against
 /// Lantern's contract, gate the model through the allow-list, fold the graph's own
-/// markdown with Pulp, and return a Lantern Response bounded by max_tokens (length
+/// markdown with Husk, and return a Lantern Response bounded by max_tokens (length
 /// stop when the budget bites). The model is never trusted before the list clears; the
 /// graph is folded, never guessed.
 pub fn answer(req: lc.Request, allow_text: []const u8, catalog: *const mn_catalog, out_buf: []u8) (lc.LanternError || sc.ParseError || mb.RenderError || QueryError || error{NoSpaceLeft})!lc.Response {

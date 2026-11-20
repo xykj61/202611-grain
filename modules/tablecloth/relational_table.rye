@@ -1,7 +1,7 @@
 //! modules/tablecloth/relational_table.rye -- TAME Relational & KV Engine!
 //!
-//! Stamp: `20261115.133500` -- Separates `Tablecloth` cleanly from `Pulp`:
-//!   - `Pulp` owns Markdown prose, movement stacks, & vector/document recall;
+//! Stamp: `20261115.133500` -- Separates `Tablecloth` cleanly from `Husk`:
+//!   - `Husk` owns Markdown prose, movement stacks, & vector/document recall;
 //!   - `Tablecloth` owns deterministic, zero-allocation **typed relational
 //!     tables** (inspired by TigerBeetle's bounded state & SQLite's clarity),
 //!   - Subsumes Key:Value storage as a 2-column `(pk, label)` table so Grain

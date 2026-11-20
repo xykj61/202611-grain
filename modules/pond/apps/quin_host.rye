@@ -2,7 +2,7 @@
 //!
 //! Quin is a role, not a module -- the Q-vane that gathers the four voices. Rungs
 //! one through three composed each built voice with Lantern's contract as its own
-//! Pond app: Lattice (inference_query), Pulp (reading_query), Flare
+//! Pond app: Lattice (inference_query), Husk (reading_query), Flare
 //! (corpus_query). This rung gathers those three under one bounded entry: a single
 //! Lantern-shaped request is dispatched to whichever voice recognizes the prompt,
 //! and the same Lantern-contract-bounded Response returns -- no matter which voice
@@ -22,7 +22,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
 const iq = @import("inference_query.rye"); // Lattice voice — arithmetic
-const rq = @import("reading_query.rye"); // Pulp voice — reading
+const rq = @import("reading_query.rye"); // Husk voice — reading
 const cq = @import("corpus_query.rye"); // Flare voice — corpus craft
 
 const quin_host_version = "20260812.140000";
@@ -99,11 +99,11 @@ fn welcome_pulp_route() !void {
         .max_tokens = 64,
     };
     const served = try dispatch(req, allow, &buf);
-    // invariant: the reading prompt reached the Pulp voice
+    // invariant: the reading prompt reached the Husk voice
     assert(served.voice == .pulp);
     assert(std.mem.eql(u8, served.response.text, "Grain Voices Detail"));
     assert(served.response.stopped_reason == .eos);
-    print("quin_host: outline dispatched to Pulp — text '{s}'\n", .{served.response.text});
+    print("quin_host: outline dispatched to Husk — text '{s}'\n", .{served.response.text});
 }
 
 fn welcome_flare_route() !void {

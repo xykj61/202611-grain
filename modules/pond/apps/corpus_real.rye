@@ -2,8 +2,8 @@
 //!
 //! Chapter 2, Yield: every module the tree built stands on real data, not a demo
 //! catalog. The reading voice has only ever read `reading_query.rye`'s `pinned_doc`
-//! -- a markdown slice hand-tuned to sit inside every Pulp bound. This rung
-//! carries that same Lantern-contracted Pulp reading onto a **real tree
+//! -- a markdown slice hand-tuned to sit inside every Husk bound. This rung
+//! carries that same Lantern-contracted Husk reading onto a **real tree
 //! document**, embedded at compile time (no network, no runtime filesystem -- the
 //! `@embedFile` idiom already lived-with in tablecloth/store.rye). The corpus is a
 //! symlink to the living context/TAME_CORE.md, so the bytes read here are exactly
@@ -12,7 +12,7 @@
 //! The real bytes surfaced one Yield red (#72): a real reference paragraph -- a run
 //! of consecutive bullet lines -- measured 1327 bytes, far past the 512-byte
 //! `max_block_text` the demo literal was tuned to fit, so parse_markdown refused
-//! `BlockTooLarge`. The fix closed on metal: pulp_core's `max_block_text`
+//! `BlockTooLarge`. The fix closed on metal: husk_core's `max_block_text`
 //! doubled twice, 512 -> 2048, admitting real reference-doc paragraphs with headroom
 //! over the measured maximum. This witness proves the real reading now runs GREEN,
 //! and proves the red was real -- the largest real block exceeds the old bound.
@@ -51,7 +51,7 @@ const allow_line = "model_hash sha3-256-rye-forge-lap0";
 fn welcome_real_parse() !void {
     var blocks: [sc.max_blocks]sc.Block = undefined;
     const block_count = try sc.parse_markdown(real_doc, &blocks);
-    // invariant: the parse stays inside Pulp's block budget
+    // invariant: the parse stays inside Husk's block budget
     assert(block_count <= sc.max_blocks);
     // invariant: a real reference document carries more than one block
     assert(block_count > 1);

@@ -2,7 +2,7 @@
 //!
 //! Stamp: `20261115.143500` -- Unites all 6 interactive rooms (`Bloom`,
 //! `Dimeroll`, `Resonance` 3-Zone DAW, `Scribe`, `Civic/Blaze` 405-Council +
-//! `Pulp` + `Tablecloth` + `Pond Puddle` + `Glasswall`, and `Surf`) across
+//! `Husk` + `Tablecloth` + `Pond Puddle` + `Glasswall`, and `Surf`) across
 //! `aarch64-macos`, `wasm32-wasi`, and `aarch64-linux-android`!
 
 const std = @import("std");

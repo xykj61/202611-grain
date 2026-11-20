@@ -1,6 +1,6 @@
 //! pond/apps/quin_host_artifact.rye - compass-surface Journey 8, Rung 3: the artifact voice, gathered.
 //!
-//! Journey 1's Q-vane host gathered three voices (Lattice, Pulp, Flare); Journey 6
+//! Journey 1's Q-vane host gathered three voices (Lattice, Husk, Flare); Journey 6
 //! gathered a fourth whose corpus is the living Blaze graph. This rung gathers a fifth,
 //! the voice whose corpus is a named Tablecloth artifact (`artifact_query`) - so a single
 //! Lantern-shaped request routes to whichever voice recognizes the prompt: arithmetic,
@@ -24,7 +24,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
-const qhg = @import("quin_host_graph.rye"); // the four-voice host: Lattice, Pulp, Flare, graph
+const qhg = @import("quin_host_graph.rye"); // the four-voice host: Lattice, Husk, Flare, graph
 const aq = @import("artifact_query.rye"); // the artifact voice - reads a named Tablecloth artifact
 
 const quin_host_artifact_version = "20260812.150200";
@@ -59,7 +59,7 @@ fn lift(voice: qhg.Voice) Voice {
 }
 
 /// The gathered Q-vane host: dispatch one bounded request across five voices. Try the
-/// four-voice host first (Lattice, Pulp, Flare, graph); on UnknownOp, try the artifact
+/// four-voice host first (Lattice, Husk, Flare, graph); on UnknownOp, try the artifact
 /// voice; any other error is a real request fault and surfaces at once rather than being
 /// retried. The artifact voice is last, so a prompt no voice recognizes refuses UnknownOp
 /// rather than inventing an answer over an artifact it cannot name.

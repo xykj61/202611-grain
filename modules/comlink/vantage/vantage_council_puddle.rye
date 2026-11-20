@@ -2,7 +2,7 @@
 //!
 //! Stamp: `20261115.141500` -- Surfaces Keaton's `d15-3-9-405` Council
 //! (`243/405` operational & `324/405` constitutional gauges), `Pond Puddle`
-//! roaming server status, `Pulp` `[15..9375]` Movement stack, and One-Clock
+//! roaming server status, `Husk` `[15..9375]` Movement stack, and One-Clock
 //! `-est`/`-edt`/`-utc` status inside `Vantage` (`Station` & `Carry`)!
 
 const std = @import("std");

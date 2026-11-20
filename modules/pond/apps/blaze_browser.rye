@@ -289,7 +289,7 @@ pub fn render(catalog: *const mn.BoltCatalog, out: []u8) RenderError![]const u8 
 /// heading, then one `## peer/bolt` heading per distinct bolt, then a `- path` line
 /// per lane beneath it. Deterministic and bounded exactly like `render`, walking the
 /// bolts in append order. This is the reading-voice's door onto the graph -- a
-/// markdown structure Pulp can outline -- so a voice folds the very grouping the
+/// markdown structure Husk can outline -- so a voice folds the very grouping the
 /// browser shows, rather than a separate reading of the catalog.
 pub fn render_markdown(catalog: *const mn.BoltCatalog, out: []u8) RenderError![]const u8 {
     // invariant: the caller's buffer respects the render budget

@@ -12,13 +12,13 @@
 //! embedded at compile time through a symlink in pond/apps/corpora/. It carries the
 //! honest adversary: line 57, `# my_first_witness.rish`, sits INSIDE a ```rish code
 //! fence. A naive `grep -cE '^#'` counts it and reports seven headings; a reading that
-//! understands fences reports the true six. Pulp understands fences, so the voice
+//! understands fences reports the true six. Husk understands fences, so the voice
 //! is truer to the bytes than a line prefix -- and this witness proves it, three tools
-//! converging: Pulp's fence-aware reading, the reading_query voice over it, and an
+//! converging: Husk's fence-aware reading, the reading_query voice over it, and an
 //! independent awk that also respects fences.
 //!
 //! Additive by construction: it reuses reading_query's public answer_over and
-//! Pulp's public parse_markdown / extract_headings / count_fence_kinds; nothing
+//! Husk's public parse_markdown / extract_headings / count_fence_kinds; nothing
 //! beneath changes.
 //!
 //!   rye build pond/apps/corpus_true.rye -femit-bin=pond/bin/corpus-true
@@ -53,24 +53,24 @@ const Reading = struct {
     words: u32,
 };
 
-/// Read the real document through the same engine the voice uses (Pulp), and
+/// Read the real document through the same engine the voice uses (Husk), and
 /// gather the counts a reader can check against the raw bytes. This is the voice's
 /// structural reading -- headings and fence kinds are fence-aware, so a '#' inside a
 /// code fence is code, never a heading.
 fn measure_reading(doc: []const u8, out_buf: []u8) !Reading {
-    // invariant: the document respects Pulp's whole-document bound
+    // invariant: the document respects Husk's whole-document bound
     assert(doc.len <= sc.max_doc_bytes);
     // invariant: the outline buffer honors Lantern's completion bound
     assert(out_buf.len <= lc.max_completion_len);
 
     var blocks: [sc.max_blocks]sc.Block = undefined;
     const block_count = try sc.parse_markdown(doc, &blocks);
-    // invariant: the parse stays inside Pulp's block budget
+    // invariant: the parse stays inside Husk's block budget
     assert(block_count <= sc.max_blocks);
 
     var headings: [sc.max_headings]sc.Heading = undefined;
     const heading_count = try sc.extract_headings(blocks[0..block_count], &headings);
-    // invariant: the outline stays inside Pulp's heading budget
+    // invariant: the outline stays inside Husk's heading budget
     assert(heading_count <= sc.max_headings);
 
     // Every reported heading is verbatim in the raw bytes (no invented heading), and
@@ -111,7 +111,7 @@ fn measure_reading(doc: []const u8, out_buf: []u8) !Reading {
 
 /// The crux: the voice's reading is true to the bytes, confirmed against an independent
 /// fence-aware measurement. The witness runs md_truth.awk over the same real file and
-/// compares this line field for field -- Pulp, the voice, and awk all agree.
+/// compares this line field for field -- Husk, the voice, and awk all agree.
 fn welcome_reading_is_true() !void {
     var buf: [lc.max_completion_len]u8 = undefined;
     const r = try measure_reading(real_doc, &buf);

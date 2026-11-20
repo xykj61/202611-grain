@@ -104,7 +104,7 @@ max_cols 80 modules/tablecloth/gleaner_intake.rye
 max_cols 80 modules/caravan/custody/vault_zeroize_seal.rye
 ascii_7bit mitra-shed/shed-prep.md
 max_cols 80 libraries/shastra/panchanga_shastra_bridge.rye
-ascii_7bit docs-geode/tutorials/civic-glasswall-pulp-tablecloth-and-puddle.md
+ascii_7bit docs-geode/tutorials/civic-glasswall-husk-tablecloth-and-puddle.md
 max_cols 80 blazepod/rv64_glasswall_boot.rye
 max_cols 80 modules/comlink/constel_405_discovery.rye
 max_cols 80 libraries/risala/twilight_wheel.rye
