@@ -13,3 +13,7 @@
    feature names (`*_witness.rish`), never milestone counts.
 4. **Brix & Kyri (`languages/brix/`, `languages/kyri/`):** Declarative recipes
    and canonical data records; chronological `YYYYMMDD.HHMMSS` stamps only.
+5. **Husk (`.husk`):** Glow-flavored markdown templates that lower to `.md` via
+   `grain-ww husk-lower`. Use `{{ binding }}` for live-computed values
+   (myofascia, commit-count, orbit, sign, version-stamp) and `{# comment #}`
+   for stripped comments. Single-source metrics -- define once, never hand-sync.

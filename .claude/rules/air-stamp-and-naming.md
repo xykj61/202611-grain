@@ -28,4 +28,5 @@
   Sikshastakam*).
 - **Canonical Vocabulary:** Use **`Resonance`** (never `Lotus` for the DAW),
   **`grain-ww`** (never `grainos`), **`Myofascia`** (never bare `fascia`), and
-  **`Husk`** (Markdown/movement stacks) vs **`Tablecloth`** (relational SQL+KV).
+  **`Husk`** (`.husk` templates, markdown lowering, movement stacks) vs
+  **`Tablecloth`** (relational SQL+KV).
