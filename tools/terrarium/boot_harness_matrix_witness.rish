@@ -1,0 +1,20 @@
+# boot_harness_matrix_witness.rish -- boot-to-harness matrix proof.
+#
+# Builds and runs blazepod/boot_harness_matrix.rye selftest proving
+# 6 welcome + 6 refusal paths across tally-ram and tally-vn boot
+# envelopes end-to-end from RV64GC pin evaluation through Cached
+# Harness dispatch.
+
+let bin = "blazepod/bin/boot-harness-matrix"
+let build = run ["rye" "build" "blazepod/boot_harness_matrix.rye" "-femit-bin=${bin}"]
+assert build.ok else "boot_harness_matrix build failed"
+
+let test = run ["sh" "-c" "${bin} 2>&1"]
+assert test.ok else "boot_harness_matrix selftest exited non-zero"
+assert test.out contains "GREEN" else "boot_harness_matrix missing GREEN"
+assert test.out contains "6 welcome" else "boot_harness_matrix missing welcome count"
+assert test.out contains "6 refusal" else "boot_harness_matrix missing refusal count"
+assert test.out contains "tally-ram" else "boot_harness_matrix missing tally-ram"
+assert test.out contains "tally-vn" else "boot_harness_matrix missing tally-vn"
+
+say "GREEN: boot_harness_matrix -- full boot-to-harness matrix proven."

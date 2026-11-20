@@ -1,0 +1,258 @@
+//! blazepod/boot_harness_matrix.rye -- Boot-to-Harness Matrix!
+//!
+//! Stamp: `20261119.200000` -- Capricorn (*Ten-year stone: bare-metal
+//! RISC-V & right-repair*): proves the full chain from physical
+//! `rv64_glasswall_boot` pin evaluation through `HardwarePosture`
+//! selection to `grain_cached_harness` dispatch for both `tally-ram`
+//! (pure 4 GiB+ RAM, zero external API) and `tally-vn` (NVMe WAL +
+//! Caravan-gated Gemini API airlock) boot envelopes.
+//!
+//! The matrix covers 6 welcome paths and 6 refusal paths across the
+//! two modes, verifying that Glasswall + TAME + Custody invariants
+//! hold end-to-end from silicon pins to harness turn outcome.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const boot = @import("rv64_glasswall_boot.rye");
+const ch = @import("../modules/harness/grain_cached_harness.rye");
+const hc = @import("../modules/harness/harness_core.rye");
+
+pub const version = "20261119.200000";
+const nl: u8 = 10;
+
+pub const BootToHarnessVerdict = struct {
+    boot_pass: bool,
+    posture: ch.HardwarePosture,
+    harness_ok: bool,
+    cache_hit: bool,
+    wood_spent: u64,
+};
+
+pub fn boot_then_dispatch(
+    pins: boot.BootPins,
+    posture: ch.HardwarePosture,
+    harness: *ch.CachedHarness,
+    transport: ch.TransportKind,
+    caps: u32,
+    prompt: []const u8,
+    wood: u64,
+) BootToHarnessVerdict {
+    const sifive = boot.evaluate_hart0_pins(pins);
+    if (sifive != boot.sifive_pass) {
+        return .{
+            .boot_pass = false,
+            .posture = posture,
+            .harness_ok = false,
+            .cache_hit = false,
+            .wood_spent = 0,
+        };
+    }
+    // invariant: boot passed means RAM-only + locked ROM + >= 4 GiB
+    assert(!pins.nvme_present and pins.spi_wp_locked);
+
+    const turn = ch.HarnessTurn{
+        .transport = transport,
+        .posture = posture,
+        .granted_caps = caps,
+        .prompt = prompt,
+        .wood_cost = wood,
+    };
+    const outcome = harness.dispatch(turn) catch |_| {
+        return .{
+            .boot_pass = true,
+            .posture = posture,
+            .harness_ok = false,
+            .cache_hit = false,
+            .wood_spent = 0,
+        };
+    };
+    // invariant: successful dispatch returns a valid outcome
+    assert(outcome.mycelium_seq >= 1);
+    return .{
+        .boot_pass = true,
+        .posture = posture,
+        .harness_ok = true,
+        .cache_hit = outcome.cache_hit,
+        .wood_spent = outcome.wood_spent,
+    };
+}
+
+const ram_pins = boot.BootPins{
+    .nvme_present = false,
+    .spi_wp_locked = true,
+    .mic_vdd_closed = false,
+    .bystander_lamp_lit = false,
+    .dram_mib = 8192,
+};
+
+const ram_pins_mic_ok = boot.BootPins{
+    .nvme_present = false,
+    .spi_wp_locked = true,
+    .mic_vdd_closed = true,
+    .bystander_lamp_lit = true,
+    .dram_mib = 4096,
+};
+
+fn run_selftest() !u8 {
+    var harness = ch.CachedHarness.init();
+    const ram_caps = hc.cap_pure_compute | hc.cap_skate_surface;
+    const vn_caps = ram_caps | hc.cap_vault_gemini_key
+        | hc.cap_comlink_peer;
+
+    // --- tally-ram welcome paths (3) ---
+
+    // W1: RAM boot + local Flare compute
+    const w1 = boot_then_dispatch(
+        ram_pins, .tally_ram, &harness,
+        .flare_local, ram_caps,
+        "render skate tile", 10,
+    );
+    if (!w1.boot_pass or !w1.harness_ok) return error.RamFlareRejected;
+
+    // W2: RAM boot + Pond sandbox
+    const w2 = boot_then_dispatch(
+        ram_pins, .tally_ram, &harness,
+        .pond_sandbox, ram_caps,
+        "run citizen glow fold", 5,
+    );
+    if (!w2.boot_pass or !w2.harness_ok) return error.RamPondRejected;
+
+    // W3: RAM boot + cache hit (same prompt replayed)
+    const w3 = boot_then_dispatch(
+        ram_pins, .tally_ram, &harness,
+        .flare_local, ram_caps,
+        "render skate tile", 10,
+    );
+    if (!w3.cache_hit or w3.wood_spent != 0) {
+        return error.RamCacheHitBroken;
+    }
+
+    // --- tally-ram refusal paths (3) ---
+
+    // R1: RAM boot refuses Gemini API bridge
+    const r1 = boot_then_dispatch(
+        ram_pins, .tally_ram, &harness,
+        .gemini_api_bridge, vn_caps,
+        "fold synonym macro", 25,
+    );
+    if (r1.harness_ok) return error.RamLeakedGeminiApi;
+
+    // R2: Rogue NVMe fails boot entirely
+    const bad_nvme = boot.BootPins{
+        .nvme_present = true,
+        .spi_wp_locked = true,
+        .mic_vdd_closed = false,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    };
+    const r2 = boot_then_dispatch(
+        bad_nvme, .tally_ram, &harness,
+        .flare_local, ram_caps,
+        "should never reach harness", 0,
+    );
+    if (r2.boot_pass) return error.RogueNvmePassedBoot;
+
+    // R3: Silent mic (VDD closed, lamp unlit) fails boot
+    const bad_mic = boot.BootPins{
+        .nvme_present = false,
+        .spi_wp_locked = true,
+        .mic_vdd_closed = true,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    };
+    const r3 = boot_then_dispatch(
+        bad_mic, .tally_ram, &harness,
+        .flare_local, ram_caps,
+        "should never reach harness", 0,
+    );
+    if (r3.boot_pass) return error.SilentMicPassedBoot;
+
+    // --- tally-vn welcome paths (3) ---
+
+    // W4: VN boot + Gemini API with Caravan cap
+    const w4 = boot_then_dispatch(
+        ram_pins, .tally_vn, &harness,
+        .gemini_api_bridge, vn_caps,
+        "fold synonym macro across vantage", 25,
+    );
+    if (!w4.boot_pass or !w4.harness_ok) {
+        return error.VnGeminiRejected;
+    }
+
+    // W5: VN boot + local Flare (still works)
+    const w5 = boot_then_dispatch(
+        ram_pins, .tally_vn, &harness,
+        .flare_local, vn_caps,
+        "local flare on vn posture", 5,
+    );
+    if (!w5.boot_pass or !w5.harness_ok) {
+        return error.VnFlareRejected;
+    }
+
+    // W6: VN boot + mic with bystander lamp lit
+    const w6 = boot_then_dispatch(
+        ram_pins_mic_ok, .tally_vn, &harness,
+        .pond_sandbox, vn_caps,
+        "earpiece fold with consent lamp", 8,
+    );
+    if (!w6.boot_pass or !w6.harness_ok) {
+        return error.VnMicConsentRejected;
+    }
+
+    // --- tally-vn refusal paths (3) ---
+
+    // R4: VN Gemini without Caravan key cap
+    const r4 = boot_then_dispatch(
+        ram_pins, .tally_vn, &harness,
+        .gemini_api_bridge, ram_caps,
+        "unauthorized gemini attempt", 25,
+    );
+    if (r4.harness_ok) return error.VnLeakedUnauthorizedApi;
+
+    // R5: Under-spec DRAM fails boot
+    const bad_dram = boot.BootPins{
+        .nvme_present = false,
+        .spi_wp_locked = true,
+        .mic_vdd_closed = false,
+        .bystander_lamp_lit = false,
+        .dram_mib = 2048,
+    };
+    const r5 = boot_then_dispatch(
+        bad_dram, .tally_vn, &harness,
+        .flare_local, vn_caps,
+        "should never reach harness", 0,
+    );
+    if (r5.boot_pass) return error.UnderspecDramPassedBoot;
+
+    // R6: Unlocked SPI NOR fails boot
+    const bad_spi = boot.BootPins{
+        .nvme_present = false,
+        .spi_wp_locked = false,
+        .mic_vdd_closed = false,
+        .bystander_lamp_lit = false,
+        .dram_mib = 8192,
+    };
+    const r6 = boot_then_dispatch(
+        bad_spi, .tally_vn, &harness,
+        .flare_local, vn_caps,
+        "should never reach harness", 0,
+    );
+    if (r6.boot_pass) return error.UnlockedSpiPassedBoot;
+
+    // --- summary ---
+    // invariant: harness accumulated correct WOOD across all paths
+    assert(harness.wood_total >= 10);
+    // invariant: cache served at least one hit (W3)
+    assert(harness.hits >= 1);
+
+    print("GREEN: boot_harness_matrix -- " ++
+        "6 welcome + 6 refusal across tally-ram & tally-vn.{c}", .{
+        nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

@@ -1,0 +1,11 @@
+::  blazepod/glow/gate-boot-harness-matrix.glow -- Boot Matrix!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-boot-to-harness
+  |=  [sifive=@ud posture=@ud caps=@ud]                ::  pin -> harness
+  ^-  @ud                                               ::  dispatch ok
+  ~|  'blazepod-boot-pin-or-harness-cap-refused'        ::  matrix refusal
+  ?>  &(eql(sifive 21845) gth(caps 0))                  ::  0x5555 == pass
+  posture
+--
