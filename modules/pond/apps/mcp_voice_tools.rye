@@ -3,7 +3,7 @@
 //! Rung one made the whole intelligence reachable as one MCP tool (`ask`) over the
 //! gathered Q-vane host. This rung gives each voice its own name at the protocol surface:
 //! a caller **discovers** the intelligence by listing five typed tools - `lattice`,
-//! `pulp`, `flare`, `graph`, `artifact` - and **invokes** one by name. The tool name
+//! `husk`, `flare`, `graph`, `artifact` - and **invokes** one by name. The tool name
 //! is a typed assertion of which voice should answer: `serve_voice` dispatches the prompt
 //! through the same gathered host and then cross-checks that the voice which actually
 //! served equals the voice the tool named, refusing `wrong_voice` when a prompt routes
@@ -49,7 +49,7 @@ const max_out: u32 = mcp.max_result;
 const VoiceTool = struct { name: []const u8, voice: qha.Voice };
 const voice_tools = [_]VoiceTool{
     .{ .name = "lattice", .voice = .lattice },
-    .{ .name = "pulp", .voice = .pulp },
+    .{ .name = "husk", .voice = .husk },
     .{ .name = "flare", .voice = .flare },
     .{ .name = "graph", .voice = .graph },
     .{ .name = "artifact", .voice = .artifact },
@@ -65,9 +65,9 @@ const m_lattice =
     \\arg prompt str
     \\result str
 ;
-const m_pulp =
+const m_husk =
     \\format mcp-tool-v1
-    \\tool pulp
+    \\tool husk
     \\summary a reading over the Husk voice
     \\arg model str
     \\arg prompt str
@@ -97,7 +97,7 @@ const m_artifact =
     \\arg prompt str
     \\result str
 ;
-const manifests = [_][]const u8{ m_lattice, m_pulp, m_flare, m_graph, m_artifact };
+const manifests = [_][]const u8{ m_lattice, m_husk, m_flare, m_graph, m_artifact };
 
 /// Map an invoked tool name to the voice that must answer it, or null when the name is
 /// not one of the five voice tools.

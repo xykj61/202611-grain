@@ -35,7 +35,7 @@ const max_result_text: u32 = lc.max_completion_len;
 /// artifact voice this rung gathers.
 pub const Voice = enum(u8) {
     lattice,
-    pulp,
+    husk,
     flare,
     graph,
     artifact,
@@ -52,7 +52,7 @@ fn lift(voice: qhg.Voice) Voice {
     // invariant: every four-voice-host voice maps to exactly one wider voice.
     return switch (voice) {
         .lattice => .lattice,
-        .pulp => .pulp,
+        .husk => .husk,
         .flare => .flare,
         .graph => .graph,
     };

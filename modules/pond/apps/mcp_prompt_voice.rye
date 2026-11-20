@@ -52,7 +52,7 @@ pub const RunError = error{
 fn voice_name(v: qha.Voice) []const u8 {
     return switch (v) {
         .lattice => "lattice",
-        .pulp => "pulp",
+        .husk => "husk",
         .flare => "flare",
         .graph => "graph",
         .artifact => "artifact",

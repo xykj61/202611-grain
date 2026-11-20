@@ -13,7 +13,7 @@
 //! and metered by the same Lantern contract every other voice obeys.
 //!
 //! Additive by construction: it imports lantern_core, blaze_browser, and
-//! pulp_core and calls only their public functions. No contract changes; the
+//! husk_core and calls only their public functions. No contract changes; the
 //! browser and the counting voice stay their own green binaries.
 //!
 //!   rye build pond/apps/graph_reading_query.rye -femit-bin=pond/bin/graph-reading-query

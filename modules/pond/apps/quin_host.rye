@@ -32,7 +32,7 @@ const max_result_text: u32 = lc.max_completion_len; // never exceed Lantern's co
 /// Which voice served a dispatched request -- for the host's own accounting.
 pub const Voice = enum(u8) {
     lattice,
-    pulp,
+    husk,
     flare,
 };
 
@@ -60,7 +60,7 @@ pub fn dispatch(req: lc.Request, allow_text: []const u8, out_buf: []u8) !Served 
         if (err != error.UnknownOp) return err;
     }
     if (rq.answer(req, allow_text, out_buf)) |resp| {
-        return .{ .voice = .pulp, .response = resp };
+        return .{ .voice = .husk, .response = resp };
     } else |err| {
         if (err != error.UnknownOp) return err;
     }
@@ -88,7 +88,7 @@ fn welcome_lattice_route() !void {
     print("quin_host: matmul dispatched to Lattice — text '{s}'\n", .{served.response.text});
 }
 
-fn welcome_pulp_route() !void {
+fn welcome_husk_route() !void {
     const allow =
         \\model_hash sha3-256-rye-forge-lap0
     ;
@@ -100,7 +100,7 @@ fn welcome_pulp_route() !void {
     };
     const served = try dispatch(req, allow, &buf);
     // invariant: the reading prompt reached the Husk voice
-    assert(served.voice == .pulp);
+    assert(served.voice == .husk);
     assert(std.mem.eql(u8, served.response.text, "Grain Voices Detail"));
     assert(served.response.stopped_reason == .eos);
     print("quin_host: outline dispatched to Husk — text '{s}'\n", .{served.response.text});
@@ -204,7 +204,7 @@ pub fn main(init: std.process.Init) !u8 {
     const args = try init.minimal.args.toSlice(garden);
     if (args.len >= 2 and std.mem.eql(u8, args[1], "selftest")) {
         try welcome_lattice_route();
-        try welcome_pulp_route();
+        try welcome_husk_route();
         try welcome_flare_route();
         try welcome_length_carries_through();
         try unwelcome_model_not_allowed();

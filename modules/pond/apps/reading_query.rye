@@ -9,7 +9,7 @@
 //! metering that governs every Lantern completion and every Lattice query in
 //! rung one.
 //!
-//! Additive by construction: it imports lantern_core and pulp_core and calls
+//! Additive by construction: it imports lantern_core and husk_core and calls
 //! only their public functions. Neither contract changes; rung one is untouched.
 //!
 //!   rye build pond/apps/reading_query.rye -femit-bin=pond/bin/reading-query

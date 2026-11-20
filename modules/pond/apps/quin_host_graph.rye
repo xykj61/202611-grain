@@ -32,7 +32,7 @@ const max_result_text: u32 = lc.max_completion_len;
 /// graph voice this rung gathers.
 pub const Voice = enum(u8) {
     lattice,
-    pulp,
+    husk,
     flare,
     graph,
 };
@@ -48,7 +48,7 @@ fn lift(voice: qh.Voice) Voice {
     // invariant: every three-voice-host voice maps to exactly one wider voice.
     return switch (voice) {
         .lattice => .lattice,
-        .pulp => .pulp,
+        .husk => .husk,
         .flare => .flare,
     };
 }
@@ -103,7 +103,7 @@ fn welcome_reading_still_routes() !void {
         .max_tokens = 64,
     };
     const served = try dispatch(req, allow, &buf);
-    assert(served.voice == .pulp);
+    assert(served.voice == .husk);
     assert(std.mem.eql(u8, served.response.text, "Grain Voices Detail"));
     print("quin_host_graph: outline still routes to Husk — text '{s}'\n", .{served.response.text});
 }
