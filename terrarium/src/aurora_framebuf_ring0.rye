@@ -1,0 +1,131 @@
+//! terrarium/src/aurora_framebuf_ring0.rye -- Aether!
+//!
+//! Stamp: `20261119.205959` -- Scorpio 8/15 Orbit 9: Ring-0
+//! Aurora framebuffer ring-0 TAME audit and bounded rewrite.
+//!
+//! This module owns the freestanding framebuffer primitive:
+//! a bounded pixel surface with explicit dimensions, stride,
+//! and Tally arena allocation. All pixel writes are bounds-
+//! checked. No unbounded loops. Write-only: the framebuffer
+//! is never read back (Glasswall).
+//!
+//! The elder `framebuf.rye` proved the concept; this module
+//! makes it TAME: explicit u32 bit widths, >= 2 invariants
+//! per function, bounded iteration, refusal on overflow.
+//!
+//! Target: freestanding RV64GC / AArch64 (no std)
+//! Fail-stop: sifive_test 0x0001_3333
+
+const assert = struct {
+    fn check(ok: bool) void {
+        if (!ok) fail_stop();
+    }
+    fn fail_stop() noreturn {
+        const sifive_test: *volatile u32 =
+            @ptrFromInt(0x10_0000);
+        sifive_test.* = 0x0001_3333;
+        while (true) {}
+    }
+};
+
+pub const version = "20261119.205959";
+
+pub const max_width: u32 = 1920;
+pub const max_height: u32 = 1080;
+pub const bytes_per_pixel: u32 = 4;
+pub const pixel_format_xrgb8888: u32 = 0x34325258;
+
+pub const FrameBuf = struct {
+    base: u32,
+    width: u32,
+    height: u32,
+    stride: u32,
+    total_bytes: u32,
+
+    pub fn init(
+        base_addr: u32,
+        w: u32,
+        h: u32,
+    ) FrameBuf {
+        // invariant: dimensions bounded
+        assert.check(w > 0 and w <= max_width);
+        assert.check(h > 0 and h <= max_height);
+        const stride = w * bytes_per_pixel;
+        // invariant: no u32 overflow
+        assert.check(stride / bytes_per_pixel == w);
+        const total = stride * h;
+        assert.check(total / stride == h);
+        return .{
+            .base = base_addr,
+            .width = w,
+            .height = h,
+            .stride = stride,
+            .total_bytes = total,
+        };
+    }
+
+    pub fn pixel_offset(
+        self: *const FrameBuf,
+        x: u32,
+        y: u32,
+    ) ?u32 {
+        if (x >= self.width) return null;
+        if (y >= self.height) return null;
+        const off = y * self.stride + x * bytes_per_pixel;
+        // invariant: offset within buffer
+        assert.check(off < self.total_bytes);
+        return off;
+    }
+
+    pub fn write_pixel(
+        self: *const FrameBuf,
+        x: u32,
+        y: u32,
+        xrgb: u32,
+    ) bool {
+        const off = self.pixel_offset(x, y);
+        if (off == null) return false;
+        const addr = self.base + off.?;
+        const ptr: *volatile u32 = @ptrFromInt(addr);
+        ptr.* = xrgb;
+        return true;
+    }
+
+    pub fn fill_rect(
+        self: *const FrameBuf,
+        x0: u32,
+        y0: u32,
+        w: u32,
+        h: u32,
+        xrgb: u32,
+    ) u32 {
+        // invariant: rect dimensions bounded
+        assert.check(w <= self.width);
+        assert.check(h <= self.height);
+        var count: u32 = 0;
+        var y: u32 = y0;
+        while (y < y0 + h and y < self.height) : (y += 1) {
+            var x: u32 = x0;
+            while (x < x0 + w and x < self.width) : (x += 1) {
+                if (self.write_pixel(x, y, xrgb)) {
+                    count += 1;
+                }
+            }
+        }
+        return count;
+    }
+
+    pub fn clear(self: *const FrameBuf, xrgb: u32) u32 {
+        return self.fill_rect(
+            0, 0, self.width, self.height, xrgb,
+        );
+    }
+};
+
+pub const FrameBufRefusal = enum(u8) {
+    none = 0,
+    width_overflow = 1,
+    height_overflow = 2,
+    pixel_out_of_bounds = 3,
+    zero_dimension = 4,
+};

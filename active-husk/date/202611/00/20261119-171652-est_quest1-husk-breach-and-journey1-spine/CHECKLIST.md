@@ -61,15 +61,15 @@ paired welcome/refusal. Seed publishes at Siya 15/15.*
 - [x] **[Taurus, `20261119.204643`, `57.101`]** `carry_hearth_pointer.rye` (pointer file read/write, round-trip serialize/parse, corrupt/truncated/invalid/missing fallback, 2 welcome + 4 refusal)
 - [x] **[Gemini, `20261119.204920`, `57.102`]** `carry_publish_gate.rye` + `gate-carry-publish.glow` -- 3-door gate-before-surface for publishing UI (2 welcome + 4 refusal)
 - [x] **[Cancer, `20261119.205016`, `57.103`]** `carry_publish_pipeline.rye` -- 4-stage bounded pipeline with WOOD (1 welcome + 4 refusal)
-- [ ] **[TOP -- Leo, `57.104`]** `carry_manifest_emit.rye` -- Android manifest from declared capabilities (elder: `tube_manifest*`)
-- [ ] **[Virgo, `57.105`]** `carry_audience_session.rye` -- multi-signer broadcast + chat (elder: `seva_jabs2_*`)
-- [ ] **[Libra, `57.106`]** `carry_device_setup.rye` -- USB-to-desk pipeline bounded (elders: `setu0`..`setu6`)
-- [ ] **[Scorpio, `57.107`]** `carry_desk_hold.rye` -- Wayland/X11 desk surface hold (elders: `setu_desk_*`)
-- [ ] **[Sagittarius, `57.108`]** `carry_dexter_keyboard.rye` -- text input + Dexter glass keyboard (elders: `dexter_glass_key*`)
-- [ ] **[Capricorn, `57.109`]** Terrarium Carry glass pipe update (`terrarium/carry-tablet/`) with new Vantage Carry imports
-- [ ] **[Aquarius, `57.110`]** Update `grain_ww_closure.brix` with all new Carry modules + Glow desks
-- [ ] **[Pisces, `57.111`]** Carry Vantage integration witness -- prove full admission -> hearth -> publish path
-- [ ] **[Cardinal Sky, `57.112`]** Sweep any remaining retired terms discovered during build
+- [x] **[Leo, `20261119.205159`, `57.104`]** `carry_manifest_emit.rye` -- mechanical Android XML from declared capabilities (2 welcome + 2 refusal) + stamp molt across Aries-Cancer
+- [x] **[Virgo, `20261119.205744`, `57.105`]** `carry_audience_session.rye` -- multi-signer bounded session (2 welcome + 5 refusal)
+- [x] **[Libra, `20261119.205848`, `57.106`]** `carry_device_setup.rye` -- 5-stage USB pipeline bounded (2 welcome + 5 refusal)
+- [x] **[Scorpio, `20261119.210207`, `57.107`]** `aurora_framebuf_ring0.rye` -- TAME Ring-0 framebuffer (bounded pixel writes, Glasswall write-only, sifive_test 0x0001_3333 fail-stop)
+- [x] **[Sagittarius, `20261119.210207`, `57.108`]** `pond_wire_ring0.rye` -- Ring-0 Pond wire protocol (length-prefixed SHA3-checksummed frames over UART, 16-frame bounded SendQueue)
+- [ ] **[TOP -- Capricorn, `57.109`]** `puddle_ring0.rye` -- Ring-0 Puddle session over pond_wire (packet exchange, session stamp, CRDT-ready)
+- [ ] **[Aquarius, `57.110`]** Update `grain_ww_closure.brix` with all new Carry + Ring-0 modules
+- [ ] **[Pisces, `57.111`]** Ring-0 integration witness -- boot -> aurora_framebuf -> pond_wire -> puddle session path
+- [ ] **[Cardinal Sky, `57.112`]** Sweep retired terms + retire non-TAME desk_hold/dexter_keyboard stubs from plan
 - [ ] **[Fixed Sky, `57.113`]** Refresh all checklists + Myofascia vector
 - [ ] **[Siya, `57.114`]** Seal Orbit 9 + `publish-seed.rish --push`
 

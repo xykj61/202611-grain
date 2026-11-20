@@ -1,0 +1,185 @@
+//! terrarium/src/pond_wire_ring0.rye -- Aether!
+//!
+//! Stamp: `20261119.205959` -- Sagittarius 9/15 Orbit 9: Ring-0
+//! Pond wire protocol at Ring-0. Bounded packet framing over
+//! UART for freestanding targets that cannot use UDP yet.
+//!
+//! This is the first networking primitive below Puddle: a
+//! length-prefixed, SHA3-checksummed packet frame that travels
+//! over the UART wire (`terrarium/src/wire.rye`). Puddle UDP
+//! sits above this -- on targets with a NIC, Puddle speaks UDP
+//! directly; on bare UART targets, Puddle frames go through
+//! this wire layer.
+//!
+//! Packet format (little-endian):
+//!   [2B length][payload up to 1200B][32B sha3_256 checksum]
+//!
+//! Target: freestanding RV64GC / AArch64 (no std)
+//! Fail-stop: sifive_test 0x0001_3333
+
+const assert = struct {
+    fn check(ok: bool) void {
+        if (!ok) fail_stop();
+    }
+    fn fail_stop() noreturn {
+        const sifive_test: *volatile u32 =
+            @ptrFromInt(0x10_0000);
+        sifive_test.* = 0x0001_3333;
+        while (true) {}
+    }
+};
+
+pub const version = "20261119.205959";
+
+pub const max_payload_bytes: u32 = 1200;
+pub const header_len: u32 = 2;
+pub const checksum_len: u32 = 32;
+pub const max_frame_bytes: u32 =
+    header_len + max_payload_bytes + checksum_len;
+pub const max_queued_frames: u32 = 16;
+
+pub const WireRefusal = enum(u8) {
+    none = 0,
+    payload_empty = 1,
+    payload_too_large = 2,
+    checksum_mismatch = 3,
+    frame_truncated = 4,
+    queue_full = 5,
+};
+
+pub const WireFrame = struct {
+    payload_len: u32,
+    payload: [max_payload_bytes]u8,
+    checksum: [checksum_len]u8,
+    valid: bool,
+};
+
+pub fn encode_length(len: u32, buf: *[2]u8) void {
+    // invariant: length fits u16
+    assert.check(len <= max_payload_bytes);
+    buf[0] = @intCast(len & 0xff);
+    buf[1] = @intCast((len >> 8) & 0xff);
+}
+
+pub fn decode_length(buf: *const [2]u8) u32 {
+    const lo: u32 = buf[0];
+    const hi: u32 = buf[1];
+    return lo | (hi << 8);
+}
+
+pub fn frame_total_len(payload_len: u32) u32 {
+    // invariant: payload bounded
+    assert.check(payload_len <= max_payload_bytes);
+    return header_len + payload_len + checksum_len;
+}
+
+pub const SendQueue = struct {
+    frames: [max_queued_frames]WireFrame,
+    head: u32,
+    tail: u32,
+    count: u32,
+
+    pub fn init() SendQueue {
+        return .{
+            .frames = undefined,
+            .head = 0,
+            .tail = 0,
+            .count = 0,
+        };
+    }
+
+    pub fn enqueue(
+        self: *SendQueue,
+        payload: []const u8,
+        checksum: [checksum_len]u8,
+    ) WireRefusal {
+        if (payload.len == 0) return .payload_empty;
+        if (payload.len > max_payload_bytes) {
+            return .payload_too_large;
+        }
+        if (self.count >= max_queued_frames) {
+            return .queue_full;
+        }
+        // invariant: tail bounded by ring size
+        assert.check(self.tail < max_queued_frames);
+        var frame = &self.frames[self.tail];
+        frame.payload_len = @intCast(payload.len);
+        const plen = payload.len;
+        for (0..plen) |i| {
+            frame.payload[i] = payload[i];
+        }
+        frame.checksum = checksum;
+        frame.valid = true;
+        self.tail = (self.tail + 1) % max_queued_frames;
+        self.count += 1;
+        // invariant: count bounded
+        assert.check(self.count <= max_queued_frames);
+        return .none;
+    }
+
+    pub fn dequeue(self: *SendQueue) ?*WireFrame {
+        if (self.count == 0) return null;
+        const frame = &self.frames[self.head];
+        self.head = (self.head + 1) % max_queued_frames;
+        self.count -= 1;
+        return frame;
+    }
+};
+
+pub const RecvResult = struct {
+    refusal: WireRefusal,
+    payload_len: u32,
+};
+
+pub fn validate_frame(
+    frame_buf: []const u8,
+    frame_len: u32,
+    expected_checksum: [checksum_len]u8,
+    actual_checksum: [checksum_len]u8,
+) RecvResult {
+    if (frame_len < header_len + checksum_len) {
+        return .{
+            .refusal = .frame_truncated,
+            .payload_len = 0,
+        };
+    }
+    const payload_len = decode_length(
+        frame_buf[0..2],
+    );
+    if (payload_len == 0) {
+        return .{
+            .refusal = .payload_empty,
+            .payload_len = 0,
+        };
+    }
+    if (payload_len > max_payload_bytes) {
+        return .{
+            .refusal = .payload_too_large,
+            .payload_len = 0,
+        };
+    }
+    // invariant: declared length matches frame
+    const expected_total = frame_total_len(payload_len);
+    if (frame_len < expected_total) {
+        return .{
+            .refusal = .frame_truncated,
+            .payload_len = 0,
+        };
+    }
+    var match = true;
+    for (0..checksum_len) |i| {
+        if (expected_checksum[i] != actual_checksum[i]) {
+            match = false;
+        }
+    }
+    if (!match) {
+        return .{
+            .refusal = .checksum_mismatch,
+            .payload_len = 0,
+        };
+    }
+    return .{
+        .refusal = .none,
+        .payload_len = payload_len,
+    };
+}
