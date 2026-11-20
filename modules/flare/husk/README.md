@@ -49,7 +49,7 @@ Pulp turns human prose into block values -- headings, paragraphs, and fenced cod
 | [`fixtures/outline.md`](fixtures/outline.md) | Heading + paragraph outline |
 | [`fixtures/outline_h3.md`](fixtures/outline_h3.md) | Depth-three outline for h3 view |
 | [`fixtures/fence_kinds.md`](fixtures/fence_kinds.md) | One rye - one rish - one plain fence |
-| `pond/apps/pulp/pulp_core.rye` | Symlink for drawn-terminal import |
+| `pond/apps/husk/husk_core.rye` | Symlink for drawn-terminal import |
 
 ```bash
 rishi/bin/rishi run tools/s/pulp_lap8.rish

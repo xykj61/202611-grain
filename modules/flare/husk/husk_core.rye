@@ -1,4 +1,4 @@
-//! pulp/pulp_core.rye -- Markdown subset -> value blocks.
+//! husk/husk_core.rye -- Markdown subset -> value blocks.
 //!
 //! Headings, paragraphs, fenced code (rye / rish / plain). Heading, paragraph, fence-kind, plain-snippet extract, and heading-depth filter for views.
 

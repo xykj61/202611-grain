@@ -28,7 +28,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
-const sc = @import("pulp/pulp_core.rye");
+const sc = @import("husk/husk_core.rye");
 const rq = @import("reading_query.rye");
 
 const corpus_real_version = "20260812.181015";

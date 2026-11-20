@@ -1,7 +1,7 @@
-//! modules/flare/pulp/pulp_movement_stack.rye -- `grain-ww pulp` Stack!
+//! modules/flare/husk/husk_movement_stack.rye -- `grain-ww husk` Stack!
 //!
-//! Stamp: `20261115.135500` -- Powers `grain-ww pulp [<checklist.md>]
-//! [--prepend "<urgent movement>"]` over `active-pulp/` checklists:
+//! Stamp: `20261115.135500` -- Powers `grain-ww husk [<checklist.md>]
+//! [--prepend "<urgent movement>"]` over `active-husk/` checklists:
 //!   - `[15, 75, 375, 1875, 9375] : [orbit, quest, journey, section, chapter]`,
 //!   - `1 Orbit` strictly means **completion of 15 Movements**,
 //!   - Adaptable **prepend-to-front** stack (`prepend_front` inserts urgent

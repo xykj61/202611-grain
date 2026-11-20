@@ -28,8 +28,8 @@
   `[orbit, quest, journey, section, chapter]` strictly counts completed
   **Movements** (`round -> movement` molt; **`1 Orbit == 15 completed
   Movements`**, expanding `x5` by the 5 elements: `15 -> 75 -> 375 -> 1,875 ->
-  9,375`), backed by `Pulp`'s adaptable **prepend-to-front** stack
-  (`modules/flare/pulp/pulp_movement_stack.rye`).
+  9,375`), backed by `Husk`'s adaptable **prepend-to-front** stack
+  (`modules/flare/husk/husk_movement_stack.rye`).
 - **`d15 -> 3 -> 9 -> 405` Council & Dual `243 / 324` Consensus:**
   15 Galaxies (`Aries..Siya`) x 3 Modal Pillars (`45` Stars) x 9 Navamsa Seats
   = `405` Council Seats (`modules/comlink/council_405.rye`), enacting routine

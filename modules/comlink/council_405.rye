@@ -135,7 +135,7 @@ fn run_selftest() !u8 {
     // 2. Constitutional 80% tier: 323 refuses, 324th enacts!
     var c_box = ColloquiumBallotBox.open(
         .constitutional_80,
-        "Molt active-pulp",
+        "Molt active-husk",
     );
     var v: u32 = 0;
     while (v < 323) : (v += 1) try c_box.cast_ballot(v, true);

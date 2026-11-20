@@ -1,4 +1,4 @@
-//! modules/flare/pulp/pulp_object_recall.rye -- Turbopuffer-Style Pulp Recall!
+//! modules/flare/husk/husk_object_recall.rye -- Turbopuffer-Style Husk Recall!
 //!
 //! Stamp: `20261115.141500` -- Unifies `Pulp` (Markdown prose & movement
 //! boards) with Turbopuffer-inspired **content-addressed object-storage vector

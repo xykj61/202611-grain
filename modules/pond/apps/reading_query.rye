@@ -19,7 +19,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const lc = @import("lantern/lantern_core.rye");
-const sc = @import("pulp/pulp_core.rye");
+const sc = @import("husk/husk_core.rye");
 
 const reading_query_version = "20260812.120000";
 

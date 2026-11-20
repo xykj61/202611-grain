@@ -108,7 +108,7 @@ const wov_core = @import("mandi/wov_core.rye");
 const rc = @import("mandi/receipt_core.rye");
 const kumara = @import("mandi/kumara.rye");
 const flare = @import("flare/flare_core.rye");
-const pulp = @import("pulp/pulp_core.rye");
+const husk = @import("husk/husk_core.rye");
 const dimeroll = @import("dimeroll/dimeroll_core.rye");
 const lc = @import("lantern/lantern_core.rye");
 const open_asks = @import("linengrow/open_asks.rye");
@@ -199,11 +199,11 @@ const tablecloth_query_device_hits_fixture = "tools/fixtures/t/tablecloth_query_
 const forge_cellar_manifest_fixture = "tools/fixtures/.forge_view_bundle/manifest.kyri";
 const amphora_vessel_fixture = "tools/fixtures/.forge_view_bundle/vessel.kyri";
 const amphora_device_fetch_hits_fixture = "tools/fixtures/a/amphora_device_fetch_hits.kyri";
-const pulp_snippets_fixture = "flare/pulp/fixtures/session_snippets.md";
-const pulp_rish_snippets_fixture = "flare/pulp/fixtures/session_rish_snippets.md";
-const pulp_outline_fixture = "flare/pulp/fixtures/outline.md";
-const pulp_outline_h3_fixture = "flare/pulp/fixtures/outline_h3.md";
-const pulp_fence_kinds_fixture = "flare/pulp/fixtures/fence_kinds.md";
+const husk_snippets_fixture = "flare/husk/fixtures/session_snippets.md";
+const husk_rish_snippets_fixture = "flare/husk/fixtures/session_rish_snippets.md";
+const husk_outline_fixture = "flare/husk/fixtures/outline.md";
+const husk_outline_h3_fixture = "flare/husk/fixtures/outline_h3.md";
+const husk_fence_kinds_fixture = "flare/husk/fixtures/fence_kinds.md";
 const forge_query_hits_fixture = "tools/fixtures/f/forge_query_hits.kyri";
 const forge_query_device_hits_fixture = "tools/fixtures/f/forge_query_device_hits.kyri";
 const granary_front_page_fixture = "granary/fixtures/front_page.md";
@@ -704,15 +704,15 @@ fn count_assist_fence_band(snippets: []const u8, fence_kinds_text: []const u8) !
     // drifts reds here rather than drawing a wrong tally
     assert(fences.rye == 2);
     assert(fences.rish == 1);
-    var fence_blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const fence_n = try pulp.parse_markdown(fence_kinds_text, &fence_blocks);
-    const plain_kinds = pulp.count_fence_kinds(fence_blocks[0..fence_n]);
+    var fence_blocks: [husk.max_blocks]husk.Block = undefined;
+    const fence_n = try husk.parse_markdown(fence_kinds_text, &fence_blocks);
+    const plain_kinds = husk.count_fence_kinds(fence_blocks[0..fence_n]);
     // invariant: the fence-kinds fixture carries one plain block, four blocks in all, and one
     // rye snip, so a parser that regroups them is caught before the tally is drawn
     assert(plain_kinds.plain == 1);
     assert(fence_n == 4);
-    var rye_snips: [pulp.max_snippets]pulp.Snippet = undefined;
-    const fence_rye = try pulp.extract_rye_snippets(fence_blocks[0..fence_n], &rye_snips);
+    var rye_snips: [husk.max_snippets]husk.Snippet = undefined;
+    const fence_rye = try husk.extract_rye_snippets(fence_blocks[0..fence_n], &rye_snips);
     // invariant: the fence fixture holds exactly one rye snippet, so an extractor that begins
     // finding more is caught before its tally is drawn
     assert(fence_rye == 1);
@@ -762,9 +762,9 @@ fn compose_assist_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.S
     var journal_buf: [2048]u8 = undefined;
     const journal = try cwd.readFile(io, dimeroll_journal_fixture, &journal_buf);
     var snippets_buf: [4096]u8 = undefined;
-    const snippets = try cwd.readFile(io, pulp_snippets_fixture, &snippets_buf);
-    var fence_kinds_buf: [pulp.max_doc_bytes]u8 = undefined;
-    const fence_kinds = try cwd.readFile(io, pulp_fence_kinds_fixture, &fence_kinds_buf);
+    const snippets = try cwd.readFile(io, husk_snippets_fixture, &snippets_buf);
+    var fence_kinds_buf: [husk.max_doc_bytes]u8 = undefined;
+    const fence_kinds = try cwd.readFile(io, husk_fence_kinds_fixture, &fence_kinds_buf);
 
     const kinds = count_corpus_kinds(corpus);
     // why: assist golden locks corpus rye/rish
@@ -838,9 +838,9 @@ fn compose_assist_sight_view_lines(garden: std.mem.Allocator, io: std.Io) ![]sur
     var journal_buf: [2048]u8 = undefined;
     const journal = try cwd.readFile(io, dimeroll_journal_fixture, &journal_buf);
     var snippets_buf: [4096]u8 = undefined;
-    const snippets = try cwd.readFile(io, pulp_snippets_fixture, &snippets_buf);
-    var fence_kinds_buf: [pulp.max_doc_bytes]u8 = undefined;
-    const fence_kinds = try cwd.readFile(io, pulp_fence_kinds_fixture, &fence_kinds_buf);
+    const snippets = try cwd.readFile(io, husk_snippets_fixture, &snippets_buf);
+    var fence_kinds_buf: [husk.max_doc_bytes]u8 = undefined;
+    const fence_kinds = try cwd.readFile(io, husk_fence_kinds_fixture, &fence_kinds_buf);
 
     const amount = field_value(mint, "amount") orelse return error.BadMintFixture;
     const seq = field_value(wov, "seq") orelse return error.BadWovFixture;
@@ -1550,12 +1550,12 @@ fn run_forge_query_device_view_witness(garden: std.mem.Allocator, io: std.Io) !u
 /// Pulp paragraphs view -- paragraph extract folded onto a Skate frame.
 fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
-    const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
+    const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (pn != 3) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_para_view_max_lines);
@@ -1659,11 +1659,11 @@ fn run_bs_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp fence-kinds view -- rye/rish/plain counts on Skate.
 fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_fence_kinds_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    const kinds = pulp.count_fence_kinds(blocks[0..n]);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    const kinds = husk.count_fence_kinds(blocks[0..n]);
     if (kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_fence_view_max_lines);
@@ -1712,12 +1712,12 @@ fn run_pulp_fence_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp plain-snippets view -- unmarked fence bodies on Skate.
 fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_fence_kinds_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var snippets: [pulp.max_blocks]pulp.Snippet = undefined;
-    const sn = try pulp.extract_plain_snippets(blocks[0..n], &snippets);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var snippets: [husk.max_blocks]husk.Snippet = undefined;
+    const sn = try husk.extract_plain_snippets(blocks[0..n], &snippets);
     if (sn != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_plain_view_max_lines);
@@ -1771,12 +1771,12 @@ fn pulp_first_line(text: []const u8) []const u8 {
 /// Pulp rye-snippets view -- rye fence first lines on Skate.
 fn compose_pulp_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_snippets_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
-    const sn = try pulp.extract_rye_snippets(blocks[0..n], &snippets);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_snippets_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var snippets: [husk.max_snippets]husk.Snippet = undefined;
+    const sn = try husk.extract_rye_snippets(blocks[0..n], &snippets);
     if (sn != 2) return error.BadPulpFixture;
     // invariant: the golden rye snippets are matched by content rather than by index, so a
     // reordered extractor reds here instead of drawing the wrong two
@@ -1829,12 +1829,12 @@ fn run_pulp_rye_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp rish-snippets view -- rish fence first lines on Skate.
 fn compose_pulp_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_rish_snippets_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
-    const sn = try pulp.extract_rish_snippets(blocks[0..n], &snippets);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_rish_snippets_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var snippets: [husk.max_snippets]husk.Snippet = undefined;
+    const sn = try husk.extract_rish_snippets(blocks[0..n], &snippets);
     if (sn != 2) return error.BadPulpFixture;
     // invariant: the golden rish snippets are matched by content rather than by index, so a
     // reordered extractor reds here instead of drawing the wrong two
@@ -2872,12 +2872,12 @@ fn run_pnl_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp outline view -- heading extract folded onto a Skate frame.
 fn compose_pulp_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings(blocks[0..n], &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings(blocks[0..n], &headings);
     if (hn != 3) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_view_max_lines);
@@ -2928,12 +2928,12 @@ fn run_pulp_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp h1 view -- depth-1 headings on Skate.
 fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings_at_depth(blocks[0..n], 1, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
     if (hn != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h1_view_max_lines);
@@ -2982,12 +2982,12 @@ fn run_pulp_h1_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp h2 view -- depth-2 headings on Skate.
 fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings_at_depth(blocks[0..n], 2, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
     if (hn != 2) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h2_view_max_lines);
@@ -3036,12 +3036,12 @@ fn run_pulp_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp h3 view -- depth-3 headings on Skate.
 fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_h3_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings_at_depth(blocks[0..n], 3, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_h3_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
     if (hn != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h3_view_max_lines);
@@ -3198,14 +3198,14 @@ fn run_corpus_rish_tools_prefix_view_witness(garden: std.mem.Allocator, io: std.
 /// Pulp depth tally view -- h1/h2/h3 counts on Skate.
 fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_h3_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const h1 = try pulp.extract_headings_at_depth(blocks[0..n], 1, &headings);
-    const h2 = try pulp.extract_headings_at_depth(blocks[0..n], 2, &headings);
-    const h3 = try pulp.extract_headings_at_depth(blocks[0..n], 3, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_h3_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const h1 = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
+    const h2 = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
+    const h3 = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
     if (h1 != 1 or h2 != 1 or h3 != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_depth_view_max_lines);
@@ -3526,14 +3526,14 @@ fn run_corpus_sum_lines_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
 /// Pulp tally view -- heading + paragraph counts on Skate.
 fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings(blocks[0..n], &headings);
-    var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
-    const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings(blocks[0..n], &headings);
+    var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
+    const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (hn != 3 or pn != 3) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_tally_view_max_lines);
@@ -3582,10 +3582,10 @@ fn run_pulp_tally_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp blocks view -- total parsed blocks on Skate.
 fn compose_pulp_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
     if (n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_blocks_view_max_lines);
@@ -3634,13 +3634,13 @@ fn run_pulp_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp fence+heading combo -- fence kinds and heading count on one Skate frame.
 fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var fence_buf: [pulp.max_doc_bytes]u8 = undefined;
-    const fence_text = try cwd.readFile(io, pulp_fence_kinds_fixture, &fence_buf);
-    var fence_blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const fence_n = try pulp.parse_markdown(fence_text, &fence_blocks);
-    const kinds = pulp.count_fence_kinds(fence_blocks[0..fence_n]);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings(fence_blocks[0..fence_n], &headings);
+    var fence_buf: [husk.max_doc_bytes]u8 = undefined;
+    const fence_text = try cwd.readFile(io, husk_fence_kinds_fixture, &fence_buf);
+    var fence_blocks: [husk.max_blocks]husk.Block = undefined;
+    const fence_n = try husk.parse_markdown(fence_text, &fence_blocks);
+    const kinds = husk.count_fence_kinds(fence_blocks[0..fence_n]);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings(fence_blocks[0..fence_n], &headings);
     if (hn != 1 or kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_fence_heading_view_max_lines);
@@ -3689,14 +3689,14 @@ fn run_pulp_fence_heading_view_witness(garden: std.mem.Allocator, io: std.Io) !u
 /// Pulp tally+blocks combo -- headings/paragraphs tally and block count on one Skate frame.
 fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const hn = try pulp.extract_headings(blocks[0..n], &headings);
-    var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
-    const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const hn = try husk.extract_headings(blocks[0..n], &headings);
+    var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
+    const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (hn != 3 or pn != 3 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_tally_blocks_view_max_lines);
@@ -3745,12 +3745,12 @@ fn run_pulp_tally_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8
 /// Pulp paragraphs+blocks combo -- paragraph count and block count on one Skate frame.
 fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var paragraphs: [pulp.max_paragraphs]pulp.Paragraph = undefined;
-    const pn = try pulp.extract_paragraphs(blocks[0..n], &paragraphs);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var paragraphs: [husk.max_paragraphs]husk.Paragraph = undefined;
+    const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (pn != 3 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_para_blocks_view_max_lines);
@@ -3799,12 +3799,12 @@ fn run_pulp_para_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
 /// Pulp h1+blocks combo -- depth-1 heading count and block count on one Skate frame.
 fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const h1 = try pulp.extract_headings_at_depth(blocks[0..n], 1, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const h1 = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
     if (h1 != 1 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h1_blocks_view_max_lines);
@@ -3853,12 +3853,12 @@ fn run_pulp_h1_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp h2+blocks combo -- depth-2 heading count and block count on one Skate frame.
 fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const h2 = try pulp.extract_headings_at_depth(blocks[0..n], 2, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const h2 = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
     if (h2 != 2 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h2_blocks_view_max_lines);
@@ -3907,12 +3907,12 @@ fn run_pulp_h2_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp h3+blocks combo -- depth-3 heading count and block count on one Skate frame.
 fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_outline_h3_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var headings: [pulp.max_headings]pulp.Heading = undefined;
-    const h3 = try pulp.extract_headings_at_depth(blocks[0..n], 3, &headings);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_outline_h3_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var headings: [husk.max_headings]husk.Heading = undefined;
+    const h3 = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
     if (h3 != 1 or n != 6) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_h3_blocks_view_max_lines);
@@ -3961,12 +3961,12 @@ fn run_pulp_h3_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp rye+blocks combo -- rye fence count and block count on one Skate frame.
 fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_fence_kinds_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
-    const rye_n = try pulp.extract_rye_snippets(blocks[0..n], &snippets);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var snippets: [husk.max_snippets]husk.Snippet = undefined;
+    const rye_n = try husk.extract_rye_snippets(blocks[0..n], &snippets);
     if (rye_n != 1 or n != 4) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_rye_blocks_view_max_lines);
@@ -4015,12 +4015,12 @@ fn run_pulp_rye_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 /// Pulp rish+blocks combo -- rish fence count and block count on one Skate frame.
 fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
-    var buf: [pulp.max_doc_bytes]u8 = undefined;
-    const text = try cwd.readFile(io, pulp_fence_kinds_fixture, &buf);
-    var blocks: [pulp.max_blocks]pulp.Block = undefined;
-    const n = try pulp.parse_markdown(text, &blocks);
-    var snippets: [pulp.max_snippets]pulp.Snippet = undefined;
-    const rish_n = try pulp.extract_rish_snippets(blocks[0..n], &snippets);
+    var buf: [husk.max_doc_bytes]u8 = undefined;
+    const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
+    var blocks: [husk.max_blocks]husk.Block = undefined;
+    const n = try husk.parse_markdown(text, &blocks);
+    var snippets: [husk.max_snippets]husk.Snippet = undefined;
+    const rish_n = try husk.extract_rish_snippets(blocks[0..n], &snippets);
     if (rish_n != 1 or n != 4) return error.BadPulpFixture;
 
     const lines = try garden.alloc(surface.SkateLine, pulp_rish_blocks_view_max_lines);

@@ -41,7 +41,7 @@ languages/rishi/bin/grain-ww stamp cabinet-brief.md
 Grain measures momentum in **Movements** (`[15, 75, 375, 1875, 9375] : [orbit,
 quest, journey, section, chapter]`), where **1 Orbit strictly equals 15
 completed Movements**. Urgent *Standfast* reds push straight to index `0` of an
-[`../../active-pulp/`](../../active-pulp/README.md) board with zero serial
+[`../../active-husk/`](../../active-husk/README.md) board with zero serial
 renumbering:
 
 ```sh

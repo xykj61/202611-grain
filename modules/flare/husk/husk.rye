@@ -1,7 +1,7 @@
-//! pulp/pulp.rye -- Pulp -- parse selftest (parse - rye/rish/plain - headings - depth filter - paragraphs - fence kinds).
+//! husk/husk.rye -- Husk -- parse selftest (parse - rye/rish/plain - headings - depth filter - paragraphs - fence kinds).
 //!
-//!   rye build pulp/pulp.rye -femit-bin=pulp/bin/pulp
-//!   pulp/bin/pulp selftest
+//!   rye build husk/husk.rye -femit-bin=husk/bin/husk
+//!   husk/bin/husk selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
@@ -9,12 +9,12 @@ const print = std.debug.print;
 const Dir = std.Io.Dir;
 const sc = @import("husk_core.rye");
 
-const pulp_version = "20260710.211930";
-pub const fixture_path = "flare/pulp/fixtures/sample.md";
-pub const session_fixture_path = "flare/pulp/fixtures/session_snippets.md";
-pub const session_rish_fixture_path = "flare/pulp/fixtures/session_rish_snippets.md";
-pub const outline_fixture_path = "flare/pulp/fixtures/outline.md";
-pub const fence_kinds_fixture_path = "flare/pulp/fixtures/fence_kinds.md";
+const husk_version = "20260710.211930";
+pub const fixture_path = "flare/husk/fixtures/sample.md";
+pub const session_fixture_path = "flare/husk/fixtures/session_snippets.md";
+pub const session_rish_fixture_path = "flare/husk/fixtures/session_rish_snippets.md";
+pub const outline_fixture_path = "flare/husk/fixtures/outline.md";
+pub const fence_kinds_fixture_path = "flare/husk/fixtures/fence_kinds.md";
 
 fn welcome_parse() !void {
     const sample =
@@ -268,7 +268,7 @@ pub fn main(init: std.process.Init) !u8 {
         try welcome_extract_plain(io);
         try unwelcome_plain_snippet_overflow(io);
         try unwelcome_unclosed_fence();
-        print("pulp lap7: version {s} — GREEN\n", .{pulp_version});
+        print("husk selftest: version {s} -- GREEN\n", .{husk_version});
         return 0;
     }
     print("usage: pulp selftest\n", .{});
