@@ -28,7 +28,7 @@ let r_ac = run ["languages/rishi/bin/grain-ww" "audit-clean"]
 assert r_ac.ok else "grain-ww audit-clean failed"
 
 # 4. Verify `ITINERARY.md` stays strictly within its 40,960-byte pin ceiling!
-let it_chk = run ["sh" "-c" "test $(wc -c < construction/ITINERARY.md) -le 40960 && grep -q '56.910' construction/ITINERARY.md"]
-assert it_chk.ok else "construction/ITINERARY.md exceeded 40960B or missing 56.910!"
+let it_chk = run ["sh" "-c" "test $(wc -c < construction/ITINERARY.md) -le 40960 && grep -q 'Myofascia' construction/ITINERARY.md"]
+assert it_chk.ok else "construction/ITINERARY.md exceeded 40960B or missing Myofascia!"
 
 say "GREEN: twilight_risala_and_itinerary_witness -- 15-sign Prema-Bhakti/Risala Twilight, clean-bench audit, & Calfive ITINERARY proven."

@@ -25,6 +25,7 @@ measurement discipline, Radiant warmth, and civic-ecological purpose.
   `PUBLISH_TARGETS.kyri`), uniting the writer and the record under one name.
 - **Complete Specification:** Read the full shared canon in
   **[`voices/companion-voice-base.md`](voices/companion-voice-base.md)**.
+- **Vocabulary:** See [`../LEXICON.md`](../LEXICON.md) for every standing term.
 
 ---
 
