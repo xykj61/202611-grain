@@ -72,6 +72,10 @@ template  .geminiignore
 template  .gitattributes
 template  .gitignore
 template  .gitmodules
+personal  .claude
+personal  CLAUDE.md
+personal  counsel
+personal  rye
 personal  template-manifest.kyri
 
 # -- Root prose & legal doors --

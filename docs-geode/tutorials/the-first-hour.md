@@ -83,11 +83,10 @@ languages/rye/bin/rye build languages/rishi/src/main.rye -femit-bin=languages/ri
 Silence on compilation means clean success. Now ask Rishi to run two real witnesses over the tree's `.brix` descriptor ([`../../.brix`](../../.brix)):
 
 ```sh
-languages/rishi/bin/rishi run tools/b/bricks_exist_witness.rish
-languages/rishi/bin/rishi run tools/b/brix_infuse_witness.rish
+languages/rishi/bin/rishi run tools/rishi/bricks_exist_witness.rish
 ```
 
-Watch the terminal print `GREEN: bricks-exist` and `GREEN: brix infuse`. Nobody typed that `GREEN` into a markdown badge -- your own CPU just compiled and verified both positive and negative cases on metal.
+Watch the terminal print `GREEN: bricks-exist`. Nobody typed that `GREEN` into a markdown badge -- your own CPU just compiled and verified both positive and negative cases on metal.
 
 ---
 
@@ -95,7 +94,7 @@ Watch the terminal print `GREEN: bricks-exist` and `GREEN: brix infuse`. Nobody 
 
 **Glow** (`.glow`) is Grain's pure, deterministic citizen language: two-character ASCII **runes** (`|=` for a function gate, `=/` for a named binding, `?:` for an if-branch) that lower to TAME-bounded Rye and bare-metal **RISC-V** instructions.
 
-Verify all 30 live Glow rune digraphs on your machine:
+Verify the live Glow rune digraphs on your machine:
 
 ```sh
 mkdir -p languages/glow/bin
@@ -103,7 +102,7 @@ languages/rye/bin/rye build languages/glow/digraph_twin_check.rye -femit-bin=lan
 languages/glow/bin/digraph_twin_check
 ```
 
-Seeing `OK digraph_twin_check 30` confirms your Glow toolchain is live and ready.
+Seeing `OK digraph_twin_check <count>` confirms your Glow toolchain is live and ready.
 
 ---
 
@@ -125,7 +124,7 @@ languages/rishi/bin/rishi run tasks.rish pond-gemini
 
 ## Where to Walk Next
 
-- **Beginner zero-prerequisite macOS course (`00..12`):** [`../../modules/apps/bloom/art-of-programming/README.md`](../../modules/apps/bloom/art-of-programming/README.md)
+- **Beginner zero-prerequisite macOS course:** [`../../modules/apps/bloom/art-of-programming/README.md`](../../modules/apps/bloom/art-of-programming/README.md)
 - **Multi-year *Bloom & Shastra* curriculum (Andal, Rupa Goswami, Jiva Goswami):** [`../../libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md`](../../libraries/shastra/MULTI_YEAR_BLOOM_SHASTRA_CURRICULUM.md)
 - **Set up GPG signing, Gemini CLI (`gemini-4-carbon`), and your own bench:** [`../../SOURCE.md`](../../SOURCE.md)
 - **Understand every module and root file in plain words:** [`../architecture/module-ring-and-root-audit.md`](../architecture/module-ring-and-root-audit.md)
