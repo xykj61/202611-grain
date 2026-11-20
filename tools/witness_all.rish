@@ -444,4 +444,45 @@ let w23 = "tools/fusion/fusion_seed_and_build_witness.rish"
 assert (run [rishi "run" w23]).ok else "fusion_seed_and_build"
 assert (run [rishi "run" "tasks.rish" "sundial"]).ok else "tasks.rish sundial"
 
-say "GREEN: witness_all -- harness-console, 38 hubs, & 72 proofs (57.078)!"
+# -- Orbit 9 Vantage Carry modules (host-compiled) --
+let sc1 = "modules/comlink/vantage/carry_hearth_mold.rye"
+let oc1 = "-femit-bin=tools/.build/carry_hearth_mold"
+assert (run ["sh" rb sc1 oc1]).ok else "carry_hearth_mold build"
+assert (run ["tools/.build/carry_hearth_mold"]).ok else "hearth_mold"
+
+let sc2 = "modules/comlink/vantage/carry_hearth_pointer.rye"
+let oc2 = "-femit-bin=tools/.build/carry_hearth_pointer"
+assert (run ["sh" rb sc2 oc2]).ok else "carry_hearth_pointer build"
+assert (run ["tools/.build/carry_hearth_pointer"]).ok else "hearth_ptr"
+
+let sc3 = "modules/comlink/vantage/carry_admission_gate.rye"
+let oc3 = "-femit-bin=tools/.build/carry_admission_gate"
+assert (run ["sh" rb sc3 oc3]).ok else "carry_admission_gate build"
+assert (run ["tools/.build/carry_admission_gate"]).ok else "admit_gate"
+
+let sc4 = "modules/comlink/vantage/carry_publish_gate.rye"
+let oc4 = "-femit-bin=tools/.build/carry_publish_gate"
+assert (run ["sh" rb sc4 oc4]).ok else "carry_publish_gate build"
+assert (run ["tools/.build/carry_publish_gate"]).ok else "pub_gate"
+
+let sc5 = "modules/comlink/vantage/carry_publish_pipeline.rye"
+let oc5 = "-femit-bin=tools/.build/carry_publish_pipeline"
+assert (run ["sh" rb sc5 oc5]).ok else "carry_publish_pipeline build"
+assert (run ["tools/.build/carry_publish_pipeline"]).ok else "pub_pipe"
+
+let sc6 = "modules/comlink/vantage/carry_manifest_emit.rye"
+let oc6 = "-femit-bin=tools/.build/carry_manifest_emit"
+assert (run ["sh" rb sc6 oc6]).ok else "carry_manifest_emit build"
+assert (run ["tools/.build/carry_manifest_emit"]).ok else "manifest_emit"
+
+let sc7 = "modules/comlink/vantage/carry_audience_session.rye"
+let oc7 = "-femit-bin=tools/.build/carry_audience_session"
+assert (run ["sh" rb sc7 oc7]).ok else "carry_audience_session build"
+assert (run ["tools/.build/carry_audience_session"]).ok else "audience_sess"
+
+let sc8 = "modules/comlink/vantage/carry_device_setup.rye"
+let oc8 = "-femit-bin=tools/.build/carry_device_setup"
+assert (run ["sh" rb sc8 oc8]).ok else "carry_device_setup build"
+assert (run ["tools/.build/carry_device_setup"]).ok else "device_setup"
+
+say "GREEN: witness_all -- 38 hubs & 88 proofs on metal!"
