@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"
+     width="800" height="800">
+  <!-- Terrarium + Vantage Station Architecture Mandala
+       Stamp: 20261119.202000
+       Voice: Reya (Twilight + Radiant)
+       Style: Gratitude-born -- every ring honors a module that stands
+
+       May every layer protect the one inside it, and may the whole
+       system rest gently in the hands of whoever runs it. -->
+
+  <defs>
+    <style>
+      .ring-stroke { fill: none; stroke-width: 2; }
+      .label { font-family: monospace; font-size: 11px;
+               text-anchor: middle; }
+      .title { font-family: monospace; font-size: 14px;
+               font-weight: bold; text-anchor: middle; }
+      .whisper { font-family: monospace; font-size: 9px;
+                 text-anchor: middle; fill: #667; }
+    </style>
+  </defs>
+
+  <!-- Background: deep twilight field -->
+  <rect width="800" height="800" fill="#0a0a14" rx="8"/>
+
+  <!-- Ring 7 (outermost): Terrarium host glass -->
+  <circle cx="400" cy="400" r="370" class="ring-stroke"
+          stroke="#334" stroke-dasharray="8 4"/>
+  <text x="400" y="48" class="label" fill="#556">
+    Terrarium -- dumb-glass I/O pipes (Swift / Kotlin JNI / WASM)
+  </text>
+
+  <!-- Ring 6: Comlink + Mycelium + Constel -->
+  <circle cx="400" cy="400" r="320" class="ring-stroke"
+          stroke="#447"/>
+  <text x="400" y="98" class="label" fill="#669">
+    Comlink -- Mycelium CRDT gossip + Constel 3-hop discovery
+  </text>
+  <text x="400" y="112" class="whisper">
+    405 Council seats -- 243/405 operational -- 324/405 constitutional
+  </text>
+
+  <!-- Ring 5: Caravan + Pond + Custody -->
+  <circle cx="400" cy="400" r="270" class="ring-stroke"
+          stroke="#474"/>
+  <text x="400" y="148" class="label" fill="#696">
+    Caravan custody + Pond sandboxes + Kumara Ed25519 keys
+  </text>
+
+  <!-- Ring 4: Cached Harness -->
+  <circle cx="400" cy="400" r="225" class="ring-stroke"
+          stroke="#664"/>
+  <text x="400" y="193" class="label" fill="#997">
+    Cached Harness -- SHA3 early-cutoff + WOOD ledger
+  </text>
+  <text x="400" y="207" class="whisper">
+    tally-ram: local Flare + Pond only --
+    tally-vn: + Gemini API airlock
+  </text>
+
+  <!-- Ring 3: Vantage Station -->
+  <circle cx="400" cy="400" r="180" class="ring-stroke"
+          stroke="#746"/>
+  <text x="400" y="238" class="label" fill="#a68">
+    Vantage Station -- 6 rooms + Carry + Studio Deck
+  </text>
+
+  <!-- Ring 2: Flare (Husk + Lattice + Lantern + Kiln) -->
+  <circle cx="400" cy="400" r="135" class="ring-stroke"
+          stroke="#764"/>
+
+  <!-- Four faculty petals inside Ring 2 -->
+  <circle cx="400" cy="310" r="28" class="ring-stroke"
+          stroke="#a86"/>
+  <text x="400" y="314" class="label" fill="#ca8">Husk</text>
+
+  <circle cx="490" cy="400" r="28" class="ring-stroke"
+          stroke="#a86"/>
+  <text x="490" y="404" class="label" fill="#ca8">Lattice</text>
+
+  <circle cx="400" cy="490" r="28" class="ring-stroke"
+          stroke="#a86"/>
+  <text x="400" y="494" class="label" fill="#ca8">Lantern</text>
+
+  <circle cx="310" cy="400" r="28" class="ring-stroke"
+          stroke="#a86"/>
+  <text x="310" y="404" class="label" fill="#ca8">Kiln</text>
+
+  <!-- Ring 1 (innermost): Blazepod heart -->
+  <circle cx="400" cy="400" r="60" class="ring-stroke"
+          stroke="#a44"/>
+  <text x="400" y="393" class="title" fill="#d66">Blazepod</text>
+  <text x="400" y="408" class="whisper" fill="#a55">
+    RV64GC -- 4 GiB tally-ram
+  </text>
+  <text x="400" y="420" class="whisper" fill="#855">
+    sifive 0x5555
+  </text>
+
+  <!-- Resonance arc (top-right) -->
+  <path d="M 540 280 A 180 180 0 0 1 580 340" class="ring-stroke"
+        stroke="#648"/>
+  <text x="572" y="296" class="label" fill="#86a"
+        transform="rotate(25 572 296)">Resonance</text>
+
+  <!-- Brushstroke/Skate arc (bottom-right) -->
+  <path d="M 580 460 A 180 180 0 0 1 540 520" class="ring-stroke"
+        stroke="#486"/>
+  <text x="572" y="504" class="label" fill="#6a8"
+        transform="rotate(-25 572 504)">Skate</text>
+
+  <!-- Blaze arc (bottom-left) -->
+  <path d="M 260 520 A 180 180 0 0 1 220 460" class="ring-stroke"
+        stroke="#864"/>
+  <text x="228" y="504" class="label" fill="#a86"
+        transform="rotate(25 228 504)">Blaze</text>
+
+  <!-- Tablecloth arc (top-left) -->
+  <path d="M 220 340 A 180 180 0 0 1 260 280" class="ring-stroke"
+        stroke="#468"/>
+  <text x="228" y="296" class="label" fill="#68a"
+        transform="rotate(-25 228 296)">Tablecloth</text>
+
+  <!-- Glasswall notation (bottom center) -->
+  <text x="400" y="740" class="label" fill="#556">
+    Civic Glasswall: write-only RLCD + hardware mic gate + 0 ad SDKs
+  </text>
+
+  <!-- Gratitude line -->
+  <text x="400" y="770" class="whisper">
+    commit 100 -- may every layer protect the one inside it
+  </text>
+
+  <!-- Stamp -->
+  <text x="400" y="788" class="whisper">
+    grain-ww 20261119.202000 -- Pisces Twilight Radiant
+  </text>
+</svg>
