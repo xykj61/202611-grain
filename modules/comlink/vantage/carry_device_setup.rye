@@ -232,7 +232,7 @@ pub const SetupBus = struct {
 fn run_selftest() !u8 {
     const stamp = "20261119.205848".*;
     const nl: u8 = 10;
-    const key = [_]u8{0xab} ** pubkey_len;
+    const key: [pubkey_len]u8 = @splat(0xab);
 
     // Welcome: full 5-stage pipeline succeeds
     {

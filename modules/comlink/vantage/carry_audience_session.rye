@@ -169,7 +169,6 @@ pub const AudienceSession = struct {
             u8,
             &stamp,
             &self.last_message_stamp,
-            .lt,
         );
         if (cmp == .lt) return .stamp_not_advancing;
 

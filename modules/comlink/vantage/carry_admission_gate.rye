@@ -181,15 +181,8 @@ fn run_selftest() !u8 {
         assert(overflow == error.ManifestFull);
     }
 
-    // Refusal: resource name too long
-    {
-        var m = AdmissionManifest.init(stamp);
-        var long_name: [max_resource_name_len + 1]u8 = @splat('x');
-        _ = &long_name;
-        // This would trip the assert in declare -- we test
-        // the manifest overflow path instead since assert
-        // is fatal in production.
-    }
+    // Refusal: resource name too long (assert-fatal in
+    // production; overflow path tested above instead)
 
     print("GREEN: carry_admission_gate -- " ++
         "gate-before-surface, 2 welcome + 2 refusal, " ++
