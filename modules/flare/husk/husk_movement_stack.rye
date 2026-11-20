@@ -40,20 +40,20 @@ pub const CalfiveProgress = struct {
     quest_step: u32,
 };
 
-pub const PulpMovementStack = struct {
+pub const HuskMovementStack = struct {
     cards: [max_stack_items]MovementCard,
     count: u32,
     completed_total: u32,
 
-    pub fn init() PulpMovementStack {
+    pub fn init() HuskMovementStack {
         // invariant: x5 elemental ring ratios [15, 75, 375, 1875, 9375] hold.
         assert(orbit_movements * 5 == quest_movements);
         assert(section_movements * 5 == chapter_movements);
-        return std.mem.zeroes(PulpMovementStack);
+        return std.mem.zeroes(HuskMovementStack);
     }
 
     pub fn prepend_front(
-        self: *PulpMovementStack,
+        self: *HuskMovementStack,
         title: []const u8,
     ) StackError!void {
         if (title.len == 0) return error.EmptyTitleRefused;
@@ -72,7 +72,7 @@ pub const PulpMovementStack = struct {
         assert(self.count <= max_stack_items and !self.cards[0].done);
     }
 
-    pub fn complete_front(self: *PulpMovementStack) StackError!void {
+    pub fn complete_front(self: *HuskMovementStack) StackError!void {
         var idx: u32 = 0;
         while (idx < self.count and self.cards[idx].done) : (idx += 1) {}
         if (idx >= self.count) return error.StackEmpty;
@@ -81,7 +81,7 @@ pub const PulpMovementStack = struct {
         assert(self.completed_total >= 1);
     }
 
-    pub fn progress(self: *const PulpMovementStack) CalfiveProgress {
+    pub fn progress(self: *const HuskMovementStack) CalfiveProgress {
         const m = self.completed_total;
         const p = CalfiveProgress{
             .completed_movements = m,
@@ -94,7 +94,7 @@ pub const PulpMovementStack = struct {
     }
 
     pub fn ingest_markdown(
-        self: *PulpMovementStack,
+        self: *HuskMovementStack,
         md: []const u8,
     ) StackError!void {
         var it = std.mem.splitScalar(u8, md, nl);
@@ -112,7 +112,7 @@ pub const PulpMovementStack = struct {
 };
 
 fn run_selftest() !u8 {
-    var st = PulpMovementStack.init();
+    var st = HuskMovementStack.init();
     var k: u32 = 0;
     while (k < 14) : (k += 1) {
         try st.prepend_front("Planned craft step");
@@ -130,7 +130,7 @@ fn run_selftest() !u8 {
         return error.Orbit15NotCompleted;
     }
 
-    print("GREEN: pulp_movement_stack -- [15..9375] & prepend proven.{c}", .{
+    print("GREEN: husk_movement_stack -- [15..9375] & prepend proven.{c}", .{
         nl,
     });
     return 0;
@@ -157,7 +157,7 @@ pub fn main(init: std.process.Init) !u8 {
 
     const cwd = std.Io.Dir.cwd();
     const md = try cwd.readFileAlloc(io, path, a, .limited(131072));
-    var st = PulpMovementStack.init();
+    var st = HuskMovementStack.init();
     try st.ingest_markdown(md);
 
     var j: usize = 1;

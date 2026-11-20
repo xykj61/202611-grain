@@ -1,6 +1,6 @@
 //! modules/flare/husk/husk_object_recall.rye -- Turbopuffer-Style Husk Recall!
 //!
-//! Stamp: `20261115.141500` -- Unifies `Pulp` (Markdown prose & movement
+//! Stamp: `20261115.141500` -- Unifies `Husk` (Markdown prose & movement
 //! boards) with Turbopuffer-inspired **content-addressed object-storage vector
 //! + lexical hybrid recall** over `Blaze` SHA3-256 blobs:
 //!   1. Chunks Markdown documents into immutable `Blaze` SHA3-256 segments,
@@ -24,7 +24,7 @@ pub const RecallError = error{
     EmptySegmentRefused,
 };
 
-pub const PulpSegment = struct {
+pub const HuskSegment = struct {
     blaze_sha3: [32]u8,
     title: [48]u8,
     title_len: u8,
@@ -70,16 +70,16 @@ pub fn sketch_text(text: []const u8, vec_out: *[embed_dims]i8) u32 {
     return bloom;
 }
 
-pub const PulpObjectIndex = struct {
-    segments: [max_segments]PulpSegment,
+pub const HuskObjectIndex = struct {
+    segments: [max_segments]HuskSegment,
     count: u32,
 
-    pub fn init() PulpObjectIndex {
-        return std.mem.zeroes(PulpObjectIndex);
+    pub fn init() HuskObjectIndex {
+        return std.mem.zeroes(HuskObjectIndex);
     }
 
     pub fn index_markdown_blob(
-        self: *PulpObjectIndex,
+        self: *HuskObjectIndex,
         title: []const u8,
         body: []const u8,
     ) RecallError!u32 {
@@ -87,7 +87,7 @@ pub const PulpObjectIndex = struct {
         if (self.count >= max_segments) return error.IndexFull;
 
         const id = self.count;
-        var seg = std.mem.zeroes(PulpSegment);
+        var seg = std.mem.zeroes(HuskSegment);
         Sha3_256.hash(body, &seg.blaze_sha3, .{});
         const tn = @min(title.len, 48);
         @memcpy(seg.title[0..tn], title[0..tn]);
@@ -102,7 +102,7 @@ pub const PulpObjectIndex = struct {
     }
 
     pub fn query_best(
-        self: *const PulpObjectIndex,
+        self: *const HuskObjectIndex,
         query: []const u8,
     ) ?RecallHit {
         if (self.count == 0) return null;
@@ -136,7 +136,7 @@ pub const PulpObjectIndex = struct {
 };
 
 fn run_selftest() !u8 {
-    var idx = PulpObjectIndex.init();
+    var idx = HuskObjectIndex.init();
     _ = try idx.index_markdown_blob(
         "Glasswall Hardware Doctrine",
         "Write-only RLCD display, hardware VDD mic switch, bystander LED",
@@ -161,7 +161,7 @@ fn run_selftest() !u8 {
         if (err != error.EmptySegmentRefused) return err;
     }
 
-    print("GREEN: pulp_object_recall -- Blaze i8 vector + BM25 proven.{c}", .{
+    print("GREEN: husk_object_recall -- Blaze i8 vector + BM25 proven.{c}", .{
         nl,
     });
     return 0;
