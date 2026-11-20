@@ -45,8 +45,8 @@
   - Fold `keys/` (2), `vault/` (3), `constel/` (35), and `contacts/` (2) under `kumara/{keys,vault,constel,contacts}/`.
   - Fold `surf/` (7) and `vantage/` (10) under `comlink/{surf,vantage}/`.
   - Fold `cellar/` (2) and `kyri-resins/` (18) under `amphora/{cellar,resins}/`.
-  - Fold `scribe/` (6) and `bat/` (7) under `kyri/{scribe,bat}/`.
-  - Fold `mand/` (9) under `caravan/mand/`, `encoding/` (10) under `crypto/encoding/`, and `basin/` (1) under `sundial/basin/`.
+  - Fold `scribe/` (6) under `kyri/scribe/` (`bat/` already shed to `yonder/bat/`).
+  - Fold `encoding/` (10) under `crypto/encoding/` and `basin/` (1) under `sundial/basin/` (`mand/` paths already repointed to `caravan/custody/`).
   - Group market modules (`dimeroll/`, `settlement/`, `granary/`, `mandi/`) under `market/` and citizen apps (`linengrow/`, `bloom/`, `mycelium/`) under `apps/` (or keep `mycelium/` top-level if preferred on Keaton's word).
   **SLC gate:** Every consolidated module compiles and passes its unit/Rishi witness at its new path; zero dangling symlinks remain anywhere in the tree.
 

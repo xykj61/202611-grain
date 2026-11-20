@@ -42,13 +42,13 @@ Vantage Carry foundation:*
 - [x] **[Virgo, `20261119.213700`, `57.090`]** Topology shed audit (`compass_sky` load-bearing, logged)
 - [x] **[Libra, `20261119.214000`, `57.091`]** Archived 72 Linengrow waymark files to `yonder/linengrow-waymarks/`
 - [x] **[Scorpio, `20261119.214500`, `57.092`]** Linengrow waymark study (72 files compress to 10 TAME modules + 1 glass pipe)
-- [ ] **[TOP -- Sagittarius, `57.093`]** Repoint `tablecloth/wal.rye` + `named_serve.rye` from `mandate/` to `tablecloth/`
-- [ ] **[Capricorn, `57.094`]** Update `sundial/README.md` -- remove stale `fascia` docs, reflect `myofascia`-only API
-- [ ] **[Aquarius, `57.095`]** Rename `quin_host*.rye` -> `harness_host*.rye` and repoint to Harness vocabulary
-- [ ] **[Pisces, `57.096`]** Archive Quin handoff resin to yonder + sweep `amphora/resins/manifest.kyri`
-- [ ] **[Cardinal Sky, `57.097`]** Build `vantage/carry_admission_gate.rye` (first TAME Carry module from study map)
-- [ ] **[Fixed Sky, `57.098`]** Refresh Distillation + Husk Breach checklists with current state
-- [ ] **[Siya, `57.099`]** Seal Orbit 8, Calfive movement advice for Orbit 9 (Vantage Carry reimplementation)
+- [x] **[Sagittarius, `20261119.215000`, `57.093`]** Repointed `tablecloth/wal.rye` + `named_serve.rye` from `mandate/` to `tablecloth/` (22 refs) + wrote Orbit 8 plan
+- [x] **[Capricorn, `20261119.215500`, `57.094`]** Updated `sundial/README.md` to `myofascia`-only API + swept stale `fascia` refs in `sha3_digest.rye` and `discovery/table.rye`
+- [x] **[Aquarius, `20261119.216000`, `57.095`]** Renamed `quin_host*.rye` -> `harness_host*.rye` (3 files + 4 importers, 51 refs repointed)
+- [x] **[Pisces, `20261119.216500`, `57.096`]** Archived Quin handoff resin to `yonder/` + updated `amphora/resins/manifest.kyri`
+- [x] **[Cardinal Sky, `20261119.220000`, `57.097`]** Built `carry_admission_gate.rye` + `gate-carry-admission.glow` (first TAME Carry module from waymark study: gate-before-surface, 16-cap bounded manifest, 2 welcome + 2 refusal)
+- [x] **[Fixed Sky, `20261119.221000`, `57.098`]** Refreshed Distillation + Husk Breach checklists with current state (bat shed, mand repoint reflected)
+- [ ] **[TOP -- Siya, `57.099`]** Seal Orbit 8, Calfive movement advice for Orbit 9 (Vantage Carry reimplementation)
 
 ---
 
