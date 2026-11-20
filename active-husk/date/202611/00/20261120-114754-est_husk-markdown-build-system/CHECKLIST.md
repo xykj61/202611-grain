@@ -36,17 +36,17 @@ Built-in bindings:
 
 ## Journey (Movements)
 
-- [x] **[Leo, `20261120.115122`, `56.650`]** husk_template.rye: bounded template parser (32KB in, 64KB out, 64 bindings). 4 welcome + 2 refusal witnesses. husk_lower.rye: CLI with live bindings (myofascia, commit-count, orbit, sign, version-stamp from git + .brix). demo.husk proves single-source lowering
-- [x] **[Virgo, `20261120.115341`, `56.651`]** Wire grain-ww husk-lower subcommand (null extra_first). Add to help listing under HUSK & STUDIO
-- [x] **[Libra, `20261120.115457`, `56.652`]** Add husk_template + husk_lower to witness_all (220 assertions, 109 proofs). Update closure stamp + entries
-- [x] **[Scorpio, `20261120.115618`, `56.653`]** Document .husk format in languages/CLAUDE.md (sixth file type) and Air rule card canonical vocabulary
-- [x] **[Sagittarius, `20261120.115642`, `56.654`]** ITINERARY refreshed: 633 movements, Orbit 11 Scorpio 8/15
-- [x] **[Capricorn, `20261120.115811`, `56.654`]** Final witness_all GREEN (109 proofs, 220 assertions). audit-clean GREEN (9876 files). manifest-cover OK. publish-seed GREEN (b3d184c3 -> grain-ww/202611-grain)
-- [x] **[Aquarius, `20261120.115811`, `56.654`]** Checklist refreshed with all stamps
-- [x] **[Pisces, `20261120.115811`, `56.654`]** 220 assertions verified across witness_all
-- [x] **[Cardinal Sky, `20261120.115811`, `56.654`]** audit-clean + manifest-cover both GREEN
-- [x] **[Fixed Sky, `20261120.115811`, `56.654`]** Publish-seed GREEN with 109 proofs
-- [x] **[Siya, `20261120.115811`, `56.654`]** Sealed Orbit 11: .husk markdown build system. husk_template (bounded {{ expr }} lowering, 4 welcome + 2 refusal). husk_lower (live bindings from git + .brix). grain-ww help + husk-lower + 6 Carry + conifer wired into CLI. .husk documented as sixth file type. 109 proofs, 220 assertions. publish-seed GREEN x4
+- [x] **[Leo, `20261120.120536`]** Single-source README metrics from .husk proven end-to-end. .brix owns myofascia -> husk_lower reads it -> readme_metrics.husk -> readme_patch.sh -> README.md. husk_lower refactored: removed bad compute_myofascia, reads from .brix instead. libra_preflight GREEN
+- [x] **[Virgo, `20261120.134437`]** Wire readme_metrics_patch + libra_preflight into witness_all. README auto-verified on every witness run. 222 assertions, 113 proofs
+- [x] **[Libra, `20261120.134508`]** Closure stamp updated, ITINERARY refreshed: 642 movements, Orbit 12 Libra 7/15
+- [x] **[Scorpio, `20261120.134628`]** Final witness_all GREEN (113 proofs, 222 assertions). audit-clean GREEN (9879 files). manifest-cover OK. publish-seed GREEN (4921b3dc -> grain-ww/202611-grain)
+- [x] **[Sagittarius, `20261120.134628`]** Checklist refreshed with final stamps
+- [x] **[Capricorn, `20261120.134628`]** 222 assertions verified
+- [x] **[Aquarius, `20261120.134628`]** audit-clean + manifest-cover GREEN
+- [x] **[Pisces, `20261120.134628`]** Publish-seed GREEN with 113 proofs
+- [x] **[Cardinal Sky, `20261120.134628`]** All verification gates passed
+- [x] **[Fixed Sky, `20261120.134628`]** Publish-seed GREEN x5
+- [x] **[Siya, `20261120.134628`]** Sealed Orbit 12: single-source README from .husk. .brix -> husk_lower -> readme_metrics.husk -> README.md. libra_preflight + readme_metrics_patch auto-verified in witness_all. 113 proofs, 222 assertions. publish-seed GREEN x5
 
 ---
 
