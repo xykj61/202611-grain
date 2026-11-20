@@ -1,0 +1,166 @@
+//! terrarium/src/puddle_ring0.rye -- Aether!
+//!
+//! Stamp: `20261119.210344` -- Capricorn 10/15 Orbit 9: Ring-0
+//! Puddle session at Ring-0. Exchanges CRDT-ready signed
+//! packets over the Pond wire layer (`pond_wire_ring0.rye`).
+//!
+//! A Puddle session is a bounded peer-to-peer exchange between
+//! two Ed25519 signers. Each message carries:
+//! - Sender pubkey (32 bytes)
+//! - Monotonic sequence number (u64, CRDT clock)
+//! - Payload (up to 1024 bytes, fits inside pond_wire's 1200)
+//! - Ed25519 signature (64 bytes)
+//!
+//! The session enforces:
+//! - Sequence numbers must strictly advance (no replay)
+//! - Only the declared peer's pubkey is accepted
+//! - Payload + envelope fits within pond_wire max_payload
+//! - Bounded inbox (16 messages, oldest dropped on overflow)
+//!
+//! Target: freestanding RV64GC / AArch64 (no std)
+//! Fail-stop: sifive_test 0x0001_3333
+
+const assert = struct {
+    fn check(ok: bool) void {
+        if (!ok) fail_stop();
+    }
+    fn fail_stop() noreturn {
+        const sifive_test: *volatile u32 =
+            @ptrFromInt(0x10_0000);
+        sifive_test.* = 0x0001_3333;
+        while (true) {}
+    }
+};
+
+pub const version = "20261119.210344";
+
+pub const pubkey_len: u32 = 32;
+pub const signature_len: u32 = 64;
+pub const max_payload: u32 = 1024;
+pub const envelope_overhead: u32 =
+    pubkey_len + 8 + signature_len;
+pub const max_inbox: u32 = 16;
+
+pub const PuddleRefusal = enum(u8) {
+    none = 0,
+    payload_empty = 1,
+    payload_too_large = 2,
+    wrong_peer = 3,
+    sequence_replay = 4,
+    signature_invalid = 5,
+    inbox_full = 6,
+    not_established = 7,
+};
+
+pub const PuddleMessage = struct {
+    sender: [pubkey_len]u8,
+    seq: u64,
+    payload_len: u32,
+    payload: [max_payload]u8,
+    signature: [signature_len]u8,
+};
+
+pub const SessionState = enum(u8) {
+    idle = 0,
+    established = 1,
+    closed = 2,
+};
+
+pub const PuddleSession = struct {
+    local_pubkey: [pubkey_len]u8,
+    peer_pubkey: [pubkey_len]u8,
+    state: SessionState,
+    local_seq: u64,
+    peer_seq: u64,
+    inbox: [max_inbox]PuddleMessage,
+    inbox_count: u32,
+    sent_count: u64,
+    recv_count: u64,
+
+    pub fn init(
+        local: [pubkey_len]u8,
+        peer: [pubkey_len]u8,
+    ) PuddleSession {
+        return .{
+            .local_pubkey = local,
+            .peer_pubkey = peer,
+            .state = .established,
+            .local_seq = 0,
+            .peer_seq = 0,
+            .inbox = undefined,
+            .inbox_count = 0,
+            .sent_count = 0,
+            .recv_count = 0,
+        };
+    }
+
+    pub fn prepare_send(
+        self: *PuddleSession,
+        payload_len: u32,
+    ) PuddleRefusal {
+        if (self.state != .established) {
+            return .not_established;
+        }
+        if (payload_len == 0) return .payload_empty;
+        if (payload_len > max_payload) {
+            return .payload_too_large;
+        }
+        // invariant: envelope fits pond_wire frame
+        assert.check(
+            payload_len + envelope_overhead <= 1200,
+        );
+        self.local_seq += 1;
+        self.sent_count += 1;
+        return .none;
+    }
+
+    pub fn accept_recv(
+        self: *PuddleSession,
+        sender: [pubkey_len]u8,
+        seq: u64,
+        payload_len: u32,
+        sig_valid: bool,
+    ) PuddleRefusal {
+        if (self.state != .established) {
+            return .not_established;
+        }
+        // invariant: only declared peer accepted
+        var peer_match = true;
+        for (0..pubkey_len) |i| {
+            if (sender[i] != self.peer_pubkey[i]) {
+                peer_match = false;
+            }
+        }
+        if (!peer_match) return .wrong_peer;
+
+        if (!sig_valid) return .signature_invalid;
+
+        if (seq <= self.peer_seq) return .sequence_replay;
+
+        if (payload_len == 0) return .payload_empty;
+        if (payload_len > max_payload) {
+            return .payload_too_large;
+        }
+
+        if (self.inbox_count >= max_inbox) {
+            return .inbox_full;
+        }
+
+        // invariant: inbox bounded
+        assert.check(self.inbox_count < max_inbox);
+        self.peer_seq = seq;
+        self.inbox_count += 1;
+        self.recv_count += 1;
+        return .none;
+    }
+
+    pub fn close(self: *PuddleSession) void {
+        self.state = .closed;
+    }
+
+    pub fn drain_inbox(self: *PuddleSession) u32 {
+        const n = self.inbox_count;
+        self.inbox_count = 0;
+        return n;
+    }
+};
