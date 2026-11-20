@@ -1,0 +1,325 @@
+//! modules/comlink/vantage/carry_publish_pipeline.rye -- Aether!
+//!
+//! Stamp: `20261119.230000` -- Cancer 4/15 Orbit 9: Vantage
+//! Carry publish pipeline. Four bounded stages behind the
+//! publish gate: upload, fetch, market browse, and revision.
+//!
+//! Each stage is a pure function over bounded inputs that
+//! returns a typed result. The pipeline composes them in
+//! order: upload -> fetch confirmation -> market listing ->
+//! revision seal. Any stage failure stops the pipeline and
+//! names the stage that refused.
+//!
+//! Elders: `tube2_publish`, `tube3_resin_fetch`,
+//!         `tube4_market_rail`, `tube5_blaze_revision`
+//!         (yonder/linengrow-waymarks/)
+//! Fixes: 4 files -> 1, plain name, bounded payloads,
+//!        WOOD cost per stage, >= 2 invariants, no serials.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const gate = @import("carry_publish_gate.rye");
+
+pub const version = "20261119.230000";
+
+pub const max_payload_bytes: u32 = 65536;
+pub const max_title_len: u32 = 128;
+pub const max_hash_len: u32 = 64;
+pub const max_stages: u32 = 4;
+pub const wood_cost_per_stage: u64 = 2;
+
+pub const Stage = enum(u8) {
+    upload = 1,
+    fetch_confirm = 2,
+    market_list = 3,
+    revision_seal = 4,
+};
+
+pub const StageResult = struct {
+    stage: Stage,
+    ok: bool,
+    bytes_processed: u32,
+    wood_spent: u64,
+};
+
+pub const PipelineRefusal = enum(u8) {
+    none = 0,
+    gate_closed = 1,
+    upload_too_large = 2,
+    upload_empty = 3,
+    fetch_hash_mismatch = 4,
+    market_title_empty = 5,
+    market_title_too_long = 6,
+    revision_no_prior = 7,
+};
+
+pub const PublishJob = struct {
+    payload_len: u32,
+    title: [max_title_len]u8,
+    title_len: u32,
+    upload_hash: [max_hash_len]u8,
+    fetch_hash: [max_hash_len]u8,
+    has_prior_revision: bool,
+    stamp: [15]u8,
+};
+
+pub const PipelineResult = struct {
+    stages_completed: u32,
+    total_wood: u64,
+    refusal: PipelineRefusal,
+    results: [max_stages]StageResult,
+};
+
+fn do_upload(job: *const PublishJob) StageResult {
+    // invariant: payload bounded
+    assert(job.payload_len <= max_payload_bytes);
+    const ok = job.payload_len > 0;
+    return .{
+        .stage = .upload,
+        .ok = ok,
+        .bytes_processed = if (ok) job.payload_len else 0,
+        .wood_spent = if (ok) wood_cost_per_stage else 0,
+    };
+}
+
+fn do_fetch_confirm(job: *const PublishJob) StageResult {
+    // invariant: hashes are fixed width
+    assert(job.upload_hash.len == max_hash_len);
+    const ok = std.mem.eql(
+        u8,
+        &job.upload_hash,
+        &job.fetch_hash,
+    );
+    return .{
+        .stage = .fetch_confirm,
+        .ok = ok,
+        .bytes_processed = max_hash_len,
+        .wood_spent = if (ok) wood_cost_per_stage else 0,
+    };
+}
+
+fn do_market_list(job: *const PublishJob) StageResult {
+    // invariant: title length bounded
+    assert(job.title_len <= max_title_len);
+    const ok = job.title_len > 0;
+    return .{
+        .stage = .market_list,
+        .ok = ok,
+        .bytes_processed = job.title_len,
+        .wood_spent = if (ok) wood_cost_per_stage else 0,
+    };
+}
+
+fn do_revision_seal(job: *const PublishJob) StageResult {
+    const ok = job.has_prior_revision;
+    // invariant: stamp present on seal
+    assert(job.stamp[8] == '.');
+    return .{
+        .stage = .revision_seal,
+        .ok = ok,
+        .bytes_processed = 0,
+        .wood_spent = if (ok) wood_cost_per_stage else 0,
+    };
+}
+
+pub fn run_pipeline(
+    publish_gate: *const gate.PublishGate,
+    job: *const PublishJob,
+) PipelineResult {
+    var result = PipelineResult{
+        .stages_completed = 0,
+        .total_wood = 0,
+        .refusal = .none,
+        .results = undefined,
+    };
+
+    if (!publish_gate.is_open()) {
+        result.refusal = .gate_closed;
+        return result;
+    }
+
+    // Stage 1: upload
+    const s1 = do_upload(job);
+    result.results[0] = s1;
+    if (!s1.ok) {
+        result.refusal = if (job.payload_len == 0)
+            .upload_empty
+        else
+            .upload_too_large;
+        return result;
+    }
+    result.stages_completed = 1;
+    result.total_wood += s1.wood_spent;
+
+    // Stage 2: fetch confirm
+    const s2 = do_fetch_confirm(job);
+    result.results[1] = s2;
+    if (!s2.ok) {
+        result.refusal = .fetch_hash_mismatch;
+        return result;
+    }
+    result.stages_completed = 2;
+    result.total_wood += s2.wood_spent;
+
+    // Stage 3: market list
+    const s3 = do_market_list(job);
+    result.results[2] = s3;
+    if (!s3.ok) {
+        result.refusal = if (job.title_len == 0)
+            .market_title_empty
+        else
+            .market_title_too_long;
+        return result;
+    }
+    result.stages_completed = 3;
+    result.total_wood += s3.wood_spent;
+
+    // Stage 4: revision seal
+    const s4 = do_revision_seal(job);
+    result.results[3] = s4;
+    if (!s4.ok) {
+        result.refusal = .revision_no_prior;
+        return result;
+    }
+    result.stages_completed = 4;
+    result.total_wood += s4.wood_spent;
+
+    // invariant: all 4 stages complete means 8 WOOD spent
+    assert(result.total_wood == max_stages * wood_cost_per_stage);
+    return result;
+}
+
+fn make_test_job(stamp: [15]u8) PublishJob {
+    var job = PublishJob{
+        .payload_len = 1024,
+        .title = @splat(0),
+        .title_len = 5,
+        .upload_hash = @splat(0xaa),
+        .fetch_hash = @splat(0xaa),
+        .has_prior_revision = true,
+        .stamp = stamp,
+    };
+    @memcpy(job.title[0..5], "hello");
+    return job;
+}
+
+fn run_selftest() !u8 {
+    const stamp = "20261119.230000".*;
+    const nl: u8 = 10;
+
+    // Welcome: full pipeline succeeds
+    {
+        var pg = gate.PublishGate.init(stamp);
+        try pg.manifest.declare(
+            "storage",
+            @intFromEnum(
+                @import("carry_admission_gate.rye").CapRight.read,
+            ),
+        );
+        pg.check_admission(&mock_allow);
+        pg.check_identity(true);
+        pg.check_network(true);
+
+        const job = make_test_job(stamp);
+        const r = run_pipeline(&pg, &job);
+        assert(r.stages_completed == 4);
+        assert(r.refusal == .none);
+        assert(r.total_wood == 8);
+    }
+
+    // Refusal: gate closed
+    {
+        var pg = gate.PublishGate.init(stamp);
+        try pg.manifest.declare(
+            "storage",
+            @intFromEnum(
+                @import("carry_admission_gate.rye").CapRight.read,
+            ),
+        );
+        pg.check_admission(&mock_deny);
+        pg.check_identity(true);
+        pg.check_network(true);
+
+        const job = make_test_job(stamp);
+        const r = run_pipeline(&pg, &job);
+        assert(r.stages_completed == 0);
+        assert(r.refusal == .gate_closed);
+    }
+
+    // Refusal: empty payload
+    {
+        var pg = gate.PublishGate.init(stamp);
+        try pg.manifest.declare(
+            "storage",
+            @intFromEnum(
+                @import("carry_admission_gate.rye").CapRight.read,
+            ),
+        );
+        pg.check_admission(&mock_allow);
+        pg.check_identity(true);
+        pg.check_network(true);
+
+        var job = make_test_job(stamp);
+        job.payload_len = 0;
+        const r = run_pipeline(&pg, &job);
+        assert(r.stages_completed == 0);
+        assert(r.refusal == .upload_empty);
+    }
+
+    // Refusal: hash mismatch
+    {
+        var pg = gate.PublishGate.init(stamp);
+        try pg.manifest.declare(
+            "storage",
+            @intFromEnum(
+                @import("carry_admission_gate.rye").CapRight.read,
+            ),
+        );
+        pg.check_admission(&mock_allow);
+        pg.check_identity(true);
+        pg.check_network(true);
+
+        var job = make_test_job(stamp);
+        job.fetch_hash = @splat(0xbb);
+        const r = run_pipeline(&pg, &job);
+        assert(r.stages_completed == 1);
+        assert(r.refusal == .fetch_hash_mismatch);
+    }
+
+    // Refusal: no prior revision
+    {
+        var pg = gate.PublishGate.init(stamp);
+        try pg.manifest.declare(
+            "storage",
+            @intFromEnum(
+                @import("carry_admission_gate.rye").CapRight.read,
+            ),
+        );
+        pg.check_admission(&mock_allow);
+        pg.check_identity(true);
+        pg.check_network(true);
+
+        var job = make_test_job(stamp);
+        job.has_prior_revision = false;
+        const r = run_pipeline(&pg, &job);
+        assert(r.stages_completed == 3);
+        assert(r.refusal == .revision_no_prior);
+    }
+
+    print("GREEN: carry_publish_pipeline -- " ++
+        "4-stage bounded pipeline with WOOD tracking " ++
+        "(1 welcome, 4 refusal by stage).{c}", .{nl});
+    return 0;
+}
+
+fn mock_allow(_: []const u8, _: u8) bool {
+    return true;
+}
+fn mock_deny(_: []const u8, _: u8) bool {
+    return false;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
