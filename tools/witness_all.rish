@@ -485,4 +485,8 @@ let oc8 = "-femit-bin=tools/.build/carry_device_setup"
 assert (run ["sh" rb sc8 oc8]).ok else "carry_device_setup build"
 assert (run ["tools/.build/carry_device_setup"]).ok else "device_setup"
 
-say "GREEN: witness_all -- 38 hubs & 88 proofs on metal!"
+# -- Orbit 9 Ring-0 cross-compile (riscv64-freestanding) --
+let w24 = "tools/terrarium/ring0_cross_compile_witness.rish"
+assert (run [rishi "run" w24]).ok else "ring0_cross_compile"
+
+say "GREEN: witness_all -- 38 hubs & 93 proofs on metal!"

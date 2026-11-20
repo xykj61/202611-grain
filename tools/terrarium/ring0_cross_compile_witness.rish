@@ -1,0 +1,23 @@
+# tools/terrarium/ring0_cross_compile_witness.rish
+# Proves all 4 Orbit 9 Ring-0 modules cross-compile to
+# riscv64-freestanding ELF. They cannot run on host (no
+# std, bare metal only) -- the gate is: they compile.
+
+let rye = "languages/rye/bin/rye"
+let mk = run ["mkdir" "-p" "tools/.build"]
+assert mk.ok else "mkdir tools/.build failed"
+let tgt = "riscv64-freestanding"
+
+let b1 = run [rye "build" "terrarium/src/aurora_framebuf_ring0.rye" "-target" tgt "-fno-entry" "-femit-bin=tools/.build/aurora_framebuf_ring0.elf"]
+assert b1.ok else "aurora_framebuf_ring0 cross-compile failed"
+
+let b2 = run [rye "build" "terrarium/src/pond_wire_ring0.rye" "-target" tgt "-fno-entry" "-femit-bin=tools/.build/pond_wire_ring0.elf"]
+assert b2.ok else "pond_wire_ring0 cross-compile failed"
+
+let b3 = run [rye "build" "terrarium/src/puddle_ring0.rye" "-target" tgt "-fno-entry" "-femit-bin=tools/.build/puddle_ring0.elf"]
+assert b3.ok else "puddle_ring0 cross-compile failed"
+
+let b4 = run [rye "build" "terrarium/src/ring0_integration_witness.rye" "-target" tgt "-fno-entry" "-femit-bin=tools/.build/ring0_integration_witness.elf"]
+assert b4.ok else "ring0_integration_witness cross-compile failed"
+
+say "GREEN: ring0_cross_compile_witness -- 4 Ring-0 modules compile to riscv64-freestanding ELF."
