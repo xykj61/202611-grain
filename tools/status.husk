@@ -1,0 +1,5 @@
+grain-ww status ({{ brix-version }})
+  Myofascia:  {{ myofascia }} / 100.000
+  Commits:    {{ commit-count }}
+  Orbit:      {{ orbit }} ({{ movement }}/15 {{ sign }})
+  Name:       {{ name }}

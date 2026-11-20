@@ -67,6 +67,7 @@ fn print_help() u8 {
         "grain-ww -- Grain Worldwide CLI\n\n" ++
         "USAGE: grain-ww <command> [args...]\n\n" ++
         "TOOLCHAIN\n" ++
+        "  status         live project health summary\n" ++
         "  version        print version + myofascia\n" ++
         "  doctor         verify toolchain health\n" ++
         "  selftest       run CLI self-checks\n" ++
@@ -882,6 +883,15 @@ pub fn main(init: std.process.Init) !u8 {
         );
     }
 
+    if (std.mem.eql(u8, sub, "status")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/husk_lower",
+            null,
+            &.{"tools/status.husk"},
+        );
+    }
     if (std.mem.eql(u8, sub, "readme-refresh")) {
         const rr: []const []const u8 = &.{
             "run",
