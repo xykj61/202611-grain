@@ -88,7 +88,7 @@ echo "local_override=$local_override"
 [ "$resolved_effort" = "$effort" ] || echo "override_detail: this clone runs effort $resolved_effort where the tracked file declares $effort"
 
 # The declaring roster: living pages that state which model THIS clone runs today.
-DECLARING="GLOW_PROFILE.template.kyri recursion-prompts/seed/autonomous-loop.seed.md .claude/rules/session-logs.md"
+DECLARING="context/templates/GLOW_PROFILE.template.kyri recursion-prompts/seed/autonomous-loop.seed.md .claude/rules/session-logs.md"
 
 declaring_total=0
 declaring_over=0

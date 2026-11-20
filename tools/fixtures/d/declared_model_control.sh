@@ -36,7 +36,8 @@ build() {
   # The pen's own driver reads `max`, deliberately unlike the real tree's `medium`, so every effort
   # leg below proves the gate reads THE FILE rather than a value baked into the scan.
   printf '{ "model": "%s", "effortLevel": "max" }\n' "$want" > "$d/.claude/settings.json"
-  printf 'model %s\neffort max\n' "$want" > "$d/GLOW_PROFILE.template.kyri"
+  mkdir -p "$d/context/templates"
+  printf 'model %s\neffort max\n' "$want" > "$d/context/templates/GLOW_PROFILE.template.kyri"
   printf 'The loop runs `"model": "%s"` at max effort.\n' "$want" > "$d/recursion-prompts/seed/autonomous-loop.seed.md"
   printf 'Record `model %s` on new logs; settings configures max.\n' "$want" > "$d/.claude/rules/session-logs.md"
   printf 'settings.json proves the configured default at max.\n' > "$d/.claude/rules/session-log-provenance.md"
@@ -75,7 +76,7 @@ echo "$out" | grep -q 'declaring_over=1' && leg stale_site_counted yes || leg st
 
 # 3 -- an absent declaring site is bitten, rather than silently skipped.
 build "$pen/absent" claude-opus-5
-rm -f "$pen/absent/GLOW_PROFILE.template.kyri"
+rm -f "$pen/absent/context/templates/GLOW_PROFILE.template.kyri"
 ( cd "$pen/absent" && git add -A && git -c user.email=pen@pen -c user.name=pen commit -qm rm ) >/dev/null 2>&1
 out=$(runscan "$pen/absent")
 echo "$out" | grep -q 'is named on the declaring roster and absent' && leg absent_site_bitten yes || leg absent_site_bitten no

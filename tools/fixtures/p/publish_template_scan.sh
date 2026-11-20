@@ -23,7 +23,7 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/../../.." && pwd)
 cd "$root"
 
 TPL=${PUBLISH_TEMPLATE:-publish-seed.template.sh}
-PROFILE=${PUBLISH_PROFILE:-GLOW_PROFILE.template.kyri}
+PROFILE=${PUBLISH_PROFILE:-context/templates/GLOW_PROFILE.template.kyri}
 
 [ -f "$TPL" ] || { echo "refused: no template at $TPL"; exit 2; }
 [ -f "$PROFILE" ] || { echo "refused: no profile at $PROFILE"; exit 2; }
