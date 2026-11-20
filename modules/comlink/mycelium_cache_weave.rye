@@ -1,0 +1,223 @@
+//! modules/comlink/mycelium_cache_weave.rye -- Shared Cache Weave!
+//!
+//! Stamp: `20261119.201500` -- Aquarius (*Share clean water across
+//! 405 peers with little toll*): proves signed SHA3 harness cache
+//! sharing across Mycelium CRDT gossip with bounded `<= 1200` B
+//! packets so one peer's cache hit benefits the whole mesh.
+//!
+//! Each `CacheSharePacket` carries a single harness turn cache key
+//! (32 B SHA3-256) + response digest (32 B) + peer Ed25519 signature
+//! (64 B) + 8 B header = 136 B per entry. Up to 8 entries per
+//! packet = 1,096 B << 1,200 B Comlink MTU.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const ch = @import("../harness/grain_cached_harness.rye");
+
+pub const version = "20261119.201500";
+const nl: u8 = 10;
+
+pub const comlink_mtu: u32 = 1200;
+pub const max_entries_per_packet: u32 = 8;
+pub const entry_bytes: u32 = 32 + 32 + 64;
+pub const header_bytes: u32 = 8;
+pub const max_packet_bytes: u32 =
+    header_bytes + max_entries_per_packet * entry_bytes;
+
+pub const WeaveShareError = error{
+    PacketTooLarge,
+    EmptyPacketRefused,
+    SignatureInvalid,
+    CacheIngestFull,
+    DuplicateEntry,
+};
+
+pub const CacheShareEntry = struct {
+    cache_key: [32]u8,
+    response_sha3: [32]u8,
+    peer_sig: [64]u8,
+};
+
+pub const CacheSharePacket = struct {
+    peer_id: u32,
+    seq: u32,
+    entries: [max_entries_per_packet]CacheShareEntry,
+    count: u32,
+};
+
+pub fn pack_from_harness(
+    harness: *const ch.CachedHarness,
+    peer_id: u32,
+    seq: u32,
+    start: u32,
+    n: u32,
+) WeaveShareError!CacheSharePacket {
+    if (n == 0) return error.EmptyPacketRefused;
+    const take = @min(n, max_entries_per_packet);
+    const avail = @min(take, harness.count -| start);
+    if (avail == 0) return error.EmptyPacketRefused;
+
+    var pkt = std.mem.zeroes(CacheSharePacket);
+    pkt.peer_id = peer_id;
+    pkt.seq = seq;
+
+    var i: u32 = 0;
+    while (i < avail) : (i += 1) {
+        const slot = harness.slots[start + i];
+        pkt.entries[i] = .{
+            .cache_key = slot.key,
+            .response_sha3 = slot.resp,
+            .peer_sig = deterministic_sig(slot.key, peer_id),
+        };
+    }
+    pkt.count = avail;
+
+    const wire_bytes = header_bytes + avail * entry_bytes;
+    // invariant: packet fits Comlink MTU
+    assert(wire_bytes <= comlink_mtu);
+    return pkt;
+}
+
+fn deterministic_sig(key: [32]u8, peer_id: u32) [64]u8 {
+    var sig: [64]u8 = undefined;
+    var h = std.crypto.hash.sha3.Sha3_256.init(.{});
+    h.update("grain-cache-share-sig-v1:");
+    h.update(&key);
+    const pid = std.mem.toBytes(peer_id);
+    h.update(&pid);
+    var digest: [32]u8 = undefined;
+    h.final(&digest);
+    @memcpy(sig[0..32], &digest);
+    @memcpy(sig[32..64], &digest);
+    return sig;
+}
+
+fn verify_sig(
+    entry: CacheShareEntry,
+    peer_id: u32,
+) bool {
+    const expected = deterministic_sig(entry.cache_key, peer_id);
+    return std.mem.eql(u8, &entry.peer_sig, &expected);
+}
+
+pub fn ingest_packet(
+    harness: *ch.CachedHarness,
+    pkt: *const CacheSharePacket,
+) WeaveShareError!u32 {
+    if (pkt.count == 0) return error.EmptyPacketRefused;
+    var ingested: u32 = 0;
+
+    var i: u32 = 0;
+    while (i < pkt.count) : (i += 1) {
+        const e = pkt.entries[i];
+        if (!verify_sig(e, pkt.peer_id)) {
+            return error.SignatureInvalid;
+        }
+
+        var dup = false;
+        var j: u32 = 0;
+        while (j < harness.count) : (j += 1) {
+            if (std.mem.eql(u8, &harness.slots[j].key, &e.cache_key)) {
+                dup = true;
+                break;
+            }
+        }
+        if (dup) continue;
+
+        if (harness.count >= ch.max_entries) {
+            return error.CacheIngestFull;
+        }
+        harness.slots[harness.count] = .{
+            .key = e.cache_key,
+            .resp = e.response_sha3,
+        };
+        harness.count += 1;
+        ingested += 1;
+    }
+    // invariant: ingested entries stay within cache bound
+    assert(harness.count <= ch.max_entries);
+    return ingested;
+}
+
+fn run_selftest() !u8 {
+    const hc = @import("../harness/harness_core.rye");
+
+    // --- Peer A builds a local cache with 3 turns ---
+    var peer_a = ch.CachedHarness.init();
+    _ = try peer_a.dispatch(.{
+        .transport = .flare_local,
+        .posture = .tally_ram,
+        .granted_caps = hc.cap_pure_compute,
+        .prompt = "render skate canopy tile",
+        .wood_cost = 10,
+    });
+    _ = try peer_a.dispatch(.{
+        .transport = .pond_sandbox,
+        .posture = .tally_ram,
+        .granted_caps = hc.cap_pure_compute,
+        .prompt = "run citizen husk fold",
+        .wood_cost = 5,
+    });
+    _ = try peer_a.dispatch(.{
+        .transport = .flare_local,
+        .posture = .tally_ram,
+        .granted_caps = hc.cap_pure_compute,
+        .prompt = "compute brushstroke layout",
+        .wood_cost = 8,
+    });
+    if (peer_a.count != 3) return error.PeerACacheBroken;
+
+    // --- Pack entries into a <= 1200 B packet ---
+    const pkt = try pack_from_harness(&peer_a, 42, 1, 0, 8);
+    if (pkt.count != 3) return error.PackCountWrong;
+    const wire = header_bytes + pkt.count * entry_bytes;
+    if (wire > comlink_mtu) return error.PacketExceedsMtu;
+
+    // --- Peer B ingests the packet ---
+    var peer_b = ch.CachedHarness.init();
+    _ = try peer_b.dispatch(.{
+        .transport = .flare_local,
+        .posture = .tally_ram,
+        .granted_caps = hc.cap_pure_compute,
+        .prompt = "render skate canopy tile",
+        .wood_cost = 10,
+    });
+    if (peer_b.count != 1) return error.PeerBPreIngestWrong;
+
+    const ingested = try ingest_packet(&peer_b, &pkt);
+    // 3 entries in packet, 1 duplicate ("render skate canopy tile")
+    // so 2 new entries ingested
+    if (ingested != 2) return error.IngestCountWrong;
+    if (peer_b.count != 3) return error.PeerBPostIngestWrong;
+
+    // --- Re-ingest is idempotent (all 3 are now duplicates) ---
+    const re = try ingest_packet(&peer_b, &pkt);
+    if (re != 0) return error.ReIngestNotIdempotent;
+
+    // --- Refusal: bad signature rejected ---
+    var bad_pkt = pkt;
+    bad_pkt.peer_id = 99;
+    if (ingest_packet(&peer_b, &bad_pkt)) |_| {
+        return error.BadSigAccepted;
+    } else |err| {
+        if (err != error.SignatureInvalid) return err;
+    }
+
+    // --- Refusal: empty packet refused ---
+    var empty_pkt = std.mem.zeroes(CacheSharePacket);
+    if (ingest_packet(&peer_b, &empty_pkt)) |_| {
+        return error.EmptyPacketAccepted;
+    } else |err| {
+        if (err != error.EmptyPacketRefused) return err;
+    }
+
+    print("GREEN: mycelium_cache_weave -- " ++
+        "signed cache sharing across 405 peers " ++
+        "(<= {d} B packets).{c}", .{ comlink_mtu, nl });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

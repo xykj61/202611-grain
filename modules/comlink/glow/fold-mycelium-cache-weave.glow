@@ -1,0 +1,12 @@
+::  comlink/glow/fold-mycelium-cache-weave.glow -- Cache Weave!
+/-  compiler-shapes
+/!  32768
+|%
+++  fold-cache-share-packet
+  |=  [count=@ud entry-bytes=@ud header=@ud mtu=@ud]   ::  packet bound
+  ^-  @ud                                               ::  wire bytes
+  ~|  'mycelium-cache-packet-exceeds-comlink-mtu'       ::  MTU refusal
+  =+  wire  (add header (mul count entry-bytes))        ::  total bytes
+  ?>  lte(wire mtu)
+  wire
+--
