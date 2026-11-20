@@ -485,8 +485,39 @@ let oc8 = "-femit-bin=tools/.build/carry_device_setup"
 assert (run ["sh" rb sc8 oc8]).ok else "carry_device_setup build"
 assert (run ["tools/.build/carry_device_setup"]).ok else "device_setup"
 
+# -- Conifer CLI terminal (6 modules, renamed from dexter) --
+let cc1 = "modules/pond/apps/conifer_history.rye"
+let co1 = "-femit-bin=tools/.build/conifer_history"
+assert (run ["sh" rb cc1 co1]).ok else "conifer_history build"
+assert (run ["tools/.build/conifer_history"]).ok else "conifer_hist"
+
+let cc2 = "modules/pond/apps/conifer_key.rye"
+let co2 = "-femit-bin=tools/.build/conifer_key"
+assert (run ["sh" rb cc2 co2]).ok else "conifer_key build"
+assert (run ["tools/.build/conifer_key"]).ok else "conifer_key"
+
+let cc3 = "modules/pond/apps/conifer_line.rye"
+let co3 = "-femit-bin=tools/.build/conifer_line"
+assert (run ["sh" rb cc3 co3]).ok else "conifer_line build"
+assert (run ["tools/.build/conifer_line"]).ok else "conifer_line"
+
+let cc4 = "modules/pond/apps/conifer_prompt.rye"
+let co4 = "-femit-bin=tools/.build/conifer_prompt"
+assert (run ["sh" rb cc4 co4]).ok else "conifer_prompt build"
+assert (run ["tools/.build/conifer_prompt"]).ok else "conifer_prmt"
+
+let cc5 = "modules/pond/apps/conifer_shell.rye"
+let co5 = "-femit-bin=tools/.build/conifer_shell"
+assert (run ["sh" rb cc5 co5]).ok else "conifer_shell build"
+assert (run ["tools/.build/conifer_shell"]).ok else "conifer_shll"
+
+let cc6 = "modules/pond/apps/conifer_terminal.rye"
+let co6 = "-femit-bin=tools/.build/conifer_terminal"
+assert (run ["sh" rb cc6 co6]).ok else "conifer_terminal build"
+assert (run ["tools/.build/conifer_terminal"]).ok else "conifer_term"
+
 # -- Orbit 9 Ring-0 cross-compile (riscv64-freestanding) --
 let w24 = "tools/terrarium/ring0_cross_compile_witness.rish"
 assert (run [rishi "run" w24]).ok else "ring0_cross_compile"
 
-say "GREEN: witness_all -- 38 hubs & 93 proofs on metal!"
+say "GREEN: witness_all -- 38 hubs & 105 proofs on metal!"
