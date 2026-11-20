@@ -25,8 +25,8 @@ access through the deterministic cached Grain Harness interface:*
 - [x] **[Aquarius, `20261119.201500`, `57.080`]** Built `Mycelium` Shared Harness Cache Weave (`modules/comlink/mycelium_cache_weave.rye`, `fold-mycelium-cache-weave.glow`: signed SHA3 cache entries in `<= 1200` B packets, idempotent CRDT ingest with duplicate dedup, bad-signature refusal, 4 welcome + 3 refusal paths)
 - [x] **[Pisces, `20261119.202000`, `57.081`]** Crafted `Reya` Twilight Radiant architecture mandala SVG (`libraries/risala/art/terrarium-vantage-mandala.svg`: 7 concentric rings from Blazepod heart through Flare faculties, Vantage Station, Cached Harness, Caravan/Pond, Comlink/Mycelium, to Terrarium glass -- commit 100 gratitude artifact)
 - [x] **[Cardinal Sky, `20261119.203000`, `57.082`]** Built constituency verification matrix (`modules/harness/constituency_verification.rye`, `gate-constituency-verification.glow`: 5 constituencies x 2 postures x 3 transports = 30 cells, all offline welcome, zero RAM API leaks, grower/civic/engineer/teacher/musician proven end-to-end)
-- [ ] **[TOP -- Fixed Sky (`14/15`), `57.083`]** Hold the Whole Cup (`Terrarium` Final Consolidation!) -- compress `Terrarium`, `Vantage Station`, `Blazepod`, & `Cached Harness` through `Synonym` into one verified C-ABI + `.brix` closure
-- [ ] **[Siya (`15/15`), `57.084`]** Harvest Whole & Carry Into Dawn -- seal the consolidated `Vantage Station` + `Terrarium` + `Cached Harness` orbit & refresh public seed
+- [x] **[Fixed Sky, `20261119.204000`, `57.083`]** Built `grain-ww` Whole-Cup `.brix` Closure (`modules/fusion/grain_ww_closure.brix` + `tools/fusion/grain_ww_closure_witness.rish`: single manifest declaring Terrarium + Vantage Station + Blazepod + Cached Harness + Flare + Comlink + 7 Glow desks + 5 Glasswall invariants + 4 Synonym compressions, all paths verified on disk)
+- [ ] **[TOP -- Siya (`15/15`), `57.084`]** Harvest Whole & Carry Into Dawn -- seal the consolidated `Vantage Station` + `Terrarium` + `Cached Harness` orbit & refresh public seed
 
 ---
 

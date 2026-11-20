@@ -1,0 +1,56 @@
+# grain_ww_closure_witness.rish -- Fixed Sky closure integrity.
+#
+# Verifies every module path declared in grain_ww_closure.brix
+# exists on disk. The whole cup holds only if every piece stands.
+
+say "Fixed Sky closure witness -- verifying grain_ww_closure.brix"
+
+# Harness modules
+let h1 = run ["test" "-f" "modules/harness/harness_core.rye"]
+assert h1.ok else "harness_core.rye missing"
+let h2 = run ["test" "-f" "modules/harness/grain_cached_harness.rye"]
+assert h2.ok else "grain_cached_harness.rye missing"
+let h3 = run ["test" "-f" "modules/harness/constituency_verification.rye"]
+assert h3.ok else "constituency_verification.rye missing"
+let h4 = run ["test" "-f" "modules/harness/harness_wood_ledger.rye"]
+assert h4.ok else "harness_wood_ledger.rye missing"
+let h5 = run ["test" "-f" "modules/harness/pond_api_airlock.rye"]
+assert h5.ok else "pond_api_airlock.rye missing"
+let h6 = run ["test" "-f" "modules/harness/scorpio_session_zeroize.rye"]
+assert h6.ok else "scorpio_session_zeroize.rye missing"
+
+# Blazepod
+let b1 = run ["test" "-f" "blazepod/rv64_glasswall_boot.rye"]
+assert b1.ok else "rv64_glasswall_boot.rye missing"
+let b2 = run ["test" "-f" "blazepod/boot_harness_matrix.rye"]
+assert b2.ok else "boot_harness_matrix.rye missing"
+let b3 = run ["test" "-f" "blazepod/blazepod.brix"]
+assert b3.ok else "blazepod.brix missing"
+
+# Flare / Husk
+let f1 = run ["test" "-f" "modules/flare/husk/husk_core.rye"]
+assert f1.ok else "husk_core.rye missing"
+let f2 = run ["test" "-f" "modules/flare/husk/husk_movement_stack.rye"]
+assert f2.ok else "husk_movement_stack.rye missing"
+let f3 = run ["test" "-f" "modules/flare/husk/husk_object_recall.rye"]
+assert f3.ok else "husk_object_recall.rye missing"
+
+# Comlink + Council
+let c1 = run ["test" "-f" "modules/comlink/council_405.rye"]
+assert c1.ok else "council_405.rye missing"
+let c2 = run ["test" "-f" "modules/comlink/council_mycelium_weave.rye"]
+assert c2.ok else "council_mycelium_weave.rye missing"
+let c3 = run ["test" "-f" "modules/comlink/mycelium_cache_weave.rye"]
+assert c3.ok else "mycelium_cache_weave.rye missing"
+
+# Vantage
+let v1 = run ["test" "-f" "modules/comlink/vantage/vantage_app.rye"]
+assert v1.ok else "vantage_app.rye missing"
+let v2 = run ["test" "-f" "modules/comlink/vantage/vantage_studio_deck.rye"]
+assert v2.ok else "vantage_studio_deck.rye missing"
+
+# Closure manifest itself
+let m1 = run ["test" "-f" "modules/fusion/grain_ww_closure.brix"]
+assert m1.ok else "grain_ww_closure.brix missing"
+
+say "GREEN: grain_ww_closure -- all paths verified on disk."

@@ -1,0 +1,100 @@
+# modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
+#
+# Stamp: 20261119.204000
+# Fixed Sky (14/15): compress Terrarium, Vantage Station, Blazepod,
+# and Cached Harness through Synonym into one verified package.
+# Every line stays within 80 columns and plain 7-bit ASCII.
+
+name grain-ww
+version 20261119.204000
+identity com.grainww
+
+# --- Languages (Native-5 Spine) ---
+language rye languages/rye/
+language glow languages/glow/
+language rishi languages/rishi/
+language brix languages/brix/
+language kyri languages/kyri/
+
+# --- Blazepod Hardware Profiles ---
+hardware blazepod blazepod/blazepod.brix
+hardware boot blazepod/rv64_glasswall_boot.rye
+hardware matrix blazepod/boot_harness_matrix.rye
+
+# --- Harness (Cached + Core + Constituency) ---
+harness core modules/harness/harness_core.rye
+harness cache modules/harness/grain_cached_harness.rye
+harness wood modules/harness/harness_wood_ledger.rye
+harness airlock modules/harness/pond_api_airlock.rye
+harness zeroize modules/harness/scorpio_session_zeroize.rye
+harness constituency modules/harness/constituency_verification.rye
+
+# --- Vantage Station (All UI) ---
+vantage app modules/comlink/vantage/vantage_app.rye
+vantage deck modules/comlink/vantage/vantage_studio_deck.rye
+vantage canvas modules/comlink/vantage/vantage_canvas_bridge.rye
+vantage husk-editor modules/comlink/vantage/vantage_husk_editor.rye
+vantage mutations modules/comlink/vantage/vantage_mutations.rye
+vantage council modules/comlink/vantage/vantage_council_puddle.rye
+vantage twilight modules/comlink/vantage/vantage_twilight_reader.rye
+vantage carry modules/comlink/vantage/carry.rye
+
+# --- Flare (Four Faculties) ---
+flare husk modules/flare/husk/husk_core.rye
+flare husk-stack modules/flare/husk/husk_movement_stack.rye
+flare husk-recall modules/flare/husk/husk_object_recall.rye
+
+# --- Comlink + Council 405 + Mycelium ---
+comlink council modules/comlink/council_405.rye
+comlink mycelium modules/comlink/council_mycelium_weave.rye
+comlink cache-weave modules/comlink/mycelium_cache_weave.rye
+comlink topology modules/comlink/topology.rye
+
+# --- Pond + Caravan + Custody ---
+pond puddle modules/pond/puddle/pond_puddle.rye
+caravan custody modules/caravan/custody/vault_zeroize_seal.rye
+
+# --- Brushstroke / Skate ---
+skate surface modules/brushstroke/skate/skate_surface.rye
+skate console modules/brushstroke/skate/vantage_harness_console.rye
+skate triptych modules/brushstroke/skate/studio_triptych_canvas.rye
+
+# --- Resonance ---
+resonance station modules/comlink/vantage/resonance_station.rye
+resonance dsp modules/comlink/vantage/resonance_dsp.rye
+
+# --- Storage ---
+tablecloth sql modules/tablecloth/sql_workspace.rye
+tablecloth relational modules/tablecloth/relational_table.rye
+blaze store modules/blaze/store.rye
+
+# --- Sundial + Calfive ---
+sundial clock modules/sundial/one_clock.rye
+sundial calfive modules/sundial/calfive_wheel.rye
+
+# --- Terrarium Host Glass ---
+terrarium swift terrarium/app/
+terrarium kotlin terrarium/carry-tablet/
+terrarium wasm terrarium/wasm/
+
+# --- Glow Citizen Ring (verified desks) ---
+glow_desk fold-harness-cache modules/harness/glow/
+glow_desk fold-harness-wood modules/harness/glow/
+glow_desk gate-api-airlock modules/harness/glow/
+glow_desk gate-session-zeroize modules/harness/glow/
+glow_desk gate-constituency modules/harness/glow/
+glow_desk gate-boot-matrix blazepod/glow/
+glow_desk fold-mycelium-cache modules/comlink/glow/
+
+# --- Civic Glasswall Invariants ---
+glasswall display write-only-rlcd
+glasswall mic hardware-vdd-plus-bystander-lamp
+glasswall ad-sdk zero
+glasswall telemetry zero
+glasswall acr zero
+
+# --- Synonym Compressions (Sameness Is the Macro) ---
+synonym kyri reya
+synonym husk active-husk
+synonym grain-ww grain_ww com.grainww
+synonym resonance never-lotus
