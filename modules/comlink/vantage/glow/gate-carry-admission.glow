@@ -1,0 +1,11 @@
+::  vantage/glow/gate-carry-admission.glow -- Aether!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-carry-admission
+  |=  [caps=@ud granted=@ud admitted=@ud]              ::  manifest totals
+  ^-  @ud                                               ::  granted count
+  ~|  'carry-admission-gate-invariant-broken'            ::  Aether refusal
+  ?>  &(gth(caps 0) lte(granted caps) eql(admitted 1))  ::  caps>0, granted<=caps
+  granted
+--
