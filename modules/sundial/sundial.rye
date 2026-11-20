@@ -25,11 +25,6 @@ pub const myofascia_milli_scale: u32 = 1000;
 pub const myofascia_milli_max: u32 = 100000;
 pub const myofascia_base_milli: u32 = 56500; // 56.500 baseline (64.500 - 8.000)
 
-// Elder compatibility constants kept until door-approved Mitra shed.
-pub const fascia_percent_max: u32 = 100;
-pub const fascia_units_scale: u32 = 10000;
-pub const fascia_units_max: u32 = 1000000;
-
 pub const Reading = struct {
     name: []const u8,
     green: bool,
@@ -45,9 +40,6 @@ pub const Sundial = struct {
     count: u32,
     myofascia: u32,
     myofascia_milli: u32,
-    fascia: u32,
-    fascia_units: u32,
-
     pub fn init(myofascia: u32) Sundial {
         // invariant: whole myofascia stays within 0..100.
         assert(myofascia <= myofascia_percent_max);
@@ -59,8 +51,6 @@ pub const Sundial = struct {
             .count = 0,
             .myofascia = myofascia,
             .myofascia_milli = milli,
-            .fascia = myofascia,
-            .fascia_units = myofascia * fascia_units_scale,
         };
     }
 
@@ -74,31 +64,17 @@ pub const Sundial = struct {
             .count = 0,
             .myofascia = myofascia,
             .myofascia_milli = myofascia_milli,
-            .fascia = myofascia,
-            .fascia_units = myofascia_milli * 10,
         };
     }
 
     pub fn init_orbits(completed_orbits: u32) Sundial {
-        // invariant: orbit bonus stays inside remaining headroom to 100.000.
-        assert(myofascia_base_milli + completed_orbits <= myofascia_milli_max);
+        // invariant: orbit bonus stays inside remaining headroom.
+        assert(myofascia_base_milli + completed_orbits <=
+            myofascia_milli_max);
         const milli = myofascia_base_milli + completed_orbits;
         const whole = milli / myofascia_milli_scale;
         assert(whole <= myofascia_percent_max);
         return init_myofascia(whole, milli);
-    }
-
-    pub fn init_face(fascia: u32, fascia_units: u32) Sundial {
-        assert(fascia <= fascia_percent_max);
-        assert(fascia_units <= fascia_units_max);
-        return .{
-            .readings = undefined,
-            .count = 0,
-            .myofascia = fascia,
-            .myofascia_milli = fascia_units / 10,
-            .fascia = fascia,
-            .fascia_units = fascia_units,
-        };
     }
 
     pub fn add(
