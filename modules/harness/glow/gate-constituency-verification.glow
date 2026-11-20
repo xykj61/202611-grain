@@ -1,0 +1,11 @@
+::  harness/glow/gate-constituency-verification.glow -- Aether!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-constituency-matrix
+  |=  [tested=@ud welcome=@ud refused=@ud leak=@ud]    ::  matrix totals
+  ^-  @ud                                               ::  verified count
+  ~|  'constituency-matrix-invariant-broken'             ::  Aether refusal
+  ?>  &(eql(tested 30) eql(leak 0) gth(refused 0))     ::  30 cells, 0 leak
+  tested
+--

@@ -1,0 +1,209 @@
+//! modules/harness/constituency_verification.rye -- Aether Hears!
+//!
+//! Stamp: `20261119.203000` -- Cardinal Sky (*Step back and ask whom
+//! the work serves*): proves every human constituency can reach a
+//! working `Vantage Station` + `grain-ww harness-cache` session
+//! through both `tally-ram` (offline, zero network) and `tally-vn`
+//! (NVMe + Caravan-gated API airlock) boot postures.
+//!
+//! Five constituencies (`grower`, `civic_leader`, `engineer`,
+//! `teacher`, `musician`) x 2 postures x 3 transports = 30 matrix
+//! cells. Each cell either welcomes or correctly refuses based on
+//! posture + capability rules. The matrix proves no constituency
+//! is locked out of offline computing and no constituency leaks
+//! external API access without Caravan custody.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const ch = @import("grain_cached_harness.rye");
+const hc = @import("harness_core.rye");
+const boot = @import("../../blazepod/rv64_glasswall_boot.rye");
+
+pub const version = "20261119.203000";
+const nl: u8 = 10;
+
+pub const Constituency = enum(u8) {
+    grower = 1,
+    civic_leader = 2,
+    engineer = 3,
+    teacher = 4,
+    musician = 5,
+};
+
+pub const constituency_count: u32 = 5;
+
+pub const ConstituencyProfile = struct {
+    who: Constituency,
+    name: []const u8,
+    prompt: []const u8,
+    needs_audio: bool,
+    needs_api: bool,
+};
+
+const profiles = [constituency_count]ConstituencyProfile{
+    .{
+        .who = .grower,
+        .name = "biocyclic vegan grower",
+        .prompt = "compost schedule and soil mineral audit",
+        .needs_audio = false,
+        .needs_api = false,
+    },
+    .{
+        .who = .civic_leader,
+        .name = "civic leader",
+        .prompt = "colloquium ballot 324 of 405 consensus",
+        .needs_audio = false,
+        .needs_api = true,
+    },
+    .{
+        .who = .engineer,
+        .name = "systems engineer",
+        .prompt = "glow mill stage1 eq stage2 self-host parity",
+        .needs_audio = false,
+        .needs_api = true,
+    },
+    .{
+        .who = .teacher,
+        .name = "teacher at classroom huddle",
+        .prompt = "shastra tiruppavai verse and bloom companion",
+        .needs_audio = false,
+        .needs_api = false,
+    },
+    .{
+        .who = .musician,
+        .name = "musician in resonance studio",
+        .prompt = "resonance 3-zone daw timeline stereo mix",
+        .needs_audio = true,
+        .needs_api = false,
+    },
+};
+
+pub const CellVerdict = struct {
+    constituency: Constituency,
+    posture: ch.HardwarePosture,
+    transport: ch.TransportKind,
+    expected_ok: bool,
+    actual_ok: bool,
+};
+
+pub const MatrixResult = struct {
+    cells_tested: u32,
+    cells_welcome: u32,
+    cells_refused: u32,
+    all_offline_welcome: bool,
+    no_ram_api_leak: bool,
+};
+
+fn caps_for(
+    profile: ConstituencyProfile,
+    posture: ch.HardwarePosture,
+) u32 {
+    var caps: u32 = hc.cap_pure_compute | hc.cap_skate_surface;
+    if (profile.needs_audio) {
+        caps |= hc.cap_resonance_audio;
+    }
+    if (posture == .tally_vn and profile.needs_api) {
+        caps |= hc.cap_vault_gemini_key | hc.cap_comlink_peer;
+    }
+    return caps;
+}
+
+fn test_cell(
+    harness: *ch.CachedHarness,
+    profile: ConstituencyProfile,
+    posture: ch.HardwarePosture,
+    transport: ch.TransportKind,
+) CellVerdict {
+    const is_api = (transport == .gemini_api_bridge);
+    const is_ram = (posture == .tally_ram);
+    const expected_ok = !(is_api and is_ram) and
+        !(is_api and !profile.needs_api);
+
+    const caps = caps_for(profile, posture);
+    const turn = ch.HarnessTurn{
+        .transport = transport,
+        .posture = posture,
+        .granted_caps = caps,
+        .prompt = profile.prompt,
+        .wood_cost = 5,
+    };
+    const actual_ok = if (harness.dispatch(turn)) |_| true else |_| false;
+
+    return .{
+        .constituency = profile.who,
+        .posture = posture,
+        .transport = transport,
+        .expected_ok = expected_ok,
+        .actual_ok = actual_ok,
+    };
+}
+
+fn run_selftest() !u8 {
+    var harness = ch.CachedHarness.init();
+    var tested: u32 = 0;
+    var welcome: u32 = 0;
+    var refused: u32 = 0;
+    var all_offline_ok = true;
+    var ram_api_leak = false;
+
+    const postures = [_]ch.HardwarePosture{ .tally_ram, .tally_vn };
+    const transports = [_]ch.TransportKind{
+        .flare_local,
+        .pond_sandbox,
+        .gemini_api_bridge,
+    };
+
+    for (profiles) |p| {
+        for (postures) |posture| {
+            for (transports) |transport| {
+                const cell = test_cell(
+                    &harness, p, posture, transport,
+                );
+                // invariant: expected matches actual for every cell
+                if (cell.expected_ok != cell.actual_ok) {
+                    return error.MatrixCellMismatch;
+                }
+                tested += 1;
+                if (cell.actual_ok) {
+                    welcome += 1;
+                } else {
+                    refused += 1;
+                }
+
+                if (posture == .tally_ram and
+                    transport != .gemini_api_bridge and
+                    !cell.actual_ok)
+                {
+                    all_offline_ok = false;
+                }
+                if (posture == .tally_ram and
+                    transport == .gemini_api_bridge and
+                    cell.actual_ok)
+                {
+                    ram_api_leak = true;
+                }
+            }
+        }
+    }
+
+    // invariant: 5 constituencies x 2 postures x 3 transports = 30
+    assert(tested == 30);
+    // invariant: every constituency reaches offline (ram + local)
+    assert(all_offline_ok);
+    // invariant: zero ram-mode API leaks
+    assert(!ram_api_leak);
+    // invariant: some cells are correctly refused
+    assert(refused >= 1);
+
+    print("GREEN: constituency_verification -- " ++
+        "{d} cells ({d} welcome, {d} refused), " ++
+        "all offline ok, 0 RAM API leaks.{c}", .{
+        tested, welcome, refused, nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
