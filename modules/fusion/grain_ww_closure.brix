@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261119.210709
-# Aquarius (11/15 Orbit 9): updated with 8 Carry modules, 3 Ring-0
-# terrarium modules, and 3 Carry Glow desks from Orbit 9.
+# Stamp: 20261119.221001
+# Scorpio (8/15 Orbit 10): added 6 Conifer CLI modules, Ring-0
+# cross-compile witness, tutorial sync, manifest cover fix.
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261119.210709
+version 20261119.221001
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---
@@ -87,6 +87,15 @@ terrarium wasm terrarium/wasm/
 terrarium ring0-framebuf terrarium/src/aurora_framebuf_ring0.rye
 terrarium ring0-pond-wire terrarium/src/pond_wire_ring0.rye
 terrarium ring0-puddle terrarium/src/puddle_ring0.rye
+terrarium ring0-witness terrarium/src/ring0_integration_witness.rye
+
+# --- Conifer CLI Terminal (Grain Harness Terminal) ---
+conifer conifer-history modules/pond/apps/conifer_history.rye
+conifer conifer-key modules/pond/apps/conifer_key.rye
+conifer conifer-line modules/pond/apps/conifer_line.rye
+conifer conifer-prompt modules/pond/apps/conifer_prompt.rye
+conifer conifer-shell modules/pond/apps/conifer_shell.rye
+conifer conifer-terminal modules/pond/apps/conifer_terminal.rye
 
 # --- Glow Citizen Ring (verified desks) ---
 glow_desk fold-harness-cache modules/harness/glow/
