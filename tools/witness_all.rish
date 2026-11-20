@@ -531,4 +531,9 @@ let ho2 = "-femit-bin=tools/.build/husk_lower"
 assert (run ["sh" rb ht2 ho2]).ok else "husk_lower build"
 assert (run ["tools/.build/husk_lower" "selftest"]).ok else "husk_low"
 
-say "GREEN: witness_all -- 38 hubs & 109 proofs on metal!"
+# -- Orbit 12 README metrics from .husk + libra preflight --
+let rm_patch = "tools/readme_metrics_patch.rish"
+assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
+assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
+
+say "GREEN: witness_all -- 38 hubs & 113 proofs on metal!"
