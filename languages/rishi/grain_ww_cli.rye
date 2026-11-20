@@ -760,6 +760,60 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
+    if (std.mem.eql(u8, sub, "carry-gate")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/carry_admission_gate",
+            "modules/comlink/vantage/carry_admission_gate.rye",
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "carry-publish")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/carry_publish_gate",
+            "modules/comlink/vantage/carry_publish_gate.rye",
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "carry-device")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/carry_device_setup",
+            "modules/comlink/vantage/carry_device_setup.rye",
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "carry-session")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/carry_audience_session",
+            "modules/comlink/vantage/carry_audience_session.rye",
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "carry-hearth")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/carry_hearth_mold",
+            "modules/comlink/vantage/carry_hearth_mold.rye",
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "carry-manifest")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/carry_manifest_emit",
+            "modules/comlink/vantage/carry_manifest_emit.rye",
+            args[2..],
+        );
+    }
 
     print("grain-ww: unknown subcommand '{s}'{c}", .{ sub, nl });
     return 1;
