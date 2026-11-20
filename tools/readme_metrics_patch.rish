@@ -1,0 +1,18 @@
+# tools/readme_metrics_patch.rish -- lower readme_metrics.husk
+# and patch the result into README.md between sentinel lines.
+
+let husk_lower = "tools/.build/husk_lower"
+let husk_src = "tools/readme_metrics.husk"
+let scratch = "tools/.build/readme_metrics_lowered.md"
+
+let lo = run [husk_lower husk_src scratch]
+assert lo.ok else "husk_lower failed on readme_metrics.husk"
+
+let patcher = "tools/fixtures/r/readme_patch.sh"
+let patch = run ["sh" patcher scratch "README.md"]
+assert patch.ok else "readme_patch.sh failed"
+
+let chk = run ["sh" "-c" "grep -q Myofascia README.md"]
+assert chk.ok else "Myofascia missing after patch"
+
+say "GREEN: readme_metrics_patch -- README.md from .husk"

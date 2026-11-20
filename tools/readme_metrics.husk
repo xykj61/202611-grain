@@ -1,0 +1,7 @@
+| Reading | Measured Now |
+|---|---|
+| **Myofascia** -- living connective integrity (`+0.001` / movement) | **{{ myofascia }}** / 100.000 |
+| **Commits** | **{{ commit-count }}** |
+| **Orbit** | **{{ orbit }}** ({{ movement }}/15 {{ sign }}) |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **{{ brix-version }}** |
+| **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |

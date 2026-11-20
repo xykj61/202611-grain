@@ -42,7 +42,8 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 | Reading | Measured Now |
 |---|---|
 | **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.078** / 100.000 |
-| **Glow rune digraphs** verified live in `languages/glow/front/rune_book.rye` | **48** |
+| **Commits** | **155** |
+| **Orbit** | **11** (5/15 Leo) |
 | **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261119.183931** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 

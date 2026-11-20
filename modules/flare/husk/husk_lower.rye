@@ -23,27 +23,6 @@ fn run_capture(
     return std.mem.trim(u8, r.stdout, " \t\n\r");
 }
 
-fn compute_myofascia(
-    a: std.mem.Allocator,
-    io: std.Io,
-) ![]const u8 {
-    const count_str = try run_capture(
-        a,
-        io,
-        &.{ "git", "rev-list", "--count", "HEAD" },
-    );
-    const count = try std.fmt.parseInt(u32, count_str, 10);
-    const baseline_milli: u32 = 56500;
-    const milli = baseline_milli + count;
-    const whole = milli / 1000;
-    const frac = milli % 1000;
-    return try std.fmt.allocPrint(
-        a,
-        "{d}.{d:0>3}",
-        .{ whole, frac },
-    );
-}
-
 fn compute_calfive_sign(count: u32) []const u8 {
     // invariant: 15-sign cycle, 1-indexed
     assert(count >= 1);
@@ -80,12 +59,21 @@ fn run_selftest(a: std.mem.Allocator, io: std.Io) !u8 {
     const print = std.debug.print;
     const c: u8 = '\n';
 
-    const myof = compute_myofascia(a, io) catch {
-        print("FAIL: cannot compute myofascia{c}", .{c});
+    const cwd_st = std.Io.Dir.cwd();
+    const brix_st = cwd_st.readFileAlloc(
+        io,
+        ".brix",
+        a,
+        .limited(65536),
+    ) catch {
+        print("FAIL: cannot read .brix{c}", .{c});
+        return 1;
+    };
+    const myof = read_brix_field(brix_st, "myofascia") orelse {
+        print("FAIL: no myofascia in .brix{c}", .{c});
         return 1;
     };
     assert(myof.len >= 5);
-    assert(myof[2] == '.');
 
     const count_str = run_capture(
         a,
@@ -101,17 +89,7 @@ fn run_selftest(a: std.mem.Allocator, io: std.Io) !u8 {
     const sign = compute_calfive_sign(count);
     assert(sign.len >= 3);
 
-    const cwd = std.Io.Dir.cwd();
-    const brix = cwd.readFileAlloc(
-        io,
-        ".brix",
-        a,
-        .limited(65536),
-    ) catch {
-        print("FAIL: cannot read .brix{c}", .{c});
-        return 1;
-    };
-    const name = read_brix_field(brix, "name");
+    const name = read_brix_field(brix_st, "name");
     assert(name != null);
     assert(std.mem.eql(u8, name.?, "grain"));
 
@@ -161,8 +139,14 @@ pub fn main(init: std.process.Init) !u8 {
     );
     try bindings.put("commit-count", count_str);
 
-    const myof = try compute_myofascia(a, io);
-    try bindings.put("myofascia", myof);
+    const brix_early = try cwd.readFileAlloc(
+        io,
+        ".brix",
+        a,
+        .limited(65536),
+    );
+    if (read_brix_field(brix_early, "myofascia")) |m|
+        try bindings.put("myofascia", m);
 
     const count = try std.fmt.parseInt(u32, count_str, 10);
     const sign = compute_calfive_sign(count);
@@ -193,15 +177,9 @@ pub fn main(init: std.process.Init) !u8 {
     );
     try bindings.put("version-stamp", stamp_out);
 
-    const brix = cwd.readFileAlloc(
-        io,
-        ".brix",
-        a,
-        .limited(65536),
-    ) catch "";
-    if (read_brix_field(brix, "name")) |n|
+    if (read_brix_field(brix_early, "name")) |n|
         try bindings.put("name", n);
-    if (read_brix_field(brix, "version")) |v|
+    if (read_brix_field(brix_early, "version")) |v|
         try bindings.put("brix-version", v);
 
     var out: [tpl.max_output_bytes]u8 = undefined;
