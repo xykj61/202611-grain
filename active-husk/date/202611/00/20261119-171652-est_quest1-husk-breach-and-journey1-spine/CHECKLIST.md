@@ -28,6 +28,28 @@ access through the deterministic cached Grain Harness interface:*
 - [x] **[Fixed Sky, `20261119.204000`, `57.083`]** Built `grain-ww` Whole-Cup `.brix` Closure (`modules/fusion/grain_ww_closure.brix` + `tools/fusion/grain_ww_closure_witness.rish`: single manifest declaring Terrarium + Vantage Station + Blazepod + Cached Harness + Flare + Comlink + 7 Glow desks + 5 Glasswall invariants + 4 Synonym compressions, all paths verified on disk)
 - [x] **[Siya, `20261119.205000`, `57.084`]** Harvest Whole & Carry Into Dawn -- sealed consolidated orbit: Husk breach (50 files, 500+ edits), QUIN/RIYO/TRYA archived, boot-to-harness matrix, Mycelium cache weave, constituency verification, whole-cup .brix closure, Pisces mandala. Public seed refresh gated on `publish-seed.rish`
 
+## Orbit 8 -- Mitra Shed Repoint Sweep + Retired Term Debride
+
+*Clean the living tree of retired names, archive elder prototypes,
+study patterns for TAME reimplementation, and prepare Orbit 9
+Vantage Carry foundation:*
+
+- [x] **[Aries, `20261119.210000`, `57.085`]** Shed elder `fascia` compat from `sundial.rye` (28 lines removed, `myofascia`-only API)
+- [x] **[Taurus, `20261119.211000`, `57.086`]** Shed 6 baton exemplars to `yonder/bat/`
+- [x] **[Gemini, `20261119.212000`, `57.087`]** Repointed `caravan/custody/` headers from bare `mand/` paths
+- [x] **[Cancer, `20261119.213000`, `57.088`]** Repointed `GLOW_PROFILE` paths to `context/templates/` in 3 fixture scripts
+- [x] **[Leo, `20261119.213500`, `57.089`]** Linengrow shed audit (entangled, logged honestly)
+- [x] **[Virgo, `20261119.213700`, `57.090`]** Topology shed audit (`compass_sky` load-bearing, logged)
+- [x] **[Libra, `20261119.214000`, `57.091`]** Archived 72 Linengrow waymark files to `yonder/linengrow-waymarks/`
+- [x] **[Scorpio, `20261119.214500`, `57.092`]** Linengrow waymark study (72 files compress to 10 TAME modules + 1 glass pipe)
+- [ ] **[TOP -- Sagittarius, `57.093`]** Repoint `tablecloth/wal.rye` + `named_serve.rye` from `mandate/` to `tablecloth/`
+- [ ] **[Capricorn, `57.094`]** Update `sundial/README.md` -- remove stale `fascia` docs, reflect `myofascia`-only API
+- [ ] **[Aquarius, `57.095`]** Rename `quin_host*.rye` -> `harness_host*.rye` and repoint to Harness vocabulary
+- [ ] **[Pisces, `57.096`]** Archive Quin handoff resin to yonder + sweep `amphora/resins/manifest.kyri`
+- [ ] **[Cardinal Sky, `57.097`]** Build `vantage/carry_admission_gate.rye` (first TAME Carry module from study map)
+- [ ] **[Fixed Sky, `57.098`]** Refresh Distillation + Husk Breach checklists with current state
+- [ ] **[Siya, `57.099`]** Seal Orbit 8, Calfive movement advice for Orbit 9 (Vantage Carry reimplementation)
+
 ---
 
 ## Downstream Synced Explicit-Bound Husk Spines

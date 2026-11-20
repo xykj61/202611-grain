@@ -1,4 +1,4 @@
-//! mandate/named_serve.rye -- resolve a query's matches to spoken names.
+//! modules/tablecloth/named_serve.rye -- resolve a query's matches to spoken names.
 //!
 //! A bare query answers with point numbers. A *named* query answers with **who**: each
 //! match resolved through the shared name registry to the spoken name its point wears,
@@ -9,8 +9,8 @@
 //! A point with no name resolves `named = false`, never a fabricated name -- the search
 //! tells the truth about who it found.
 //!
-//!   rye build mandate/named_serve.rye -femit-bin=mandate/bin/named_serve
-//!   mandate/bin/named_serve selftest
+//!   rye build modules/tablecloth/named_serve.rye -femit-bin=modules/tablecloth/bin/named_serve
+//!   modules/tablecloth/bin/named_serve selftest
 
 const std = @import("std");
 const assert = std.debug.assert;
@@ -107,11 +107,11 @@ fn prove_named_serve() !void {
 
 fn run_selftest() !u8 {
     try prove_named_serve();
-    print("mandate named_serve: a named query resolves each match to WHO — the spoken name its point wears via the shared registry — so a search returns a name, not merely a number.\n", .{});
-    print("mandate named_serve: a point with no name resolves named=false, never a fabricated name; the search tells the truth about who it found.\n", .{});
-    print("mandate named_serve: names are claimed from here through names.rye's public sign_claim, and the registry resolves both ways (name to point, point to name).\n", .{});
-    print("mandate named_serve: version {s}\n", .{named_serve_version});
-    print("GREEN: mandate named_serve — a query's matches resolved to spoken names over the shared registry: who, not just which number, witnessed.\n", .{});
+    print("tablecloth named_serve: a named query resolves each match to WHO — the spoken name its point wears via the shared registry — so a search returns a name, not merely a number.\n", .{});
+    print("tablecloth named_serve: a point with no name resolves named=false, never a fabricated name; the search tells the truth about who it found.\n", .{});
+    print("tablecloth named_serve: names are claimed from here through names.rye's public sign_claim, and the registry resolves both ways (name to point, point to name).\n", .{});
+    print("tablecloth named_serve: version {s}\n", .{named_serve_version});
+    print("GREEN: tablecloth named_serve — a query's matches resolved to spoken names over the shared registry: who, not just which number, witnessed.\n", .{});
     return 0;
 }
 
