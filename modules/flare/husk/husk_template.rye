@@ -1,0 +1,212 @@
+//! husk/husk_template.rye -- .husk template -> markdown lowering.
+//!
+//! Parses {{ expr }} interpolations in markdown text and
+//! evaluates them against a binding map. Lowers .husk to .md.
+
+const std = @import("std");
+const assert = std.debug.assert;
+
+pub const max_template_bytes: u32 = 32768;
+pub const max_output_bytes: u32 = 65536;
+pub const max_bindings: u32 = 64;
+pub const max_key_len: u32 = 64;
+pub const max_val_len: u32 = 256;
+
+pub const TemplateError = error{
+    TemplateTooLarge,
+    OutputOverflow,
+    UnclosedExpr,
+    UnknownBinding,
+    BindingOverflow,
+    KeyTooLong,
+    ValTooLong,
+};
+
+pub const Binding = struct {
+    key: [max_key_len]u8 = @splat(0),
+    key_len: u32 = 0,
+    val: [max_val_len]u8 = @splat(0),
+    val_len: u32 = 0,
+};
+
+pub const BindingMap = struct {
+    items: [max_bindings]Binding = undefined,
+    count: u32 = 0,
+
+    // invariant: count <= max_bindings
+    // invariant: no duplicate keys
+    pub fn put(
+        self: *BindingMap,
+        key: []const u8,
+        val: []const u8,
+    ) TemplateError!void {
+        assert(self.count <= max_bindings);
+        if (key.len > max_key_len)
+            return error.KeyTooLong;
+        if (val.len > max_val_len)
+            return error.ValTooLong;
+        if (self.count >= max_bindings)
+            return error.BindingOverflow;
+        var b = &self.items[self.count];
+        @memcpy(b.key[0..key.len], key);
+        b.key_len = @intCast(key.len);
+        @memcpy(b.val[0..val.len], val);
+        b.val_len = @intCast(val.len);
+        self.count += 1;
+    }
+
+    pub fn get(self: *const BindingMap, key: []const u8) ?[]const u8 {
+        // invariant: linear scan bounded by max_bindings
+        assert(self.count <= max_bindings);
+        for (0..self.count) |i| {
+            const b = &self.items[i];
+            const k = b.key[0..b.key_len];
+            if (std.mem.eql(u8, k, key)) {
+                return b.val[0..b.val_len];
+            }
+        }
+        return null;
+    }
+};
+
+pub fn lower(
+    template: []const u8,
+    bindings: *const BindingMap,
+    out: []u8,
+) TemplateError![]const u8 {
+    // invariant: template fits in max_template_bytes
+    // invariant: output written <= out.len
+    if (template.len > max_template_bytes)
+        return error.TemplateTooLarge;
+    assert(out.len >= 1);
+
+    var pos: u32 = 0;
+    var wpos: u32 = 0;
+    const src = template;
+    const slen: u32 = @intCast(src.len);
+
+    while (pos < slen) {
+        if (pos + 1 < slen and
+            src[pos] == '{' and src[pos + 1] == '{')
+        {
+            const expr_start = pos + 2;
+            var expr_end: u32 = expr_start;
+            while (expr_end + 1 < slen) : (expr_end += 1) {
+                if (src[expr_end] == '}' and
+                    src[expr_end + 1] == '}')
+                    break;
+            }
+            if (expr_end + 1 >= slen and
+                !(src[expr_end] == '}' and
+                src[expr_end + 1] == '}'))
+            {
+                return error.UnclosedExpr;
+            }
+            const raw_key = src[expr_start..expr_end];
+            const key = std.mem.trim(u8, raw_key, " \t");
+            if (bindings.get(key)) |val| {
+                if (wpos + val.len > out.len)
+                    return error.OutputOverflow;
+                @memcpy(out[wpos..][0..val.len], val);
+                wpos += @intCast(val.len);
+            } else {
+                return error.UnknownBinding;
+            }
+            pos = expr_end + 2;
+        } else if (pos + 1 < slen and
+            src[pos] == '{' and src[pos + 1] == '#')
+        {
+            var cend: u32 = pos + 2;
+            while (cend + 1 < slen) : (cend += 1) {
+                if (src[cend] == '#' and src[cend + 1] == '}')
+                    break;
+            }
+            if (cend + 1 < slen) {
+                pos = cend + 2;
+            } else {
+                pos = slen;
+            }
+        } else {
+            if (wpos >= out.len)
+                return error.OutputOverflow;
+            out[wpos] = src[pos];
+            wpos += 1;
+            pos += 1;
+        }
+    }
+    return out[0..wpos];
+}
+
+fn run_selftest() u8 {
+    const print = std.debug.print;
+    const c: u8 = '\n';
+
+    var bindings: BindingMap = .{};
+    bindings.put("myofascia", "57.078") catch unreachable;
+    bindings.put("commit-count", "149") catch unreachable;
+    bindings.put("version", "20261120.114754") catch unreachable;
+
+    const t1 = "Myofascia: {{ myofascia }}";
+    var buf1: [256]u8 = undefined;
+    const r1 = lower(t1, &bindings, &buf1) catch {
+        print("FAIL: basic interpolation{c}", .{c});
+        return 1;
+    };
+    assert(std.mem.eql(u8, r1, "Myofascia: 57.078"));
+
+    const t2 = "v{{ version }} ({{ commit-count }} commits)";
+    var buf2: [256]u8 = undefined;
+    const r2 = lower(t2, &bindings, &buf2) catch {
+        print("FAIL: multi interpolation{c}", .{c});
+        return 1;
+    };
+    assert(std.mem.eql(
+        u8,
+        r2,
+        "v20261120.114754 (149 commits)",
+    ));
+
+    const t3 = "plain text no expressions";
+    var buf3: [256]u8 = undefined;
+    const r3 = lower(t3, &bindings, &buf3) catch {
+        print("FAIL: passthrough{c}", .{c});
+        return 1;
+    };
+    assert(std.mem.eql(u8, r3, t3));
+
+    const t4 = "before {# this is stripped #} after";
+    var buf4: [256]u8 = undefined;
+    const r4 = lower(t4, &bindings, &buf4) catch {
+        print("FAIL: comment strip{c}", .{c});
+        return 1;
+    };
+    assert(std.mem.eql(u8, r4, "before  after"));
+
+    const t5 = "{{ unknown-key }}";
+    var buf5: [256]u8 = undefined;
+    if (lower(t5, &bindings, &buf5)) |_| {
+        print("FAIL: should reject unknown binding{c}", .{c});
+        return 1;
+    } else |e| {
+        assert(e == error.UnknownBinding);
+    }
+
+    const t6 = "{{ myofascia";
+    var buf6: [256]u8 = undefined;
+    if (lower(t6, &bindings, &buf6)) |_| {
+        print("FAIL: should reject unclosed expr{c}", .{c});
+        return 1;
+    } else |e| {
+        assert(e == error.UnclosedExpr);
+    }
+
+    print("GREEN: husk_template -- 4 welcome + " ++
+        "2 refusal, bounded template lowering " ++
+        "({{ expr }} -> value).{c}", .{c});
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    _ = init;
+    return run_selftest();
+}

@@ -1,0 +1,12 @@
+# {{ name }} -- Live Health
+
+| Metric | Value |
+|--------|-------|
+| **Myofascia** | **{{ myofascia }}** / 100.000 |
+| **Commits** | {{ commit-count }} |
+| **Orbit** | {{ orbit }} ({{ movement }}/15 {{ sign }}) |
+| **Version** | {{ brix-version }} |
+
+{# This comment will be stripped from the output #}
+
+Built by `grain-ww` at {{ version-stamp }}.

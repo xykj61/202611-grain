@@ -1,0 +1,219 @@
+//! husk/husk_lower.rye -- CLI: .husk file -> .md lowering.
+//!
+//! Reads a .husk template, computes live bindings from git
+//! and the .brix manifest, and writes lowered markdown.
+//! Usage: husk_lower <input.husk> [output.md]
+
+const std = @import("std");
+const tpl = @import("husk_template.rye");
+const assert = std.debug.assert;
+
+const max_cmd_out: u32 = 256;
+
+fn run_capture(
+    a: std.mem.Allocator,
+    io: std.Io,
+    argv: []const []const u8,
+) ![]const u8 {
+    // invariant: argv.len >= 1
+    assert(argv.len >= 1);
+    const r = try std.process.run(a, io, .{ .argv = argv });
+    if (r.term != .exited or r.term.exited != 0)
+        return error.CommandFailed;
+    return std.mem.trim(u8, r.stdout, " \t\n\r");
+}
+
+fn compute_myofascia(
+    a: std.mem.Allocator,
+    io: std.Io,
+) ![]const u8 {
+    const count_str = try run_capture(
+        a,
+        io,
+        &.{ "git", "rev-list", "--count", "HEAD" },
+    );
+    const count = try std.fmt.parseInt(u32, count_str, 10);
+    const baseline_milli: u32 = 56500;
+    const milli = baseline_milli + count;
+    const whole = milli / 1000;
+    const frac = milli % 1000;
+    return try std.fmt.allocPrint(
+        a,
+        "{d}.{d:0>3}",
+        .{ whole, frac },
+    );
+}
+
+fn compute_calfive_sign(count: u32) []const u8 {
+    // invariant: 15-sign cycle, 1-indexed
+    assert(count >= 1);
+    const signs = [15][]const u8{
+        "Aries",       "Taurus",    "Gemini",
+        "Cancer",      "Leo",       "Virgo",
+        "Libra",       "Scorpio",   "Sagittarius",
+        "Capricorn",   "Aquarius",  "Pisces",
+        "Cardinal Sky", "Fixed Sky", "Siya",
+    };
+    const idx = (count - 1) % 15;
+    return signs[idx];
+}
+
+fn read_brix_field(
+    brix: []const u8,
+    field: []const u8,
+) ?[]const u8 {
+    var it = std.mem.splitScalar(u8, brix, '\n');
+    while (it.next()) |line| {
+        const trimmed = std.mem.trim(u8, line, " \t");
+        if (trimmed.len == 0 or trimmed[0] == '#') continue;
+        if (std.mem.startsWith(u8, trimmed, field)) {
+            const rest = trimmed[field.len..];
+            if (rest.len > 0 and rest[0] == ' ') {
+                return std.mem.trim(u8, rest, " \t");
+            }
+        }
+    }
+    return null;
+}
+
+fn run_selftest(a: std.mem.Allocator, io: std.Io) !u8 {
+    const print = std.debug.print;
+    const c: u8 = '\n';
+
+    const myof = compute_myofascia(a, io) catch {
+        print("FAIL: cannot compute myofascia{c}", .{c});
+        return 1;
+    };
+    assert(myof.len >= 5);
+    assert(myof[2] == '.');
+
+    const count_str = run_capture(
+        a,
+        io,
+        &.{ "git", "rev-list", "--count", "HEAD" },
+    ) catch {
+        print("FAIL: git rev-list{c}", .{c});
+        return 1;
+    };
+    const count = try std.fmt.parseInt(u32, count_str, 10);
+    assert(count >= 1);
+
+    const sign = compute_calfive_sign(count);
+    assert(sign.len >= 3);
+
+    const cwd = std.Io.Dir.cwd();
+    const brix = cwd.readFileAlloc(
+        io,
+        ".brix",
+        a,
+        .limited(65536),
+    ) catch {
+        print("FAIL: cannot read .brix{c}", .{c});
+        return 1;
+    };
+    const name = read_brix_field(brix, "name");
+    assert(name != null);
+    assert(std.mem.eql(u8, name.?, "grain"));
+
+    print("GREEN: husk_lower -- live bindings " ++
+        "(myofascia {s}, {s}, commit {s}).{c}", .{
+        myof,
+        sign,
+        count_str,
+        c,
+    });
+    return 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(a);
+
+    if (args.len >= 2 and
+        std.mem.eql(u8, args[1], "selftest"))
+    {
+        return run_selftest(a, io);
+    }
+
+    if (args.len < 2) {
+        std.debug.print(
+            "usage: husk-lower <input.husk> [output.md]{c}",
+            .{'\n'},
+        );
+        return 1;
+    }
+
+    const cwd = std.Io.Dir.cwd();
+    const src = try cwd.readFileAlloc(
+        io,
+        args[1],
+        a,
+        .limited(tpl.max_template_bytes),
+    );
+
+    var bindings: tpl.BindingMap = .{};
+
+    const count_str = try run_capture(
+        a,
+        io,
+        &.{ "git", "rev-list", "--count", "HEAD" },
+    );
+    try bindings.put("commit-count", count_str);
+
+    const myof = try compute_myofascia(a, io);
+    try bindings.put("myofascia", myof);
+
+    const count = try std.fmt.parseInt(u32, count_str, 10);
+    const sign = compute_calfive_sign(count);
+    try bindings.put("sign", sign);
+
+    const mov_in_orbit = (count - 1) % 15 + 1;
+    var mov_buf: [8]u8 = undefined;
+    const mov_str = try std.fmt.bufPrint(
+        &mov_buf,
+        "{d}",
+        .{mov_in_orbit},
+    );
+    try bindings.put("movement", mov_str);
+
+    const orbit = (count - 1) / 15 + 1;
+    var orb_buf: [8]u8 = undefined;
+    const orb_str = try std.fmt.bufPrint(
+        &orb_buf,
+        "{d}",
+        .{orbit},
+    );
+    try bindings.put("orbit", orb_str);
+
+    const stamp_out = try run_capture(
+        a,
+        io,
+        &.{ "date", "-u", "+%Y%m%d.%H%M%S" },
+    );
+    try bindings.put("version-stamp", stamp_out);
+
+    const brix = cwd.readFileAlloc(
+        io,
+        ".brix",
+        a,
+        .limited(65536),
+    ) catch "";
+    if (read_brix_field(brix, "name")) |n|
+        try bindings.put("name", n);
+    if (read_brix_field(brix, "version")) |v|
+        try bindings.put("brix-version", v);
+
+    var out: [tpl.max_output_bytes]u8 = undefined;
+    const result = try tpl.lower(src, &bindings, &out);
+
+    if (args.len >= 3) {
+        try cwd.writeFile(io, .{
+            .sub_path = args[2],
+            .data = result,
+        });
+    } else {
+        std.debug.print("{s}", .{result});
+    }
+    return 0;
+}
