@@ -751,6 +751,15 @@ pub fn main(init: std.process.Init) !u8 {
             args[2..],
         );
     }
+    if (std.mem.eql(u8, sub, "conifer")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/conifer_terminal",
+            "modules/pond/apps/conifer_terminal.rye",
+            args[2..],
+        );
+    }
 
     print("grain-ww: unknown subcommand '{s}'{c}", .{ sub, nl });
     return 1;
