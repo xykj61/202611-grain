@@ -43,7 +43,7 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
-### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261115.162500-est`, `Myofascia: 56.910`)
+### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261119.000000-est`, `Myofascia: 57.078`)
 
 - **Calfive Vector (`410` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 1 (`375`) COMPLETE + Quest 1, Orbit 2 (`35/75`) of Journey 2** (`27` full 15-Movement Orbits + `5` Movements; **148 `.brix` bricks**, **17 Citizen Ring `.glow` desks**, **24/24 metal witnesses GREEN**).
 - **Completed Software & Civic Foundations in [`../active-husk/`](../active-husk/README.md):**

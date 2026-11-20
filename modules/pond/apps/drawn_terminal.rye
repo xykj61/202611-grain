@@ -36,26 +36,26 @@
 //!   pond/bin/drawn-terminal corpustoolsprefixviewtest # Flare tools/ prefix -> Skate
 //!   pond/bin/drawn-terminal corpuscandyprefixviewtest # Flare dimeroll/ prefix -> Skate
 //!   pond/bin/drawn-terminal corpusappsprefixviewtest # Flare pond/apps/ prefix -> Skate
-//!   pond/bin/drawn-terminal pulpviewtest # Husk outline headings -> Skate
-//!   pond/bin/drawn-terminal pulpparaviewtest # Husk paragraphs -> Skate
-//!   pond/bin/drawn-terminal pulpfenceviewtest # Husk fence kinds -> Skate
-//!   pond/bin/drawn-terminal pulpplainviewtest # Husk plain snippets -> Skate
-//!   pond/bin/drawn-terminal pulpryeviewtest # Husk rye snippets -> Skate
-//!   pond/bin/drawn-terminal pulprishviewtest # Husk rish snippets -> Skate
-//!   pond/bin/drawn-terminal pulph1viewtest # Husk h1 headings -> Skate
-//!   pond/bin/drawn-terminal pulph2viewtest # Husk h2 headings -> Skate
-//!   pond/bin/drawn-terminal pulph3viewtest # Husk h3 headings -> Skate
-//!   pond/bin/drawn-terminal pulpdepthviewtest # Husk h1/h2/h3 depth tallies -> Skate
-//!   pond/bin/drawn-terminal pulptallyviewtest # Husk headings+paragraphs tally -> Skate
-//!   pond/bin/drawn-terminal pulpblocksviewtest # Husk block count -> Skate
-//!   pond/bin/drawn-terminal pulpfenceheadingviewtest # Husk fence+heading combo -> Skate
-//!   pond/bin/drawn-terminal pulptallyblocksviewtest # Husk tally+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulpparablocksviewtest # Husk paragraphs+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulph1blocksviewtest # Husk h1+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulph2blocksviewtest # Husk h2+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulph3blocksviewtest # Husk h3+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulpryeblocksviewtest # Husk rye+blocks combo -> Skate
-//!   pond/bin/drawn-terminal pulprishblocksviewtest # Husk rish+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskviewtest # Husk outline headings -> Skate
+//!   pond/bin/drawn-terminal huskparaviewtest # Husk paragraphs -> Skate
+//!   pond/bin/drawn-terminal huskfenceviewtest # Husk fence kinds -> Skate
+//!   pond/bin/drawn-terminal huskplainviewtest # Husk plain snippets -> Skate
+//!   pond/bin/drawn-terminal huskryeviewtest # Husk rye snippets -> Skate
+//!   pond/bin/drawn-terminal huskrishviewtest # Husk rish snippets -> Skate
+//!   pond/bin/drawn-terminal huskh1viewtest # Husk h1 headings -> Skate
+//!   pond/bin/drawn-terminal huskh2viewtest # Husk h2 headings -> Skate
+//!   pond/bin/drawn-terminal huskh3viewtest # Husk h3 headings -> Skate
+//!   pond/bin/drawn-terminal huskdepthviewtest # Husk h1/h2/h3 depth tallies -> Skate
+//!   pond/bin/drawn-terminal husktallyviewtest # Husk headings+paragraphs tally -> Skate
+//!   pond/bin/drawn-terminal huskblocksviewtest # Husk block count -> Skate
+//!   pond/bin/drawn-terminal huskfenceheadingviewtest # Husk fence+heading combo -> Skate
+//!   pond/bin/drawn-terminal husktallyblocksviewtest # Husk tally+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskparablocksviewtest # Husk paragraphs+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskh1blocksviewtest # Husk h1+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskh2blocksviewtest # Husk h2+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskh3blocksviewtest # Husk h3+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskryeblocksviewtest # Husk rye+blocks combo -> Skate
+//!   pond/bin/drawn-terminal huskrishblocksviewtest # Husk rish+blocks combo -> Skate
 //!   pond/bin/drawn-terminal corpusryecandyprefixviewtest # Flare rye + dimeroll/ -> Skate
 //!   pond/bin/drawn-terminal corpusrishtoolsprefixviewtest # Flare rish + tools/ -> Skate
 //!   pond/bin/drawn-terminal corpusryeappsprefixviewtest # Flare rye + pond/apps/ -> Skate
@@ -144,26 +144,26 @@ const corpus_min_lines_view_max_lines: u32 = 5;
 const corpus_max_lines_view_max_lines: u32 = 5;
 const corpus_path_suffix_view_max_lines: u32 = 5;
 const corpus_sum_lines_view_max_lines: u32 = 5;
-const pulp_view_max_lines: u32 = 6;
-const pulp_para_view_max_lines: u32 = 5;
-const pulp_fence_view_max_lines: u32 = 5;
-const pulp_plain_view_max_lines: u32 = 5;
-const pulp_rye_view_max_lines: u32 = 5;
-const pulp_rish_view_max_lines: u32 = 5;
-const pulp_h1_view_max_lines: u32 = 5;
-const pulp_h2_view_max_lines: u32 = 5;
-const pulp_h3_view_max_lines: u32 = 5;
-const pulp_depth_view_max_lines: u32 = 5;
-const pulp_tally_view_max_lines: u32 = 5;
-const pulp_blocks_view_max_lines: u32 = 5;
-const pulp_fence_heading_view_max_lines: u32 = 5;
-const pulp_tally_blocks_view_max_lines: u32 = 5;
-const pulp_para_blocks_view_max_lines: u32 = 5;
-const pulp_h1_blocks_view_max_lines: u32 = 5;
-const pulp_h2_blocks_view_max_lines: u32 = 5;
-const pulp_h3_blocks_view_max_lines: u32 = 5;
-const pulp_rye_blocks_view_max_lines: u32 = 5;
-const pulp_rish_blocks_view_max_lines: u32 = 5;
+const husk_view_max_lines: u32 = 6;
+const husk_para_view_max_lines: u32 = 5;
+const husk_fence_view_max_lines: u32 = 5;
+const husk_plain_view_max_lines: u32 = 5;
+const husk_rye_view_max_lines: u32 = 5;
+const husk_rish_view_max_lines: u32 = 5;
+const husk_h1_view_max_lines: u32 = 5;
+const husk_h2_view_max_lines: u32 = 5;
+const husk_h3_view_max_lines: u32 = 5;
+const husk_depth_view_max_lines: u32 = 5;
+const husk_tally_view_max_lines: u32 = 5;
+const husk_blocks_view_max_lines: u32 = 5;
+const husk_fence_heading_view_max_lines: u32 = 5;
+const husk_tally_blocks_view_max_lines: u32 = 5;
+const husk_para_blocks_view_max_lines: u32 = 5;
+const husk_h1_blocks_view_max_lines: u32 = 5;
+const husk_h2_blocks_view_max_lines: u32 = 5;
+const husk_h3_blocks_view_max_lines: u32 = 5;
+const husk_rye_blocks_view_max_lines: u32 = 5;
+const husk_rish_blocks_view_max_lines: u32 = 5;
 const exception_view_max_lines: u32 = 5;
 const pnl_view_max_lines: u32 = 5;
 const bs_view_max_lines: u32 = 5;
@@ -614,7 +614,7 @@ fn count_corpus_kinds(text: []const u8) struct { rye: u32, rish: u32 } {
 }
 
 /// Inference assist -- Flare corpus + Husk snippets + Lantern + journal on one Skate frame.
-fn count_pulp_fence_kinds(text: []const u8) struct { rye: u32, rish: u32 } {
+fn count_husk_fence_kinds(text: []const u8) struct { rye: u32, rish: u32 } {
     var rye: u32 = 0;
     var rish: u32 = 0;
     var lines = std.mem.splitScalar(u8, text, '\n');
@@ -626,8 +626,8 @@ fn count_pulp_fence_kinds(text: []const u8) struct { rye: u32, rish: u32 } {
     return .{ .rye = rye, .rish = rish };
 }
 
-fn count_pulp_fences(text: []const u8) u32 {
-    const kinds = count_pulp_fence_kinds(text);
+fn count_husk_fences(text: []const u8) u32 {
+    const kinds = count_husk_fence_kinds(text);
     return kinds.rye + kinds.rish;
 }
 
@@ -699,8 +699,8 @@ const AssistFenceBand = struct {
 
 /// Husk fence tally shared by assist view and assist sight.
 fn count_assist_fence_band(snippets: []const u8, fence_kinds_text: []const u8) !AssistFenceBand {
-    const fences = count_pulp_fence_kinds(snippets);
-    // invariant: the assist golden locks the snippet fence counts, so a pulp parse that
+    const fences = count_husk_fence_kinds(snippets);
+    // invariant: the assist golden locks the snippet fence counts, so a husk parse that
     // drifts reds here rather than drawing a wrong tally
     assert(fences.rye == 2);
     assert(fences.rish == 1);
@@ -768,7 +768,7 @@ fn compose_assist_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.S
 
     const kinds = count_corpus_kinds(corpus);
     // why: assist golden locks corpus rye/rish
-    // invariant: the assist golden locks these fence counts, so a pulp parse that drifts
+    // invariant: the assist golden locks these fence counts, so a husk parse that drifts
     // reds here rather than drawing a wrong tally
     assert(kinds.rye == 2);
     assert(kinds.rish == 1);
@@ -1548,7 +1548,7 @@ fn run_forge_query_device_view_witness(garden: std.mem.Allocator, io: std.Io) !u
 }
 
 /// Husk paragraphs view -- paragraph extract folded onto a Skate frame.
-fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -1558,8 +1558,8 @@ fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (pn != 3) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_para_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp paragraphs view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_para_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk paragraphs view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "paragraphs {d}", .{pn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "p0 {s}", .{paragraphs[0].text_slice()}) };
     lines[3] = .{ .text = try std.fmt.allocPrint(garden, "p1 {s}", .{paragraphs[1].text_slice()}) };
@@ -1567,23 +1567,23 @@ fn compose_pulp_para_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     return lines;
 }
 
-fn run_pulp_para_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_para_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_para_view_lines(garden, io);
+    const frame = try compose_husk_para_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_para_view_max_lines);
+    assert(frame.len == husk_para_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp paragraphs view",
+        "husk paragraphs view",
         "paragraphs 3",
         "p0 Lattice before Lantern; Husk feeds the corpus.",
         "p1 Matmul, add, reshape, reduce — parity before weights.",
@@ -1594,7 +1594,7 @@ fn run_pulp_para_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp paragraphs view: sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk paragraphs view: sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -1657,7 +1657,7 @@ fn run_bs_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk fence-kinds view -- rye/rish/plain counts on Skate.
-fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
@@ -1666,8 +1666,8 @@ fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const kinds = husk.count_fence_kinds(blocks[0..n]);
     if (kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_fence_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp fence kinds view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_fence_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk fence kinds view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "rye {d}", .{kinds.rye}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "rish {d}", .{kinds.rish}) };
     lines[3] = .{ .text = try std.fmt.allocPrint(garden, "plain {d}", .{kinds.plain}) };
@@ -1675,23 +1675,23 @@ fn compose_pulp_fence_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     return lines;
 }
 
-fn run_pulp_fence_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_fence_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_fence_view_lines(garden, io);
+    const frame = try compose_husk_fence_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_fence_view_max_lines);
+    assert(frame.len == husk_fence_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp fence kinds view",
+        "husk fence kinds view",
         "rye 1",
         "rish 1",
         "plain 1",
@@ -1702,7 +1702,7 @@ fn run_pulp_fence_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp fence kinds view: sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk fence kinds view: sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -1710,7 +1710,7 @@ fn run_pulp_fence_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk plain-snippets view -- unmarked fence bodies on Skate.
-fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
@@ -1720,8 +1720,8 @@ fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const sn = try husk.extract_plain_snippets(blocks[0..n], &snippets);
     if (sn != 1) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_plain_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp plain snippets view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_plain_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk plain snippets view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "plain {d}", .{sn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{snippets[0].text_slice()}) };
     lines[3] = .{ .text = try garden.dupe(u8, "unmarked fence") };
@@ -1729,23 +1729,23 @@ fn compose_pulp_plain_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     return lines;
 }
 
-fn run_pulp_plain_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_plain_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_plain_view_lines(garden, io);
+    const frame = try compose_husk_plain_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_plain_view_max_lines);
+    assert(frame.len == husk_plain_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp plain snippets view",
+        "husk plain snippets view",
         "plain 1",
         "body plain fence body",
         "unmarked fence",
@@ -1756,20 +1756,20 @@ fn run_pulp_plain_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp plain snippets view: sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk plain snippets view: sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
     return 0;
 }
 
-fn pulp_first_line(text: []const u8) []const u8 {
+fn husk_first_line(text: []const u8) []const u8 {
     if (std.mem.indexOfScalar(u8, text, '\n')) |i| return text[0..i];
     return text;
 }
 
 /// Husk rye-snippets view -- rye fence first lines on Skate.
-fn compose_pulp_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_snippets_fixture, &buf);
@@ -1783,32 +1783,32 @@ fn compose_pulp_rye_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface
     assert(std.mem.indexOf(u8, snippets[0].text_slice(), "init.minimal.args") != null);
     assert(std.mem.indexOf(u8, snippets[1].text_slice(), "lc.matmul") != null);
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_rye_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp rye snippets view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_rye_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk rye snippets view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "rye {d}", .{sn}) };
-    lines[2] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{pulp_first_line(snippets[0].text_slice())}) };
-    lines[3] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{pulp_first_line(snippets[1].text_slice())}) };
+    lines[2] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{husk_first_line(snippets[0].text_slice())}) };
+    lines[3] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{husk_first_line(snippets[1].text_slice())}) };
     lines[4] = .{ .text = try garden.dupe(u8, "rye fold green") };
     return lines;
 }
 
-fn run_pulp_rye_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_rye_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_rye_view_lines(garden, io);
+    const frame = try compose_husk_rye_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_rye_view_max_lines);
+    assert(frame.len == husk_rye_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp rye snippets view",
+        "husk rye snippets view",
         "rye 2",
         "body const garden = init.arena.allocator();",
         "body try lc.matmul(&a, &b, &c);",
@@ -1819,7 +1819,7 @@ fn run_pulp_rye_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp rye snippets view: sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk rye snippets view: sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -1827,7 +1827,7 @@ fn run_pulp_rye_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk rish-snippets view -- rish fence first lines on Skate.
-fn compose_pulp_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_rish_snippets_fixture, &buf);
@@ -1841,32 +1841,32 @@ fn compose_pulp_rish_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfac
     assert(std.mem.indexOf(u8, snippets[0].text_slice(), "lantern lap") != null);
     assert(std.mem.indexOf(u8, snippets[1].text_slice(), "GREEN") != null);
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_rish_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp rish snippets view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_rish_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk rish snippets view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "rish {d}", .{sn}) };
-    lines[2] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{pulp_first_line(snippets[0].text_slice())}) };
-    lines[3] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{pulp_first_line(snippets[1].text_slice())}) };
+    lines[2] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{husk_first_line(snippets[0].text_slice())}) };
+    lines[3] = .{ .text = try std.fmt.allocPrint(garden, "body {s}", .{husk_first_line(snippets[1].text_slice())}) };
     lines[4] = .{ .text = try garden.dupe(u8, "rish fold green") };
     return lines;
 }
 
-fn run_pulp_rish_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_rish_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_rish_view_lines(garden, io);
+    const frame = try compose_husk_rish_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_rish_view_max_lines);
+    assert(frame.len == husk_rish_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp rish snippets view",
+        "husk rish snippets view",
         "rish 2",
         "body say \"build: lantern lap\"",
         "body say \"GREEN: witness passed.\"",
@@ -1877,7 +1877,7 @@ fn run_pulp_rish_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp rish snippets view: sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk rish snippets view: sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -2870,7 +2870,7 @@ fn run_pnl_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk outline view -- heading extract folded onto a Skate frame.
-fn compose_pulp_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -2880,45 +2880,45 @@ fn compose_pulp_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.Ska
     const hn = try husk.extract_headings(blocks[0..n], &headings);
     if (hn != 3) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp outline view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk outline view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "headings {d}", .{hn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "h{d} {s}", .{ headings[0].depth, headings[0].text_slice() }) };
     lines[3] = .{ .text = try std.fmt.allocPrint(garden, "h{d} {s}", .{ headings[1].depth, headings[1].text_slice() }) };
     lines[4] = .{ .text = try std.fmt.allocPrint(garden, "h{d} {s}", .{ headings[2].depth, headings[2].text_slice() }) };
-    lines[5] = .{ .text = try garden.dupe(u8, "pulp fold green") };
+    lines[5] = .{ .text = try garden.dupe(u8, "husk fold green") };
     return lines;
 }
 
-fn run_pulp_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_view_lines(garden, io);
+    const frame = try compose_husk_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_view_max_lines);
+    assert(frame.len == husk_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp outline view",
+        "husk outline view",
         "headings 3",
         "h1 Forge outline",
         "h2 Lattice first",
         "h2 Husk next",
-        "pulp fold green",
+        "husk fold green",
     };
     assert(lines_equal(&golden, frame));
 
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp view: sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk view: sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -2926,7 +2926,7 @@ fn run_pulp_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk h1 view -- depth-1 headings on Skate.
-fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -2936,8 +2936,8 @@ fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const hn = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
     if (hn != 1) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_h1_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp h1 view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_h1_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk h1 view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h1 {d}", .{hn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "h1 {s}", .{headings[0].text_slice()}) };
     lines[3] = .{ .text = try garden.dupe(u8, "depth filter") };
@@ -2945,23 +2945,23 @@ fn compose_pulp_h1_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     return lines;
 }
 
-fn run_pulp_h1_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_h1_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_h1_view_lines(garden, io);
+    const frame = try compose_husk_h1_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_h1_view_max_lines);
+    assert(frame.len == husk_h1_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp h1 view",
+        "husk h1 view",
         "h1 1",
         "h1 Forge outline",
         "depth filter",
@@ -2972,7 +2972,7 @@ fn run_pulp_h1_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp h1 view: h1=1 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk h1 view: h1=1 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -2980,7 +2980,7 @@ fn run_pulp_h1_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk h2 view -- depth-2 headings on Skate.
-fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -2990,8 +2990,8 @@ fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const hn = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
     if (hn != 2) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_h2_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp h2 view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_h2_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk h2 view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h2 {d}", .{hn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "h2 {s}", .{headings[0].text_slice()}) };
     lines[3] = .{ .text = try std.fmt.allocPrint(garden, "h2 {s}", .{headings[1].text_slice()}) };
@@ -2999,23 +2999,23 @@ fn compose_pulp_h2_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     return lines;
 }
 
-fn run_pulp_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_h2_view_lines(garden, io);
+    const frame = try compose_husk_h2_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_h2_view_max_lines);
+    assert(frame.len == husk_h2_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp h2 view",
+        "husk h2 view",
         "h2 2",
         "h2 Lattice first",
         "h2 Husk next",
@@ -3026,7 +3026,7 @@ fn run_pulp_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp h2 view: h2=2 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk h2 view: h2=2 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3034,7 +3034,7 @@ fn run_pulp_h2_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk h3 view -- depth-3 headings on Skate.
-fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_h3_fixture, &buf);
@@ -3044,8 +3044,8 @@ fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     const hn = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
     if (hn != 1) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_h3_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp h3 view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_h3_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk h3 view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h3 {d}", .{hn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "h3 {s}", .{headings[0].text_slice()}) };
     lines[3] = .{ .text = try garden.dupe(u8, "depth filter") };
@@ -3053,23 +3053,23 @@ fn compose_pulp_h3_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.
     return lines;
 }
 
-fn run_pulp_h3_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_h3_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_h3_view_lines(garden, io);
+    const frame = try compose_husk_h3_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_h3_view_max_lines);
+    assert(frame.len == husk_h3_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp h3 view",
+        "husk h3 view",
         "h3 1",
         "h3 Depth three",
         "depth filter",
@@ -3080,7 +3080,7 @@ fn run_pulp_h3_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [160]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp h3 view: h3=1 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk h3 view: h3=1 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3196,7 +3196,7 @@ fn run_corpus_rish_tools_prefix_view_witness(garden: std.mem.Allocator, io: std.
 }
 
 /// Husk depth tally view -- h1/h2/h3 counts on Skate.
-fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_h3_fixture, &buf);
@@ -3208,8 +3208,8 @@ fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const h3 = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
     if (h1 != 1 or h2 != 1 or h3 != 1) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_depth_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp depth view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_depth_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk depth view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h1 {d}", .{h1}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "h2 {d}", .{h2}) };
     lines[3] = .{ .text = try std.fmt.allocPrint(garden, "h3 {d}", .{h3}) };
@@ -3217,23 +3217,23 @@ fn compose_pulp_depth_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     return lines;
 }
 
-fn run_pulp_depth_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_depth_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_depth_view_lines(garden, io);
+    const frame = try compose_husk_depth_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_depth_view_max_lines);
+    assert(frame.len == husk_depth_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp depth view",
+        "husk depth view",
         "h1 1",
         "h2 1",
         "h3 1",
@@ -3244,7 +3244,7 @@ fn run_pulp_depth_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [180]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp depth view: h1=1 h2=1 h3=1 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk depth view: h1=1 h2=1 h3=1 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3524,7 +3524,7 @@ fn run_corpus_sum_lines_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
 }
 
 /// Husk tally view -- heading + paragraph counts on Skate.
-fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -3536,8 +3536,8 @@ fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (hn != 3 or pn != 3) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_tally_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp tally view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_tally_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk tally view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "headings {d}", .{hn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "paragraphs {d}", .{pn}) };
     lines[3] = .{ .text = try garden.dupe(u8, "outline prose") };
@@ -3545,23 +3545,23 @@ fn compose_pulp_tally_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surfa
     return lines;
 }
 
-fn run_pulp_tally_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_tally_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_tally_view_lines(garden, io);
+    const frame = try compose_husk_tally_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_tally_view_max_lines);
+    assert(frame.len == husk_tally_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp tally view",
+        "husk tally view",
         "headings 3",
         "paragraphs 3",
         "outline prose",
@@ -3572,7 +3572,7 @@ fn run_pulp_tally_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [180]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp tally view: headings=3 paragraphs=3 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk tally view: headings=3 paragraphs=3 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3580,7 +3580,7 @@ fn run_pulp_tally_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk blocks view -- total parsed blocks on Skate.
-fn compose_pulp_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -3588,8 +3588,8 @@ fn compose_pulp_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surf
     const n = try husk.parse_markdown(text, &blocks);
     if (n != 6) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[2] = .{ .text = try garden.dupe(u8, "outline parse") };
     lines[3] = .{ .text = try garden.dupe(u8, "six blocks") };
@@ -3597,23 +3597,23 @@ fn compose_pulp_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surf
     return lines;
 }
 
-fn run_pulp_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_blocks_view_lines(garden, io);
+    const frame = try compose_husk_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_blocks_view_max_lines);
+    assert(frame.len == husk_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp blocks view",
+        "husk blocks view",
         "blocks 6",
         "outline parse",
         "six blocks",
@@ -3624,7 +3624,7 @@ fn run_pulp_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [180]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp blocks view: blocks=6 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk blocks view: blocks=6 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3632,7 +3632,7 @@ fn run_pulp_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk fence+heading combo -- fence kinds and heading count on one Skate frame.
-fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var fence_buf: [husk.max_doc_bytes]u8 = undefined;
     const fence_text = try cwd.readFile(io, husk_fence_kinds_fixture, &fence_buf);
@@ -3643,8 +3643,8 @@ fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) 
     const hn = try husk.extract_headings(fence_blocks[0..fence_n], &headings);
     if (hn != 1 or kinds.rye != 1 or kinds.rish != 1 or kinds.plain != 1) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_fence_heading_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp fence heading view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_fence_heading_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk fence heading view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "headings {d}", .{hn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "rye {d} rish {d} plain {d}", .{ kinds.rye, kinds.rish, kinds.plain }) };
     lines[3] = .{ .text = try garden.dupe(u8, "fence heading combo") };
@@ -3652,23 +3652,23 @@ fn compose_pulp_fence_heading_view_lines(garden: std.mem.Allocator, io: std.Io) 
     return lines;
 }
 
-fn run_pulp_fence_heading_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_fence_heading_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_fence_heading_view_lines(garden, io);
+    const frame = try compose_husk_fence_heading_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_fence_heading_view_max_lines);
+    assert(frame.len == husk_fence_heading_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp fence heading view",
+        "husk fence heading view",
         "headings 1",
         "rye 1 rish 1 plain 1",
         "fence heading combo",
@@ -3679,7 +3679,7 @@ fn run_pulp_fence_heading_view_witness(garden: std.mem.Allocator, io: std.Io) !u
     var out: [200]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp fence heading view: headings=1 rye=1 rish=1 plain=1 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk fence heading view: headings=1 rye=1 rish=1 plain=1 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3687,7 +3687,7 @@ fn run_pulp_fence_heading_view_witness(garden: std.mem.Allocator, io: std.Io) !u
 }
 
 /// Husk tally+blocks combo -- headings/paragraphs tally and block count on one Skate frame.
-fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -3699,8 +3699,8 @@ fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) !
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (hn != 3 or pn != 3 or n != 6) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_tally_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp tally blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_tally_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk tally blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "headings {d} paragraphs {d}", .{ hn, pn }) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "tally blocks combo") };
@@ -3708,23 +3708,23 @@ fn compose_pulp_tally_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) !
     return lines;
 }
 
-fn run_pulp_tally_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_tally_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_tally_blocks_view_lines(garden, io);
+    const frame = try compose_husk_tally_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_tally_blocks_view_max_lines);
+    assert(frame.len == husk_tally_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp tally blocks view",
+        "husk tally blocks view",
         "headings 3 paragraphs 3",
         "blocks 6",
         "tally blocks combo",
@@ -3735,7 +3735,7 @@ fn run_pulp_tally_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8
     var out: [220]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp tally blocks view: headings=3 paragraphs=3 blocks=6 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk tally blocks view: headings=3 paragraphs=3 blocks=6 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3743,7 +3743,7 @@ fn run_pulp_tally_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8
 }
 
 /// Husk paragraphs+blocks combo -- paragraph count and block count on one Skate frame.
-fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -3753,8 +3753,8 @@ fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     const pn = try husk.extract_paragraphs(blocks[0..n], &paragraphs);
     if (pn != 3 or n != 6) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_para_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp para blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_para_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk para blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "paragraphs {d}", .{pn}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "para blocks combo") };
@@ -3762,23 +3762,23 @@ fn compose_pulp_para_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     return lines;
 }
 
-fn run_pulp_para_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_para_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_para_blocks_view_lines(garden, io);
+    const frame = try compose_husk_para_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_para_blocks_view_max_lines);
+    assert(frame.len == husk_para_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp para blocks view",
+        "husk para blocks view",
         "paragraphs 3",
         "blocks 6",
         "para blocks combo",
@@ -3789,7 +3789,7 @@ fn run_pulp_para_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
     var out: [220]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp para blocks view: paragraphs=3 blocks=6 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk para blocks view: paragraphs=3 blocks=6 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3797,7 +3797,7 @@ fn run_pulp_para_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
 }
 
 /// Husk h1+blocks combo -- depth-1 heading count and block count on one Skate frame.
-fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -3807,8 +3807,8 @@ fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const h1 = try husk.extract_headings_at_depth(blocks[0..n], 1, &headings);
     if (h1 != 1 or n != 6) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_h1_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp h1 blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_h1_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk h1 blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h1 {d}", .{h1}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "h1 blocks combo") };
@@ -3816,23 +3816,23 @@ fn compose_pulp_h1_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     return lines;
 }
 
-fn run_pulp_h1_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_h1_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_h1_blocks_view_lines(garden, io);
+    const frame = try compose_husk_h1_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_h1_blocks_view_max_lines);
+    assert(frame.len == husk_h1_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp h1 blocks view",
+        "husk h1 blocks view",
         "h1 1",
         "blocks 6",
         "h1 blocks combo",
@@ -3843,7 +3843,7 @@ fn run_pulp_h1_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [200]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp h1 blocks view: h1=1 blocks=6 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk h1 blocks view: h1=1 blocks=6 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3851,7 +3851,7 @@ fn run_pulp_h1_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk h2+blocks combo -- depth-2 heading count and block count on one Skate frame.
-fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_fixture, &buf);
@@ -3861,8 +3861,8 @@ fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const h2 = try husk.extract_headings_at_depth(blocks[0..n], 2, &headings);
     if (h2 != 2 or n != 6) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_h2_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp h2 blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_h2_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk h2 blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h2 {d}", .{h2}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "h2 blocks combo") };
@@ -3870,23 +3870,23 @@ fn compose_pulp_h2_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     return lines;
 }
 
-fn run_pulp_h2_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_h2_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_h2_blocks_view_lines(garden, io);
+    const frame = try compose_husk_h2_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_h2_blocks_view_max_lines);
+    assert(frame.len == husk_h2_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp h2 blocks view",
+        "husk h2 blocks view",
         "h2 2",
         "blocks 6",
         "h2 blocks combo",
@@ -3897,7 +3897,7 @@ fn run_pulp_h2_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [200]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp h2 blocks view: h2=2 blocks=6 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk h2 blocks view: h2=2 blocks=6 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3905,7 +3905,7 @@ fn run_pulp_h2_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk h3+blocks combo -- depth-3 heading count and block count on one Skate frame.
-fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_outline_h3_fixture, &buf);
@@ -3915,8 +3915,8 @@ fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     const h3 = try husk.extract_headings_at_depth(blocks[0..n], 3, &headings);
     if (h3 != 1 or n != 6) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_h3_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp h3 blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_h3_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk h3 blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "h3 {d}", .{h3}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "h3 blocks combo") };
@@ -3924,23 +3924,23 @@ fn compose_pulp_h3_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]s
     return lines;
 }
 
-fn run_pulp_h3_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_h3_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_h3_blocks_view_lines(garden, io);
+    const frame = try compose_husk_h3_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_h3_blocks_view_max_lines);
+    assert(frame.len == husk_h3_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp h3 blocks view",
+        "husk h3 blocks view",
         "h3 1",
         "blocks 6",
         "h3 blocks combo",
@@ -3951,7 +3951,7 @@ fn run_pulp_h3_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [200]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp h3 blocks view: h3=1 blocks=6 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk h3 blocks view: h3=1 blocks=6 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -3959,7 +3959,7 @@ fn run_pulp_h3_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk rye+blocks combo -- rye fence count and block count on one Skate frame.
-fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
@@ -3969,8 +3969,8 @@ fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]
     const rye_n = try husk.extract_rye_snippets(blocks[0..n], &snippets);
     if (rye_n != 1 or n != 4) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_rye_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp rye blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_rye_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk rye blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "rye {d}", .{rye_n}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "rye blocks combo") };
@@ -3978,23 +3978,23 @@ fn compose_pulp_rye_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]
     return lines;
 }
 
-fn run_pulp_rye_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_rye_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_rye_blocks_view_lines(garden, io);
+    const frame = try compose_husk_rye_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_rye_blocks_view_max_lines);
+    assert(frame.len == husk_rye_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp rye blocks view",
+        "husk rye blocks view",
         "rye 1",
         "blocks 4",
         "rye blocks combo",
@@ -4005,7 +4005,7 @@ fn run_pulp_rye_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     var out: [200]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp rye blocks view: rye=1 blocks=4 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk rye blocks view: rye=1 blocks=4 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -4013,7 +4013,7 @@ fn run_pulp_rye_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
 }
 
 /// Husk rish+blocks combo -- rish fence count and block count on one Skate frame.
-fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
+fn compose_husk_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![]surface.SkateLine {
     const cwd = std.Io.Dir.cwd();
     var buf: [husk.max_doc_bytes]u8 = undefined;
     const text = try cwd.readFile(io, husk_fence_kinds_fixture, &buf);
@@ -4023,8 +4023,8 @@ fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     const rish_n = try husk.extract_rish_snippets(blocks[0..n], &snippets);
     if (rish_n != 1 or n != 4) return error.BadHuskFixture;
 
-    const lines = try garden.alloc(surface.SkateLine, pulp_rish_blocks_view_max_lines);
-    lines[0] = .{ .text = try garden.dupe(u8, "pulp rish blocks view") };
+    const lines = try garden.alloc(surface.SkateLine, husk_rish_blocks_view_max_lines);
+    lines[0] = .{ .text = try garden.dupe(u8, "husk rish blocks view") };
     lines[1] = .{ .text = try std.fmt.allocPrint(garden, "rish {d}", .{rish_n}) };
     lines[2] = .{ .text = try std.fmt.allocPrint(garden, "blocks {d}", .{n}) };
     lines[3] = .{ .text = try garden.dupe(u8, "rish blocks combo") };
@@ -4032,23 +4032,23 @@ fn compose_pulp_rish_blocks_view_lines(garden: std.mem.Allocator, io: std.Io) ![
     return lines;
 }
 
-fn run_pulp_rish_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
+fn run_husk_rish_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 {
     const empty = try garden.alloc(surface.SkateLine, 1);
     empty[0] = .{ .text = "" };
     const sig_empty = try surface.content_signature(garden, empty);
 
-    const frame = try compose_pulp_rish_blocks_view_lines(garden, io);
+    const frame = try compose_husk_rish_blocks_view_lines(garden, io);
     defer {
         var i: u32 = 0;
         while (i < frame.len) : (i += 1) garden.free(frame[i].text);
         garden.free(frame);
     }
-    assert(frame.len == pulp_rish_blocks_view_max_lines);
+    assert(frame.len == husk_rish_blocks_view_max_lines);
     const sig = try surface.content_signature(garden, frame);
     assert(sig != sig_empty);
 
     const golden = [_][]const u8{
-        "pulp rish blocks view",
+        "husk rish blocks view",
         "rish 1",
         "blocks 4",
         "rish blocks combo",
@@ -4059,7 +4059,7 @@ fn run_pulp_rish_blocks_view_witness(garden: std.mem.Allocator, io: std.Io) !u8 
     var out: [200]u8 = undefined;
     const msg = try std.fmt.bufPrint(
         &out,
-        "drawn terminal pulp rish blocks view: rish=1 blocks=4 sig={x} lines={d} — GREEN\n",
+        "drawn terminal husk rish blocks view: rish=1 blocks=4 sig={x} lines={d} — GREEN\n",
         .{ sig, frame.len },
     );
     try std.Io.File.stdout().writeStreamingAll(io, msg);
@@ -5770,32 +5770,32 @@ pub fn main(init: std.process.Init) !u8 {
     if (args.len >= 2 and std.mem.eql(u8, args[1], "corpusappsprefixviewtest")) {
         return run_corpus_apps_prefix_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpviewtest")) {
-        return run_pulp_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskviewtest")) {
+        return run_husk_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpparaviewtest")) {
-        return run_pulp_para_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskparaviewtest")) {
+        return run_husk_para_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpfenceviewtest")) {
-        return run_pulp_fence_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskfenceviewtest")) {
+        return run_husk_fence_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpplainviewtest")) {
-        return run_pulp_plain_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskplainviewtest")) {
+        return run_husk_plain_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpryeviewtest")) {
-        return run_pulp_rye_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskryeviewtest")) {
+        return run_husk_rye_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulprishviewtest")) {
-        return run_pulp_rish_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskrishviewtest")) {
+        return run_husk_rish_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph1viewtest")) {
-        return run_pulp_h1_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskh1viewtest")) {
+        return run_husk_h1_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph2viewtest")) {
-        return run_pulp_h2_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskh2viewtest")) {
+        return run_husk_h2_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph3viewtest")) {
-        return run_pulp_h3_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskh3viewtest")) {
+        return run_husk_h3_view_witness(garden, io);
     }
     if (args.len >= 2 and std.mem.eql(u8, args[1], "corpusryecandyprefixviewtest")) {
         return run_corpus_rye_dimeroll_prefix_view_witness(garden, io);
@@ -5818,38 +5818,38 @@ pub fn main(init: std.process.Init) !u8 {
     if (args.len >= 2 and std.mem.eql(u8, args[1], "corpussumlinesviewtest")) {
         return run_corpus_sum_lines_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpdepthviewtest")) {
-        return run_pulp_depth_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskdepthviewtest")) {
+        return run_husk_depth_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulptallyviewtest")) {
-        return run_pulp_tally_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "husktallyviewtest")) {
+        return run_husk_tally_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpblocksviewtest")) {
-        return run_pulp_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskblocksviewtest")) {
+        return run_husk_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpfenceheadingviewtest")) {
-        return run_pulp_fence_heading_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskfenceheadingviewtest")) {
+        return run_husk_fence_heading_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulptallyblocksviewtest")) {
-        return run_pulp_tally_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "husktallyblocksviewtest")) {
+        return run_husk_tally_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpparablocksviewtest")) {
-        return run_pulp_para_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskparablocksviewtest")) {
+        return run_husk_para_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph1blocksviewtest")) {
-        return run_pulp_h1_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskh1blocksviewtest")) {
+        return run_husk_h1_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph2blocksviewtest")) {
-        return run_pulp_h2_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskh2blocksviewtest")) {
+        return run_husk_h2_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulph3blocksviewtest")) {
-        return run_pulp_h3_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskh3blocksviewtest")) {
+        return run_husk_h3_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulpryeblocksviewtest")) {
-        return run_pulp_rye_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskryeblocksviewtest")) {
+        return run_husk_rye_blocks_view_witness(garden, io);
     }
-    if (args.len >= 2 and std.mem.eql(u8, args[1], "pulprishblocksviewtest")) {
-        return run_pulp_rish_blocks_view_witness(garden, io);
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "huskrishblocksviewtest")) {
+        return run_husk_rish_blocks_view_witness(garden, io);
     }
     if (args.len >= 2 and std.mem.eql(u8, args[1], "exceptionviewtest")) {
         return run_exception_view_witness(garden, io);
