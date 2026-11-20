@@ -57,11 +57,11 @@ Vantage Carry foundation:*
 Each follows gate-before-surface, bounded buffers, >= 2 invariants,
 paired welcome/refusal. Seed publishes at Siya 15/15.*
 
-- [x] **[Aries, `20261119.223000`, `57.100`]** `carry_hearth_mold.rye` + `fold-carry-hearth-mold.glow` (home display mold, DisplayPreset enum, Kyri serialization, 16-hearth registry, 2 welcome + 3 refusal)
-- [x] **[Taurus, `20261119.224000`, `57.101`]** `carry_hearth_pointer.rye` (pointer file read/write, round-trip serialize/parse, corrupt/truncated/invalid/missing fallback, 2 welcome + 4 refusal)
-- [ ] **[TOP -- Gemini, `57.102`]** `carry_publish_gate.rye` -- gate-before-surface for publishing UI (elder: `tube1_glass_gate`)
-- [ ] **[Cancer, `57.103`]** `carry_publish_pipeline.rye` -- publish + fetch + market + revision (elders: `tube2`..`tube5`)
-- [ ] **[Leo, `57.104`]** `carry_manifest_emit.rye` -- Android manifest from declared capabilities (elder: `tube_manifest*`)
+- [x] **[Aries, `20261119.204520`, `57.100`]** `carry_hearth_mold.rye` + `fold-carry-hearth-mold.glow` (home display mold, DisplayPreset enum, Kyri serialization, 16-hearth registry, 2 welcome + 3 refusal)
+- [x] **[Taurus, `20261119.204643`, `57.101`]** `carry_hearth_pointer.rye` (pointer file read/write, round-trip serialize/parse, corrupt/truncated/invalid/missing fallback, 2 welcome + 4 refusal)
+- [x] **[Gemini, `20261119.204920`, `57.102`]** `carry_publish_gate.rye` + `gate-carry-publish.glow` -- 3-door gate-before-surface for publishing UI (2 welcome + 4 refusal)
+- [x] **[Cancer, `20261119.205016`, `57.103`]** `carry_publish_pipeline.rye` -- 4-stage bounded pipeline with WOOD (1 welcome + 4 refusal)
+- [ ] **[TOP -- Leo, `57.104`]** `carry_manifest_emit.rye` -- Android manifest from declared capabilities (elder: `tube_manifest*`)
 - [ ] **[Virgo, `57.105`]** `carry_audience_session.rye` -- multi-signer broadcast + chat (elder: `seva_jabs2_*`)
 - [ ] **[Libra, `57.106`]** `carry_device_setup.rye` -- USB-to-desk pipeline bounded (elders: `setu0`..`setu6`)
 - [ ] **[Scorpio, `57.107`]** `carry_desk_hold.rye` -- Wayland/X11 desk surface hold (elders: `setu_desk_*`)

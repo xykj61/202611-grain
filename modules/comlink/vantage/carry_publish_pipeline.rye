@@ -1,6 +1,6 @@
 //! modules/comlink/vantage/carry_publish_pipeline.rye -- Aether!
 //!
-//! Stamp: `20261119.230000` -- Cancer 4/15 Orbit 9: Vantage
+//! Stamp: `20261119.205016` -- Cancer 4/15 Orbit 9: Vantage
 //! Carry publish pipeline. Four bounded stages behind the
 //! publish gate: upload, fetch, market browse, and revision.
 //!
@@ -21,7 +21,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const gate = @import("carry_publish_gate.rye");
 
-pub const version = "20261119.230000";
+pub const version = "20261119.205016";
 
 pub const max_payload_bytes: u32 = 65536;
 pub const max_title_len: u32 = 128;
@@ -205,7 +205,7 @@ fn make_test_job(stamp: [15]u8) PublishJob {
 }
 
 fn run_selftest() !u8 {
-    const stamp = "20261119.230000".*;
+    const stamp = "20261119.205016".*;
     const nl: u8 = 10;
 
     // Welcome: full pipeline succeeds

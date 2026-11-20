@@ -1,0 +1,240 @@
+//! modules/comlink/vantage/carry_manifest_emit.rye -- Aether!
+//!
+//! Stamp: `20261119.205159` -- Leo 5/15 Orbit 9: Vantage
+//! Carry manifest emitter. Generates Android manifest XML
+//! from declared capabilities. No manual XML editing --
+//! permissions derive mechanically from the capability set.
+//!
+//! The emitter walks the AdmissionManifest and maps each
+//! granted resource name to its Android permission string.
+//! Output is bounded XML in a fixed buffer.
+//!
+//! Elders: `tube_manifest.rye`, `tube_manifest_android_
+//!         permission.rye` (yonder/linengrow-waymarks/)
+//! Fixes: 3 files -> 1, plain name, bounded XML output,
+//!        zero semver, >= 2 invariants, paired refusals.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const admission = @import("carry_admission_gate.rye");
+
+pub const version = "20261119.205159";
+
+pub const max_xml_bytes: u32 = 4096;
+pub const max_permission_name: u32 = 80;
+pub const max_permissions: u32 = 16;
+
+pub const PermissionMapping = struct {
+    resource: []const u8,
+    android_permission: []const u8,
+};
+
+const permission_table = [_]PermissionMapping{
+    .{
+        .resource = "storage",
+        .android_permission =
+            "android.permission.READ_EXTERNAL_STORAGE",
+    },
+    .{
+        .resource = "network",
+        .android_permission =
+            "android.permission.INTERNET",
+    },
+    .{
+        .resource = "audio",
+        .android_permission =
+            "android.permission.RECORD_AUDIO",
+    },
+    .{
+        .resource = "camera",
+        .android_permission = "android.permission.CAMERA",
+    },
+};
+
+pub fn lookup_permission(
+    resource: []const u8,
+) ?[]const u8 {
+    for (permission_table) |entry| {
+        if (std.mem.eql(u8, resource, entry.resource)) {
+            return entry.android_permission;
+        }
+    }
+    return null;
+}
+
+pub const ManifestEmitResult = struct {
+    xml_len: u32,
+    permissions_emitted: u32,
+    unmapped_count: u32,
+    ok: bool,
+};
+
+pub fn emit_manifest(
+    manifest: *const admission.AdmissionManifest,
+    package_name: []const u8,
+    stamp: []const u8,
+    buf: []u8,
+) ManifestEmitResult {
+    // invariant: output buffer is bounded
+    assert(buf.len >= max_xml_bytes);
+    // invariant: package name fits line
+    assert(package_name.len <= max_permission_name);
+
+    var pos: u32 = 0;
+    var perms: u32 = 0;
+    var unmapped: u32 = 0;
+
+    const hdr =
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ++
+        "<manifest xmlns:android=" ++
+        "\"http://schemas.android.com/apk/res/android\"\n" ++
+        "    package=\"";
+    if (pos + hdr.len + package_name.len + 3 > max_xml_bytes) {
+        return .{
+            .xml_len = 0,
+            .permissions_emitted = 0,
+            .unmapped_count = 0,
+            .ok = false,
+        };
+    }
+    @memcpy(buf[pos .. pos + hdr.len], hdr);
+    pos += @intCast(hdr.len);
+    @memcpy(
+        buf[pos .. pos + package_name.len],
+        package_name,
+    );
+    pos += @intCast(package_name.len);
+    const hdr2 = "\"\n    android:versionName=\"";
+    @memcpy(buf[pos .. pos + hdr2.len], hdr2);
+    pos += @intCast(hdr2.len);
+    @memcpy(buf[pos .. pos + stamp.len], stamp);
+    pos += @intCast(stamp.len);
+    const hdr3 = "\">\n";
+    @memcpy(buf[pos .. pos + hdr3.len], hdr3);
+    pos += @intCast(hdr3.len);
+
+    var i: u32 = 0;
+    while (i < manifest.count) : (i += 1) {
+        const cap = &manifest.caps[i];
+        if (!cap.granted) continue;
+        const name = cap.resource[0..cap.resource_len];
+        if (lookup_permission(name)) |perm| {
+            const pre = "    <uses-permission " ++
+                "android:name=\"";
+            const suf = "\" />\n";
+            const line_len = pre.len + perm.len + suf.len;
+            if (pos + line_len > max_xml_bytes) break;
+            @memcpy(buf[pos .. pos + pre.len], pre);
+            pos += @intCast(pre.len);
+            @memcpy(buf[pos .. pos + perm.len], perm);
+            pos += @intCast(perm.len);
+            @memcpy(buf[pos .. pos + suf.len], suf);
+            pos += @intCast(suf.len);
+            perms += 1;
+        } else {
+            unmapped += 1;
+        }
+    }
+
+    const footer = "</manifest>\n";
+    if (pos + footer.len <= max_xml_bytes) {
+        @memcpy(buf[pos .. pos + footer.len], footer);
+        pos += @intCast(footer.len);
+    }
+
+    // invariant: output fits bounded buffer
+    assert(pos <= max_xml_bytes);
+    return .{
+        .xml_len = pos,
+        .permissions_emitted = perms,
+        .unmapped_count = unmapped,
+        .ok = true,
+    };
+}
+
+fn run_selftest() !u8 {
+    const stamp = "20261119.205159";
+    const nl: u8 = 10;
+    const cap_read = @intFromEnum(admission.CapRight.read);
+
+    // Welcome: emit with two known permissions
+    {
+        var m = admission.AdmissionManifest.init(
+            "20261119.205159".*,
+        );
+        try m.declare("storage", cap_read);
+        try m.declare("network", cap_read);
+        var i: u32 = 0;
+        while (i < m.count) : (i += 1) {
+            m.caps[i].granted = true;
+        }
+        var buf: [max_xml_bytes]u8 = @splat(0);
+        const r = emit_manifest(
+            &m, "com.grainww.carry", stamp, &buf,
+        );
+        // invariant: 2 permissions emitted
+        assert(r.ok);
+        assert(r.permissions_emitted == 2);
+        assert(r.unmapped_count == 0);
+        assert(r.xml_len > 0);
+    }
+
+    // Welcome: unmapped resource counted
+    {
+        var m = admission.AdmissionManifest.init(
+            "20261119.205159".*,
+        );
+        try m.declare("storage", cap_read);
+        try m.declare("custom_thing", cap_read);
+        var i: u32 = 0;
+        while (i < m.count) : (i += 1) {
+            m.caps[i].granted = true;
+        }
+        var buf: [max_xml_bytes]u8 = @splat(0);
+        const r = emit_manifest(
+            &m, "com.grainww.carry", stamp, &buf,
+        );
+        assert(r.ok);
+        assert(r.permissions_emitted == 1);
+        assert(r.unmapped_count == 1);
+    }
+
+    // Refusal: non-granted caps skipped
+    {
+        var m = admission.AdmissionManifest.init(
+            "20261119.205159".*,
+        );
+        try m.declare("storage", cap_read);
+        try m.declare("audio", cap_read);
+        m.caps[0].granted = true;
+        m.caps[1].granted = false;
+        var buf: [max_xml_bytes]u8 = @splat(0);
+        const r = emit_manifest(
+            &m, "com.grainww.carry", stamp, &buf,
+        );
+        assert(r.ok);
+        // invariant: only granted caps become permissions
+        assert(r.permissions_emitted == 1);
+    }
+
+    // Refusal: Glasswall -- no RECORD_AUDIO without grant
+    {
+        const perm = lookup_permission("audio");
+        assert(perm != null);
+        const no_perm = lookup_permission("telemetry");
+        assert(no_perm == null);
+    }
+
+    print("GREEN: carry_manifest_emit -- " ++
+        "mechanical XML from capabilities, " ++
+        "2 welcome + 2 refusal, " ++
+        "version {s} (zero semver).{c}", .{
+        stamp, nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

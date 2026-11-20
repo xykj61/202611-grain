@@ -1,6 +1,6 @@
 //! modules/comlink/vantage/carry_publish_gate.rye -- Aether!
 //!
-//! Stamp: `20261119.225000` -- Gemini 3/15 Orbit 9: Vantage
+//! Stamp: `20261119.204920` -- Gemini 3/15 Orbit 9: Vantage
 //! Carry publish gate. No publishing surface (upload, fetch,
 //! market browse, or revision) paints until this gate opens.
 //!
@@ -22,7 +22,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const admission = @import("carry_admission_gate.rye");
 
-pub const version = "20261119.225000";
+pub const version = "20261119.204920";
 
 pub const GateRefusal = enum(u8) {
     none = 0,
@@ -126,7 +126,7 @@ fn mock_deny(_: []const u8, _: u8) bool {
 }
 
 fn run_selftest() !u8 {
-    const stamp = "20261119.225000".*;
+    const stamp = "20261119.204920".*;
     const nl: u8 = 10;
 
     // Welcome: all three doors open

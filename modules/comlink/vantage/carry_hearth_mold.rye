@@ -1,6 +1,6 @@
 //! modules/comlink/vantage/carry_hearth_mold.rye -- Aether!
 //!
-//! Stamp: `20261119.223000` -- Aries 1/15 Orbit 9: Vantage
+//! Stamp: `20261119.204520` -- Aries 1/15 Orbit 9: Vantage
 //! Carry hearth display mold. A hearth is the home surface
 //! a person sees when they pick up their Carry device.
 //!
@@ -17,7 +17,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const version = "20261119.223000";
+pub const version = "20261119.204520";
 
 pub const max_home_id_len: u32 = 2;
 pub const max_hearth_text_len: u32 = 512;
@@ -192,7 +192,7 @@ pub const HearthRegistry = struct {
 };
 
 fn run_selftest() !u8 {
-    const stamp = "20261119.223000".*;
+    const stamp = "20261119.204520".*;
     const nl: u8 = 10;
 
     // Welcome: create mold and serialize
