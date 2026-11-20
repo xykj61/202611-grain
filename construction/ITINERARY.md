@@ -43,9 +43,9 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
-### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261120.141715-est`, `Myofascia: 57.078`)
+### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261120.142919-est`, `Myofascia: 57.078`)
 
-- **Calfive Vector (`654` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 3, Orbit 13 (`15/15 Siya sealed`)** -- grain-ww readme-refresh subcommand. 113 proofs, 222 assertions. publish-seed GREEN x6.
+- **Calfive Vector (`657` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 3, Orbit 14 (`15/15 Siya sealed`)** -- grain-ww status (live .husk health), readme-refresh. 113 proofs, 222 assertions. publish-seed GREEN x7.
 - **Completed Software & Civic Foundations in [`../active-husk/`](../active-husk/README.md):**
   - **5 Elemental Rule Cards & `GEMINI.md` Spine:** `aether`, `air`, `fire`, `water`, `earth` in `.gemini/rules/`; `active-tablecloth/` molted to `active-husk/`.
   - **Glow Mill & Citizen Ring (`Stage 1 == Stage 2`):** 6-pass native `.glow` compiler (`grain-ww glow`) + 17 col-57 Citizen `.glow` gates across `Aurora`, `Pond`, `Caravan`, `Comlink`, `Tablecloth`, `Husk`, `Vantage`, `Resonance`, `Dimeroll`, `Colloquium`, and `Linengrow`.
