@@ -36,19 +36,17 @@ Built-in bindings:
 
 ## Journey (Movements)
 
-- [ ] **[Leo]** Write `husk_template.rye` -- parse `{{ expr }}`
-      in markdown, evaluate to string, emit lowered `.md`
-- [ ] **[Virgo]** Built-in bindings: commit-count, myofascia,
-      version-stamp from live computation
-- [ ] **[Libra]** Write `README.husk` that lowers to `README.md`
-      with single-source myofascia + witness count
-- [ ] **[Scorpio]** Wire `grain-ww husk-lower <file.husk>` CLI
-      subcommand for build-time lowering
-- [ ] **[Sagittarius]** Add `.husk` to template-manifest.kyri,
-      docs-geode references, and language docs
-- [ ] **[Capricorn]** Witness: husk_template selftest + lowered
-      output matches expected markdown
-- [ ] **[Aquarius-Siya]** Publish-seed, ITINERARY, seal
+- [x] **[Leo, `20261120.115122`, `56.650`]** husk_template.rye: bounded template parser (32KB in, 64KB out, 64 bindings). 4 welcome + 2 refusal witnesses. husk_lower.rye: CLI with live bindings (myofascia, commit-count, orbit, sign, version-stamp from git + .brix). demo.husk proves single-source lowering
+- [x] **[Virgo, `20261120.115341`, `56.651`]** Wire grain-ww husk-lower subcommand (null extra_first). Add to help listing under HUSK & STUDIO
+- [x] **[Libra, `20261120.115457`, `56.652`]** Add husk_template + husk_lower to witness_all (220 assertions, 109 proofs). Update closure stamp + entries
+- [x] **[Scorpio, `20261120.115618`, `56.653`]** Document .husk format in languages/CLAUDE.md (sixth file type) and Air rule card canonical vocabulary
+- [x] **[Sagittarius, `20261120.115642`, `56.654`]** ITINERARY refreshed: 633 movements, Orbit 11 Scorpio 8/15
+- [x] **[Capricorn, `20261120.115811`, `56.654`]** Final witness_all GREEN (109 proofs, 220 assertions). audit-clean GREEN (9876 files). manifest-cover OK. publish-seed GREEN (b3d184c3 -> grain-ww/202611-grain)
+- [x] **[Aquarius, `20261120.115811`, `56.654`]** Checklist refreshed with all stamps
+- [x] **[Pisces, `20261120.115811`, `56.654`]** 220 assertions verified across witness_all
+- [x] **[Cardinal Sky, `20261120.115811`, `56.654`]** audit-clean + manifest-cover both GREEN
+- [x] **[Fixed Sky, `20261120.115811`, `56.654`]** Publish-seed GREEN with 109 proofs
+- [x] **[Siya, `20261120.115811`, `56.654`]** Sealed Orbit 11: .husk markdown build system. husk_template (bounded {{ expr }} lowering, 4 welcome + 2 refusal). husk_lower (live bindings from git + .brix). grain-ww help + husk-lower + 6 Carry + conifer wired into CLI. .husk documented as sixth file type. 109 proofs, 220 assertions. publish-seed GREEN x4
 
 ---
 
