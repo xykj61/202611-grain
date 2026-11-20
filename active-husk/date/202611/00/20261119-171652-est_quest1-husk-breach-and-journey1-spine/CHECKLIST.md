@@ -48,7 +48,7 @@ Vantage Carry foundation:*
 - [x] **[Pisces, `20261119.216500`, `57.096`]** Archived Quin handoff resin to `yonder/` + updated `amphora/resins/manifest.kyri`
 - [x] **[Cardinal Sky, `20261119.220000`, `57.097`]** Built `carry_admission_gate.rye` + `gate-carry-admission.glow` (first TAME Carry module from waymark study: gate-before-surface, 16-cap bounded manifest, 2 welcome + 2 refusal)
 - [x] **[Fixed Sky, `20261119.221000`, `57.098`]** Refreshed Distillation + Husk Breach checklists with current state (bat shed, mand repoint reflected)
-- [ ] **[TOP -- Siya, `57.099`]** Seal Orbit 8, Calfive movement advice for Orbit 9 (Vantage Carry reimplementation)
+- [x] **[Siya, `20261119.222000`, `57.099`]** Sealed Orbit 8: 4 Mitra sheds complete (Metrics, Batons, Custody, Templates), 2 audited honestly (Linengrow entangled, Topology load-bearing), 72 waymark files archived + studied, retired terms debrided (mandate/, fascia docs, quin_host renamed), first TAME Carry module built. Orbit 9 Recommend: Vantage Carry reimplementation (9 remaining modules from study map)
 
 ---
 
