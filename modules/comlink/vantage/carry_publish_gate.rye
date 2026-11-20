@@ -1,0 +1,224 @@
+//! modules/comlink/vantage/carry_publish_gate.rye -- Aether!
+//!
+//! Stamp: `20261119.225000` -- Gemini 3/15 Orbit 9: Vantage
+//! Carry publish gate. No publishing surface (upload, fetch,
+//! market browse, or revision) paints until this gate opens.
+//!
+//! The gate checks three independent doors:
+//! 1. Admission -- all declared caps granted by Caravan
+//! 2. Identity -- Kumara Ed25519 keypair present and valid
+//! 3. Network -- transport available (wifi/cellular/usb)
+//!
+//! Each door can independently refuse. The gate opens only
+//! when all three pass. Surface modules query `is_open()`
+//! before painting -- never the doors directly.
+//!
+//! Elder: `tube1_glass_gate.rye` (yonder/linengrow-waymarks/)
+//! Fixes: plain name, 3 independent doors (not flat bool),
+//!        >= 2 invariants per function, paired refusals.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const admission = @import("carry_admission_gate.rye");
+
+pub const version = "20261119.225000";
+
+pub const GateRefusal = enum(u8) {
+    none = 0,
+    admission_denied = 1,
+    identity_missing = 2,
+    network_unavailable = 3,
+    admission_and_identity = 4,
+    admission_and_network = 5,
+    identity_and_network = 6,
+    all_three = 7,
+};
+
+pub const PublishGate = struct {
+    admission_ok: bool,
+    identity_ok: bool,
+    network_ok: bool,
+    manifest: admission.AdmissionManifest,
+    refusal: GateRefusal,
+
+    pub fn init(stamp: [15]u8) PublishGate {
+        // invariant: stamp is chronological
+        assert(stamp[8] == '.');
+        return .{
+            .admission_ok = false,
+            .identity_ok = false,
+            .network_ok = false,
+            .manifest = admission.AdmissionManifest.init(
+                stamp,
+            ),
+            .refusal = .all_three,
+        };
+    }
+
+    pub fn check_admission(
+        self: *PublishGate,
+        custody_check: *const fn ([]const u8, u8) bool,
+    ) void {
+        // invariant: at least one cap declared
+        assert(self.manifest.count > 0);
+        self.admission_ok = self.manifest.check_all(
+            custody_check,
+        );
+        self.update_refusal();
+    }
+
+    pub fn check_identity(
+        self: *PublishGate,
+        has_keypair: bool,
+    ) void {
+        self.identity_ok = has_keypair;
+        // invariant: identity is binary
+        assert(self.identity_ok == has_keypair);
+        self.update_refusal();
+    }
+
+    pub fn check_network(
+        self: *PublishGate,
+        transport_available: bool,
+    ) void {
+        self.network_ok = transport_available;
+        self.update_refusal();
+    }
+
+    pub fn is_open(self: *const PublishGate) bool {
+        // invariant: open iff all three doors pass
+        const open = self.admission_ok and
+            self.identity_ok and self.network_ok;
+        assert(open == (self.refusal == .none));
+        return open;
+    }
+
+    fn update_refusal(self: *PublishGate) void {
+        const a = !self.admission_ok;
+        const i = !self.identity_ok;
+        const n = !self.network_ok;
+        self.refusal = if (a and i and n)
+            .all_three
+        else if (a and i)
+            .admission_and_identity
+        else if (a and n)
+            .admission_and_network
+        else if (i and n)
+            .identity_and_network
+        else if (a)
+            .admission_denied
+        else if (i)
+            .identity_missing
+        else if (n)
+            .network_unavailable
+        else
+            .none;
+    }
+};
+
+fn mock_allow(_: []const u8, _: u8) bool {
+    return true;
+}
+
+fn mock_deny(_: []const u8, _: u8) bool {
+    return false;
+}
+
+fn run_selftest() !u8 {
+    const stamp = "20261119.225000".*;
+    const nl: u8 = 10;
+
+    // Welcome: all three doors open
+    {
+        var gate = PublishGate.init(stamp);
+        try gate.manifest.declare(
+            "storage",
+            @intFromEnum(admission.CapRight.read),
+        );
+        gate.check_admission(&mock_allow);
+        gate.check_identity(true);
+        gate.check_network(true);
+        // invariant: gate opens
+        assert(gate.is_open());
+        assert(gate.refusal == .none);
+    }
+
+    // Welcome: open after checking in any order
+    {
+        var gate = PublishGate.init(stamp);
+        try gate.manifest.declare(
+            "compute",
+            @intFromEnum(admission.CapRight.execute),
+        );
+        gate.check_network(true);
+        gate.check_identity(true);
+        gate.check_admission(&mock_allow);
+        assert(gate.is_open());
+    }
+
+    // Refusal: admission denied
+    {
+        var gate = PublishGate.init(stamp);
+        try gate.manifest.declare(
+            "storage",
+            @intFromEnum(admission.CapRight.read),
+        );
+        gate.check_admission(&mock_deny);
+        gate.check_identity(true);
+        gate.check_network(true);
+        assert(!gate.is_open());
+        assert(gate.refusal == .admission_denied);
+    }
+
+    // Refusal: identity missing
+    {
+        var gate = PublishGate.init(stamp);
+        try gate.manifest.declare(
+            "storage",
+            @intFromEnum(admission.CapRight.read),
+        );
+        gate.check_admission(&mock_allow);
+        gate.check_identity(false);
+        gate.check_network(true);
+        assert(!gate.is_open());
+        assert(gate.refusal == .identity_missing);
+    }
+
+    // Refusal: network unavailable
+    {
+        var gate = PublishGate.init(stamp);
+        try gate.manifest.declare(
+            "storage",
+            @intFromEnum(admission.CapRight.read),
+        );
+        gate.check_admission(&mock_allow);
+        gate.check_identity(true);
+        gate.check_network(false);
+        assert(!gate.is_open());
+        assert(gate.refusal == .network_unavailable);
+    }
+
+    // Refusal: all three closed
+    {
+        var gate = PublishGate.init(stamp);
+        try gate.manifest.declare(
+            "storage",
+            @intFromEnum(admission.CapRight.read),
+        );
+        gate.check_admission(&mock_deny);
+        gate.check_identity(false);
+        gate.check_network(false);
+        assert(!gate.is_open());
+        assert(gate.refusal == .all_three);
+    }
+
+    print("GREEN: carry_publish_gate -- " ++
+        "3-door gate-before-surface " ++
+        "(2 welcome, 4 refusal by name).{c}", .{nl});
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

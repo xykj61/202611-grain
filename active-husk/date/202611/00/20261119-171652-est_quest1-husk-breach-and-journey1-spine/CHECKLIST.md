@@ -50,6 +50,29 @@ Vantage Carry foundation:*
 - [x] **[Fixed Sky, `20261119.221000`, `57.098`]** Refreshed Distillation + Husk Breach checklists with current state (bat shed, mand repoint reflected)
 - [x] **[Siya, `20261119.222000`, `57.099`]** Sealed Orbit 8: 4 Mitra sheds complete (Metrics, Batons, Custody, Templates), 2 audited honestly (Linengrow entangled, Topology load-bearing), 72 waymark files archived + studied, retired terms debrided (mandate/, fascia docs, quin_host renamed), first TAME Carry module built. Orbit 9 Recommend: Vantage Carry reimplementation (9 remaining modules from study map)
 
+## Orbit 9 -- Vantage Carry Reimplementation (from Waymark Study Map)
+
+*Build the 10 TAME Carry modules identified in
+`construction/linengrow-waymark-study.md`, one per movement.
+Each follows gate-before-surface, bounded buffers, >= 2 invariants,
+paired welcome/refusal. Seed publishes at Siya 15/15.*
+
+- [x] **[Aries, `20261119.223000`, `57.100`]** `carry_hearth_mold.rye` + `fold-carry-hearth-mold.glow` (home display mold, DisplayPreset enum, Kyri serialization, 16-hearth registry, 2 welcome + 3 refusal)
+- [x] **[Taurus, `20261119.224000`, `57.101`]** `carry_hearth_pointer.rye` (pointer file read/write, round-trip serialize/parse, corrupt/truncated/invalid/missing fallback, 2 welcome + 4 refusal)
+- [ ] **[TOP -- Gemini, `57.102`]** `carry_publish_gate.rye` -- gate-before-surface for publishing UI (elder: `tube1_glass_gate`)
+- [ ] **[Cancer, `57.103`]** `carry_publish_pipeline.rye` -- publish + fetch + market + revision (elders: `tube2`..`tube5`)
+- [ ] **[Leo, `57.104`]** `carry_manifest_emit.rye` -- Android manifest from declared capabilities (elder: `tube_manifest*`)
+- [ ] **[Virgo, `57.105`]** `carry_audience_session.rye` -- multi-signer broadcast + chat (elder: `seva_jabs2_*`)
+- [ ] **[Libra, `57.106`]** `carry_device_setup.rye` -- USB-to-desk pipeline bounded (elders: `setu0`..`setu6`)
+- [ ] **[Scorpio, `57.107`]** `carry_desk_hold.rye` -- Wayland/X11 desk surface hold (elders: `setu_desk_*`)
+- [ ] **[Sagittarius, `57.108`]** `carry_dexter_keyboard.rye` -- text input + Dexter glass keyboard (elders: `dexter_glass_key*`)
+- [ ] **[Capricorn, `57.109`]** Terrarium Carry glass pipe update (`terrarium/carry-tablet/`) with new Vantage Carry imports
+- [ ] **[Aquarius, `57.110`]** Update `grain_ww_closure.brix` with all new Carry modules + Glow desks
+- [ ] **[Pisces, `57.111`]** Carry Vantage integration witness -- prove full admission -> hearth -> publish path
+- [ ] **[Cardinal Sky, `57.112`]** Sweep any remaining retired terms discovered during build
+- [ ] **[Fixed Sky, `57.113`]** Refresh all checklists + Myofascia vector
+- [ ] **[Siya, `57.114`]** Seal Orbit 9 + `publish-seed.rish --push`
+
 ---
 
 ## Downstream Synced Explicit-Bound Husk Spines

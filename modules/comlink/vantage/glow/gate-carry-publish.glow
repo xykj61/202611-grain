@@ -1,0 +1,11 @@
+::  vantage/glow/gate-carry-publish.glow -- Aether!
+/-  compiler-shapes
+/!  32768
+|%
+++  gate-carry-publish
+  |=  [admit=@ud ident=@ud net=@ud refusal=@ud]        ::  three doors
+  ^-  @ud                                               ::  1 open, 0 closed
+  ~|  'carry-publish-gate-invariant-broken'              ::  Aether refusal
+  ?>  &(eql(admit 1) eql(ident 1) eql(net 1))           ::  all three pass
+  1
+--
