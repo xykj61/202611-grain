@@ -89,9 +89,10 @@ fn print_help() u8 {
         "  harness-cache  cached harness dispatch\n" ++
         "  harness-console visual console\n" ++
         "  harness-wood   WOOD compute ledger\n\n" ++
-        "STUDIO & RESONANCE\n" ++
-        "  studio-deck    vantage studio deck\n" ++
+        "HUSK & STUDIO\n" ++
+        "  husk-lower     .husk -> .md template lower\n" ++
         "  husk-editor    husk movement editor\n" ++
+        "  studio-deck    vantage studio deck\n" ++
         "  triptych-art   triptych canvas\n\n" ++
         "AUDIT & WITNESS\n" ++
         "  audit-clean    residue-free file check\n" ++
@@ -867,6 +868,15 @@ pub fn main(init: std.process.Init) !u8 {
             io,
             "tools/.build/carry_manifest_emit",
             "modules/comlink/vantage/carry_manifest_emit.rye",
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "husk-lower")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/husk_lower",
+            null,
             args[2..],
         );
     }
