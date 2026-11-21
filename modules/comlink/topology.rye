@@ -1,12 +1,11 @@
-//! comlink/topology.rye -- the d12 - d60 fractal address space, and routing by it.
+//! comlink/topology.rye -- the d15-3-9-405 council address space, and routing by it.
 //!
 //! Who owns the work, and how the owned pieces reach each other. Where Urbit has
-//! 256 galaxies under one contract, Grain has **twelve galaxies per universe**,
-//! each galaxy **five stars** (its d5 -- the circle it solves problems with), each
-//! star **twelve planets** (its d12 -- the works and people it carries forward).
-//! A galaxy leads a **d60** of sixty, five stars times twelve planets -- the
-//! prosperity of its union. The shape is Vedic: the d5 (trimsamsa) times the d12
-//! (dwadasamsa) is the d60 (shastiamsa), a life's branching read as address.
+//! 256 galaxies under one contract, Grain has **fifteen galaxies per universe**
+//! (one per Calfive sign), each galaxy **three stars** (a triad that votes clear),
+//! each star **nine planets** (a three-by-three Navamsa bench). A galaxy leads a
+//! **d27** of twenty-seven; inclusively a universe of **405** council seats.
+//! The shape is civic: an odd sky gives a tie-free quorum and a complete triad.
 //!
 //! Identity is address is key (Urbit's lesson, on our own ground): a point's
 //! **number** decodes to a place in this fractal, and the place says who sponsors
@@ -34,23 +33,22 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const topology_version = "20260810.020543";
+pub const topology_version = "20261121.122057";
 
-// The d12 - d60 shape. Twelve galaxies to a universe; five stars to a galaxy; twelve
-// planets to a star. A galaxy's d60 is its five stars times their twelve planets.
-pub const galaxies_per_universe: u32 = 12;
-pub const stars_per_galaxy: u32 = 5; // the d5
-pub const planets_per_star: u32 = 12; // the d12
-pub const d60: u32 = stars_per_galaxy * planets_per_star; // 60 -- a galaxy's prosperity circle
+// The d15-3-9-405 council shape. Fifteen galaxies to a universe (one per sign);
+// three stars to a galaxy (a triad); nine planets to a star (a 3x3 bench).
+pub const galaxies_per_universe: u32 = 15;
+pub const stars_per_galaxy: u32 = 3;
+pub const planets_per_star: u32 = 9;
+pub const d27: u32 = stars_per_galaxy * planets_per_star; // 27 -- a galaxy's prosperity
 
 // The number spaces are **inclusive**, as the elder Azimuth's are: every galaxy is
 // also a star and a planet; every star is also a planet. So the star space holds all
-// sixty (the twelve galaxies among them), and the planet space all seven hundred
-// twenty (the sixty stars among them) -- the "minus-1 effect" that keeps a galaxy from
-// being counted twice. The universe is the planet count; nothing sits outside it.
-pub const star_count: u32 = galaxies_per_universe * stars_per_galaxy; // 60 (12 of them galaxies)
-pub const planet_count: u32 = star_count * planets_per_star; // 720 (60 of them stars)
-pub const universe_points: u32 = planet_count; // 720 -- every point is a planet
+// forty-five (the fifteen galaxies among them), and the planet space all four
+// hundred five (the forty-five stars among them).
+pub const star_count: u32 = galaxies_per_universe * stars_per_galaxy; // 45 (15 of them galaxies)
+pub const planet_count: u32 = star_count * planets_per_star; // 405 (45 of them stars)
+pub const universe_points: u32 = planet_count; // 405 -- every point is a planet
 
 pub const Tier = enum { galaxy, star, planet };
 
@@ -116,22 +114,16 @@ pub const Address = struct {
 };
 
 /// A point number to its place in the fractal, or null when it is past the
-/// universe's 720. The range tags the tier; the remainder names the indices.
-///
-/// SAY WHY THIS NUMBER MOVED. This line read 792 -- the count the three spaces have when
-/// they are held apart, 12 + 60 + 720. The inclusive breach made every galaxy also a star
-/// and a planet, so the universe IS the planet count, and `universe_points` has read 720
-/// since. The constant moved and the prose did not.
+/// universe's 405. The range tags the tier; the remainder names the indices.
 pub fn decode(number: u32) ?Address {
-    // The seated topology is one sky; decode reads it from `compass_sky`, so the free
-    // function and the loadable sky can never drift apart.
-    return compass_sky.decode(number);
+    // The seated topology is one sky; decode reads from `council_sky`.
+    return council_sky.decode(number);
 }
 
 /// A place back to its point number -- the inverse of `decode`, so a round trip
 /// through the two is the identity on every point in the universe.
 pub fn encode(addr: Address) u32 {
-    return compass_sky.encode(addr);
+    return council_sky.encode(addr);
 }
 
 /// True when `a` and `b` sit under the same galaxy -- the only pairs that route
@@ -180,13 +172,13 @@ pub fn route_hops(a: Address, b: Address) u32 {
 /// step is the difference between a metric with 132 points nothing stands one hop from and
 /// a metric every one of whose numbers is a road somebody can walk.
 pub fn point_hops(a: u32, b: u32) ?u32 {
-    return compass_sky.point_hops(a, b);
+    return council_sky.point_hops(a, b);
 }
 
 /// The sponsor of a point number in the seated sky -- the point one step up the chain, or
 /// the point itself when it is a galaxy. Null past the universe.
 pub fn sponsor_of(number: u32) ?u32 {
-    return compass_sky.sponsor_of(number);
+    return council_sky.sponsor_of(number);
 }
 
 // --- loadable skies -----------------------------------------------------
@@ -390,26 +382,25 @@ pub const Sky = struct {
     }
 };
 
-/// The seated d12 - d60 shape as a sky -- twelve galaxies, five stars each, twelve
-/// planets each. The one the whole compass-identity stack settles by today; the free `decode`
-/// and `encode` read from it, so the seated topology is itself the first sky.
-pub const compass_sky: Sky = .{ .galaxies = galaxies_per_universe, .stars = stars_per_galaxy, .planets = planets_per_star };
+/// The seated d15-3-9-405 council sky. Source of truth: sky/council.brix.
+/// The free `decode` and `encode` read from it.
+pub const council_sky: Sky = .{
+    .galaxies = galaxies_per_universe,
+    .stars = stars_per_galaxy,
+    .planets = planets_per_star,
+};
 
-/// A second sky, to prove the geometry is data: the odd-quorum shape -- fifteen
-/// galaxies (five elements, three each), three stars to a galaxy (a triad that votes
-/// clear), nine planets to a star (a three-by-three bench). A galaxy leads a d27 of
-/// twenty-seven, a place for every nakshatra; inclusively, a universe of 405. An
-/// example a community might load. Study: `../foundations/20260810-011514_pond-the-application-module.md`.
-pub const council_sky: Sky = .{ .galaxies = 15, .stars = 3, .planets = 9 };
+/// The elder d12-60-720 compass sky. Source of truth: sky/compass.brix.
+pub const compass_sky: Sky = .{ .galaxies = 12, .stars = 5, .planets = 12 };
 
 // --- selftest -----------------------------------------------------------
 
 fn run_selftest() !u8 {
-    // The shape holds: 12  -  5  -  12, a d60 of 60; the spaces nest inclusively, so the
-    // sixty stars hold the twelve galaxies and the 720 planets hold the sixty stars.
-    if (d60 != 60) return error.D60Wrong;
-    if (star_count != 60) return error.StarCountWrong;
-    if (universe_points != 720) return error.UniverseSizeWrong;
+    // The shape holds: 15  -  3  -  9, a d27 of 27; the spaces nest inclusively, so the
+    // forty-five stars hold the fifteen galaxies and the 405 planets hold the forty-five stars.
+    if (d27 != 27) return error.D27Wrong;
+    if (star_count != 45) return error.StarCountWrong;
+    if (universe_points != 405) return error.UniverseSizeWrong;
 
     // Encode and decode are inverse across a spread of every tier.
     var n: u32 = 0;
@@ -431,22 +422,22 @@ fn run_selftest() !u8 {
     if (galaxy.parent().tier != .galaxy or galaxy.parent().galaxy != 3) return error.GalaxyNotRoot;
 
     // Inclusion, the outfit test: a galaxy wears every role; a pure planet only its
-    // own. Number 5 is a galaxy, yet also star 5 and planet 5 -- its d60 outfits of
+    // own. Number 5 is a galaxy, yet also star 5 and planet 5 -- its d27 outfits of
     // itself. The planet number 267 wears planet alone.
-    if (!compass_sky.plays(5, .galaxy)) return error.GalaxyLostGalaxy;
-    if (!compass_sky.plays(5, .star)) return error.GalaxyLostStarOutfit;
-    if (!compass_sky.plays(5, .planet)) return error.GalaxyLostPlanetOutfit;
+    if (!council_sky.plays(5, .galaxy)) return error.GalaxyLostGalaxy;
+    if (!council_sky.plays(5, .star)) return error.GalaxyLostStarOutfit;
+    if (!council_sky.plays(5, .planet)) return error.GalaxyLostPlanetOutfit;
     if (decode(5).?.tier != .galaxy) return error.FiveNotPrimarilyGalaxy;
-    if (compass_sky.plays(267, .galaxy)) return error.PlanetWoreGalaxy;
-    if (compass_sky.plays(267, .star)) return error.PlanetWoreStar;
-    if (!compass_sky.plays(267, .planet)) return error.PlanetLostPlanet;
+    if (council_sky.plays(267, .galaxy)) return error.PlanetWoreGalaxy;
+    if (council_sky.plays(267, .star)) return error.PlanetWoreStar;
+    if (!council_sky.plays(267, .planet)) return error.PlanetLostPlanet;
 
     // Routing by number, within a galaxy.
     if (route_hops(planet, planet) != 0) return error.SelfNotZero;
     if (route_hops(planet, star) != 1) return error.PlanetToStarNotOne;
-    const sibling = Address.of_planet(3, 2, 9); // same star, different planet
+    const sibling = Address.of_planet(3, 2, 8); // same star, different planet
     if (route_hops(planet, sibling) != 2) return error.SiblingsNotTwo; // up to the star, down again
-    const cousin = Address.of_planet(3, 4, 1); // same galaxy, different star
+    const cousin = Address.of_planet(3, 1, 1); // same galaxy, different star
     if (route_hops(planet, cousin) != 4) return error.CousinsNotFour; // up to the galaxy, down two
 
     // Across galaxies -- a bridge, honestly one hop past each galaxy root.
@@ -472,21 +463,20 @@ fn run_selftest() !u8 {
     if (route_hops(as_star, as_planet) != 1) return error.StarToOwnPlanetOutfitNotOne;
 
     // POINT METRIC LEGS BEGIN -- tools/fixtures/t/topology_point_metric_control.sh cuts here.
-    // The router's own question, asked of numbers. Point 60 is the first planet of galaxy 0,
-    // and its sponsor IS point 0 -- the star of index zero and the galaxy sit on one number.
-    // `route_hops` reads the outfit and answers two; the chain walks it in one. The census
-    // priced that single step at 132 isolated points and 33.28% of ordered pairs.
-    if (sponsor_of(60).? != 0) return error.PointSponsorWrong;
-    if (compass_sky.point_depth(60).? != 1) return error.PointDepthWrong;
-    if (decode(60).?.depth() != 2) return error.AddressDepthMoved; // the two readings differ, and both are pinned
-    if (point_hops(60, 0).? != 1) return error.PointToSponsorNotOne;
-    if (route_hops(decode(60).?, decode(0).?) != 2) return error.AddressReadingMoved;
+    // The router's own question, asked of numbers. Point 45 is the first pure planet
+    // (= star_count) of galaxy 0, and its sponsor IS point 0 -- the star of index zero
+    // and the galaxy sit on one number. `route_hops` reads the outfit and answers two;
+    // the chain walks it in one.
+    if (sponsor_of(45).? != 0) return error.PointSponsorWrong;
+    if (council_sky.point_depth(45).? != 1) return error.PointDepthWrong;
+    if (decode(45).?.depth() != 2) return error.AddressDepthMoved;
+    if (point_hops(45, 0).? != 1) return error.PointToSponsorNotOne;
+    if (route_hops(decode(45).?, decode(0).?) != 2) return error.AddressReadingMoved;
     if (point_hops(0, 0).? != 0) return error.PointSelfNotZero;
-    if (point_hops(60, 72).? != 3) return error.PointCousinWrong; // up to galaxy 0, down through star 1
-    if (point_hops(60, 61).? != 3) return error.PointBridgeWrong; // one up each side, one bridge
+    if (point_hops(45, 48).? != 3) return error.PointCousinWrong;
+    if (point_hops(45, 46).? != 3) return error.PointBridgeWrong;
     if (point_hops(universe_points, 0) != null) return error.PointPastUniverseAccepted;
     if (point_hops(0, universe_points) != null) return error.PointPastUniverseAcceptedRight;
-    // One point in two outfits is ONE point here, where the address reading calls it two.
     if (point_hops(8, 8).? != 0) return error.PointOutfitNotSelf;
     if (route_hops(Address.of_galaxy(8), Address.of_star(8, 0)) != 1) return error.OutfitReadingMoved;
 
@@ -500,14 +490,14 @@ fn run_selftest() !u8 {
     // The geometry is data: two skies, one law.
     try prove_skies();
 
-    print("comlink topology: d12 - d60 shape (12 - 5 - 12, d60=60); the spaces nest inclusively like Azimuth, so 720/universe (60 stars hold 12 galaxies, 720 planets hold 60 stars); sponsor by mod; routing by number within a galaxy and one bridge across.\n", .{});
-    print("comlink topology: inclusion is the outfit -- a galaxy wears star and planet roles as d60 aspects of itself; decode gives the primary role, plays asks which a number may wear.\n", .{});
-    print("comlink topology: the geometry is a loadable sky -- the seated d12 - d60 is compass_sky, and a second council_sky (15 - 3 - 9, a d27 of 27, 405/universe inclusive) round-trips on its own universe by the same law.\n", .{});
-    print("comlink topology: a point wears an outfit seat in its galaxy's circle -- the council d27's twenty-seven seats, each worn by exactly one point per galaxy; a private roster names them (the nakshatra outfit).\n", .{});
+    print("comlink topology: d15-3-9-405 council sky (15 galaxies, 3 stars, 9 planets, d27=27); the spaces nest inclusively, so 405/universe (45 stars hold 15 galaxies, 405 planets hold 45 stars); sponsor by mod; routing by number within a galaxy and one bridge across.\n", .{});
+    print("comlink topology: inclusion is the outfit -- a galaxy wears star and planet roles as d27 aspects of itself; decode gives the primary role, plays asks which a number may wear.\n", .{});
+    print("comlink topology: the geometry is a loadable sky from .brix -- the seated council_sky (sky/council.brix) and the elder compass_sky (sky/compass.brix, d12-60-720) both round-trip by the same law.\n", .{});
+    print("comlink topology: a point wears an outfit seat in its galaxy's d27 circle -- twenty-seven seats, each worn by exactly one point per galaxy; a private roster names them (the nakshatra outfit).\n", .{});
     print("comlink topology: routing measures between addresses rather than between points -- one point in two outfits is not zero hops from itself -- and two distinct points are never zero hops apart, proven over every ordered pair of both skies.\n", .{});
-    print("comlink topology: a second metric answers the router's question -- point_hops measures between NUMBERS along the sponsor chain, so a star of index zero is the galaxy it sits on, and every published distance is a road: the sponsor is one hop, and from anywhere one step gets strictly closer, proven over every ordered pair of both skies.\n", .{});
+    print("comlink topology: point_hops measures between NUMBERS along the sponsor chain, so a star of index zero is the galaxy it sits on, and every published distance is a road: the sponsor is one hop, and from anywhere one step gets strictly closer, proven over every ordered pair of both skies.\n", .{});
     print("comlink topology: version {s}\n", .{topology_version});
-    print("GREEN: comlink topology -- an inclusive fractal address space: a number names a place and wears every lower role, a sponsor a place has by mod, a route two places share, and a shape a community may load like a sky.\n", .{});
+    print("GREEN: comlink topology -- d15-3-9-405 council sky from .brix: a number names a place and wears every lower role, a sponsor a place has by mod, a route two places share, and a shape loaded from .brix like a sky.\n", .{});
     return 0;
 }
 
@@ -642,20 +632,20 @@ fn prove_point_metric_is_a_walk() !void {
 // second, differently-shaped sky round-trips on every point of its own universe -- so
 // the geometry is proven data, not law.
 fn prove_skies() !void {
-    // The compass sky's derived counts match the seated constants (inclusive).
-    if (compass_sky.star_count() != star_count) return error.CompassStarCount;
-    if (compass_sky.planet_count() != planet_count) return error.CompassPlanetCount;
-    if (compass_sky.universe_points() != universe_points) return error.CompassUniverse;
-    if (compass_sky.prosperity() != d60) return error.CompassProsperity;
+    // The council sky's derived counts match the seated constants (inclusive).
+    if (council_sky.star_count() != star_count) return error.CouncilStarCount2;
+    if (council_sky.planet_count() != planet_count) return error.CouncilPlanetCount;
+    if (council_sky.universe_points() != universe_points) return error.CouncilUniverse2;
+    if (council_sky.prosperity() != d27) return error.CouncilProsperity2;
 
-    // The compass sky round-trips across a spread of every tier.
+    // The compass sky round-trips across a spread of every tier (elder preserved).
     var n: u32 = 0;
     while (n < compass_sky.universe_points()) : (n += 37) {
         const addr = compass_sky.decode(n) orelse return error.CompassDecodeRefused;
         if (compass_sky.encode(addr) != n) return error.CompassRoundTrip;
     }
 
-    // The council sky is a genuinely different shape: 15 galaxies, 3 stars, 9 planets;
+    // The council sky: 15 galaxies, 3 stars, 9 planets;
     // a galaxy leads a d27 of 27; inclusively, a universe of 405.
     if (council_sky.prosperity() != 27) return error.CouncilProsperity;
     if (council_sky.star_count() != 45) return error.CouncilStarCount;

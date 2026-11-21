@@ -1,0 +1,8 @@
+# compass.brix -- the d12-60-720 compass sky (elder)
+# Twelve galaxies, five stars (d5), twelve planets (d12).
+# The original seated shape before the council molt (20261121).
+
+sky compass
+galaxies 12
+stars 5
+planets 12

@@ -1,0 +1,123 @@
+//! comlink/sky_loader.rye -- verify Sky .brix descriptors match code.
+//!
+//! Sameness Is the Macro: topologies live as .brix data files
+//! (sky/council.brix, sky/compass.brix). This module reads them
+//! at runtime and asserts they agree with the comptime constants
+//! in topology.rye. The .brix file is the single source humans
+//! edit; the code constant is the comptime truth the compiler
+//! uses; this verifier bridges the two.
+//!
+//!   rye build comlink/sky_loader.rye -femit-bin=comlink/bin/sky-loader
+
+const std = @import("std");
+const topology = @import("topology.rye");
+
+const nl: u8 = 10;
+const ws = [_]u8{ ' ', '\t', '\r', nl };
+const print = std.debug.print;
+const assert = std.debug.assert;
+
+pub const SkyLoadError = error{
+    MissingGalaxies,
+    MissingStars,
+    MissingPlanets,
+    MalformedNumber,
+    BrixDrift,
+    FileNotFound,
+};
+
+pub fn load_sky_from_file(
+    a: std.mem.Allocator,
+    io: std.Io,
+    path: []const u8,
+) SkyLoadError!topology.Sky {
+    const src = std.Io.Dir.cwd().readFileAlloc(
+        io,
+        path,
+        a,
+        .limited(4096),
+    ) catch return SkyLoadError.FileNotFound;
+    // invariant: the .brix file is non-empty
+    assert(src.len > 0);
+    var galaxies: ?u32 = null;
+    var stars: ?u32 = null;
+    var planets: ?u32 = null;
+    var it = std.mem.splitScalar(u8, src, nl);
+    while (it.next()) |raw| {
+        const line = std.mem.trim(u8, raw, &ws);
+        if (line.len == 0 or line[0] == '#') continue;
+        if (std.mem.startsWith(u8, line, "galaxies ")) {
+            galaxies = parse_u32(line[9..]);
+        } else if (std.mem.startsWith(u8, line, "stars ")) {
+            stars = parse_u32(line[6..]);
+        } else if (std.mem.startsWith(u8, line, "planets ")) {
+            planets = parse_u32(line[8..]);
+        }
+    }
+    if (galaxies == null) return SkyLoadError.MissingGalaxies;
+    if (stars == null) return SkyLoadError.MissingStars;
+    if (planets == null) return SkyLoadError.MissingPlanets;
+    return .{
+        .galaxies = galaxies.?,
+        .stars = stars.?,
+        .planets = planets.?,
+    };
+}
+
+pub fn verify_sky(
+    a: std.mem.Allocator,
+    io: std.Io,
+    path: []const u8,
+    expected: topology.Sky,
+) SkyLoadError!void {
+    const loaded = try load_sky_from_file(a, io, path);
+    // invariant: .brix must match the comptime constant
+    if (loaded.galaxies != expected.galaxies)
+        return SkyLoadError.BrixDrift;
+    if (loaded.stars != expected.stars)
+        return SkyLoadError.BrixDrift;
+    if (loaded.planets != expected.planets)
+        return SkyLoadError.BrixDrift;
+}
+
+fn parse_u32(s: []const u8) u32 {
+    const trimmed = std.mem.trim(u8, s, &ws);
+    return std.fmt.parseInt(u32, trimmed, 10) catch 0;
+}
+
+pub fn main(init: std.process.Init) !u8 {
+    const a = init.arena.allocator();
+    const io = init.io;
+
+    try verify_sky(
+        a,
+        io,
+        "modules/comlink/sky/council.brix",
+        topology.council_sky,
+    );
+    try verify_sky(
+        a,
+        io,
+        "modules/comlink/sky/compass.brix",
+        topology.compass_sky,
+    );
+
+    // invariant: council sky round-trips on every point
+    var n: u32 = 0;
+    while (n < topology.council_sky.universe_points()) : (n += 1) {
+        const addr = topology.council_sky.decode(n) orelse
+            return error.CouncilDecodeRefused;
+        assert(topology.council_sky.encode(addr) == n);
+    }
+
+    print("sky_loader: council={d} compass={d}{c}", .{
+        topology.council_sky.universe_points(),
+        topology.compass_sky.universe_points(),
+        nl,
+    });
+    print(
+        "GREEN: sky_loader -- .brix skies verified.{c}",
+        .{nl},
+    );
+    return 0;
+}

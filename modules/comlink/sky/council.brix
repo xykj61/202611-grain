@@ -1,0 +1,8 @@
+# council.brix -- the d15-3-9-405 council sky
+# Fifteen galaxies (one per Calfive sign), three stars (a triad),
+# nine planets (a 3x3 Navamsa bench). Odd sky: tie-free quorum.
+
+sky council
+galaxies 15
+stars 3
+planets 9
