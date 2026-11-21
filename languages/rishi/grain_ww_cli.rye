@@ -68,6 +68,7 @@ fn print_help() u8 {
         "USAGE: grain-ww <command> [args...]\n\n" ++
         "TOOLCHAIN\n" ++
         "  status         live project health summary\n" ++
+        "  calfive        live calfive snapshot table\n" ++
         "  preflight      cross-file integrity check\n" ++
         "  version        print version + myofascia\n" ++
         "  doctor         verify toolchain health\n" ++
@@ -891,6 +892,15 @@ pub fn main(init: std.process.Init) !u8 {
             "tools/.build/husk_lower",
             null,
             &.{"tools/status.husk"},
+        );
+    }
+    if (std.mem.eql(u8, sub, "calfive")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/husk_lower",
+            null,
+            &.{"tools/calfive_summary.husk"},
         );
     }
     if (std.mem.eql(u8, sub, "preflight")) {

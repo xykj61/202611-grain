@@ -1,0 +1,9 @@
+### CALFIVE `[15 75 375 1875 9375]` -- Live Snapshot
+
+| Metric | Value |
+|---|---|
+| **Myofascia** | **{{ myofascia }}** / 100.000 |
+| **Commits** | **{{ commit-count }}** |
+| **Orbit** | **{{ orbit }}** ({{ movement }}/15 {{ sign }}) |
+| **Version** | `{{ brix-version }}` |
+| **Name** | {{ name }} |
