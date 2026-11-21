@@ -59,6 +59,9 @@ comlink council modules/comlink/council_405.rye
 comlink mycelium modules/comlink/council_mycelium_weave.rye
 comlink cache-weave modules/comlink/mycelium_cache_weave.rye
 comlink topology modules/comlink/topology.rye
+comlink sky-loader modules/comlink/sky_loader.rye
+comlink sky-council modules/comlink/sky/council.brix
+comlink sky-compass modules/comlink/sky/compass.brix
 
 # --- Pond + Caravan + Custody ---
 pond puddle modules/pond/puddle/pond_puddle.rye

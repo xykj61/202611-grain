@@ -1,7 +1,7 @@
 # Active Husk -- Living Prepend-to-Front Movement Stacks
 
 **Language:** EN
-**Stamp:** `20261119.175014` (EST)
+**Stamp:** `20261121.123651` (EST)
 **Voice:** Kyri / Reya
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
@@ -25,7 +25,8 @@ local `CLOCK_CONFIG.kyri`). Totals are measured live via `grain-ww movement`.
 
 | Husk Project | Scope | Status |
 |---|---|---|
-| **[`20261119-171652-est_quest1-husk-breach-and-journey1-spine/`](date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md)** | **Prepended Top-of-Stack:** Active `Vantage` Live Studio, `Husk` Breach, & Explicit-Bound Calfive Spine (`[15 75 375 1875 9375]`) | **Active Top-of-Stack (`57.071`)** |
+| **[`20261121-123651-est_dimeroll-market-vantage-station/`](date/202611/00/20261121-123651-est_dimeroll-market-vantage-station/CHECKLIST.md)** | **Prepended Top-of-Stack:** Dimeroll Market + Linengrow Interface -- galaxy/star/planet buy-sell-trade-spawn-invite on Vantage Station macOS (Brushstroke/Skate/Realidream) with Gmail MCP gift links | **Active Top-of-Stack (`57.078`)** |
+| [`20261119-171652-est_quest1-husk-breach-and-journey1-spine/`](date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md) | `Vantage` Live Studio, `Husk` Breach, & Explicit-Bound Calfive Spine (`[15 75 375 1875 9375]`) | **Active (`57.071`)** |
 | [`20261119-115928-est_american-bipartisan-civic-planning/`](date/202611/00/20261119-115928-est_american-bipartisan-civic-planning/README.md) | General Writing & American Intra-National Bipartisan Civic/Ecological Planning | **Synced (`Room: vision`)** |
 | [`20261105-085747_blazepod-rv64g-journey/`](date/202611/00/20261105-085747_blazepod-rv64g-journey/README.md) | Blazepod RV64G Hardware Spine -- From a Working Hart to a Living Server | **Synced (Silicon Bring-Up Gates)** |
 | [`20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/`](date/202611/00/20261119-115928-est_pulp-tablecloth-council-puddle-and-one-clock/CHECKLIST.md) | Prior Master Calfive Board (`palisade` seed & core foundation proofs) | **Synced & Handed Off** |

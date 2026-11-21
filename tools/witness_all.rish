@@ -311,6 +311,16 @@ let o33 = "-femit-bin=tools/.build/constel_aquarius_federation"
 assert (run ["sh" rb s33 o33]).ok else "constel_aquarius build"
 assert (run ["tools/.build/constel_aquarius_federation"]).ok else "aquarius_405"
 
+let st1 = "modules/comlink/topology.rye"
+let ot1 = "-femit-bin=tools/.build/topology"
+assert (run ["sh" rb st1 ot1]).ok else "topology build"
+assert (run ["tools/.build/topology"]).ok else "topology"
+
+let st2 = "modules/comlink/sky_loader.rye"
+let ot2 = "-femit-bin=tools/.build/sky_loader"
+assert (run ["sh" rb st2 ot2]).ok else "sky_loader build"
+assert (run ["tools/.build/sky_loader"]).ok else "sky_loader"
+
 let s34 = "libraries/risala/twilight_nocturne_svg.rye"
 let o34 = "-femit-bin=tools/.build/twilight_nocturne_svg"
 assert (run ["sh" rb s34 o34]).ok else "twilight_nocturne_svg build"
@@ -536,4 +546,4 @@ let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
 assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 
-say "GREEN: witness_all -- 38 hubs & 113 proofs on metal!"
+say "GREEN: witness_all -- 40 hubs & 115 proofs on metal!"
