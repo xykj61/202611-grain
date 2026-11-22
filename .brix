@@ -7,7 +7,7 @@
 # mitra-shed/, and root yonder/.
 
 name grain
-version 20261122.131035
+version 20261122.131158
 myofascia 57.078
 
 # Upstream git remote and branch-pushing defaults

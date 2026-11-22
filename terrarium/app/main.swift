@@ -214,6 +214,7 @@ class AppDelegate: NSObject,
     var marketRedCount: Int = 0
     var marketProofCount: Int = 0
     var marketModuleQueue: [(String, String)] = []
+    var marketModulePopUp: NSPopUpButton?
 
     func applicationDidFinishLaunching(_ note: Notification) {
         let mask: NSWindow.StyleMask = [

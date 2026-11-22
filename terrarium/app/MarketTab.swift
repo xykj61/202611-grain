@@ -127,6 +127,41 @@ extension AppDelegate {
         submitBtn.translatesAutoresizingMaskIntoConstraints
             = false
 
+        // --- Module runner ---
+        let modPopUp = NSPopUpButton(
+            frame: .zero, pullsDown: false
+        )
+        for (label, _) in
+            AppDelegate.marketModules
+        {
+            modPopUp.addItem(withTitle: label)
+        }
+        modPopUp.translatesAutoresizingMaskIntoConstraints
+            = false
+        marketModulePopUp = modPopUp
+
+        let runBtn = NSButton(
+            title: "Run",
+            target: self,
+            action: #selector(
+                marketRunModuleClicked(_:)
+            )
+        )
+        runBtn.bezelStyle = .rounded
+        runBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
+        let runAllBtn = NSButton(
+            title: "Run All",
+            target: self,
+            action: #selector(
+                marketRunAllClicked(_:)
+            )
+        )
+        runAllBtn.bezelStyle = .rounded
+        runAllBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
         // --- Status text ---
         let statusView = NSScrollView(
             frame: NSRect(
@@ -177,8 +212,17 @@ extension AppDelegate {
         formRow.translatesAutoresizingMaskIntoConstraints
             = false
 
+        let moduleRow = NSStackView(views: [
+            modPopUp, runBtn, runAllBtn,
+        ])
+        moduleRow.orientation = .horizontal
+        moduleRow.spacing = 6
+        moduleRow.translatesAutoresizingMaskIntoConstraints
+            = false
+
         let stack = NSStackView(views: [
-            topBar, formRow, statusView,
+            topBar, formRow, moduleRow,
+            statusView,
         ])
         stack.orientation = .vertical
         stack.spacing = 6
@@ -208,6 +252,26 @@ extension AppDelegate {
         item.view = container
         tv.addTabViewItem(item)
         tv.selectTabViewItem(item)
+    }
+
+    @objc func marketRunModuleClicked(
+        _ sender: NSButton
+    ) {
+        let idx = marketModulePopUp?
+            .indexOfSelectedItem ?? 0
+        let modules = AppDelegate.marketModules
+        guard idx >= 0, idx < modules.count
+        else { return }
+        launchMarketModule(modules[idx].1)
+    }
+
+    @objc func marketRunAllClicked(
+        _ sender: NSButton
+    ) {
+        marketGreenCount = 0
+        marketRedCount = 0
+        marketProofCount = 0
+        runAllMarketModules()
     }
 
     // invariant: write-only display, no readback
