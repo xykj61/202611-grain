@@ -30,6 +30,7 @@ extension AppDelegate {
             case "terminal": modName = "Terminal"
             case "grid": modName = "FrameGrid"
             case "dimeroll": modName = "Dimeroll"
+            case "market": modName = "Market"
             default: modName = sel.label
             }
         }
