@@ -537,8 +537,12 @@ extension AppDelegate {
         marketOfferLog.append(entry)
 
         let addr = decoded.description
+        let gi = Int(galaxy)
+        // invariant: galaxy index in bounds
+        let gName = gi < galaxyNames.count
+            ? galaxyNames[gi] : "?"
         let msg = "OFFER: \(name) "
-            + "\(tier) \(addr) "
+            + "\(tier) \(addr) (\(gName)) "
             + "point=\(point) "
             + "wood=\(price)\n"
         appendMarketStatus(msg)
@@ -656,10 +660,16 @@ extension AppDelegate {
         }
         marketOfferLog[idx].status = "filled"
         let e = marketOfferLog[idx]
+        let fAddr = decodeTopologyPoint(
+            e.point
+        ).description
+        let fgi = Int(e.galaxy)
+        let fgn = fgi < galaxyNames.count
+            ? galaxyNames[fgi] : "?"
         appendMarketStatus(
             "FILLED: offer [\(e.id)] "
             + "\(e.action) \(e.tier) "
-            + "p\(e.point) g\(e.galaxy) "
+            + "\(fAddr) (\(fgn)) "
             + "\(e.wood)W\n"
         )
         dispatchMarketAction(
@@ -715,10 +725,16 @@ extension AppDelegate {
             return
         }
         marketOfferLog[idx].status = "filled"
+        let bAddr = decodeTopologyPoint(
+            e.point
+        ).description
+        let bgi = Int(e.galaxy)
+        let bgn = bgi < galaxyNames.count
+            ? galaxyNames[bgi] : "?"
         appendMarketStatus(
             "FILLED: offer [\(e.id)] "
             + "\(e.action) \(e.tier) "
-            + "p\(e.point) g\(e.galaxy) "
+            + "\(bAddr) (\(bgn)) "
             + "\(e.wood)W\n"
         )
         dispatchMarketAction(
@@ -754,10 +770,16 @@ extension AppDelegate {
         }
         marketOfferLog[idx].status = "cancelled"
         let e = marketOfferLog[idx]
+        let cAddr = decodeTopologyPoint(
+            e.point
+        ).description
+        let cgi = Int(e.galaxy)
+        let cgn = cgi < galaxyNames.count
+            ? galaxyNames[cgi] : "?"
         appendMarketStatus(
             "CANCELLED: offer [\(e.id)] "
             + "\(e.action) \(e.tier) "
-            + "p\(e.point) g\(e.galaxy)\n"
+            + "\(cAddr) (\(cgn))\n"
         )
         dispatchMarketAction(
             action: "cancel_offer",
