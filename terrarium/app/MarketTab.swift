@@ -176,6 +176,17 @@ extension AppDelegate {
         clearBtn.translatesAutoresizingMaskIntoConstraints
             = false
 
+        let exportBtn = NSButton(
+            title: "Export",
+            target: self,
+            action: #selector(
+                marketExportClicked(_:)
+            )
+        )
+        exportBtn.bezelStyle = .rounded
+        exportBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
         let saveBtn = NSButton(
             title: "Save",
             target: self,
@@ -262,7 +273,7 @@ extension AppDelegate {
         let moduleRow = NSStackView(views: [
             modPopUp, runBtn, runAllBtn,
             stopBtn, clearBtn,
-            saveBtn, loadBtn,
+            saveBtn, loadBtn, exportBtn,
         ])
         moduleRow.orientation = .horizontal
         moduleRow.spacing = 6
@@ -336,6 +347,12 @@ extension AppDelegate {
         appendMarketStatus(valid)
         marketStatusView?.string =
             marketBanner()
+    }
+
+    @objc func marketExportClicked(
+        _ sender: NSButton
+    ) {
+        exportSessionText()
     }
 
     @objc func marketSaveClicked(
