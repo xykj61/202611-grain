@@ -434,10 +434,22 @@ extension AppDelegate {
         let pending = marketOfferLog.filter {
             $0.status == "pending"
         }.count
+        var tGalaxy = 0, tStar = 0, tPlanet = 0
+        for e in marketOfferLog {
+            let d = decodeTopologyPoint(e.point)
+            switch d.tier {
+            case "galaxy": tGalaxy += 1
+            case "star": tStar += 1
+            default: tPlanet += 1
+            }
+        }
         s += "\n405 seats | "
         s += "\(marketOfferCount) offers "
         s += "(+\(filled) x\(cancelled) "
-        s += "~\(pending)) | "
+        s += "~\(pending))\n"
+        s += "  tiers: \(tGalaxy) galaxy "
+        s += "\(tStar) star "
+        s += "\(tPlanet) planet | "
         s += "\(marketRefusalCount) refusals\n"
         return s
     }
