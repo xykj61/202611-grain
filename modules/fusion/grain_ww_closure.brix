@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261121.122057
+# Stamp: 20261122.101618
 # Sky (13/15 Orbit 15): readme-refresh + status from .husk,
 # 5 orbits sealed this wave (10-14).
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261121.122057
+version 20261122.101618
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---
@@ -62,6 +62,9 @@ comlink topology modules/comlink/topology.rye
 comlink sky-loader modules/comlink/sky_loader.rye
 comlink sky-council modules/comlink/sky/council.brix
 comlink sky-compass modules/comlink/sky/compass.brix
+
+# --- Market (Dimeroll + WOOD + Settlement) ---
+market dimeroll-market modules/market/dimeroll_market.rye
 
 # --- Pond + Caravan + Custody ---
 pond puddle modules/pond/puddle/pond_puddle.rye

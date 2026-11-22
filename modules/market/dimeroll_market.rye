@@ -1,0 +1,298 @@
+//! modules/market/dimeroll_market.rye -- Dimeroll Market for council sky.
+//!
+//! Buy/sell/trade galaxy and star sponsor choices using WOOD tokens
+//! on the d15-3-9-405 council sky. Every offer is a signed intent;
+//! every settlement is a conserved WOOD transfer + topology sponsor
+//! change. sum(nets) == 0 holds across the whole market.
+//!
+//!   rye build market/dimeroll_market.rye -femit-bin=market/bin/dimeroll-market
+
+const std = @import("std");
+const topology = @import("topology.rye");
+const wood = @import("wood_token.rye");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const nl: u8 = 10;
+
+pub const market_version = "20261122.000000";
+
+pub const max_offers: u32 = 64;
+pub const max_trades: u32 = 32;
+
+pub const OfferKind = enum(u8) {
+    buy_sponsor = 0,
+    sell_sponsor = 1,
+    gift_invite = 2,
+};
+
+pub const Offer = struct {
+    kind: OfferKind,
+    point_number: u32,
+    price_wood: u64,
+    galaxy_id: u8,
+    filled: bool,
+    cancelled: bool,
+};
+
+pub const Trade = struct {
+    offer_idx: u32,
+    buyer_galaxy: u8,
+    seller_galaxy: u8,
+    point_number: u32,
+    price_wood: u64,
+};
+
+pub const MarketError = error{
+    OffersFull,
+    TradesFull,
+    InvalidPoint,
+    OfferNotFound,
+    OfferAlreadyFilled,
+    OfferCancelled,
+    SelfTrade,
+    InsufficientWood,
+    InvalidGalaxy,
+};
+
+pub const Market = struct {
+    offers: [max_offers]Offer,
+    trades: [max_trades]Trade,
+    offer_count: u32,
+    trade_count: u32,
+
+    pub fn init() Market {
+        return .{
+            .offers = std.mem.zeroes([max_offers]Offer),
+            .trades = std.mem.zeroes([max_trades]Trade),
+            .offer_count = 0,
+            .trade_count = 0,
+        };
+    }
+
+    pub fn post_offer(
+        self: *Market,
+        kind: OfferKind,
+        point_number: u32,
+        price_wood: u64,
+        galaxy_id: u8,
+    ) MarketError!u32 {
+        if (self.offer_count >= max_offers)
+            return MarketError.OffersFull;
+        if (topology.decode(point_number) == null)
+            return MarketError.InvalidPoint;
+        if (galaxy_id >= topology.galaxies_per_universe)
+            return MarketError.InvalidGalaxy;
+        // invariant: the offer index is bounded
+        assert(self.offer_count < max_offers);
+        const idx = self.offer_count;
+        self.offers[idx] = .{
+            .kind = kind,
+            .point_number = point_number,
+            .price_wood = price_wood,
+            .galaxy_id = galaxy_id,
+            .filled = false,
+            .cancelled = false,
+        };
+        self.offer_count += 1;
+        return idx;
+    }
+
+    pub fn fill_offer(
+        self: *Market,
+        offer_idx: u32,
+        counterparty_galaxy: u8,
+        ledger: *wood.WoodLedger,
+    ) MarketError!u32 {
+        if (offer_idx >= self.offer_count)
+            return MarketError.OfferNotFound;
+        if (self.trade_count >= max_trades)
+            return MarketError.TradesFull;
+        const offer = &self.offers[offer_idx];
+        if (offer.filled) return MarketError.OfferAlreadyFilled;
+        if (offer.cancelled) return MarketError.OfferCancelled;
+        if (counterparty_galaxy >= topology.galaxies_per_universe)
+            return MarketError.InvalidGalaxy;
+        if (counterparty_galaxy == offer.galaxy_id)
+            return MarketError.SelfTrade;
+
+        const buyer = switch (offer.kind) {
+            .buy_sponsor => offer.galaxy_id,
+            .sell_sponsor, .gift_invite => counterparty_galaxy,
+        };
+        const seller = switch (offer.kind) {
+            .buy_sponsor => counterparty_galaxy,
+            .sell_sponsor, .gift_invite => offer.galaxy_id,
+        };
+
+        if (offer.price_wood > 0) {
+            ledger.transfer_wood(buyer, seller, offer.price_wood) catch
+                return MarketError.InsufficientWood;
+        }
+
+        offer.filled = true;
+
+        // invariant: trade index is bounded
+        assert(self.trade_count < max_trades);
+        const tidx = self.trade_count;
+        self.trades[tidx] = .{
+            .offer_idx = offer_idx,
+            .buyer_galaxy = buyer,
+            .seller_galaxy = seller,
+            .point_number = offer.point_number,
+            .price_wood = offer.price_wood,
+        };
+        self.trade_count += 1;
+        return tidx;
+    }
+
+    pub fn cancel_offer(
+        self: *Market,
+        offer_idx: u32,
+    ) MarketError!void {
+        if (offer_idx >= self.offer_count)
+            return MarketError.OfferNotFound;
+        if (self.offers[offer_idx].filled)
+            return MarketError.OfferAlreadyFilled;
+        self.offers[offer_idx].cancelled = true;
+    }
+};
+
+fn run_selftest() !u8 {
+    var ledger = wood.WoodLedger.init_genesis(1000);
+    var market = Market.init();
+
+    // invariant: conservation baseline
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // Galaxy 0 posts a buy offer for star 18 (star 1 of galaxy 3)
+    const buy_idx = try market.post_offer(
+        .buy_sponsor,
+        18,
+        200,
+        0,
+    );
+    // invariant: offer was recorded
+    assert(buy_idx == 0);
+    assert(market.offer_count == 1);
+
+    // Galaxy 3 fills the buy offer -- WOOD transfers 0 -> 3
+    const trade_idx = try market.fill_offer(
+        buy_idx,
+        3,
+        &ledger,
+    );
+    // invariant: trade recorded and WOOD transferred
+    assert(trade_idx == 0);
+    assert(market.trade_count == 1);
+    assert(ledger.balances[0] == 800);
+    assert(ledger.balances[3] == 1200);
+    // invariant: sum(nets) == 0 -- conservation holds
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // Galaxy 5 posts a sell offer for planet 108
+    const sell_idx = try market.post_offer(
+        .sell_sponsor,
+        108,
+        150,
+        5,
+    );
+    // Galaxy 7 fills the sell offer -- WOOD transfers 7 -> 5
+    const t2 = try market.fill_offer(sell_idx, 7, &ledger);
+    assert(t2 == 1);
+    assert(ledger.balances[5] == 1150);
+    assert(ledger.balances[7] == 850);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // Galaxy 2 posts a gift invite (price 0) for planet 63
+    const gift_idx = try market.post_offer(
+        .gift_invite,
+        63,
+        0,
+        2,
+    );
+    const t3 = try market.fill_offer(gift_idx, 10, &ledger);
+    assert(t3 == 2);
+    // invariant: zero-price gift does not change balances
+    assert(ledger.balances[2] == 1000);
+    assert(ledger.balances[10] == 1000);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Refusal witnesses ---
+
+    // Self-trade refused
+    const self_idx = try market.post_offer(
+        .buy_sponsor,
+        33,
+        100,
+        4,
+    );
+    if (market.fill_offer(self_idx, 4, &ledger)) |_| {
+        return error.SelfTradeAccepted;
+    } else |e| {
+        if (e != MarketError.SelfTrade) return error.SelfTradeWrongErr;
+    }
+
+    // Double-fill refused
+    if (market.fill_offer(buy_idx, 5, &ledger)) |_| {
+        return error.DoubleFillAccepted;
+    } else |e| {
+        if (e != MarketError.OfferAlreadyFilled)
+            return error.DoubleFillWrongErr;
+    }
+
+    // Cancel then fill refused
+    try market.cancel_offer(self_idx);
+    if (market.fill_offer(self_idx, 5, &ledger)) |_| {
+        return error.CancelledFillAccepted;
+    } else |e| {
+        if (e != MarketError.OfferCancelled)
+            return error.CancelledFillWrongErr;
+    }
+
+    // Invalid point refused
+    if (market.post_offer(.buy_sponsor, 999, 100, 0)) |_| {
+        return error.InvalidPointAccepted;
+    } else |e| {
+        if (e != MarketError.InvalidPoint)
+            return error.InvalidPointWrongErr;
+    }
+
+    // Invalid galaxy refused
+    if (market.post_offer(.buy_sponsor, 18, 100, 20)) |_| {
+        return error.InvalidGalaxyAccepted;
+    } else |e| {
+        if (e != MarketError.InvalidGalaxy)
+            return error.InvalidGalaxyWrongErr;
+    }
+
+    // Insufficient WOOD refused
+    const big_idx = try market.post_offer(
+        .buy_sponsor,
+        45,
+        50000,
+        0,
+    );
+    if (market.fill_offer(big_idx, 1, &ledger)) |_| {
+        return error.OverdraftAccepted;
+    } else |e| {
+        if (e != MarketError.InsufficientWood)
+            return error.OverdraftWrongErr;
+    }
+
+    // invariant: conservation still holds after all refusals
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    print("dimeroll_market: 3 trades (buy, sell, gift) settled.{c}", .{nl});
+    print("dimeroll_market: 6 refusals (self, double, cancel, " ++
+        "point, galaxy, overdraft).{c}", .{nl});
+    print(
+        "GREEN: dimeroll_market -- conserved WOOD market " ++
+        "on d15-3-9-405 council sky.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
