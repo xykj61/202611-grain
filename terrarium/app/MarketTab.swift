@@ -210,16 +210,21 @@ extension AppDelegate {
         tv.selectTabViewItem(item)
     }
 
+    // invariant: write-only display, no readback
+    static let glasswallWriteOnly = true
+
     func marketBanner() -> String {
+        // invariant: Glasswall enforced
+        assert(AppDelegate.glasswallWriteOnly)
         return "Dimeroll Market -- d15-3-9-405\n"
             + "==============================\n\n"
             + "15 galaxies / 45 stars / "
             + "405 council seats\n"
             + "WOOD conservation: sum(nets) == 0\n"
-            + "Glasswall: write-only RLCD\n\n"
-            + "Select an action and post an offer,\n"
-            + "or switch to Sky Map to browse the\n"
-            + "constellation.\n"
+            + "Glasswall: write-only RLCD\n"
+            + "Offer capacity: 64 max\n\n"
+            + "Actions: Buy | Sell | Gift | Fill"
+            + " | Sky Map\n"
     }
 
     @objc func marketActionChanged(
@@ -339,6 +344,16 @@ extension AppDelegate {
         ]
         let name = actionNames[action]
         let tier = decoded.tier
+        // invariant: bounded offer log
+        if marketOfferLog.count >= 64 {
+            marketRefusalCount += 1
+            appendMarketStatus(
+                "REFUSED [\(marketRefusalCount)]"
+                + ": offer log full "
+                + "(max 64)\n"
+            )
+            return
+        }
         marketOfferCount += 1
         let entry = (
             id: marketOfferCount,
