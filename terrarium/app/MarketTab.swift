@@ -612,6 +612,12 @@ extension AppDelegate {
             + "p\(e.point) g\(e.galaxy) "
             + "\(e.wood)W\n"
         )
+        dispatchMarketAction(
+            action: "fill_offer",
+            point: e.point,
+            galaxy: e.galaxy,
+            wood: e.wood
+        )
         if e.action == "gift_invite" {
             let link = composeInviteLink(
                 point: e.point,
@@ -664,6 +670,12 @@ extension AppDelegate {
             + "\(e.action) \(e.tier) "
             + "p\(e.point) g\(e.galaxy) "
             + "\(e.wood)W\n"
+        )
+        dispatchMarketAction(
+            action: "fill_offer",
+            point: e.point,
+            galaxy: e.galaxy,
+            wood: e.wood
         )
         if e.action == "gift_invite" {
             let link = composeInviteLink(
