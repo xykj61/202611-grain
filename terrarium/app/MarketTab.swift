@@ -162,6 +162,17 @@ extension AppDelegate {
         runAllBtn.translatesAutoresizingMaskIntoConstraints
             = false
 
+        let clearBtn = NSButton(
+            title: "Clear",
+            target: self,
+            action: #selector(
+                marketClearClicked(_:)
+            )
+        )
+        clearBtn.bezelStyle = .rounded
+        clearBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
         // --- Status text ---
         let statusView = NSScrollView(
             frame: NSRect(
@@ -214,6 +225,7 @@ extension AppDelegate {
 
         let moduleRow = NSStackView(views: [
             modPopUp, runBtn, runAllBtn,
+            clearBtn,
         ])
         moduleRow.orientation = .horizontal
         moduleRow.spacing = 6
@@ -272,6 +284,13 @@ extension AppDelegate {
         marketRedCount = 0
         marketProofCount = 0
         runAllMarketModules()
+    }
+
+    @objc func marketClearClicked(
+        _ sender: NSButton
+    ) {
+        marketStatusView?.string =
+            marketBanner()
     }
 
     // invariant: write-only display, no readback

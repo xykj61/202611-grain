@@ -17,6 +17,7 @@ extension AppDelegate {
         ("Spawn Invite", "vantage_spawn_invite"),
         ("Market Core", "dimeroll_market"),
         ("Market Bridge", "dimeroll_market_bridge"),
+        ("Invite Compose", "invite_link_compose"),
         ("Market E2E", "dimeroll_market_e2e"),
     ]
 
