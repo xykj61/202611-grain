@@ -1038,6 +1038,131 @@ extension AppDelegate {
         }
     }
 
+    func loadOfferLog(_ path: String) {
+        guard let content = try? String(
+            contentsOfFile: path,
+            encoding: .utf8
+        ) else {
+            appendMarketStatus(
+                "LOAD ERROR: cannot read\n"
+            )
+            return
+        }
+        let lines = content.components(
+            separatedBy: "\n"
+        )
+        var loaded = 0
+        var curId = 0
+        var curAction = ""
+        var curTier = ""
+        var curPoint: UInt32 = 0
+        var curGalaxy: UInt8 = 0
+        var curWood: UInt64 = 0
+        var curStatus = ""
+        var inOffer = false
+
+        for line in lines {
+            let t = line.trimmingCharacters(
+                in: .whitespaces
+            )
+            if t.hasPrefix("offer ") {
+                if inOffer, curId > 0 {
+                    commitLoadedOffer(
+                        id: curId,
+                        action: curAction,
+                        tier: curTier,
+                        point: curPoint,
+                        galaxy: curGalaxy,
+                        wood: curWood,
+                        status: curStatus
+                    )
+                    loaded += 1
+                }
+                curId = Int(
+                    t.dropFirst(6)
+                ) ?? 0
+                curAction = ""
+                curTier = ""
+                curPoint = 0
+                curGalaxy = 0
+                curWood = 0
+                curStatus = "pending"
+                inOffer = true
+            } else if t.hasPrefix("action ") {
+                curAction = String(
+                    t.dropFirst(7)
+                )
+            } else if t.hasPrefix("tier ") {
+                curTier = String(
+                    t.dropFirst(5)
+                )
+            } else if t.hasPrefix("point ") {
+                curPoint = UInt32(
+                    t.dropFirst(6)
+                ) ?? 0
+            } else if t.hasPrefix("galaxy ") {
+                curGalaxy = UInt8(
+                    t.dropFirst(7)
+                ) ?? 0
+            } else if t.hasPrefix("wood ") {
+                curWood = UInt64(
+                    t.dropFirst(5)
+                ) ?? 0
+            } else if t.hasPrefix("status ") {
+                curStatus = String(
+                    t.dropFirst(7)
+                )
+            }
+        }
+        if inOffer, curId > 0 {
+            commitLoadedOffer(
+                id: curId,
+                action: curAction,
+                tier: curTier,
+                point: curPoint,
+                galaxy: curGalaxy,
+                wood: curWood,
+                status: curStatus
+            )
+            loaded += 1
+        }
+        // invariant: bounded log
+        guard marketOfferLog.count <= 64 else {
+            appendMarketStatus(
+                "LOAD CAPPED at 64\n"
+            )
+            return
+        }
+        appendMarketStatus(
+            "LOADED: \(loaded) offers "
+            + "from \(path)\n"
+        )
+    }
+
+    private func commitLoadedOffer(
+        id: Int, action: String,
+        tier: String, point: UInt32,
+        galaxy: UInt8, wood: UInt64,
+        status: String
+    ) {
+        // invariant: bounded log
+        guard marketOfferLog.count < 64 else {
+            return
+        }
+        // invariant: point in range
+        guard point < 405 else { return }
+        let entry = (
+            id: id, action: action,
+            tier: tier, point: point,
+            galaxy: galaxy, wood: wood,
+            status: status
+        )
+        marketOfferLog.append(entry)
+        if id > marketOfferCount {
+            marketOfferCount = id
+        }
+    }
+
     func appendMarketStatus(_ text: String) {
         guard let stv = marketStatusView
         else { return }
