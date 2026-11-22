@@ -346,6 +346,11 @@ let omb = "-femit-bin=tools/.build/dimeroll_market_bridge"
 assert (run ["sh" rb smb omb]).ok else "dimeroll_market_bridge build"
 assert (run ["tools/.build/dimeroll_market_bridge"]).ok else "mkt_bridge"
 
+let scv = "modules/comlink/vantage/vantage_constellation_view.rye"
+let ocv = "-femit-bin=tools/.build/vantage_constellation_view"
+assert (run ["sh" rb scv ocv]).ok else "constellation_view build"
+assert (run ["tools/.build/vantage_constellation_view"]).ok else "sky_view"
+
 let s34 = "libraries/risala/twilight_nocturne_svg.rye"
 let o34 = "-femit-bin=tools/.build/twilight_nocturne_svg"
 assert (run ["sh" rb s34 o34]).ok else "twilight_nocturne_svg build"
@@ -571,4 +576,4 @@ let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
 assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 
-say "GREEN: witness_all -- 45 hubs & 120 proofs on metal!"
+say "GREEN: witness_all -- 46 hubs & 121 proofs on metal!"

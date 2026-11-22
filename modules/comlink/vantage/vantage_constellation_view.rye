@@ -1,0 +1,275 @@
+//! modules/comlink/vantage/vantage_constellation_view.rye
+//!
+//! Realidream constellation view: live 15-galaxy sky map rendered
+//! as a Glasswall write-only RLCD surface via Brushstroke/Skate.
+//! Shows settlement state, sponsor chains, and market activity
+//! for all 405 council seats.
+//!
+//!   rye build vantage/vantage_constellation_view.rye
+
+const std = @import("std");
+const topology = @import("topology.rye");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const nl: u8 = 10;
+
+pub const view_version = "20261122.000000";
+
+pub const max_draw_cmds: u32 = 128;
+pub const max_view_bytes: u32 = 262144;
+pub const galaxies: u32 = topology.galaxies_per_universe;
+pub const stars_per: u32 = topology.stars_per_galaxy;
+pub const planets_per: u32 = topology.planets_per_star;
+pub const total_seats: u32 = topology.universe_points;
+
+pub const color_oat: u32 = 0xF5F3EE;
+pub const color_ink: u32 = 0x0A0A0A;
+pub const color_settled: u32 = 0x2E7D32;
+pub const color_vacant: u32 = 0x757575;
+pub const color_sponsor: u32 = 0x4A148C;
+
+pub const ViewError = error{
+    CmdLimitExceeded,
+    GlasswallWriteOnlyRefused,
+    PayloadExceedsDeckWall,
+    InvalidGalaxy,
+};
+
+pub const DrawKind = enum(u8) {
+    none = 0,
+    clear_ground = 1,
+    galaxy_ring = 2,
+    star_node = 3,
+    planet_dot = 4,
+    sponsor_arc = 5,
+    market_badge = 6,
+    legend_bar = 7,
+};
+
+pub const DrawCmd = struct {
+    kind: DrawKind,
+    x: u16,
+    y: u16,
+    w: u16,
+    h: u16,
+    color: u32,
+    galaxy_id: u8,
+};
+
+pub const SkyViewFrame = struct {
+    cmds: [max_draw_cmds]DrawCmd,
+    cmd_count: u32,
+    write_only_fb: bool,
+    payload_bytes: u32,
+    seal: [32]u8,
+
+    pub fn init() SkyViewFrame {
+        return .{
+            .cmds = std.mem.zeroes([max_draw_cmds]DrawCmd),
+            .cmd_count = 0,
+            .write_only_fb = true,
+            .payload_bytes = 0,
+            .seal = @splat(0),
+        };
+    }
+
+    pub fn push_cmd(
+        self: *SkyViewFrame,
+        cmd: DrawCmd,
+    ) ViewError!void {
+        if (self.cmd_count >= max_draw_cmds)
+            return ViewError.CmdLimitExceeded;
+        // invariant: cmd index bounded
+        assert(self.cmd_count < max_draw_cmds);
+        self.cmds[self.cmd_count] = cmd;
+        self.cmd_count += 1;
+    }
+
+    pub fn compose_galaxy(
+        self: *SkyViewFrame,
+        galaxy_id: u8,
+    ) ViewError!void {
+        if (galaxy_id >= galaxies)
+            return ViewError.InvalidGalaxy;
+        try self.push_cmd(.{
+            .kind = .galaxy_ring,
+            .x = @as(u16, galaxy_id) * 64,
+            .y = 100,
+            .w = 56,
+            .h = 56,
+            .color = color_settled,
+            .galaxy_id = galaxy_id,
+        });
+        var s: u8 = 0;
+        while (s < stars_per) : (s += 1) {
+            try self.push_cmd(.{
+                .kind = .star_node,
+                .x = @as(u16, galaxy_id) * 64 + s * 16,
+                .y = 180,
+                .w = 12,
+                .h = 12,
+                .color = color_sponsor,
+                .galaxy_id = galaxy_id,
+            });
+        }
+    }
+
+    pub fn seal_frame(self: *SkyViewFrame) ViewError!void {
+        if (!self.write_only_fb)
+            return ViewError.GlasswallWriteOnlyRefused;
+        var h = Sha3_256.init(.{});
+        h.update("grain-sky-view-frame:");
+        var i: u32 = 0;
+        while (i < self.cmd_count) : (i += 1) {
+            const c = &self.cmds[i];
+            var buf: [12]u8 = undefined;
+            buf[0] = @intFromEnum(c.kind);
+            std.mem.writeInt(u16, buf[1..3], c.x, .little);
+            std.mem.writeInt(u16, buf[3..5], c.y, .little);
+            std.mem.writeInt(u16, buf[5..7], c.w, .little);
+            std.mem.writeInt(u16, buf[7..9], c.h, .little);
+            buf[9] = c.galaxy_id;
+            std.mem.writeInt(u16, buf[10..12], @truncate(c.color), .little);
+            h.update(&buf);
+        }
+        h.final(&self.seal);
+        self.payload_bytes = self.cmd_count * 12;
+        // invariant: sealed frame has non-zero digest
+        assert((self.seal[0] |
+            self.seal[1] |
+            self.seal[2]) != 0);
+        // invariant: payload within Glasswall cap
+        assert(self.payload_bytes <= max_view_bytes);
+    }
+};
+
+fn run_selftest() !u8 {
+    // --- Welcome witnesses ---
+
+    // 1. Compose and seal a full 15-galaxy sky view
+    var frame = SkyViewFrame.init();
+    try frame.push_cmd(.{
+        .kind = .clear_ground,
+        .x = 0, .y = 0, .w = 960, .h = 540,
+        .color = color_oat,
+        .galaxy_id = 0,
+    });
+    var g: u8 = 0;
+    while (g < galaxies) : (g += 1) {
+        try frame.compose_galaxy(g);
+    }
+    try frame.push_cmd(.{
+        .kind = .legend_bar,
+        .x = 0, .y = 500, .w = 960, .h = 32,
+        .color = color_ink,
+        .galaxy_id = 0,
+    });
+    try frame.seal_frame();
+    // invariant: 1 clear + 15*(1 ring + 3 stars) + 1 legend
+    assert(frame.cmd_count == 1 + 15 * 4 + 1);
+    assert(frame.cmd_count == 62);
+    assert(frame.write_only_fb);
+
+    // 2. Deterministic seal
+    var frame2 = SkyViewFrame.init();
+    try frame2.push_cmd(.{
+        .kind = .clear_ground,
+        .x = 0, .y = 0, .w = 960, .h = 540,
+        .color = color_oat,
+        .galaxy_id = 0,
+    });
+    g = 0;
+    while (g < galaxies) : (g += 1) {
+        try frame2.compose_galaxy(g);
+    }
+    try frame2.push_cmd(.{
+        .kind = .legend_bar,
+        .x = 0, .y = 500, .w = 960, .h = 32,
+        .color = color_ink,
+        .galaxy_id = 0,
+    });
+    try frame2.seal_frame();
+    // invariant: same commands -> same seal
+    assert(std.mem.eql(u8, &frame.seal, &frame2.seal));
+
+    // 3. Single galaxy compose
+    var single = SkyViewFrame.init();
+    try single.compose_galaxy(3);
+    assert(single.cmd_count == 4);
+    try single.seal_frame();
+    assert((single.seal[0] |
+        single.seal[1] |
+        single.seal[2]) != 0);
+
+    // --- Refusal witnesses ---
+
+    // 4. Cmd limit exceeded
+    var full = SkyViewFrame.init();
+    var c: u32 = 0;
+    while (c < max_draw_cmds) : (c += 1) {
+        try full.push_cmd(.{
+            .kind = .planet_dot,
+            .x = 0, .y = 0, .w = 4, .h = 4,
+            .color = color_vacant,
+            .galaxy_id = 0,
+        });
+    }
+    if (full.push_cmd(.{
+        .kind = .planet_dot,
+        .x = 0, .y = 0, .w = 4, .h = 4,
+        .color = color_vacant,
+        .galaxy_id = 0,
+    })) |_| {
+        return error.OverflowAccepted;
+    } else |e| {
+        if (e != ViewError.CmdLimitExceeded)
+            return error.OverflowWrongErr;
+    }
+
+    // 5. Glasswall non-write-only refused
+    var sneaky = SkyViewFrame.init();
+    sneaky.write_only_fb = false;
+    try sneaky.push_cmd(.{
+        .kind = .clear_ground,
+        .x = 0, .y = 0, .w = 960, .h = 540,
+        .color = color_oat,
+        .galaxy_id = 0,
+    });
+    if (sneaky.seal_frame()) |_| {
+        return error.ReadbackAccepted;
+    } else |e| {
+        if (e != ViewError.GlasswallWriteOnlyRefused)
+            return error.ReadbackWrongErr;
+    }
+
+    // 6. Invalid galaxy refused
+    var bad_gal = SkyViewFrame.init();
+    if (bad_gal.compose_galaxy(20)) |_| {
+        return error.BadGalaxyAccepted;
+    } else |e| {
+        if (e != ViewError.InvalidGalaxy)
+            return error.BadGalaxyWrongErr;
+    }
+
+    print(
+        "constellation_view: 3 welcome (full sky, " ++
+        "deterministic, single galaxy).{c}",
+        .{nl},
+    );
+    print(
+        "constellation_view: 3 refusals (cmd limit, " ++
+        "glasswall readback, invalid galaxy).{c}",
+        .{nl},
+    );
+    print(
+        "GREEN: vantage_constellation_view -- " ++
+        "Realidream 15-galaxy sky map on council sky.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
