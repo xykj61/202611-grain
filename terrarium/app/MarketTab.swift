@@ -832,6 +832,19 @@ extension AppDelegate {
         return s
     }
 
+    static func marketActionLabel(
+        _ action: String
+    ) -> String {
+        switch action {
+        case "buy_sponsor": return "Buy"
+        case "sell_sponsor": return "Sell"
+        case "gift_invite": return "Gift"
+        case "fill_offer": return "Fill"
+        case "cancel_offer": return "Cancel"
+        default: return action
+        }
+    }
+
     func offerStats() -> String {
         var buys = 0, sells = 0, gifts = 0
         for e in marketOfferLog {
