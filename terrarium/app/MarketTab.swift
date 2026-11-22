@@ -485,6 +485,32 @@ extension AppDelegate {
         return s
     }
 
+    func purgeOldSessions(keep: Int = 8) {
+        let dir = "\(repoRoot)/active-husk"
+            + "/market"
+        let fm = FileManager.default
+        guard let files = try? fm
+            .contentsOfDirectory(atPath: dir)
+        else { return }
+        let kyri = files.filter {
+            $0.hasSuffix("_market_offers.kyri")
+        }.sorted()
+        // invariant: keep bound
+        guard kyri.count > keep else { return }
+        let toRemove = kyri.prefix(
+            kyri.count - keep
+        )
+        for f in toRemove {
+            try? fm.removeItem(
+                atPath: "\(dir)/\(f)"
+            )
+        }
+        appendMarketStatus(
+            "PURGED: \(toRemove.count) old "
+            + "sessions (keeping \(keep))\n"
+        )
+    }
+
     func loadLatestSession() {
         let dir = "\(repoRoot)/active-husk"
             + "/market"
