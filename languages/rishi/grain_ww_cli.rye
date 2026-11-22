@@ -26,7 +26,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261122.131942";
+pub const grain_ww_version = "20261122.132137";
 pub const myofascia_reading = "57.078";
 const nl: u8 = 10;
 
@@ -102,7 +102,8 @@ fn print_help() u8 {
         "  market         dimeroll WOOD market\n" ++
         "  market-deck    C-ABI market surface\n" ++
         "  market-e2e     end-to-end market flow\n" ++
-        "  sky-view       realidream constellation\n\n" ++
+        "  sky-view       realidream constellation\n" ++
+        "  market-run     run all market selftests\n\n" ++
         "AUDIT & WITNESS\n" ++
         "  audit-clean    residue-free file check\n" ++
         "  virgo-audit    compass topology audit\n" ++
@@ -111,7 +112,7 @@ fn print_help() u8 {
         "  whole-cup      sameness macro cup\n" ++
         "  stamp-ratchet  stamp-no-serial ratchet\n\n" ++
         "Run grain-ww <command> with no args for its\n" ++
-        "selftest. See grain_ww_cli.rye for all 85.\n";
+        "selftest. See grain_ww_cli.rye for all 86.\n";
     print("{s}", .{h});
     return 0;
 }
@@ -965,6 +966,39 @@ pub fn main(init: std.process.Init) !u8 {
             null,
             args[2..],
         );
+    }
+
+    if (std.mem.eql(u8, sub, "market-run")) {
+        const bins = [_][]const u8{
+            "tools/.build/vantage_market_deck",
+            "tools/.build/vantage_constellation_view",
+            "tools/.build/vantage_spawn_invite",
+            "tools/.build/dimeroll_market",
+            "tools/.build/dimeroll_market_bridge",
+            "tools/.build/invite_link_compose",
+            "tools/.build/dimeroll_market_e2e",
+        };
+        var greens: u32 = 0;
+        var reds: u32 = 0;
+        for (bins) |b| {
+            const rc = dispatch_exec(
+                a, io, b, null, args[2..],
+            ) catch 1;
+            if (rc == 0) {
+                greens += 1;
+            } else {
+                reds += 1;
+            }
+        }
+        // invariant: all bins accounted for
+        const total = greens + reds;
+        std.debug.assert(total == bins.len);
+        print(
+            "market-run: {d}/{d} GREEN{c}",
+            .{ greens, total, nl },
+        );
+        if (reds > 0) return 1;
+        return 0;
     }
 
     print("grain-ww: unknown subcommand '{s}'{c}", .{ sub, nl });
