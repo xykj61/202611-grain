@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261122.102106
+# Stamp: 20261122.102330
 # Sky (13/15 Orbit 15): readme-refresh + status from .husk,
 # 5 orbits sealed this wave (10-14).
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261122.102106
+version 20261122.102330
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---
@@ -47,6 +47,7 @@ vantage carry-manifest modules/comlink/vantage/carry_manifest_emit.rye
 vantage carry-audience modules/comlink/vantage/carry_audience_session.rye
 vantage carry-device modules/comlink/vantage/carry_device_setup.rye
 vantage market-deck modules/comlink/vantage/vantage_market_deck.rye
+vantage spawn-invite modules/comlink/vantage/vantage_spawn_invite.rye
 
 # --- Flare (Four Faculties) ---
 flare husk modules/flare/husk/husk_core.rye

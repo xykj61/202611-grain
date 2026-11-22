@@ -331,6 +331,11 @@ let omd = "-femit-bin=tools/.build/vantage_market_deck"
 assert (run ["sh" rb smd omd]).ok else "vantage_market_deck build"
 assert (run ["tools/.build/vantage_market_deck"]).ok else "market_deck"
 
+let ssi = "modules/comlink/vantage/vantage_spawn_invite.rye"
+let osi = "-femit-bin=tools/.build/vantage_spawn_invite"
+assert (run ["sh" rb ssi osi]).ok else "vantage_spawn_invite build"
+assert (run ["tools/.build/vantage_spawn_invite"]).ok else "spawn_invite"
+
 let s34 = "libraries/risala/twilight_nocturne_svg.rye"
 let o34 = "-femit-bin=tools/.build/twilight_nocturne_svg"
 assert (run ["sh" rb s34 o34]).ok else "twilight_nocturne_svg build"
@@ -556,4 +561,4 @@ let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
 assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 
-say "GREEN: witness_all -- 42 hubs & 117 proofs on metal!"
+say "GREEN: witness_all -- 43 hubs & 118 proofs on metal!"

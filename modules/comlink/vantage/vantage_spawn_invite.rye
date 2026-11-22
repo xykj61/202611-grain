@@ -1,0 +1,275 @@
+//! modules/comlink/vantage/vantage_spawn_invite.rye
+//!
+//! Spawn/invite flow for Vantage Station: composes a market gift
+//! offer with a constellation mint into a single signed invite
+//! envelope. The envelope is a bounded record that can be printed
+//! as an email draft or handed to Gmail MCP.
+//!
+//!   rye build vantage/vantage_spawn_invite.rye
+
+const std = @import("std");
+const topology = @import("topology.rye");
+const dimeroll = @import("dimeroll_market.rye");
+const wood = @import("wood_token.rye");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const nl: u8 = 10;
+
+pub const spawn_invite_version = "20261122.000000";
+
+pub const max_invite_subject: u32 = 128;
+pub const max_invite_body: u32 = 2048;
+pub const max_invites: u32 = 32;
+
+pub const InviteKind = enum(u8) {
+    planet_spawn = 0,
+    star_sponsor = 1,
+};
+
+pub const InviteError = error{
+    InvitesFull,
+    InvalidPoint,
+    InvalidGalaxy,
+    SubjectTooLong,
+    BodyTooLong,
+    EmptyRecipient,
+    AlreadySealed,
+    NotSealed,
+};
+
+pub const InviteEnvelope = struct {
+    kind: InviteKind,
+    point_number: u32,
+    sponsor_galaxy: u8,
+    gift_price_wood: u64,
+    subject_len: u32,
+    body_len: u32,
+    subject_buf: [max_invite_subject]u8,
+    body_buf: [max_invite_body]u8,
+    sealed: bool,
+    seal_digest: [32]u8,
+
+    pub fn set_subject(
+        self: *InviteEnvelope,
+        text: []const u8,
+    ) InviteError!void {
+        if (self.sealed) return InviteError.AlreadySealed;
+        if (text.len > max_invite_subject)
+            return InviteError.SubjectTooLong;
+        if (text.len == 0)
+            return InviteError.EmptyRecipient;
+        @memcpy(self.subject_buf[0..text.len], text);
+        self.subject_len = @intCast(text.len);
+    }
+
+    pub fn set_body(
+        self: *InviteEnvelope,
+        text: []const u8,
+    ) InviteError!void {
+        if (self.sealed) return InviteError.AlreadySealed;
+        if (text.len > max_invite_body)
+            return InviteError.BodyTooLong;
+        @memcpy(self.body_buf[0..text.len], text);
+        self.body_len = @intCast(text.len);
+    }
+
+    pub fn seal(self: *InviteEnvelope) InviteError!void {
+        if (self.sealed) return InviteError.AlreadySealed;
+        if (self.subject_len == 0)
+            return InviteError.EmptyRecipient;
+        var h = Sha3_256.init(.{});
+        h.update("grain-invite-seal:");
+        var hdr: [14]u8 = undefined;
+        hdr[0] = @intFromEnum(self.kind);
+        std.mem.writeInt(
+            u32, hdr[1..5], self.point_number, .little,
+        );
+        hdr[5] = self.sponsor_galaxy;
+        std.mem.writeInt(
+            u32, hdr[6..10], self.subject_len, .little,
+        );
+        std.mem.writeInt(
+            u32, hdr[10..14], self.body_len, .little,
+        );
+        h.update(&hdr);
+        h.update(self.subject_buf[0..self.subject_len]);
+        h.update(self.body_buf[0..self.body_len]);
+        h.final(&self.seal_digest);
+        self.sealed = true;
+        // invariant: sealed digest is non-zero
+        assert((self.seal_digest[0] |
+            self.seal_digest[1] |
+            self.seal_digest[2]) != 0);
+    }
+};
+
+pub const InviteBook = struct {
+    envelopes: [max_invites]InviteEnvelope,
+    count: u32,
+
+    pub fn init() InviteBook {
+        return .{
+            .envelopes = std.mem.zeroes(
+                [max_invites]InviteEnvelope,
+            ),
+            .count = 0,
+        };
+    }
+
+    pub fn create_invite(
+        self: *InviteBook,
+        kind: InviteKind,
+        point_number: u32,
+        sponsor_galaxy: u8,
+        gift_price: u64,
+    ) InviteError!u32 {
+        if (self.count >= max_invites)
+            return InviteError.InvitesFull;
+        if (topology.decode(point_number) == null)
+            return InviteError.InvalidPoint;
+        if (sponsor_galaxy >= topology.galaxies_per_universe)
+            return InviteError.InvalidGalaxy;
+        // invariant: invite index is bounded
+        assert(self.count < max_invites);
+        const idx = self.count;
+        self.envelopes[idx] = .{
+            .kind = kind,
+            .point_number = point_number,
+            .sponsor_galaxy = sponsor_galaxy,
+            .gift_price_wood = gift_price,
+            .subject_len = 0,
+            .body_len = 0,
+            .subject_buf = @splat(0),
+            .body_buf = @splat(0),
+            .sealed = false,
+            .seal_digest = @splat(0),
+        };
+        self.count += 1;
+        return idx;
+    }
+};
+
+fn run_selftest() !u8 {
+    var book = InviteBook.init();
+
+    // invariant: empty book starts at zero
+    assert(book.count == 0);
+
+    // --- Welcome witnesses ---
+
+    // 1. Create planet spawn invite
+    const p_idx = try book.create_invite(
+        .planet_spawn, 63, 2, 0,
+    );
+    assert(p_idx == 0);
+    assert(book.count == 1);
+    const p = &book.envelopes[p_idx];
+    try p.set_subject("Welcome to Galaxy 2, Star 1!");
+    try p.set_body(
+        "You are invited to settle planet 63 " ++
+        "on the d15-3-9-405 council sky. " ++
+        "Your sponsor is Galaxy 2.",
+    );
+    try p.seal();
+    // invariant: sealed envelope has non-zero digest
+    assert(p.sealed);
+    assert((p.seal_digest[0] |
+        p.seal_digest[1] |
+        p.seal_digest[2]) != 0);
+
+    // 2. Create star sponsor invite with gift
+    const s_idx = try book.create_invite(
+        .star_sponsor, 18, 0, 200,
+    );
+    assert(s_idx == 1);
+    const s = &book.envelopes[s_idx];
+    try s.set_subject("Star 18 sponsor gift");
+    try s.set_body("200 WOOD gift for star 18.");
+    try s.seal();
+    assert(s.sealed);
+
+    // 3. Deterministic seal: same content -> same digest
+    var book2 = InviteBook.init();
+    const p2_idx = try book2.create_invite(
+        .planet_spawn, 63, 2, 0,
+    );
+    const p2 = &book2.envelopes[p2_idx];
+    try p2.set_subject("Welcome to Galaxy 2, Star 1!");
+    try p2.set_body(
+        "You are invited to settle planet 63 " ++
+        "on the d15-3-9-405 council sky. " ++
+        "Your sponsor is Galaxy 2.",
+    );
+    try p2.seal();
+    // invariant: same content -> same seal digest
+    assert(std.mem.eql(u8, &p.seal_digest, &p2.seal_digest));
+
+    // --- Refusal witnesses ---
+
+    // 4. Invalid point refused
+    if (book.create_invite(.planet_spawn, 999, 0, 0)) |_| {
+        return error.BadPointAccepted;
+    } else |e| {
+        if (e != InviteError.InvalidPoint)
+            return error.BadPointWrongErr;
+    }
+
+    // 5. Invalid galaxy refused
+    if (book.create_invite(.planet_spawn, 63, 20, 0)) |_| {
+        return error.BadGalaxyAccepted;
+    } else |e| {
+        if (e != InviteError.InvalidGalaxy)
+            return error.BadGalaxyWrongErr;
+    }
+
+    // 6. Double seal refused
+    if (p.seal()) |_| {
+        return error.DoubleSealAccepted;
+    } else |e| {
+        if (e != InviteError.AlreadySealed)
+            return error.DoubleSealWrongErr;
+    }
+
+    // 7. Subject edit after seal refused
+    if (p.set_subject("hacked")) |_| {
+        return error.SealedEditAccepted;
+    } else |e| {
+        if (e != InviteError.AlreadySealed)
+            return error.SealedEditWrongErr;
+    }
+
+    // 8. Empty subject refused
+    var book3 = InviteBook.init();
+    const e_idx = try book3.create_invite(
+        .planet_spawn, 63, 2, 0,
+    );
+    const ev = &book3.envelopes[e_idx];
+    if (ev.set_subject("")) |_| {
+        return error.EmptySubjectAccepted;
+    } else |e| {
+        if (e != InviteError.EmptyRecipient)
+            return error.EmptySubjectWrongErr;
+    }
+
+    print(
+        "spawn_invite: 3 welcome (planet, star, " ++
+        "deterministic seal).{c}",
+        .{nl},
+    );
+    print(
+        "spawn_invite: 5 refusals (point, galaxy, " ++
+        "double-seal, sealed-edit, empty).{c}",
+        .{nl},
+    );
+    print(
+        "GREEN: vantage_spawn_invite -- bounded " ++
+        "invite envelopes on council sky.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
