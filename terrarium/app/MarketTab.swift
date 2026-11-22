@@ -978,6 +978,66 @@ extension AppDelegate {
         }
     }
 
+    func saveOfferLog() {
+        // invariant: bounded log
+        guard marketOfferLog.count <= 64 else {
+            appendMarketStatus(
+                "REFUSED: log exceeds 64\n"
+            )
+            return
+        }
+        let df = DateFormatter()
+        df.dateFormat = "yyyyMMdd-HHmmss"
+        df.timeZone = TimeZone.current
+        let ts = df.string(from: Date())
+        let name = "\(ts)_market_offers.kyri"
+        let dir = "\(repoRoot)/active-husk/market"
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: dir) {
+            try? fm.createDirectory(
+                atPath: dir,
+                withIntermediateDirectories: true
+            )
+        }
+        let path = "\(dir)/\(name)"
+
+        var s = "# Market Offer Log\n"
+        s += "# Saved: \(ts)\n"
+        s += "# Offers: \(marketOfferLog.count)\n"
+        s += "\n"
+        for e in marketOfferLog {
+            let d = decodeTopologyPoint(e.point)
+            s += "offer \(e.id)\n"
+            s += "  action \(e.action)\n"
+            s += "  tier \(d.tier)\n"
+            s += "  point \(e.point)\n"
+            s += "  galaxy \(e.galaxy)\n"
+            s += "  address \(d.description)\n"
+            s += "  wood \(e.wood)\n"
+            s += "  status \(e.status)\n"
+            s += "\n"
+        }
+        s += woodConservation()
+        s += offerStats()
+
+        do {
+            try s.write(
+                toFile: path,
+                atomically: true,
+                encoding: .utf8
+            )
+            appendMarketStatus(
+                "SAVED: \(name) "
+                + "(\(marketOfferLog.count) "
+                + "offers)\n"
+            )
+        } catch {
+            appendMarketStatus(
+                "SAVE ERROR: \(error)\n"
+            )
+        }
+    }
+
     func appendMarketStatus(_ text: String) {
         guard let stv = marketStatusView
         else { return }
