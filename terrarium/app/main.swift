@@ -201,6 +201,11 @@ class AppDelegate: NSObject,
     var marketPriceField: NSTextField?
     var marketStatusView: NSTextView?
     var marketOfferCount: Int = 0
+    var marketOfferLog: [(
+        id: Int, action: String, tier: String,
+        point: UInt32, galaxy: UInt8,
+        wood: UInt64, status: String
+    )] = []
 
     func applicationDidFinishLaunching(_ note: Notification) {
         let mask: NSWindow.StyleMask = [

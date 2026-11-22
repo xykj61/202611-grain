@@ -318,15 +318,26 @@ extension AppDelegate {
         ]
         let name = actionNames[action]
         let tier = decoded.tier
+        marketOfferCount += 1
+        let entry = (
+            id: marketOfferCount,
+            action: name, tier: tier,
+            point: point, galaxy: galaxy,
+            wood: price, status: "pending"
+        )
+        marketOfferLog.append(entry)
+
         let msg = "OFFER: \(name) "
             + "\(tier) point=\(point) "
             + "galaxy=\(galaxy) "
             + "wood=\(price)\n"
         appendMarketStatus(msg)
-        marketOfferCount += 1
         appendMarketStatus(
             "  -> offer \(marketOfferCount) "
             + "posted (pending fill)\n"
+        )
+        appendMarketStatus(
+            offerLogSummary()
         )
     }
 
@@ -361,6 +372,25 @@ extension AppDelegate {
             galaxy: g, star: s,
             planet: planet, tier: "planet"
         )
+    }
+
+    func offerLogSummary() -> String {
+        var s = "\n--- Offer Log "
+        s += "(\(marketOfferLog.count) total) "
+        s += "---\n"
+        for e in marketOfferLog.suffix(8) {
+            s += "  [\(e.id)] \(e.action) "
+            s += "\(e.tier) p\(e.point) "
+            s += "g\(e.galaxy) "
+            s += "\(e.wood)W "
+            s += "(\(e.status))\n"
+        }
+        if marketOfferLog.count > 8 {
+            let hidden =
+                marketOfferLog.count - 8
+            s += "  ... \(hidden) earlier\n"
+        }
+        return s
     }
 
     func appendMarketStatus(_ text: String) {
