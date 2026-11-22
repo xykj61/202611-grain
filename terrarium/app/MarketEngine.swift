@@ -258,6 +258,53 @@ extension AppDelegate {
         }
     }
 
+    func dispatchSkyView(galaxy: UInt8) {
+        let gww = "\(repoRoot)/languages"
+            + "/rishi/bin/grain-ww"
+        guard FileManager.default
+            .isExecutableFile(atPath: gww)
+        else { return }
+
+        let proc = Process()
+        proc.executableURL = URL(
+            fileURLWithPath: gww
+        )
+        proc.arguments = [
+            "sky-view",
+            "--galaxy", "\(galaxy)",
+        ]
+
+        let pipe = Pipe()
+        proc.standardOutput = pipe
+        proc.standardError = pipe
+
+        pipe.fileHandleForReading
+            .readabilityHandler = {
+                [weak self] handle in
+                let data = handle.availableData
+                guard !data.isEmpty else { return }
+                if let text = String(
+                    data: data, encoding: .utf8
+                ) {
+                    DispatchQueue.main.async {
+                        self?.appendMarketStatus(
+                            text
+                        )
+                    }
+                }
+            }
+
+        proc.terminationHandler = { _ in }
+
+        do {
+            try proc.run()
+        } catch {
+            appendMarketStatus(
+                "sky-view error: \(error)\n"
+            )
+        }
+    }
+
     func stopMarketModule() {
         if let p = marketProcess,
            p.isRunning
