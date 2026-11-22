@@ -531,27 +531,41 @@ extension AppDelegate {
         let priceStr =
             marketPriceField?.stringValue ?? ""
 
-        guard let point = UInt32(pointStr),
-              point < 405
-        else {
-            marketRefusalCount += 1
-            appendMarketStatus(
-                "REFUSED [\(marketRefusalCount)]"
-                + ": invalid point "
-                + "(must be 0-404)\n"
-            )
-            return
-        }
-        guard let galaxy = UInt8(galaxyStr),
-              galaxy < 15
-        else {
-            marketRefusalCount += 1
-            appendMarketStatus(
-                "REFUSED [\(marketRefusalCount)]"
-                + ": invalid galaxy "
-                + "(must be 0-14)\n"
-            )
-            return
+        var point: UInt32
+        var galaxy: UInt8
+        if let parsed =
+            topologyAddressFromString(pointStr)
+        {
+            point = parsed.point
+            galaxy = parsed.galaxy
+        } else {
+            guard let p = UInt32(pointStr),
+                  p < 405
+            else {
+                marketRefusalCount += 1
+                appendMarketStatus(
+                    "REFUSED ["
+                    + "\(marketRefusalCount)]"
+                    + ": invalid point "
+                    + "(must be 0-404 or "
+                    + "g0.s1.p3)\n"
+                )
+                return
+            }
+            guard let g = UInt8(galaxyStr),
+                  g < 15
+            else {
+                marketRefusalCount += 1
+                appendMarketStatus(
+                    "REFUSED ["
+                    + "\(marketRefusalCount)]"
+                    + ": invalid galaxy "
+                    + "(must be 0-14)\n"
+                )
+                return
+            }
+            point = p
+            galaxy = g
         }
         let price = UInt64(priceStr) ?? 0
 
