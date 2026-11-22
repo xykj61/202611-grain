@@ -368,6 +368,35 @@ extension AppDelegate {
 
     static var marketAutoSave = true
 
+    func listSavedSessions() -> String {
+        let dir = "\(repoRoot)/active-husk"
+            + "/market"
+        let fm = FileManager.default
+        guard let files = try? fm
+            .contentsOfDirectory(atPath: dir)
+        else {
+            return "No saved sessions found.\n"
+        }
+        let kyri = files.filter {
+            $0.hasSuffix(".kyri")
+        }.sorted().reversed()
+        if kyri.isEmpty {
+            return "No saved sessions found.\n"
+        }
+        // invariant: list bounded
+        let show = Array(kyri.prefix(16))
+        var s = "Saved sessions "
+        s += "(\(kyri.count) total):\n"
+        for f in show {
+            s += "  \(f)\n"
+        }
+        if kyri.count > 16 {
+            s += "  ... \(kyri.count - 16) "
+            s += "more\n"
+        }
+        return s
+    }
+
     func autoSaveAfterMutation() {
         guard AppDelegate.marketAutoSave else {
             return
