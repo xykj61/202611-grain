@@ -508,6 +508,12 @@ extension AppDelegate {
             "  -> offer \(marketOfferCount) "
             + "posted (pending fill)\n"
         )
+        dispatchMarketAction(
+            action: name,
+            point: point,
+            galaxy: galaxy,
+            wood: price
+        )
         appendMarketStatus(
             offerLogSummary()
         )

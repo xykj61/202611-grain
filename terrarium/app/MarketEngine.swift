@@ -187,6 +187,77 @@ extension AppDelegate {
         launchMarketModule(next.1)
     }
 
+    func dispatchMarketAction(
+        action: String,
+        point: UInt32,
+        galaxy: UInt8,
+        wood: UInt64
+    ) {
+        let gww = "\(repoRoot)/languages"
+            + "/rishi/bin/grain-ww"
+        guard FileManager.default
+            .isExecutableFile(atPath: gww)
+        else {
+            appendMarketStatus(
+                "error: grain-ww not found\n"
+            )
+            return
+        }
+
+        let proc = Process()
+        proc.executableURL = URL(
+            fileURLWithPath: gww
+        )
+        proc.arguments = [
+            "market-deck",
+            "--action", action,
+            "--point", "\(point)",
+            "--galaxy", "\(galaxy)",
+            "--wood", "\(wood)",
+        ]
+
+        let pipe = Pipe()
+        proc.standardOutput = pipe
+        proc.standardError = pipe
+
+        pipe.fileHandleForReading
+            .readabilityHandler = {
+                [weak self] handle in
+                let data = handle.availableData
+                guard !data.isEmpty else { return }
+                if let text = String(
+                    data: data, encoding: .utf8
+                ) {
+                    DispatchQueue.main.async {
+                        self?.appendMarketStatus(
+                            text
+                        )
+                    }
+                }
+            }
+
+        proc.terminationHandler = {
+            [weak self] p in
+            DispatchQueue.main.async {
+                let code = p.terminationStatus
+                let status = code == 0
+                    ? "dispatched" : "failed"
+                self?.appendMarketStatus(
+                    "  deck: \(action) "
+                    + "\(status)\n"
+                )
+            }
+        }
+
+        do {
+            try proc.run()
+        } catch {
+            appendMarketStatus(
+                "dispatch error: \(error)\n"
+            )
+        }
+    }
+
     func stopMarketModule() {
         if let p = marketProcess,
            p.isRunning
