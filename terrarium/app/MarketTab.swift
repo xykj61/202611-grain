@@ -37,8 +37,9 @@ extension AppDelegate {
         // --- Action bar ---
         let actionSeg = NSSegmentedControl(
             labels: [
-                "Buy Sponsor", "Sell Sponsor",
-                "Gift Invite", "Sky Map",
+                "Buy", "Sell",
+                "Gift", "Fill",
+                "Sky Map",
             ],
             trackingMode: .selectOne,
             target: self,
@@ -225,10 +226,13 @@ extension AppDelegate {
         _ sender: NSSegmentedControl
     ) {
         let seg = sender.selectedSegment
-        let isSkyMap = seg == 3
+        let isSkyMap = seg == 4
+        let isFill = seg == 3
         marketPointField?.isEnabled = !isSkyMap
-        marketGalaxyField?.isEnabled = !isSkyMap
-        marketPriceField?.isEnabled = !isSkyMap
+        marketGalaxyField?.isEnabled =
+            !isSkyMap && !isFill
+        marketPriceField?.isEnabled =
+            !isSkyMap && !isFill
         if isSkyMap {
             marketStatusView?.string =
                 skyMapBanner()
@@ -276,8 +280,12 @@ extension AppDelegate {
         guard let seg = marketActionControl
         else { return }
         let action = seg.selectedSegment
-        if action == 3 {
+        if action == 4 {
             stv.string = skyMapBanner()
+            return
+        }
+        if action == 3 {
+            fillOldestPending()
             return
         }
 
@@ -327,7 +335,7 @@ extension AppDelegate {
 
         let actionNames = [
             "buy_sponsor", "sell_sponsor",
-            "gift_invite",
+            "gift_invite", "fill", "sky_map",
         ]
         let name = actionNames[action]
         let tier = decoded.tier
@@ -405,6 +413,30 @@ extension AppDelegate {
         }
         s += woodConservation()
         return s
+    }
+
+    func fillOldestPending() {
+        guard let idx = marketOfferLog.firstIndex(
+            where: { $0.status == "pending" }
+        ) else {
+            appendMarketStatus(
+                "REFUSED: no pending offers "
+                + "to fill\n"
+            )
+            marketRefusalCount += 1
+            return
+        }
+        marketOfferLog[idx].status = "filled"
+        let e = marketOfferLog[idx]
+        appendMarketStatus(
+            "FILLED: offer [\(e.id)] "
+            + "\(e.action) \(e.tier) "
+            + "p\(e.point) g\(e.galaxy) "
+            + "\(e.wood)W\n"
+        )
+        appendMarketStatus(
+            offerLogSummary()
+        )
     }
 
     func woodConservation() -> String {
