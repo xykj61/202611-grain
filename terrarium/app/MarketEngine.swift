@@ -7,6 +7,9 @@
 // Glasswall: write-only display, no readback.
 
 import AppKit
+#if canImport(VantageMarket)
+import VantageMarket
+#endif
 
 extension AppDelegate {
 
