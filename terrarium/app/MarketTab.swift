@@ -415,6 +415,16 @@ extension AppDelegate {
         return s
     }
 
+    func composeInviteLink(
+        point: UInt32, galaxy: UInt8
+    ) -> String {
+        let pHex = String(point, radix: 16)
+        let gHex = String(galaxy, radix: 16)
+        let sealStub = "0000000000000000"
+        return "grain://invite/"
+            + "\(pHex)/\(gHex)/\(sealStub)"
+    }
+
     func fillOldestPending() {
         guard let idx = marketOfferLog.firstIndex(
             where: { $0.status == "pending" }
@@ -434,6 +444,15 @@ extension AppDelegate {
             + "p\(e.point) g\(e.galaxy) "
             + "\(e.wood)W\n"
         )
+        if e.action == "gift_invite" {
+            let link = composeInviteLink(
+                point: e.point,
+                galaxy: e.galaxy
+            )
+            appendMarketStatus(
+                "  INVITE: \(link)\n"
+            )
+        }
         appendMarketStatus(
             offerLogSummary()
         )
