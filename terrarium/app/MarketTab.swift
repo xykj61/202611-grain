@@ -366,6 +366,15 @@ extension AppDelegate {
         }
     }
 
+    static var marketAutoSave = true
+
+    func autoSaveAfterMutation() {
+        guard AppDelegate.marketAutoSave else {
+            return
+        }
+        saveOfferLog()
+    }
+
     func validateOfferLog() -> String {
         // invariant: bounded log
         guard marketOfferLog.count <= 64 else {
@@ -722,6 +731,7 @@ extension AppDelegate {
         appendMarketStatus(
             offerLogSummary()
         )
+        autoSaveAfterMutation()
     }
 
     struct TopologyAddr {
@@ -853,6 +863,7 @@ extension AppDelegate {
         appendMarketStatus(
             offerLogSummary()
         )
+        autoSaveAfterMutation()
     }
 
     func fillById(_ targetId: Int) {
@@ -918,6 +929,7 @@ extension AppDelegate {
         appendMarketStatus(
             offerLogSummary()
         )
+        autoSaveAfterMutation()
     }
 
     func cancelOldestPending() {
@@ -953,6 +965,7 @@ extension AppDelegate {
         appendMarketStatus(
             offerLogSummary()
         )
+        autoSaveAfterMutation()
     }
 
     func woodConservation() -> String {
