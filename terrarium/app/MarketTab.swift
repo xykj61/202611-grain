@@ -368,6 +368,46 @@ extension AppDelegate {
 
     static var marketAutoSave = true
 
+    func exportSessionText() {
+        let df = DateFormatter()
+        df.dateFormat = "yyyyMMdd-HHmmss"
+        df.timeZone = TimeZone.current
+        let ts = df.string(from: Date())
+        let name = "\(ts)_session_export.txt"
+        let dir = "\(repoRoot)/active-husk"
+            + "/market"
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: dir) {
+            try? fm.createDirectory(
+                atPath: dir,
+                withIntermediateDirectories: true
+            )
+        }
+        let path = "\(dir)/\(name)"
+        var s = marketBanner()
+        s += "\n"
+        s += exportOfferLog()
+        s += "\n"
+        s += marketSessionSummary()
+        s += "\n"
+        s += skyMapBanner()
+
+        do {
+            try s.write(
+                toFile: path,
+                atomically: true,
+                encoding: .utf8
+            )
+            appendMarketStatus(
+                "EXPORTED: \(name)\n"
+            )
+        } catch {
+            appendMarketStatus(
+                "EXPORT ERROR: \(error)\n"
+            )
+        }
+    }
+
     func marketSessionSummary() -> String {
         let dig = sessionDigest()
         let valid = validateOfferLog()
