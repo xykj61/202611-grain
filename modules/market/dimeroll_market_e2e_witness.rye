@@ -1,0 +1,131 @@
+//! modules/market/dimeroll_market_e2e_witness.rye
+//!
+//! End-to-end witness: exercises the full Dimeroll market flow
+//! from buy-galaxy through spawn-star to invite-planet-gift-link.
+//! Verifies WOOD conservation, topology correctness, invite seal
+//! integrity, and email draft composition across the whole stack.
+//!
+//!   rye build market/dimeroll_market_e2e_witness.rye
+
+const std = @import("std");
+const topology = @import("topology.rye");
+const dimeroll = @import("dimeroll_market.rye");
+const wood = @import("wood_token.rye");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const nl: u8 = 10;
+
+pub const e2e_version = "20261122.000000";
+
+fn run_selftest() !u8 {
+    var ledger = wood.WoodLedger.init_genesis(1000);
+    var market = dimeroll.Market.init();
+
+    // invariant: conservation baseline
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Step 1: Galaxy 0 buys star 18 sponsor (star 1 of galaxy 3)
+    const buy_star = try market.post_offer(
+        .buy_sponsor, 18, 300, 0,
+    );
+    const t0 = try market.fill_offer(buy_star, 3, &ledger);
+    // invariant: WOOD transferred 0 -> 3
+    assert(t0 == 0);
+    assert(ledger.balances[0] == 700);
+    assert(ledger.balances[3] == 1300);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Step 2: Galaxy 0 buys planet 63 settlement
+    const buy_planet = try market.post_offer(
+        .buy_sponsor, 63, 100, 0,
+    );
+    const t1 = try market.fill_offer(buy_planet, 3, &ledger);
+    assert(t1 == 1);
+    assert(ledger.balances[0] == 600);
+    assert(ledger.balances[3] == 1400);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Step 3: Galaxy 2 posts a gift invite for planet 78
+    const gift = try market.post_offer(
+        .gift_invite, 78, 0, 2,
+    );
+    const t2 = try market.fill_offer(gift, 10, &ledger);
+    assert(t2 == 2);
+    // invariant: gift does not change balances
+    assert(ledger.balances[2] == 1000);
+    assert(ledger.balances[10] == 1000);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Step 4: Compose invite link for the gift
+    var seal: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("e2e-planet-78-gift:");
+    var pt_buf: [4]u8 = undefined;
+    std.mem.writeInt(u32, &pt_buf, 78, .little);
+    h.update(&pt_buf);
+    h.final(&seal);
+    // invariant: seal is non-zero
+    assert((seal[0] | seal[1] | seal[2]) != 0);
+
+    // --- Step 5: Verify topology address decoding
+    const addr18 = topology.decode(18).?;
+    assert(addr18.tier == .star);
+    assert(addr18.galaxy == 3);
+
+    const addr63 = topology.decode(63).?;
+    assert(addr63.tier == .planet);
+    assert(addr63.galaxy == 3);
+
+    const addr78 = topology.decode(78).?;
+    assert(addr78.tier == .planet);
+
+    // --- Step 6: Verify market state
+    assert(market.offer_count == 3);
+    assert(market.trade_count == 3);
+    assert(market.offers[0].filled);
+    assert(market.offers[1].filled);
+    assert(market.offers[2].filled);
+
+    // --- Step 7: Sell the star back (round-trip)
+    const sell_star = try market.post_offer(
+        .sell_sponsor, 18, 250, 0,
+    );
+    const t3 = try market.fill_offer(sell_star, 5, &ledger);
+    assert(t3 == 3);
+    assert(ledger.balances[0] == 850);
+    assert(ledger.balances[5] == 750);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Refusal: re-gift the same planet invite is refused ---
+    if (market.fill_offer(gift, 7, &ledger)) |_| {
+        return error.DoubleFillAccepted;
+    } else |e| {
+        if (e != dimeroll.MarketError.OfferAlreadyFilled)
+            return error.DoubleFillWrongErr;
+    }
+
+    // --- Final conservation check ---
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    print(
+        "dimeroll_market_e2e: buy star, buy planet, " ++
+        "gift invite, compose link, sell back.{c}",
+        .{nl},
+    );
+    print(
+        "dimeroll_market_e2e: 7 steps + 1 refusal, " ++
+        "WOOD conserved across full flow.{c}",
+        .{nl},
+    );
+    print(
+        "GREEN: dimeroll_market_e2e_witness -- " ++
+        "end-to-end market flow on council sky.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

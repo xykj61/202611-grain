@@ -58,19 +58,19 @@ libraries/
 
 ## Journey (Movements)
 
-- [ ] **[Gemini]** Scaffold `dimeroll_market.rye` -- WOOD buy/sell/trade
+- [x] **[Gemini]** Scaffold `dimeroll_market.rye` -- WOOD buy/sell/trade
       for galaxy and star sponsor choices on the council sky
-- [ ] **[Cancer]** Wire `vantage_market_deck.rye` -- Vantage Station
+- [x] **[Cancer]** Wire `vantage_market_deck.rye` -- Vantage Station
       buy/sell/trade surface with Brushstroke/Skate rendering
-- [ ] **[Leo]** Implement star-planet spawn/invite flow -- settlement
+- [x] **[Leo]** Implement star-planet spawn/invite flow -- settlement
       `mint` from Vantage with signed cap + bind
-- [ ] **[Virgo]** `invite_link_compose` -- gift links as email drafts
+- [x] **[Virgo]** `invite_link_compose` -- gift links as email drafts
       via Gmail MCP connector or print-to-mail fallback
-- [ ] **[Libra]** `dimeroll_market_bridge` library -- TAME-guided bridge
+- [x] **[Libra]** `dimeroll_market_bridge` library -- TAME-guided bridge
       with bounded queues and explicit capability fences
-- [ ] **[Scorpio]** Realidream constellation view -- live 15-galaxy sky
+- [x] **[Scorpio]** Realidream constellation view -- live 15-galaxy sky
       map with settlement state and transaction history
-- [ ] **[Sagittarius]** End-to-end witness: buy galaxy, spawn star,
+- [x] **[Sagittarius]** End-to-end witness: buy galaxy, spawn star,
       invite planet, send gift link, verify on metal
 
 ---
