@@ -368,6 +368,19 @@ extension AppDelegate {
 
     static var marketAutoSave = true
 
+    func marketSessionSummary() -> String {
+        let dig = sessionDigest()
+        let valid = validateOfferLog()
+        var s = "--- Session Summary ---\n"
+        s += offerStats()
+        s += woodConservation()
+        s += "Digest: \(dig)\n"
+        s += "Integrity: \(valid)"
+        s += listSavedSessions()
+        s += "-----------------------\n"
+        return s
+    }
+
     func sessionDigest() -> String {
         var h: UInt64 = 0x9e3779b97f4a7c15
         for e in marketOfferLog {
