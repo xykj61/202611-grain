@@ -43,9 +43,9 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
-### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261122.132137-est`, `Myofascia: 57.078`)
+### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261122.140401-est`, `Myofascia: 57.078`)
 
-- **Calfive Vector (`705` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 5, Orbit 21 (`12/15 Pisces`)** -- MarketEngine.swift (native Rye binary launcher), module selector with Run/Run All/Stop/Clear, VantageMarket C-ABI import, topology constants, status indicators, sky map breakdown, grain-ww market-run CLI (7/7 GREEN). 122 proofs, 244 assertions. publish-seed GREEN x14.
+- **Calfive Vector (`225` Completed Movements above `57.078`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 5, Orbit 22 (`15/15 Siya`) SEALED** -- glass-to-core pipeline: dispatchMarketAction wires offer post/fill/cancel to grain-ww market-deck binary, dispatchSkyView per-galaxy browser, topology address display (g.s.p), galaxy names in all messages, offerStats, topologyAddressFromString input parser, validateOfferLog integrity checks, session timestamps, marketActionLabel helper. 122 proofs, 244 assertions. publish-seed GREEN x14.
 - **Completed Software & Civic Foundations in [`../active-husk/`](../active-husk/README.md):**
   - **5 Elemental Rule Cards & `GEMINI.md` Spine:** `aether`, `air`, `fire`, `water`, `earth` in `.gemini/rules/`; `active-tablecloth/` molted to `active-husk/`.
   - **Glow Mill & Citizen Ring (`Stage 1 == Stage 2`):** 6-pass native `.glow` compiler (`grain-ww glow`) + 17 col-57 Citizen `.glow` gates across `Aurora`, `Pond`, `Caravan`, `Comlink`, `Tablecloth`, `Husk`, `Vantage`, `Resonance`, `Dimeroll`, `Colloquium`, and `Linengrow`.

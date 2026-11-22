@@ -309,6 +309,8 @@ extension AppDelegate {
     @objc func marketClearClicked(
         _ sender: NSButton
     ) {
+        let valid = validateOfferLog()
+        appendMarketStatus(valid)
         marketStatusView?.string =
             marketBanner()
     }
