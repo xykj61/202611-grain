@@ -523,7 +523,10 @@ extension AppDelegate {
         s += "(\(marketOfferLog.count) total) "
         s += "---\n"
         for e in marketOfferLog.suffix(8) {
-            s += "  [\(e.id)] \(e.action) "
+            let ind = AppDelegate.statusColor(
+                e.status
+            )
+            s += "  \(ind) [\(e.id)] \(e.action) "
             s += "\(e.tier) p\(e.point) "
             s += "g\(e.galaxy) "
             s += "\(e.wood)W "
@@ -686,6 +689,17 @@ extension AppDelegate {
         let net = Int64(buys) - Int64(sells)
         s += "net=\(net)\n"
         return s
+    }
+
+    static func statusColor(
+        _ status: String
+    ) -> String {
+        switch status {
+        case "filled": return "+"
+        case "cancelled": return "x"
+        case "pending": return "~"
+        default: return "?"
+        }
     }
 
     func appendMarketStatus(_ text: String) {
