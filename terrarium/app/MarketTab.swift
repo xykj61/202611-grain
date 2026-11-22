@@ -418,6 +418,9 @@ extension AppDelegate {
         let action = seg.selectedSegment
         if action == 5 {
             stv.string = skyMapBanner()
+            launchMarketModule(
+                "vantage_constellation_view"
+            )
             return
         }
         if action == 3 {
@@ -708,6 +711,12 @@ extension AppDelegate {
             "CANCELLED: offer [\(e.id)] "
             + "\(e.action) \(e.tier) "
             + "p\(e.point) g\(e.galaxy)\n"
+        )
+        dispatchMarketAction(
+            action: "cancel_offer",
+            point: e.point,
+            galaxy: e.galaxy,
+            wood: 0
         )
         appendMarketStatus(
             offerLogSummary()
