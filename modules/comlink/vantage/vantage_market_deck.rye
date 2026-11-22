@@ -1,0 +1,261 @@
+//! modules/comlink/vantage/vantage_market_deck.rye
+//!
+//! Vantage Station market deck: C-ABI dispatch table for the
+//! Dimeroll buy/sell/trade/gift UI on d15-3-9-405 council sky.
+//! Write-only RLCD Glasswall surface for Brushstroke/Skate.
+//!
+//!   rye build vantage/vantage_market_deck.rye
+
+const std = @import("std");
+const topology = @import("topology.rye");
+const dimeroll = @import("dimeroll_market.rye");
+const wood = @import("wood_token.rye");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const nl: u8 = 10;
+
+pub const market_deck_version = "20261122.000000";
+pub const max_deck_bytes: u32 = 262144;
+
+pub const MarketAction = enum(u32) {
+    browse_galaxies = 1,
+    browse_stars = 2,
+    post_buy = 3,
+    post_sell = 4,
+    post_gift = 5,
+    fill_offer = 6,
+    cancel_offer = 7,
+};
+
+pub const DeckError = error{
+    UnknownActionRefused,
+    PayloadExceedsDeckWall,
+    GlasswallWriteOnlyRefused,
+    InvalidPointRefused,
+    InvalidGalaxyRefused,
+};
+
+pub const MarketDeckPacket = extern struct {
+    action_id: u32,
+    point_number: u32,
+    galaxy_id: u32,
+    price_wood: u64,
+    payload_bytes: u32,
+    write_only_fb: u32,
+};
+
+pub fn dispatch_market_action(
+    pkt: MarketDeckPacket,
+) DeckError![32]u8 {
+    // invariant: action must be in range 1..7
+    if (pkt.action_id < 1 or pkt.action_id > 7)
+        return error.UnknownActionRefused;
+    // invariant: Glasswall write-only display
+    if (pkt.write_only_fb != 1)
+        return error.GlasswallWriteOnlyRefused;
+    if (pkt.payload_bytes == 0 or
+        pkt.payload_bytes > max_deck_bytes)
+        return error.PayloadExceedsDeckWall;
+    if (pkt.action_id >= 3 and pkt.action_id <= 6) {
+        if (topology.decode(pkt.point_number) == null)
+            return error.InvalidPointRefused;
+    }
+    if (pkt.galaxy_id >= topology.galaxies_per_universe)
+        return error.InvalidGalaxyRefused;
+
+    var out: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("grain-vantage-market-deck:");
+    var buf: [24]u8 = undefined;
+    std.mem.writeInt(u32, buf[0..4], pkt.action_id, .little);
+    std.mem.writeInt(u32, buf[4..8], pkt.point_number, .little);
+    std.mem.writeInt(u32, buf[8..12], pkt.galaxy_id, .little);
+    std.mem.writeInt(u64, buf[12..20], pkt.price_wood, .little);
+    std.mem.writeInt(u32, buf[20..24], pkt.payload_bytes, .little);
+    h.update(&buf);
+    h.final(&out);
+
+    // invariant: SHA3 seal is non-zero
+    assert(pkt.payload_bytes <= max_deck_bytes);
+    assert((out[0] | out[1] | out[2]) != 0);
+    return out;
+}
+
+pub fn deck_roundtrip_market(
+    market: *dimeroll.Market,
+    ledger: *wood.WoodLedger,
+    kind: dimeroll.OfferKind,
+    point: u32,
+    price: u64,
+    poster_galaxy: u8,
+    filler_galaxy: u8,
+) !u32 {
+    const offer_idx = try market.post_offer(
+        kind, point, price, poster_galaxy,
+    );
+    const pkt = MarketDeckPacket{
+        .action_id = switch (kind) {
+            .buy_sponsor => 3,
+            .sell_sponsor => 4,
+            .gift_invite => 5,
+        },
+        .point_number = point,
+        .galaxy_id = poster_galaxy,
+        .price_wood = price,
+        .payload_bytes = 1024,
+        .write_only_fb = 1,
+    };
+    _ = try dispatch_market_action(pkt);
+    const trade_idx = try market.fill_offer(
+        offer_idx, filler_galaxy, ledger,
+    );
+    return trade_idx;
+}
+
+fn run_selftest() !u8 {
+    var ledger = wood.WoodLedger.init_genesis(1000);
+    var market = dimeroll.Market.init();
+
+    // invariant: conservation baseline
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Welcome witnesses ---
+
+    // 1. Browse galaxies (action 1) -- dispatch + seal
+    const browse_gal = MarketDeckPacket{
+        .action_id = @intFromEnum(MarketAction.browse_galaxies),
+        .point_number = 0,
+        .galaxy_id = 0,
+        .price_wood = 0,
+        .payload_bytes = 4096,
+        .write_only_fb = 1,
+    };
+    const seal1 = try dispatch_market_action(browse_gal);
+    const seal1b = try dispatch_market_action(browse_gal);
+    // invariant: deterministic seal
+    assert(std.mem.eql(u8, &seal1, &seal1b));
+
+    // 2. Browse stars (action 2) -- dispatch + seal
+    const browse_star = MarketDeckPacket{
+        .action_id = @intFromEnum(MarketAction.browse_stars),
+        .point_number = 0,
+        .galaxy_id = 3,
+        .price_wood = 0,
+        .payload_bytes = 2048,
+        .write_only_fb = 1,
+    };
+    _ = try dispatch_market_action(browse_star);
+
+    // 3. Full roundtrip: buy sponsor for star 18
+    const t0 = try deck_roundtrip_market(
+        &market, &ledger,
+        .buy_sponsor, 18, 200, 0, 3,
+    );
+    assert(t0 == 0);
+    assert(ledger.balances[0] == 800);
+    assert(ledger.balances[3] == 1200);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // 4. Full roundtrip: sell sponsor for planet 108
+    const t1 = try deck_roundtrip_market(
+        &market, &ledger,
+        .sell_sponsor, 108, 150, 5, 7,
+    );
+    assert(t1 == 1);
+    assert(ledger.balances[5] == 1150);
+    assert(ledger.balances[7] == 850);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // 5. Full roundtrip: gift invite for planet 63
+    const t2 = try deck_roundtrip_market(
+        &market, &ledger,
+        .gift_invite, 63, 0, 2, 10,
+    );
+    assert(t2 == 2);
+    assert(ledger.balances[2] == 1000);
+    assert(ledger.balances[10] == 1000);
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    // --- Refusal witnesses ---
+
+    // 6. Unknown action refused
+    var bad_act = browse_gal;
+    bad_act.action_id = 99;
+    if (dispatch_market_action(bad_act)) |_| {
+        return error.BadActionAccepted;
+    } else |e| {
+        if (e != DeckError.UnknownActionRefused)
+            return error.BadActionWrongErr;
+    }
+
+    // 7. Oversized payload refused
+    var huge = browse_gal;
+    huge.payload_bytes = max_deck_bytes + 1;
+    if (dispatch_market_action(huge)) |_| {
+        return error.OversizedAccepted;
+    } else |e| {
+        if (e != DeckError.PayloadExceedsDeckWall)
+            return error.OversizedWrongErr;
+    }
+
+    // 8. Glasswall non-write-only refused
+    var read_fb = browse_gal;
+    read_fb.write_only_fb = 0;
+    if (dispatch_market_action(read_fb)) |_| {
+        return error.ReadbackAccepted;
+    } else |e| {
+        if (e != DeckError.GlasswallWriteOnlyRefused)
+            return error.ReadbackWrongErr;
+    }
+
+    // 9. Invalid point refused on buy
+    const bad_pt = MarketDeckPacket{
+        .action_id = @intFromEnum(MarketAction.post_buy),
+        .point_number = 999,
+        .galaxy_id = 0,
+        .price_wood = 100,
+        .payload_bytes = 1024,
+        .write_only_fb = 1,
+    };
+    if (dispatch_market_action(bad_pt)) |_| {
+        return error.BadPointAccepted;
+    } else |e| {
+        if (e != DeckError.InvalidPointRefused)
+            return error.BadPointWrongErr;
+    }
+
+    // 10. Invalid galaxy refused
+    var bad_gal = browse_gal;
+    bad_gal.galaxy_id = 20;
+    if (dispatch_market_action(bad_gal)) |_| {
+        return error.BadGalaxyAccepted;
+    } else |e| {
+        if (e != DeckError.InvalidGalaxyRefused)
+            return error.BadGalaxyWrongErr;
+    }
+
+    // invariant: conservation holds through all deck ops
+    assert(ledger.sum_balances() == ledger.total_supply);
+
+    print(
+        "vantage_market_deck: 5 welcome (browse x2, " ++
+        "buy, sell, gift roundtrips).{c}",
+        .{nl},
+    );
+    print(
+        "vantage_market_deck: 5 refusals (action, " ++
+        "payload, glasswall, point, galaxy).{c}",
+        .{nl},
+    );
+    print(
+        "GREEN: vantage_market_deck -- C-ABI market " ++
+        "deck on d15-3-9-405 council sky.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
