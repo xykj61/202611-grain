@@ -313,6 +313,40 @@ extension AppDelegate {
             marketBanner()
     }
 
+    func resetMarketSession() {
+        marketOfferLog.removeAll()
+        marketOfferCount = 0
+        marketRefusalCount = 0
+        marketGreenCount = 0
+        marketRedCount = 0
+        marketProofCount = 0
+        marketRawBuffer = ""
+        marketStatusView?.string =
+            marketBanner()
+        appendMarketStatus(
+            "Session reset.\n"
+        )
+    }
+
+    func exportOfferLog() -> String {
+        var s = "# Market Offer Log\n"
+        s += "# \(marketOfferLog.count) offers, "
+        s += "\(marketRefusalCount) refusals\n\n"
+        for e in marketOfferLog {
+            let ind = AppDelegate.statusColor(
+                e.status
+            )
+            s += "\(ind) [\(e.id)] \(e.action) "
+            s += "\(e.tier) p\(e.point) "
+            s += "g\(e.galaxy) "
+            s += "\(e.wood)W "
+            s += "(\(e.status))\n"
+        }
+        s += "\n"
+        s += woodConservation()
+        return s
+    }
+
     // invariant: write-only display, no readback
     static let glasswallWriteOnly = true
     static let topologyGalaxies: UInt32 = 15
