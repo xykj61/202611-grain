@@ -1,0 +1,277 @@
+//! libraries/dimeroll-market-bridge/dimeroll_market_bridge.rye
+//!
+//! TAME-guided bridge between the Dimeroll market, constellation
+//! settlement, and Vantage Station UI. Bounded command queues with
+//! explicit capability fences: a bridge command must name its
+//! source (market offer or invite) and target (settlement action)
+//! and both must pass validation before the bridge commits.
+//!
+//!   rye build dimeroll_market_bridge.rye
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const nl: u8 = 10;
+
+pub const bridge_version = "20261122.000000";
+
+pub const max_commands: u32 = 32;
+pub const max_pending: u32 = 16;
+
+pub const BridgeAction = enum(u8) {
+    market_to_settle = 0,
+    settle_to_invite = 1,
+    market_to_invite = 2,
+};
+
+pub const CommandState = enum(u8) {
+    pending = 0,
+    validated = 1,
+    committed = 2,
+    refused = 3,
+};
+
+pub const BridgeError = error{
+    QueueFull,
+    InvalidAction,
+    AlreadyCommitted,
+    AlreadyRefused,
+    NotValidated,
+    PendingOverflow,
+    ZeroPointRefused,
+};
+
+pub const BridgeCommand = struct {
+    action: BridgeAction,
+    point_number: u32,
+    sponsor_galaxy: u8,
+    price_wood: u64,
+    state: CommandState,
+    seal: [32]u8,
+};
+
+pub const Bridge = struct {
+    commands: [max_commands]BridgeCommand,
+    count: u32,
+    pending_count: u32,
+
+    pub fn init() Bridge {
+        return .{
+            .commands = std.mem.zeroes(
+                [max_commands]BridgeCommand,
+            ),
+            .count = 0,
+            .pending_count = 0,
+        };
+    }
+
+    pub fn enqueue(
+        self: *Bridge,
+        action: BridgeAction,
+        point_number: u32,
+        sponsor_galaxy: u8,
+        price_wood: u64,
+    ) BridgeError!u32 {
+        if (self.count >= max_commands)
+            return BridgeError.QueueFull;
+        if (self.pending_count >= max_pending)
+            return BridgeError.PendingOverflow;
+        if (point_number == 0)
+            return BridgeError.ZeroPointRefused;
+        // invariant: command index is bounded
+        assert(self.count < max_commands);
+        const idx = self.count;
+        var h = Sha3_256.init(.{});
+        h.update("grain-bridge-cmd:");
+        var buf: [13]u8 = undefined;
+        buf[0] = @intFromEnum(action);
+        std.mem.writeInt(
+            u32, buf[1..5], point_number, .little,
+        );
+        buf[5] = sponsor_galaxy;
+        std.mem.writeInt(
+            u64,
+            @as(*[8]u8, @ptrCast(buf[5..13])),
+            price_wood,
+            .little,
+        );
+        h.update(&buf);
+        var seal: [32]u8 = undefined;
+        h.final(&seal);
+
+        self.commands[idx] = .{
+            .action = action,
+            .point_number = point_number,
+            .sponsor_galaxy = sponsor_galaxy,
+            .price_wood = price_wood,
+            .state = .pending,
+            .seal = seal,
+        };
+        self.count += 1;
+        self.pending_count += 1;
+        return idx;
+    }
+
+    pub fn validate(
+        self: *Bridge,
+        idx: u32,
+    ) BridgeError!void {
+        // invariant: idx must be in range
+        assert(idx < self.count);
+        const cmd = &self.commands[idx];
+        if (cmd.state == .committed)
+            return BridgeError.AlreadyCommitted;
+        if (cmd.state == .refused)
+            return BridgeError.AlreadyRefused;
+        cmd.state = .validated;
+    }
+
+    pub fn commit_cmd(
+        self: *Bridge,
+        idx: u32,
+    ) BridgeError!void {
+        // invariant: idx must be in range
+        assert(idx < self.count);
+        const cmd = &self.commands[idx];
+        if (cmd.state == .committed)
+            return BridgeError.AlreadyCommitted;
+        if (cmd.state != .validated)
+            return BridgeError.NotValidated;
+        cmd.state = .committed;
+        // invariant: pending count decrements
+        assert(self.pending_count > 0);
+        self.pending_count -= 1;
+    }
+
+    pub fn refuse(
+        self: *Bridge,
+        idx: u32,
+    ) BridgeError!void {
+        // invariant: idx must be in range
+        assert(idx < self.count);
+        const cmd = &self.commands[idx];
+        if (cmd.state == .committed)
+            return BridgeError.AlreadyCommitted;
+        if (cmd.state != .refused) {
+            if (cmd.state == .pending) {
+                assert(self.pending_count > 0);
+                self.pending_count -= 1;
+            }
+            cmd.state = .refused;
+        }
+    }
+};
+
+fn run_selftest() !u8 {
+    var bridge = Bridge.init();
+
+    // invariant: empty bridge
+    assert(bridge.count == 0);
+    assert(bridge.pending_count == 0);
+
+    // --- Welcome witnesses ---
+
+    // 1. Enqueue market_to_settle for star 18
+    const c0 = try bridge.enqueue(
+        .market_to_settle, 18, 0, 200,
+    );
+    assert(c0 == 0);
+    assert(bridge.count == 1);
+    assert(bridge.pending_count == 1);
+    // invariant: seal is non-zero
+    assert((bridge.commands[0].seal[0] |
+        bridge.commands[0].seal[1] |
+        bridge.commands[0].seal[2]) != 0);
+
+    // 2. Validate and commit
+    try bridge.validate(c0);
+    assert(bridge.commands[0].state == .validated);
+    try bridge.commit_cmd(c0);
+    assert(bridge.commands[0].state == .committed);
+    assert(bridge.pending_count == 0);
+
+    // 3. Enqueue settle_to_invite for planet 63
+    const c1 = try bridge.enqueue(
+        .settle_to_invite, 63, 2, 0,
+    );
+    assert(c1 == 1);
+    try bridge.validate(c1);
+    try bridge.commit_cmd(c1);
+    assert(bridge.pending_count == 0);
+
+    // 4. Enqueue market_to_invite for planet 108
+    const c2 = try bridge.enqueue(
+        .market_to_invite, 108, 5, 150,
+    );
+    assert(c2 == 2);
+    try bridge.validate(c2);
+    try bridge.commit_cmd(c2);
+
+    // 5. Enqueue and refuse
+    const c3 = try bridge.enqueue(
+        .market_to_settle, 33, 4, 100,
+    );
+    try bridge.refuse(c3);
+    assert(bridge.commands[c3].state == .refused);
+    assert(bridge.pending_count == 0);
+
+    // --- Refusal witnesses ---
+
+    // 6. Zero point refused
+    if (bridge.enqueue(.market_to_settle, 0, 0, 100)) |_| {
+        return error.ZeroPointAccepted;
+    } else |e| {
+        if (e != BridgeError.ZeroPointRefused)
+            return error.ZeroPointWrongErr;
+    }
+
+    // 7. Commit without validate refused
+    const c4 = try bridge.enqueue(
+        .market_to_settle, 45, 1, 50,
+    );
+    if (bridge.commit_cmd(c4)) |_| {
+        return error.UnvalidatedCommitAccepted;
+    } else |e| {
+        if (e != BridgeError.NotValidated)
+            return error.UnvalidatedCommitWrongErr;
+    }
+    try bridge.refuse(c4);
+
+    // 8. Double commit refused
+    if (bridge.commit_cmd(c0)) |_| {
+        return error.DoubleCommitAccepted;
+    } else |e| {
+        if (e != BridgeError.AlreadyCommitted)
+            return error.DoubleCommitWrongErr;
+    }
+
+    // 9. Validate after refuse refused
+    if (bridge.validate(c3)) |_| {
+        return error.RefusedValidateAccepted;
+    } else |e| {
+        if (e != BridgeError.AlreadyRefused)
+            return error.RefusedValidateWrongErr;
+    }
+
+    print(
+        "dimeroll_market_bridge: 5 welcome (3 actions, " ++
+        "validate+commit, refuse).{c}",
+        .{nl},
+    );
+    print(
+        "dimeroll_market_bridge: 4 refusals (zero point, " ++
+        "unvalidated, double commit, refused validate).{c}",
+        .{nl},
+    );
+    print(
+        "GREEN: dimeroll_market_bridge -- TAME-guided " ++
+        "bridge with bounded command queue.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
