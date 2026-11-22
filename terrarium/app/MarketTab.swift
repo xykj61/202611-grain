@@ -39,7 +39,7 @@ extension AppDelegate {
             labels: [
                 "Buy", "Sell",
                 "Gift", "Fill",
-                "Sky Map",
+                "Cancel", "Sky Map",
             ],
             trackingMode: .selectOne,
             target: self,
@@ -223,21 +223,21 @@ extension AppDelegate {
             + "WOOD conservation: sum(nets) == 0\n"
             + "Glasswall: write-only RLCD\n"
             + "Offer capacity: 64 max\n\n"
-            + "Actions: Buy | Sell | Gift | Fill"
-            + " | Sky Map\n"
+            + "Actions: Buy | Sell | Gift "
+            + "| Fill | Cancel | Sky Map\n"
     }
 
     @objc func marketActionChanged(
         _ sender: NSSegmentedControl
     ) {
         let seg = sender.selectedSegment
-        let isSkyMap = seg == 4
-        let isFill = seg == 3
+        let isSkyMap = seg == 5
+        let isFillOrCancel = seg == 3 || seg == 4
         marketPointField?.isEnabled = !isSkyMap
         marketGalaxyField?.isEnabled =
-            !isSkyMap && !isFill
+            !isSkyMap && !isFillOrCancel
         marketPriceField?.isEnabled =
-            !isSkyMap && !isFill
+            !isSkyMap && !isFillOrCancel
         if isSkyMap {
             marketStatusView?.string =
                 skyMapBanner()
@@ -298,12 +298,16 @@ extension AppDelegate {
         guard let seg = marketActionControl
         else { return }
         let action = seg.selectedSegment
-        if action == 4 {
+        if action == 5 {
             stv.string = skyMapBanner()
             return
         }
         if action == 3 {
             fillOldestPending()
+            return
+        }
+        if action == 4 {
+            cancelOldestPending()
             return
         }
 
@@ -353,7 +357,8 @@ extension AppDelegate {
 
         let actionNames = [
             "buy_sponsor", "sell_sponsor",
-            "gift_invite", "fill", "sky_map",
+            "gift_invite", "fill",
+            "cancel", "sky_map",
         ]
         let name = actionNames[action]
         let tier = decoded.tier
@@ -481,6 +486,29 @@ extension AppDelegate {
                 "  INVITE: \(link)\n"
             )
         }
+        appendMarketStatus(
+            offerLogSummary()
+        )
+    }
+
+    func cancelOldestPending() {
+        guard let idx = marketOfferLog.firstIndex(
+            where: { $0.status == "pending" }
+        ) else {
+            appendMarketStatus(
+                "REFUSED: no pending offers "
+                + "to cancel\n"
+            )
+            marketRefusalCount += 1
+            return
+        }
+        marketOfferLog[idx].status = "cancelled"
+        let e = marketOfferLog[idx]
+        appendMarketStatus(
+            "CANCELLED: offer [\(e.id)] "
+            + "\(e.action) \(e.tier) "
+            + "p\(e.point) g\(e.galaxy)\n"
+        )
         appendMarketStatus(
             offerLogSummary()
         )
