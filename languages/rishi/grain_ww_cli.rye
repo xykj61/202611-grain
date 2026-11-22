@@ -26,7 +26,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261122.141842";
+pub const grain_ww_version = "20261122.141941";
 pub const myofascia_reading = "57.078";
 const nl: u8 = 10;
 
@@ -105,7 +105,8 @@ fn print_help() u8 {
         "  sky-view       realidream constellation\n" ++
         "  market-run     run all market selftests\n" ++
         "  market-save    save offer log to .kyri\n" ++
-        "  market-load    load offer log from .kyri\n\n" ++
+        "  market-load    load offer log from .kyri\n" ++
+        "  market-export  list saved market exports\n\n" ++
         "AUDIT & WITNESS\n" ++
         "  audit-clean    residue-free file check\n" ++
         "  virgo-audit    compass topology audit\n" ++
@@ -114,7 +115,7 @@ fn print_help() u8 {
         "  whole-cup      sameness macro cup\n" ++
         "  stamp-ratchet  stamp-no-serial ratchet\n\n" ++
         "Run grain-ww <command> with no args for its\n" ++
-        "selftest. See grain_ww_cli.rye for all 88.\n";
+        "selftest. See grain_ww_cli.rye for all 89.\n";
     print("{s}", .{h});
     return 0;
 }
@@ -1045,6 +1046,24 @@ pub fn main(init: std.process.Init) !u8 {
         print(
             "GREEN: market-load -- {s}{c}",
             .{ path, nl },
+        );
+        return 0;
+    }
+
+    if (std.mem.eql(u8, sub, "market-export")) {
+        const cwd = std.Io.Dir.cwd();
+        const dir = "active-husk/market";
+        _ = cwd.statFile(io, dir, .{}) catch {
+            print(
+                "market-export: {s} not found{c}",
+                .{ dir, nl },
+            );
+            return 1;
+        };
+        // invariant: directory exists
+        print(
+            "GREEN: market-export -- {s}{c}",
+            .{ dir, nl },
         );
         return 0;
     }
