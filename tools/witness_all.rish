@@ -581,4 +581,8 @@ let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
 assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 
-say "GREEN: witness_all -- 47 hubs & 122 proofs on metal!"
+# --- Market composite witness ---
+let gww = "languages/rishi/bin/grain-ww"
+assert (run [gww "market-run"]).ok else "market-run 7/7"
+
+say "GREEN: witness_all -- 48 hubs & 122 proofs on metal!"
