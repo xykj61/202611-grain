@@ -163,11 +163,18 @@ extension AppDelegate {
     func advanceMarketQueue() {
         guard !marketModuleQueue.isEmpty
         else {
+            let total = marketGreenCount
+                + marketRedCount
+            let pct = total > 0
+                ? (marketGreenCount * 100)
+                    / total
+                : 0
             appendMarketStatus(
                 "\n=== All market modules "
                 + "complete ===\n"
                 + "GREEN: \(marketGreenCount) "
                 + "RED: \(marketRedCount) "
+                + "(\(pct)% pass) "
                 + "proofs: \(marketProofCount)\n"
             )
             return
@@ -175,5 +182,19 @@ extension AppDelegate {
         let next = marketModuleQueue
             .removeFirst()
         launchMarketModule(next.1)
+    }
+
+    func stopMarketModule() {
+        if let p = marketProcess,
+           p.isRunning
+        {
+            p.terminate()
+            p.waitUntilExit()
+            appendMarketStatus(
+                "\n--- stopped ---\n"
+            )
+        }
+        marketModuleRunning = false
+        marketModuleQueue.removeAll()
     }
 }

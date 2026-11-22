@@ -226,9 +226,20 @@ extension AppDelegate {
         formRow.translatesAutoresizingMaskIntoConstraints
             = false
 
+        let stopBtn = NSButton(
+            title: "Stop",
+            target: self,
+            action: #selector(
+                marketStopClicked(_:)
+            )
+        )
+        stopBtn.bezelStyle = .rounded
+        stopBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
         let moduleRow = NSStackView(views: [
             modPopUp, runBtn, runAllBtn,
-            clearBtn,
+            stopBtn, clearBtn,
         ])
         moduleRow.orientation = .horizontal
         moduleRow.spacing = 6
@@ -287,6 +298,12 @@ extension AppDelegate {
         marketRedCount = 0
         marketProofCount = 0
         runAllMarketModules()
+    }
+
+    @objc func marketStopClicked(
+        _ sender: NSButton
+    ) {
+        stopMarketModule()
     }
 
     @objc func marketClearClicked(
