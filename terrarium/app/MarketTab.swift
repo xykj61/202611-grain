@@ -1264,6 +1264,7 @@ extension AppDelegate {
                 + "(\(marketOfferLog.count) "
                 + "offers, digest=\(dig))\n"
             )
+            purgeOldSessions()
         } catch {
             appendMarketStatus(
                 "SAVE ERROR: \(error)\n"
