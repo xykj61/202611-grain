@@ -7,6 +7,9 @@
 // Glasswall: write-only display, no readback, no ad/tracking SDK.
 
 import AppKit
+#if canImport(VantageMarket)
+import VantageMarket
+#endif
 
 extension AppDelegate {
 
@@ -295,6 +298,10 @@ extension AppDelegate {
 
     // invariant: write-only display, no readback
     static let glasswallWriteOnly = true
+    static let topologyGalaxies: UInt32 = 15
+    static let topologyStarsPerGalaxy: UInt32 = 3
+    static let topologyPlanetsPerStar: UInt32 = 9
+    static let topologyTotalSeats: UInt32 = 405
 
     func marketBanner() -> String {
         // invariant: Glasswall enforced
