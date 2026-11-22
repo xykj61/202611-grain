@@ -258,20 +258,33 @@ extension AppDelegate {
     func skyMapBanner() -> String {
         var s = "Constellation Sky Map\n"
         s += "=====================\n\n"
+        var gCounts = [Int](
+            repeating: 0, count: 15
+        )
+        for e in marketOfferLog {
+            let gi = Int(e.galaxy)
+            if gi < 15 { gCounts[gi] += 1 }
+        }
         var g: UInt32 = 0
         while g < 15 {
-            let name = galaxyNames[Int(g)]
+            let gi = Int(g)
+            let name = galaxyNames[gi]
             let padded = name.padding(
                 toLength: 12,
                 withPad: " ",
                 startingAt: 0
             )
-            s += "  g\(g) \(padded) "
-            s += "3 stars, 27 planets "
-            s += "(pts \(g)..)\n"
+            let bar = String(
+                repeating: "|",
+                count: min(gCounts[gi], 16)
+            )
+            let gIdx = g < 10
+                ? " \(g)" : "\(g)"
+            s += "  g\(gIdx) \(padded) "
+            s += "[\(gCounts[gi])] \(bar)\n"
             g += 1
         }
-        s += "\n405 total council seats | "
+        s += "\n405 seats | "
         s += "\(marketOfferCount) offers | "
         s += "\(marketRefusalCount) refusals\n"
         return s
