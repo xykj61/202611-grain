@@ -485,6 +485,31 @@ extension AppDelegate {
         return s
     }
 
+    func loadLatestSession() {
+        let dir = "\(repoRoot)/active-husk"
+            + "/market"
+        let fm = FileManager.default
+        guard let files = try? fm
+            .contentsOfDirectory(atPath: dir)
+        else {
+            appendMarketStatus(
+                "No saved sessions to load.\n"
+            )
+            return
+        }
+        let kyri = files.filter {
+            $0.hasSuffix("_market_offers.kyri")
+        }.sorted()
+        guard let latest = kyri.last else {
+            appendMarketStatus(
+                "No offer files found.\n"
+            )
+            return
+        }
+        let path = "\(dir)/\(latest)"
+        loadOfferLog(path)
+    }
+
     func autoSaveAfterMutation() {
         guard AppDelegate.marketAutoSave else {
             return
