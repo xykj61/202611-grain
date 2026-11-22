@@ -37,3 +37,8 @@ module VantageApp {
     header "vantage_app.h"
     export *
 }
+
+module VantageMarket {
+    header "vantage_market.h"
+    export *
+}
