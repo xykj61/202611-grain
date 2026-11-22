@@ -176,6 +176,28 @@ extension AppDelegate {
         clearBtn.translatesAutoresizingMaskIntoConstraints
             = false
 
+        let saveBtn = NSButton(
+            title: "Save",
+            target: self,
+            action: #selector(
+                marketSaveClicked(_:)
+            )
+        )
+        saveBtn.bezelStyle = .rounded
+        saveBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
+        let loadBtn = NSButton(
+            title: "Load",
+            target: self,
+            action: #selector(
+                marketLoadClicked(_:)
+            )
+        )
+        loadBtn.bezelStyle = .rounded
+        loadBtn.translatesAutoresizingMaskIntoConstraints
+            = false
+
         // --- Status text ---
         let statusView = NSScrollView(
             frame: NSRect(
@@ -240,6 +262,7 @@ extension AppDelegate {
         let moduleRow = NSStackView(views: [
             modPopUp, runBtn, runAllBtn,
             stopBtn, clearBtn,
+            saveBtn, loadBtn,
         ])
         moduleRow.orientation = .horizontal
         moduleRow.spacing = 6
@@ -313,6 +336,34 @@ extension AppDelegate {
         appendMarketStatus(valid)
         marketStatusView?.string =
             marketBanner()
+    }
+
+    @objc func marketSaveClicked(
+        _ sender: NSButton
+    ) {
+        saveOfferLog()
+    }
+
+    @objc func marketLoadClicked(
+        _ sender: NSButton
+    ) {
+        let dir = "\(repoRoot)/active-husk"
+            + "/market"
+        let panel = NSOpenPanel()
+        panel.directoryURL = URL(
+            fileURLWithPath: dir
+        )
+        panel.allowedContentTypes = []
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.title = "Load Market Session"
+        let resp = panel.runModal()
+        if resp == .OK,
+           let url = panel.url
+        {
+            loadOfferLog(url.path)
+        }
     }
 
     func validateOfferLog() -> String {
