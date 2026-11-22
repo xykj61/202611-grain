@@ -43,9 +43,9 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 3. (`20260916.004153`) -- **the wire ceiling above**, once Keaton's word names which door it takes.
    `%646` left this queue `20260917`: swept and closed, its 7 hard sites each wanting their own lane.
 
-### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261122.104557-est`, `Myofascia: 57.078`)
+### CALFIVE `[15 75 375 1875 9375]` ITINERARY & OPEN PROJECT STATE (`20261122.110405-est`, `Myofascia: 57.078`)
 
-- **Calfive Vector (`675` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 4, Orbit 19 (`15/15 Siya sealed`)** -- market+sky-view CLI subcommands, full dimeroll husk project delivered (7/7 checklist). 122 proofs, 244 assertions. publish-seed GREEN x12.
+- **Calfive Vector (`690` Completed Movements above `56.500`):** `[orbit=15, quest=75, journey=375, section=1875, chapter=9375]` -> **Journey 2, Quest 4, Orbit 20 (`14/15 Draco`)** -- terrarium MarketTab.swift (full market surface: buy/sell/gift/fill/cancel/sky-map), vantage_market.h C-ABI header, topology guard, offer log, WOOD conservation, Glasswall assert, per-galaxy histogram, double-fill/cancel-then-fill guards. 122 proofs, 244 assertions. publish-seed GREEN x13.
 - **Completed Software & Civic Foundations in [`../active-husk/`](../active-husk/README.md):**
   - **5 Elemental Rule Cards & `GEMINI.md` Spine:** `aether`, `air`, `fire`, `water`, `earth` in `.gemini/rules/`; `active-tablecloth/` molted to `active-husk/`.
   - **Glow Mill & Citizen Ring (`Stage 1 == Stage 2`):** 6-pass native `.glow` compiler (`grain-ww glow`) + 17 col-57 Citizen `.glow` gates across `Aurora`, `Pond`, `Caravan`, `Comlink`, `Tablecloth`, `Husk`, `Vantage`, `Resonance`, `Dimeroll`, `Colloquium`, and `Linengrow`.
