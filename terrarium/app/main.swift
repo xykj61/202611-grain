@@ -206,6 +206,7 @@ class AppDelegate: NSObject,
         point: UInt32, galaxy: UInt8,
         wood: UInt64, status: String
     )] = []
+    var marketRefusalCount: Int = 0
 
     func applicationDidFinishLaunching(_ note: Notification) {
         let mask: NSWindow.StyleMask = [

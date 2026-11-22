@@ -238,26 +238,33 @@ extension AppDelegate {
         }
     }
 
+    let galaxyNames = [
+        "Aries", "Taurus", "Gemini",
+        "Cancer", "Leo", "Virgo",
+        "Libra", "Scorpio", "Sagittarius",
+        "Capricorn", "Aquarius", "Pisces",
+        "Ophiuchus", "Draco", "Siya",
+    ]
+
     func skyMapBanner() -> String {
         var s = "Constellation Sky Map\n"
         s += "=====================\n\n"
-        var g = 0
+        var g: UInt32 = 0
         while g < 15 {
-            s += "  Galaxy \(g): "
-            s += "*** "
-            s += String(
-                repeating: ".",
-                count: 3
+            let name = galaxyNames[Int(g)]
+            let padded = name.padding(
+                toLength: 12,
+                withPad: " ",
+                startingAt: 0
             )
-            s += " stars, "
-            s += String(
-                repeating: ".",
-                count: 9
-            )
-            s += " planets\n"
+            s += "  g\(g) \(padded) "
+            s += "3 stars, 27 planets "
+            s += "(pts \(g)..)\n"
             g += 1
         }
-        s += "\n405 total council seats\n"
+        s += "\n405 total council seats | "
+        s += "\(marketOfferCount) offers | "
+        s += "\(marketRefusalCount) refusals\n"
         return s
     }
 
@@ -284,8 +291,10 @@ extension AppDelegate {
         guard let point = UInt32(pointStr),
               point < 405
         else {
+            marketRefusalCount += 1
             appendMarketStatus(
-                "REFUSED: invalid point "
+                "REFUSED [\(marketRefusalCount)]"
+                + ": invalid point "
                 + "(must be 0-404)\n"
             )
             return
@@ -293,8 +302,10 @@ extension AppDelegate {
         guard let galaxy = UInt8(galaxyStr),
               galaxy < 15
         else {
+            marketRefusalCount += 1
             appendMarketStatus(
-                "REFUSED: invalid galaxy "
+                "REFUSED [\(marketRefusalCount)]"
+                + ": invalid galaxy "
                 + "(must be 0-14)\n"
             )
             return
@@ -303,8 +314,10 @@ extension AppDelegate {
 
         let decoded = decodeTopologyPoint(point)
         if decoded.galaxy != galaxy {
+            marketRefusalCount += 1
             appendMarketStatus(
-                "REFUSED: point \(point) "
+                "REFUSED [\(marketRefusalCount)]"
+                + ": point \(point) "
                 + "belongs to galaxy "
                 + "\(decoded.galaxy), "
                 + "not \(galaxy)\n"
