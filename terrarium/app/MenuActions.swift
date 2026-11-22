@@ -51,10 +51,18 @@ extension AppDelegate {
         dimItem.keyEquivalentModifierMask = [.command]
         viewMenu.addItem(dimItem)
 
+        let mktItem = NSMenuItem(
+            title: "Focus Market",
+            action: #selector(focusMarket),
+            keyEquivalent: "4"
+        )
+        mktItem.keyEquivalentModifierMask = [.command]
+        viewMenu.addItem(mktItem)
+
         let manItem = NSMenuItem(
             title: "Focus Blaze",
             action: #selector(focusBlaze),
-            keyEquivalent: "4"
+            keyEquivalent: "5"
         )
         manItem.keyEquivalentModifierMask = [.command]
         viewMenu.addItem(manItem)
@@ -62,7 +70,7 @@ extension AppDelegate {
         let blmItem = NSMenuItem(
             title: "Focus Bloom",
             action: #selector(focusBloom),
-            keyEquivalent: "5"
+            keyEquivalent: "6"
         )
         blmItem.keyEquivalentModifierMask = [.command]
         viewMenu.addItem(blmItem)
@@ -70,7 +78,7 @@ extension AppDelegate {
         let audItem = NSMenuItem(
             title: "Focus Audio",
             action: #selector(focusAudio),
-            keyEquivalent: "6"
+            keyEquivalent: "7"
         )
         audItem.keyEquivalentModifierMask = [.command]
         viewMenu.addItem(audItem)

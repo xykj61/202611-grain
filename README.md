@@ -42,9 +42,9 @@ Every claim at this front door is backed by executable **witnesses** in [`tools/
 | Reading | Measured Now |
 |---|---|
 | **Myofascia** -- living connective integrity (`+0.001` / movement) | **57.078** / 100.000 |
-| **Commits** | **179** |
-| **Orbit** | **12** (14/15 Fixed Sky) |
-| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261122.104557** |
+| **Commits** | **181** |
+| **Orbit** | **13** (1/15 Aries) |
+| **Chronological spine** (`YYYYMMDD.HHMMSS`, zero semver) | **20261122.105112** |
 | **Scattered archive closets** outside [`yonder/`](yonder/README.md) | **0** |
 
 <!-- metrics:end -->

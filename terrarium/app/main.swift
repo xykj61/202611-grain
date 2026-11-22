@@ -94,9 +94,10 @@ class AppDelegate: NSObject,
     var sidebarVisible = true
     let sidebarModules = [
         "Terminal", "Grid",
-        "Dimeroll", "Blaze",
-        "Bloom", "Audio",
-        "Social", "Linengrow",
+        "Dimeroll", "Market",
+        "Blaze", "Bloom",
+        "Audio", "Social",
+        "Linengrow",
     ]
     var bloomTextView: NSTextView?
     var bloomLessonIndex: Int = 0
@@ -192,6 +193,14 @@ class AppDelegate: NSObject,
     var connectionLabel: NSTextField?
     var moduleLabel: NSTextField?
     var infoLabel: NSTextField?
+
+    // --- Market tab properties ---
+    var marketActionControl: NSSegmentedControl?
+    var marketPointField: NSTextField?
+    var marketGalaxyField: NSTextField?
+    var marketPriceField: NSTextField?
+    var marketStatusView: NSTextView?
+    var marketOfferCount: Int = 0
 
     func applicationDidFinishLaunching(_ note: Notification) {
         let mask: NSWindow.StyleMask = [
