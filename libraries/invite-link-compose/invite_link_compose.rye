@@ -1,0 +1,244 @@
+//! libraries/invite-link-compose/invite_link_compose.rye
+//!
+//! Compose invite gift links as printable email drafts or Gmail
+//! MCP handoff payloads. TAME-guided: bounded buffers, no ambient
+//! network, no tracking. The link is a self-contained token that
+//! encodes the point number, sponsor galaxy, and a SHA3 seal.
+//!
+//!   rye build invite_link_compose.rye
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const nl: u8 = 10;
+
+pub const compose_version = "20261122.000000";
+
+pub const max_link_len: u32 = 256;
+pub const max_draft_subject: u32 = 128;
+pub const max_draft_body: u32 = 4096;
+pub const max_drafts: u32 = 16;
+
+pub const ComposeError = error{
+    DraftsFull,
+    SubjectTooLong,
+    BodyTooLong,
+    EmptySubject,
+    EmptyBody,
+    LinkOverflow,
+    AlreadyComposed,
+};
+
+pub const OutputMode = enum(u8) {
+    print_draft = 0,
+    gmail_mcp = 1,
+};
+
+fn hex_byte(b: u8) [2]u8 {
+    const hex = "0123456789abcdef";
+    return .{ hex[b >> 4], hex[b & 0x0f] };
+}
+
+pub fn compose_link(
+    out: *[max_link_len]u8,
+    point_number: u32,
+    sponsor_galaxy: u8,
+    seal: *const [32]u8,
+) u32 {
+    const prefix = "grain://invite/";
+    @memcpy(out[0..prefix.len], prefix);
+    var pos: u32 = prefix.len;
+
+    var pt_buf: [8]u8 = undefined;
+    std.mem.writeInt(u32, pt_buf[0..4], point_number, .little);
+    var i: u32 = 0;
+    while (i < 4) : (i += 1) {
+        const hx = hex_byte(pt_buf[i]);
+        out[pos] = hx[0];
+        out[pos + 1] = hx[1];
+        pos += 2;
+    }
+    out[pos] = '/';
+    pos += 1;
+    const gx = hex_byte(sponsor_galaxy);
+    out[pos] = gx[0];
+    out[pos + 1] = gx[1];
+    pos += 2;
+    out[pos] = '/';
+    pos += 1;
+    var s: u32 = 0;
+    while (s < 8) : (s += 1) {
+        const hx = hex_byte(seal[s]);
+        out[pos] = hx[0];
+        out[pos + 1] = hx[1];
+        pos += 2;
+    }
+    // invariant: link length fits in buffer
+    assert(pos <= max_link_len);
+    return pos;
+}
+
+pub const EmailDraft = struct {
+    subject_buf: [max_draft_subject]u8,
+    body_buf: [max_draft_body]u8,
+    subject_len: u32,
+    body_len: u32,
+    mode: OutputMode,
+    composed: bool,
+};
+
+pub const DraftBook = struct {
+    drafts: [max_drafts]EmailDraft,
+    count: u32,
+
+    pub fn init() DraftBook {
+        return .{
+            .drafts = std.mem.zeroes([max_drafts]EmailDraft),
+            .count = 0,
+        };
+    }
+
+    pub fn create_draft(
+        self: *DraftBook,
+        subject: []const u8,
+        body: []const u8,
+        mode: OutputMode,
+    ) ComposeError!u32 {
+        if (self.count >= max_drafts)
+            return ComposeError.DraftsFull;
+        if (subject.len == 0)
+            return ComposeError.EmptySubject;
+        if (subject.len > max_draft_subject)
+            return ComposeError.SubjectTooLong;
+        if (body.len == 0)
+            return ComposeError.EmptyBody;
+        if (body.len > max_draft_body)
+            return ComposeError.BodyTooLong;
+        // invariant: draft index is bounded
+        assert(self.count < max_drafts);
+        const idx = self.count;
+        var d = &self.drafts[idx];
+        @memcpy(d.subject_buf[0..subject.len], subject);
+        @memcpy(d.body_buf[0..body.len], body);
+        d.subject_len = @intCast(subject.len);
+        d.body_len = @intCast(body.len);
+        d.mode = mode;
+        d.composed = true;
+        self.count += 1;
+        return idx;
+    }
+};
+
+fn run_selftest() !u8 {
+    // --- Welcome witnesses ---
+
+    // 1. Compose an invite link
+    var seal: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("test-seal-planet-63");
+    h.final(&seal);
+    var link_buf: [max_link_len]u8 = undefined;
+    const link_len = compose_link(
+        &link_buf, 63, 2, &seal,
+    );
+    // invariant: link starts with grain://invite/
+    assert(link_len > 15);
+    assert(std.mem.eql(
+        u8,
+        link_buf[0..15],
+        "grain://invite/",
+    ));
+
+    // 2. Deterministic link: same input -> same link
+    var link_buf2: [max_link_len]u8 = undefined;
+    const link_len2 = compose_link(
+        &link_buf2, 63, 2, &seal,
+    );
+    assert(link_len == link_len2);
+    assert(std.mem.eql(
+        u8,
+        link_buf[0..link_len],
+        link_buf2[0..link_len2],
+    ));
+
+    // 3. Create print draft
+    var book = DraftBook.init();
+    const d0 = try book.create_draft(
+        "Grain invite for planet 63",
+        "grain://invite/3f000000/02/abcdef0123456789",
+        .print_draft,
+    );
+    assert(d0 == 0);
+    assert(book.count == 1);
+    assert(book.drafts[0].composed);
+    assert(book.drafts[0].mode == .print_draft);
+
+    // 4. Create Gmail MCP draft
+    const d1 = try book.create_draft(
+        "Star 18 sponsor gift",
+        "grain://invite/12000000/00/fedcba9876543210",
+        .gmail_mcp,
+    );
+    assert(d1 == 1);
+    assert(book.drafts[1].mode == .gmail_mcp);
+
+    // --- Refusal witnesses ---
+
+    // 5. Empty subject refused
+    if (book.create_draft("", "body", .print_draft)) |_| {
+        return error.EmptySubjectAccepted;
+    } else |e| {
+        if (e != ComposeError.EmptySubject)
+            return error.EmptySubjectWrongErr;
+    }
+
+    // 6. Empty body refused
+    if (book.create_draft("subj", "", .print_draft)) |_| {
+        return error.EmptyBodyAccepted;
+    } else |e| {
+        if (e != ComposeError.EmptyBody)
+            return error.EmptyBodyWrongErr;
+    }
+
+    // 7. Subject overflow refused
+    var big_sub: [max_draft_subject + 1]u8 = undefined;
+    @memset(&big_sub, 'x');
+    if (book.create_draft(&big_sub, "body", .print_draft)) |_| {
+        return error.BigSubjectAccepted;
+    } else |e| {
+        if (e != ComposeError.SubjectTooLong)
+            return error.BigSubjectWrongErr;
+    }
+
+    // 8. Body overflow refused
+    var big_body: [max_draft_body + 1]u8 = undefined;
+    @memset(&big_body, 'x');
+    if (book.create_draft("subj", &big_body, .print_draft)) |_| {
+        return error.BigBodyAccepted;
+    } else |e| {
+        if (e != ComposeError.BodyTooLong)
+            return error.BigBodyWrongErr;
+    }
+
+    print(
+        "invite_link_compose: 4 welcome (link, " ++
+        "deterministic, print, gmail).{c}",
+        .{nl},
+    );
+    print(
+        "invite_link_compose: 4 refusals (empty subj, " ++
+        "empty body, subj overflow, body overflow).{c}",
+        .{nl},
+    );
+    print(
+        "GREEN: invite_link_compose -- bounded email " ++
+        "draft composition for invite gift links.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
