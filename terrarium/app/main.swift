@@ -207,6 +207,13 @@ class AppDelegate: NSObject,
         wood: UInt64, status: String
     )] = []
     var marketRefusalCount: Int = 0
+    var marketProcess: Process?
+    var marketModuleRunning: Bool = false
+    var marketRawBuffer: String = ""
+    var marketGreenCount: Int = 0
+    var marketRedCount: Int = 0
+    var marketProofCount: Int = 0
+    var marketModuleQueue: [(String, String)] = []
 
     func applicationDidFinishLaunching(_ note: Notification) {
         let mask: NSWindow.StyleMask = [

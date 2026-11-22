@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261122.110554
+# Stamp: 20261122.131035
 # Sky (13/15 Orbit 15): readme-refresh + status from .husk,
 # 5 orbits sealed this wave (10-14).
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261122.110554
+version 20261122.131035
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---
@@ -100,6 +100,7 @@ sundial calfive modules/sundial/calfive_wheel.rye
 # --- Terrarium Host Glass + Ring-0 ---
 terrarium swift terrarium/app/
 terrarium market-tab terrarium/app/MarketTab.swift
+terrarium market-engine terrarium/app/MarketEngine.swift
 terrarium kotlin terrarium/carry-tablet/
 terrarium wasm terrarium/wasm/
 terrarium ring0-framebuf terrarium/src/aurora_framebuf_ring0.rye
