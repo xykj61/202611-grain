@@ -330,8 +330,8 @@ extension AppDelegate {
 
     func exportOfferLog() -> String {
         var s = "# Market Offer Log\n"
-        s += "# \(marketOfferLog.count) offers, "
-        s += "\(marketRefusalCount) refusals\n\n"
+        s += offerStats()
+        s += "\n"
         for e in marketOfferLog {
             let ind = AppDelegate.statusColor(
                 e.status
@@ -812,6 +812,33 @@ extension AppDelegate {
         s += "gift=\(gifts) "
         let net = Int64(buys) - Int64(sells)
         s += "net=\(net)\n"
+        return s
+    }
+
+    func offerStats() -> String {
+        var buys = 0, sells = 0, gifts = 0
+        for e in marketOfferLog {
+            switch e.action {
+            case "buy_sponsor": buys += 1
+            case "sell_sponsor": sells += 1
+            case "gift_invite": gifts += 1
+            default: break
+            }
+        }
+        let filled = marketOfferLog.filter {
+            $0.status == "filled"
+        }.count
+        let pending = marketOfferLog.filter {
+            $0.status == "pending"
+        }.count
+        let cancelled = marketOfferLog.filter {
+            $0.status == "cancelled"
+        }.count
+        var s = "STATS: \(marketOfferLog.count) "
+        s += "offers "
+        s += "(\(buys)b/\(sells)s/\(gifts)g) "
+        s += "| \(filled)+/\(pending)~/\(cancelled)x "
+        s += "| \(marketRefusalCount) refused\n"
         return s
     }
 
