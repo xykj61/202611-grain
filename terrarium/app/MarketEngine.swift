@@ -14,7 +14,9 @@ extension AppDelegate {
     static let marketModules: [(String, String)] = [
         ("Market Deck", "vantage_market_deck"),
         ("Sky View", "vantage_constellation_view"),
+        ("Spawn Invite", "vantage_spawn_invite"),
         ("Market Core", "dimeroll_market"),
+        ("Market Bridge", "dimeroll_market_bridge"),
         ("Market E2E", "dimeroll_market_e2e"),
     ]
 
