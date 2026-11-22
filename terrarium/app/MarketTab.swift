@@ -313,6 +313,44 @@ extension AppDelegate {
             marketBanner()
     }
 
+    func validateOfferLog() -> String {
+        // invariant: bounded log
+        guard marketOfferLog.count <= 64 else {
+            return "FAIL: log exceeds 64\n"
+        }
+        var ids = Set<Int>()
+        var violations = 0
+        for e in marketOfferLog {
+            // invariant: unique ids
+            if ids.contains(e.id) {
+                violations += 1
+            }
+            ids.insert(e.id)
+            // invariant: point in bounds
+            if e.point >= 405 {
+                violations += 1
+            }
+            // invariant: galaxy matches point
+            let d = decodeTopologyPoint(e.point)
+            if d.galaxy != e.galaxy {
+                violations += 1
+            }
+            // invariant: valid status
+            let valid = [
+                "pending", "filled", "cancelled",
+            ]
+            if !valid.contains(e.status) {
+                violations += 1
+            }
+        }
+        if violations > 0 {
+            return "FAIL: \(violations) "
+                + "violations found\n"
+        }
+        return "OK: \(marketOfferLog.count) "
+            + "offers validated\n"
+    }
+
     func resetMarketSession() {
         marketOfferLog.removeAll()
         marketOfferCount = 0
