@@ -403,6 +403,30 @@ extension AppDelegate {
                 marketOfferLog.count - 8
             s += "  ... \(hidden) earlier\n"
         }
+        s += woodConservation()
+        return s
+    }
+
+    func woodConservation() -> String {
+        var buys: UInt64 = 0
+        var sells: UInt64 = 0
+        var gifts: UInt64 = 0
+        for e in marketOfferLog {
+            switch e.action {
+            case "buy_sponsor":
+                buys += e.wood
+            case "sell_sponsor":
+                sells += e.wood
+            case "gift_invite":
+                gifts += e.wood
+            default: break
+            }
+        }
+        var s = "  WOOD: buy=\(buys) "
+        s += "sell=\(sells) "
+        s += "gift=\(gifts) "
+        let net = Int64(buys) - Int64(sells)
+        s += "net=\(net)\n"
         return s
     }
 
