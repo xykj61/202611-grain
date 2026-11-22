@@ -401,6 +401,47 @@ extension AppDelegate {
         "Ophiuchus", "Draco", "Siya",
     ]
 
+    func topologyAddressFromString(
+        _ input: String
+    ) -> (point: UInt32, galaxy: UInt8)? {
+        let parts = input.split(separator: ".")
+        guard !parts.isEmpty else { return nil }
+        if parts.count == 1 {
+            if let p = UInt32(parts[0]) {
+                let g = UInt8(p % 15)
+                return (p, g)
+            }
+            return nil
+        }
+        guard parts[0].hasPrefix("g"),
+              let g = UInt8(parts[0].dropFirst())
+        else { return nil }
+        // invariant: galaxy bound
+        guard g < 15 else { return nil }
+        if parts.count == 2,
+           parts[1].hasPrefix("s"),
+           let s = UInt8(parts[1].dropFirst())
+        {
+            guard s < 3 else { return nil }
+            let p = UInt32(s) * 15 + UInt32(g)
+            return (p, g)
+        }
+        if parts.count == 3,
+           parts[1].hasPrefix("s"),
+           parts[2].hasPrefix("p"),
+           let s = UInt8(parts[1].dropFirst()),
+           let pl = UInt8(parts[2].dropFirst())
+        {
+            guard s < 3, pl < 9 else {
+                return nil
+            }
+            let p = UInt32(pl) * 15
+                + UInt32(s) * 15 + UInt32(g)
+            return (p, g)
+        }
+        return nil
+    }
+
     func skyMapBanner() -> String {
         var s = "Constellation Sky Map\n"
         s += "=====================\n\n"
