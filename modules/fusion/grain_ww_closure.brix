@@ -1,12 +1,12 @@
 # modules/fusion/grain_ww_closure.brix -- Whole-Cup Closure Manifest.
 #
-# Stamp: 20261122.135813
+# Stamp: 20261122.135915
 # Sky (13/15 Orbit 15): readme-refresh + status from .husk,
 # 5 orbits sealed this wave (10-14).
 # Every line stays within 80 columns and plain 7-bit ASCII.
 
 name grain-ww
-version 20261122.135813
+version 20261122.135915
 identity com.grainww
 
 # --- Languages (Native-5 Spine) ---

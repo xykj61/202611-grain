@@ -357,8 +357,13 @@ extension AppDelegate {
     func marketBanner() -> String {
         // invariant: Glasswall enforced
         assert(AppDelegate.glasswallWriteOnly)
+        let df = DateFormatter()
+        df.dateFormat = "yyyyMMdd.HHmmss"
+        df.timeZone = TimeZone.current
+        let ts = df.string(from: Date())
         return "Dimeroll Market -- d15-3-9-405\n"
-            + "==============================\n\n"
+            + "==============================\n"
+            + "Session: \(ts)\n\n"
             + "15 galaxies / 45 stars / "
             + "405 council seats\n"
             + "WOOD conservation: sum(nets) == 0\n"
