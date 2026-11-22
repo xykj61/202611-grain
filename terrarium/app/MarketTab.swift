@@ -536,9 +536,10 @@ extension AppDelegate {
         )
         marketOfferLog.append(entry)
 
+        let addr = decoded.description
         let msg = "OFFER: \(name) "
-            + "\(tier) point=\(point) "
-            + "galaxy=\(galaxy) "
+            + "\(tier) \(addr) "
+            + "point=\(point) "
             + "wood=\(price)\n"
         appendMarketStatus(msg)
         appendMarketStatus(
@@ -561,6 +562,18 @@ extension AppDelegate {
         let star: UInt8
         let planet: UInt8
         let tier: String
+
+        var description: String {
+            switch tier {
+            case "galaxy":
+                return "g\(galaxy)"
+            case "star":
+                return "g\(galaxy).s\(star)"
+            default:
+                return "g\(galaxy).s\(star)"
+                    + ".p\(planet)"
+            }
+        }
     }
 
     func decodeTopologyPoint(
