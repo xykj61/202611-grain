@@ -26,7 +26,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261122.103125";
+pub const grain_ww_version = "20261122.104557";
 pub const myofascia_reading = "57.078";
 const nl: u8 = 10;
 
@@ -98,6 +98,11 @@ fn print_help() u8 {
         "  husk-editor    husk movement editor\n" ++
         "  studio-deck    vantage studio deck\n" ++
         "  triptych-art   triptych canvas\n\n" ++
+        "MARKET & SKY\n" ++
+        "  market         dimeroll WOOD market\n" ++
+        "  market-deck    C-ABI market surface\n" ++
+        "  market-e2e     end-to-end market flow\n" ++
+        "  sky-view       realidream constellation\n\n" ++
         "AUDIT & WITNESS\n" ++
         "  audit-clean    residue-free file check\n" ++
         "  virgo-audit    compass topology audit\n" ++
@@ -106,7 +111,7 @@ fn print_help() u8 {
         "  whole-cup      sameness macro cup\n" ++
         "  stamp-ratchet  stamp-no-serial ratchet\n\n" ++
         "Run grain-ww <command> with no args for its\n" ++
-        "selftest. See grain_ww_cli.rye for all 81.\n";
+        "selftest. See grain_ww_cli.rye for all 85.\n";
     print("{s}", .{h});
     return 0;
 }
@@ -923,6 +928,42 @@ pub fn main(init: std.process.Init) !u8 {
             "languages/rishi/bin/rishi",
             null,
             rr,
+        );
+    }
+    if (std.mem.eql(u8, sub, "market")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/dimeroll_market",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "market-deck")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_market_deck",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "market-e2e")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/dimeroll_market_e2e",
+            null,
+            args[2..],
+        );
+    }
+    if (std.mem.eql(u8, sub, "sky-view")) {
+        return dispatch_exec(
+            a,
+            io,
+            "tools/.build/vantage_constellation_view",
+            null,
+            args[2..],
         );
     }
 
