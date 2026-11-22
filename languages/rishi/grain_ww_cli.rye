@@ -26,7 +26,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 
-pub const grain_ww_version = "20261122.141513";
+pub const grain_ww_version = "20261122.141611";
 pub const myofascia_reading = "57.078";
 const nl: u8 = 10;
 

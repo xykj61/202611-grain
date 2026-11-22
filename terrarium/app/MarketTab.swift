@@ -368,6 +368,24 @@ extension AppDelegate {
 
     static var marketAutoSave = true
 
+    func sessionDigest() -> String {
+        var h: UInt64 = 0x9e3779b97f4a7c15
+        for e in marketOfferLog {
+            h ^= UInt64(e.id) &* 0x517cc1b727220a95
+            h ^= UInt64(e.point) &* 0x6c62272e07bb0142
+            h ^= e.wood &* 0x9e3779b97f4a7c15
+            h = (h &<< 13) | (h &>> 51)
+            h &+= UInt64(e.galaxy)
+            switch e.status {
+            case "pending": h ^= 1
+            case "filled": h ^= 2
+            case "cancelled": h ^= 3
+            default: h ^= 0
+            }
+        }
+        return String(h, radix: 16)
+    }
+
     func listSavedSessions() -> String {
         let dir = "\(repoRoot)/active-husk"
             + "/market"
@@ -1119,10 +1137,11 @@ extension AppDelegate {
                 atomically: true,
                 encoding: .utf8
             )
+            let dig = sessionDigest()
             appendMarketStatus(
                 "SAVED: \(name) "
                 + "(\(marketOfferLog.count) "
-                + "offers)\n"
+                + "offers, digest=\(dig))\n"
             )
         } catch {
             appendMarketStatus(
