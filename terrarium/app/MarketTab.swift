@@ -301,12 +301,25 @@ extension AppDelegate {
         }
         let price = UInt64(priceStr) ?? 0
 
+        let decoded = decodeTopologyPoint(point)
+        if decoded.galaxy != galaxy {
+            appendMarketStatus(
+                "REFUSED: point \(point) "
+                + "belongs to galaxy "
+                + "\(decoded.galaxy), "
+                + "not \(galaxy)\n"
+            )
+            return
+        }
+
         let actionNames = [
             "buy_sponsor", "sell_sponsor",
             "gift_invite",
         ]
         let name = actionNames[action]
-        let msg = "OFFER: \(name) point=\(point) "
+        let tier = decoded.tier
+        let msg = "OFFER: \(name) "
+            + "\(tier) point=\(point) "
             + "galaxy=\(galaxy) "
             + "wood=\(price)\n"
         appendMarketStatus(msg)
@@ -314,6 +327,39 @@ extension AppDelegate {
         appendMarketStatus(
             "  -> offer \(marketOfferCount) "
             + "posted (pending fill)\n"
+        )
+    }
+
+    struct TopologyAddr {
+        let galaxy: UInt8
+        let star: UInt8
+        let planet: UInt8
+        let tier: String
+    }
+
+    func decodeTopologyPoint(
+        _ p: UInt32
+    ) -> TopologyAddr {
+        // invariant: p < 405
+        let g = UInt8(p % 15)
+        let rem = p / 15
+        if rem == 0 {
+            return TopologyAddr(
+                galaxy: g, star: 0,
+                planet: 0, tier: "galaxy"
+            )
+        }
+        let s = UInt8((rem - 1) / 9)
+        let planet = UInt8((rem - 1) % 9)
+        if planet == 0 && s < 3 {
+            return TopologyAddr(
+                galaxy: g, star: s,
+                planet: 0, tier: "star"
+            )
+        }
+        return TopologyAddr(
+            galaxy: g, star: s,
+            planet: planet, tier: "planet"
         )
     }
 
