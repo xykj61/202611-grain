@@ -391,8 +391,19 @@ extension AppDelegate {
             s += "[\(gCounts[gi])] \(bar)\n"
             g += 1
         }
+        let filled = marketOfferLog.filter {
+            $0.status == "filled"
+        }.count
+        let cancelled = marketOfferLog.filter {
+            $0.status == "cancelled"
+        }.count
+        let pending = marketOfferLog.filter {
+            $0.status == "pending"
+        }.count
         s += "\n405 seats | "
-        s += "\(marketOfferCount) offers | "
+        s += "\(marketOfferCount) offers "
+        s += "(+\(filled) x\(cancelled) "
+        s += "~\(pending)) | "
         s += "\(marketRefusalCount) refusals\n"
         return s
     }
