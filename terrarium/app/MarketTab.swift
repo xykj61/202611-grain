@@ -459,6 +459,14 @@ extension AppDelegate {
     }
 
     func fillOldestPending() {
+        let pointStr =
+            marketPointField?.stringValue ?? ""
+        if let targetId = Int(pointStr),
+           targetId > 0
+        {
+            fillById(targetId)
+            return
+        }
         guard let idx = marketOfferLog.firstIndex(
             where: { $0.status == "pending" }
         ) else {
@@ -471,6 +479,59 @@ extension AppDelegate {
         }
         marketOfferLog[idx].status = "filled"
         let e = marketOfferLog[idx]
+        appendMarketStatus(
+            "FILLED: offer [\(e.id)] "
+            + "\(e.action) \(e.tier) "
+            + "p\(e.point) g\(e.galaxy) "
+            + "\(e.wood)W\n"
+        )
+        if e.action == "gift_invite" {
+            let link = composeInviteLink(
+                point: e.point,
+                galaxy: e.galaxy
+            )
+            appendMarketStatus(
+                "  INVITE: \(link)\n"
+            )
+        }
+        appendMarketStatus(
+            offerLogSummary()
+        )
+    }
+
+    func fillById(_ targetId: Int) {
+        guard let idx = marketOfferLog.firstIndex(
+            where: { $0.id == targetId }
+        ) else {
+            marketRefusalCount += 1
+            appendMarketStatus(
+                "REFUSED [\(marketRefusalCount)]"
+                + ": offer \(targetId) "
+                + "not found\n"
+            )
+            return
+        }
+        let e = marketOfferLog[idx]
+        if e.status == "filled" {
+            marketRefusalCount += 1
+            appendMarketStatus(
+                "REFUSED [\(marketRefusalCount)]"
+                + ": double-fill on offer "
+                + "[\(targetId)] "
+                + "(already filled)\n"
+            )
+            return
+        }
+        if e.status == "cancelled" {
+            marketRefusalCount += 1
+            appendMarketStatus(
+                "REFUSED [\(marketRefusalCount)]"
+                + ": fill-after-cancel on "
+                + "offer [\(targetId)]\n"
+            )
+            return
+        }
+        marketOfferLog[idx].status = "filled"
         appendMarketStatus(
             "FILLED: offer [\(e.id)] "
             + "\(e.action) \(e.tier) "
