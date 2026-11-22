@@ -79,6 +79,11 @@ extension AppDelegate {
                     + "\(status) ---\n"
                 )
                 self?.marketModuleRunning = false
+                if !(self?.marketModuleQueue
+                    .isEmpty ?? true)
+                {
+                    self?.advanceMarketQueue()
+                }
             }
         }
 
