@@ -48,7 +48,7 @@ where the practice drifted from the gratitude.
 - [x] **[Taurus]** Close or re-book each row with current-tree
       proof -- run witnesses where scripts exist, measure where
       they do not
-- [ ] **[Gemini]** Sweep ascending serial numbers from ITINERARY
+- [x] **[Gemini]** Sweep ascending serial numbers from ITINERARY
       Calfive line and RESONANCE section -- replace orbit numbers
       with stamps or semantic names per Air
 - [ ] **[Cancer]** Establish commit-subject convention: sign name
