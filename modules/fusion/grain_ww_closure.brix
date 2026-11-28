@@ -54,6 +54,7 @@ vantage pulp-board modules/vantage/pulp/pulp_board.rye
 vantage pulp-feed modules/vantage/pulp/pulp_feed.rye
 vantage pulp-bounty modules/vantage/pulp/pulp_bounty.rye
 vantage pulp-tablecloth modules/vantage/pulp/pulp_board_tablecloth_bridge.rye
+vantage pulp-canvas modules/vantage/pulp/pulp_card_canvas.rye
 
 # --- Libraries ---
 library invite-link-compose libraries/invite-link-compose/invite_link_compose.rye

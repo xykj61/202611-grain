@@ -597,6 +597,11 @@ let pto = "-femit-bin=tools/.build/pulp_tablecloth_bridge"
 assert (run ["sh" rb pt1 pto]).ok else "pulp_tablecloth build"
 assert (run ["tools/.build/pulp_tablecloth_bridge"]).ok else "pulp_tc"
 
+let pc1 = "modules/vantage/pulp/pulp_card_canvas.rye"
+let pco = "-femit-bin=tools/.build/pulp_card_canvas"
+assert (run ["sh" rb pc1 pco]).ok else "pulp_card_canvas build"
+assert (run ["tools/.build/pulp_card_canvas"]).ok else "pulp_canvas"
+
 # -- Orbit 12 README metrics from .husk + libra preflight --
 let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
@@ -606,4 +611,4 @@ assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 let gww = "languages/rishi/bin/grain-ww"
 assert (run [gww "market-run"]).ok else "market-run 7/7"
 
-say "GREEN: witness_all -- 52 hubs & 151 proofs on metal!"
+say "GREEN: witness_all -- 53 hubs & 158 proofs on metal!"

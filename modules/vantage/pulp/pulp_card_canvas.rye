@@ -1,0 +1,261 @@
+//! modules/vantage/pulp/pulp_card_canvas.rye -- Card Canvas!
+//!
+//! Stamp: `20261128.131236` -- Renders Pulp board cards as
+//! bounded Skate FrameGrid tiles for Vantage Station and
+//! Carry surfaces. Each card renders into a `24 x 6` text
+//! cell tile showing title, column, bounty status, and a
+//! SHA3-256 visual hash stripe. Glasswall write-only: the
+//! canvas writes pixels, never reads them back.
+//!
+//!   rye build modules/vantage/pulp/pulp_card_canvas.rye \
+//!     -femit-bin=tools/.build/pulp_card_canvas
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.131236";
+
+pub const tile_w: u32 = 24;
+pub const tile_h: u32 = 6;
+pub const board_cols: u32 = 8;
+pub const board_rows: u32 = 8;
+pub const max_cards: u32 = 64;
+pub const grid_w: u32 = tile_w * board_cols;
+pub const grid_h: u32 = tile_h * board_rows;
+const nl: u8 = 10;
+
+pub const CanvasError = error{
+    CardIndexOutOfRange,
+    ColumnOutOfRange,
+    TitleTooLong,
+};
+
+pub const BountyBadge = enum(u8) {
+    none,
+    open,
+    witnessed,
+    settled,
+    cancelled,
+};
+
+pub const CardTile = struct {
+    cells: [tile_h][tile_w]u8,
+
+    pub fn init() CardTile {
+        var t: CardTile = undefined;
+        for (&t.cells) |*row| @memset(row, ' ');
+        // invariant: fresh tile is space-padded
+        assert(t.cells[0][0] == ' ');
+        return t;
+    }
+
+    pub fn write_line(
+        self: *CardTile,
+        row: u32,
+        text: []const u8,
+    ) void {
+        if (row >= tile_h) return;
+        @memset(&self.cells[row], ' ');
+        const n = @min(text.len, tile_w);
+        @memcpy(self.cells[row][0..n], text[0..n]);
+    }
+};
+
+pub fn render_card_tile(
+    title: []const u8,
+    column_name: []const u8,
+    bounty: BountyBadge,
+    visual_sha3: ?[32]u8,
+) CanvasError!CardTile {
+    if (title.len > 48) return error.TitleTooLong;
+
+    var tile = CardTile.init();
+
+    var border: [tile_w]u8 = undefined;
+    @memset(&border, '-');
+    border[0] = '+';
+    border[tile_w - 1] = '+';
+    tile.write_line(0, &border);
+
+    var title_line: [tile_w]u8 = undefined;
+    @memset(&title_line, ' ');
+    title_line[0] = '|';
+    title_line[tile_w - 1] = '|';
+    const tlen = @min(title.len, tile_w - 4);
+    @memcpy(title_line[2 .. 2 + tlen], title[0..tlen]);
+    tile.write_line(1, &title_line);
+
+    var col_line: [tile_w]u8 = undefined;
+    @memset(&col_line, ' ');
+    col_line[0] = '|';
+    col_line[tile_w - 1] = '|';
+    const clen = @min(column_name.len, tile_w - 4);
+    @memcpy(col_line[2 .. 2 + clen], column_name[0..clen]);
+    tile.write_line(2, &col_line);
+
+    var badge_line: [tile_w]u8 = undefined;
+    @memset(&badge_line, ' ');
+    badge_line[0] = '|';
+    badge_line[tile_w - 1] = '|';
+    const badge_text: []const u8 = switch (bounty) {
+        .none => "",
+        .open => "[BOUNTY OPEN]",
+        .witnessed => "[WITNESSED]",
+        .settled => "[SETTLED]",
+        .cancelled => "[CANCELLED]",
+    };
+    if (badge_text.len > 0) {
+        const blen = @min(badge_text.len, tile_w - 4);
+        @memcpy(
+            badge_line[2 .. 2 + blen],
+            badge_text[0..blen],
+        );
+    }
+    tile.write_line(3, &badge_line);
+
+    var hash_line: [tile_w]u8 = undefined;
+    @memset(&hash_line, ' ');
+    hash_line[0] = '|';
+    hash_line[tile_w - 1] = '|';
+    if (visual_sha3) |sha| {
+        const hex = "0123456789abcdef";
+        var i: usize = 0;
+        while (i < 10) : (i += 1) {
+            hash_line[2 + i * 2] = hex[sha[i] >> 4];
+            hash_line[3 + i * 2] = hex[sha[i] & 0xF];
+        }
+    }
+    tile.write_line(4, &hash_line);
+
+    tile.write_line(5, &border);
+
+    // invariant: tile border corners always '+' after render
+    assert(tile.cells[0][0] == '+');
+    assert(tile.cells[5][0] == '+');
+    return tile;
+}
+
+pub const BoardCanvas = struct {
+    tiles: [max_cards]CardTile,
+    tile_count: u32,
+    digest: [32]u8,
+
+    pub fn init() BoardCanvas {
+        const bc = std.mem.zeroes(BoardCanvas);
+        // invariant: empty canvas has zero tiles
+        assert(bc.tile_count == 0);
+        return bc;
+    }
+
+    pub fn add_tile(
+        self: *BoardCanvas,
+        tile: CardTile,
+    ) CanvasError!u32 {
+        // invariant: tile count stays within bounded max
+        assert(self.tile_count <= max_cards);
+        if (self.tile_count >= max_cards) {
+            return error.CardIndexOutOfRange;
+        }
+        const idx = self.tile_count;
+        self.tiles[idx] = tile;
+        self.tile_count += 1;
+        return idx;
+    }
+
+    pub fn compute_digest(self: *BoardCanvas) [32]u8 {
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-canvas-v1:");
+        var i: u32 = 0;
+        while (i < self.tile_count) : (i += 1) {
+            for (&self.tiles[i].cells) |*row| {
+                h.update(row);
+            }
+        }
+        h.final(&self.digest);
+        return self.digest;
+    }
+};
+
+fn run_selftest() !u8 {
+    // Welcome 1: Render a card tile with bounty badge
+    var sha: [32]u8 = undefined;
+    @memset(&sha, 0xAB);
+    const tile = try render_card_tile(
+        "Build the board model",
+        "In Progress",
+        .open,
+        sha,
+    );
+    if (tile.cells[0][0] != '+') return error.BorderWrong;
+    if (tile.cells[1][2] != 'B') return error.TitleWrong;
+
+    // Welcome 2: Render a tile with no bounty
+    const plain = try render_card_tile(
+        "Design review",
+        "Done",
+        .none,
+        null,
+    );
+    if (plain.cells[3][2] != ' ') {
+        return error.NoBadgeShouldBeBlank;
+    }
+
+    // Welcome 3: Build a board canvas with two tiles
+    var canvas = BoardCanvas.init();
+    _ = try canvas.add_tile(tile);
+    _ = try canvas.add_tile(plain);
+    if (canvas.tile_count != 2) {
+        return error.TileCountWrong;
+    }
+
+    // Welcome 4: Compute canvas digest
+    const d = canvas.compute_digest();
+    if (d[0] == 0 and d[1] == 0 and d[2] == 0 and d[3] == 0) {
+        return error.DigestAllZeros;
+    }
+
+    // Welcome 5: Settled bounty badge renders
+    const settled = try render_card_tile(
+        "Feed data model",
+        "Done",
+        .settled,
+        sha,
+    );
+    if (settled.cells[3][2] != '[') {
+        return error.SettledBadgeMissing;
+    }
+
+    // Refusal 1: Title too long (> 48 chars)
+    var long_buf: [49]u8 = undefined;
+    @memset(&long_buf, 'A');
+    if (render_card_tile(&long_buf, "X", .none, null)) |_| {
+        return error.LongTitleAccepted;
+    } else |err| {
+        if (err != error.TitleTooLong) return err;
+    }
+
+    // Refusal 2: Canvas capacity overflow
+    var full = BoardCanvas.init();
+    var i: u32 = 0;
+    while (i < max_cards) : (i += 1) {
+        _ = try full.add_tile(plain);
+    }
+    if (full.add_tile(plain)) |_| {
+        return error.OverflowAccepted;
+    } else |err| {
+        if (err != error.CardIndexOutOfRange) return err;
+    }
+
+    print(
+        "GREEN: pulp_card_canvas -- "
+        ++ "Skate tile rendering for Pulp boards.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
