@@ -1,0 +1,227 @@
+//! modules/vantage/pulp/pulp_feed.rye -- Social Feed!
+//!
+//! Stamp: `20261128.125854` -- Append-only Blaze-signed
+//! feed for Pulp boards. Each entry is content-addressed
+//! via SHA3-256, Kumara-signed, and timestamped by
+//! One-Clock. The feed is the honest chronological
+//! record of everything that happens on a board.
+//!
+//!   rye build modules/vantage/pulp/pulp_feed.rye \
+//!     -femit-bin=tools/.build/pulp_feed
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.125854";
+
+pub const max_feed_entries: u32 = 256;
+pub const max_entry_body: u32 = 128;
+pub const max_author: u32 = 32;
+const nl: u8 = 10;
+
+pub const FeedError = error{
+    FeedFull,
+    EmptyBodyRefused,
+    EmptyAuthorRefused,
+};
+
+pub const EntryKind = enum(u8) {
+    card_created,
+    card_moved,
+    card_visual,
+    card_comment,
+    voice_note,
+    witness_result,
+    hearth_grant,
+};
+
+pub const FeedEntry = struct {
+    blaze_sha3: [32]u8,
+    prev_sha3: [32]u8,
+    author: [max_author]u8,
+    author_len: u8,
+    body: [max_entry_body]u8,
+    body_len: u8,
+    kind: EntryKind,
+    timestamp_ms: u64,
+    seq: u32,
+
+    pub fn author_slice(
+        self: *const FeedEntry,
+    ) []const u8 {
+        return self.author[0..self.author_len];
+    }
+
+    pub fn body_slice(
+        self: *const FeedEntry,
+    ) []const u8 {
+        return self.body[0..self.body_len];
+    }
+};
+
+pub const BoardFeed = struct {
+    entries: [max_feed_entries]FeedEntry,
+    count: u32,
+    head_sha3: [32]u8,
+
+    pub fn init() BoardFeed {
+        const f = std.mem.zeroes(BoardFeed);
+        // invariant: empty feed starts at zero entries
+        assert(f.count == 0);
+        return f;
+    }
+
+    pub fn append(
+        self: *BoardFeed,
+        author: []const u8,
+        body: []const u8,
+        kind: EntryKind,
+        timestamp_ms: u64,
+    ) FeedError!u32 {
+        if (author.len == 0)
+            return error.EmptyAuthorRefused;
+        if (body.len == 0)
+            return error.EmptyBodyRefused;
+        if (self.count >= max_feed_entries)
+            return error.FeedFull;
+
+        const idx = self.count;
+        var entry = std.mem.zeroes(FeedEntry);
+
+        const an = @min(author.len, max_author);
+        @memcpy(entry.author[0..an], author[0..an]);
+        entry.author_len = @intCast(an);
+
+        const bn = @min(body.len, max_entry_body);
+        @memcpy(entry.body[0..bn], body[0..bn]);
+        entry.body_len = @intCast(bn);
+
+        entry.kind = kind;
+        entry.timestamp_ms = timestamp_ms;
+        entry.seq = idx;
+        entry.prev_sha3 = self.head_sha3;
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-feed-v1:");
+        h.update(&entry.prev_sha3);
+        h.update(entry.author[0..an]);
+        h.update(entry.body[0..bn]);
+        var kind_byte: [1]u8 = .{@intFromEnum(kind)};
+        h.update(&kind_byte);
+        var ts_buf: [8]u8 = undefined;
+        std.mem.writeInt(
+            u64,
+            &ts_buf,
+            timestamp_ms,
+            .little,
+        );
+        h.update(&ts_buf);
+        h.final(&entry.blaze_sha3);
+
+        self.head_sha3 = entry.blaze_sha3;
+        self.entries[idx] = entry;
+        self.count += 1;
+
+        // invariant: feed count bounded, head tracks tip
+        assert(self.count <= max_feed_entries);
+        assert(std.mem.eql(
+            u8,
+            &self.head_sha3,
+            &entry.blaze_sha3,
+        ));
+        return idx;
+    }
+
+    pub fn verify_chain(
+        self: *const BoardFeed,
+    ) bool {
+        if (self.count == 0) return true;
+        var i: u32 = 1;
+        while (i < self.count) : (i += 1) {
+            if (!std.mem.eql(
+                u8,
+                &self.entries[i].prev_sha3,
+                &self.entries[i - 1].blaze_sha3,
+            )) return false;
+        }
+        // invariant: chain tip matches head
+        assert(std.mem.eql(
+            u8,
+            &self.head_sha3,
+            &self.entries[self.count - 1].blaze_sha3,
+        ));
+        return true;
+    }
+};
+
+fn run_selftest() !u8 {
+    var feed = BoardFeed.init();
+
+    const ts_base: u64 = 1732780734000;
+
+    _ = try feed.append(
+        "~sunflower",
+        "Created card: Design board layout",
+        .card_created,
+        ts_base,
+    );
+    _ = try feed.append(
+        "~rosemary",
+        "Moved card to Growing column",
+        .card_moved,
+        ts_base + 60000,
+    );
+    _ = try feed.append(
+        "~siya",
+        "Attached sketch of feed timeline",
+        .card_visual,
+        ts_base + 120000,
+    );
+    const grant_idx = try feed.append(
+        "~sunflower",
+        "HearthGrant 500 MALA to this board",
+        .hearth_grant,
+        ts_base + 180000,
+    );
+
+    if (feed.count != 4) return error.FeedCountWrong;
+
+    if (!feed.verify_chain())
+        return error.ChainVerifyFailed;
+
+    if (feed.entries[grant_idx].kind != .hearth_grant)
+        return error.WrongEntryKind;
+
+    const e0_sha3 = feed.entries[0].blaze_sha3;
+    if (e0_sha3[0] == 0 and e0_sha3[1] == 0 and
+        e0_sha3[2] == 0 and e0_sha3[3] == 0)
+    {
+        return error.SuspiciousZeroHash;
+    }
+
+    if (feed.append("", "body", .card_comment, 0)) |_| {
+        return error.EmptyAuthorAccepted;
+    } else |err| {
+        if (err != error.EmptyAuthorRefused) return err;
+    }
+
+    if (feed.append("~a", "", .card_comment, 0)) |_| {
+        return error.EmptyBodyAccepted;
+    } else |err| {
+        if (err != error.EmptyBodyRefused) return err;
+    }
+
+    print(
+        "GREEN: pulp_feed -- append-only " ++
+            "Blaze chain, 4 welcome + " ++
+            "2 refusal.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

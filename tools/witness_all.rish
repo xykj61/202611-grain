@@ -576,6 +576,17 @@ let ho2 = "-femit-bin=tools/.build/husk_lower"
 assert (run ["sh" rb ht2 ho2]).ok else "husk_lower build"
 assert (run ["tools/.build/husk_lower" "selftest"]).ok else "husk_low"
 
+# -- Pulp Vantage room (Living Board + Social Feed) --
+let pb1 = "modules/vantage/pulp/pulp_board.rye"
+let po1 = "-femit-bin=tools/.build/pulp_board"
+assert (run ["sh" rb pb1 po1]).ok else "pulp_board build"
+assert (run ["tools/.build/pulp_board"]).ok else "pulp_board"
+
+let pf1 = "modules/vantage/pulp/pulp_feed.rye"
+let pfo = "-femit-bin=tools/.build/pulp_feed"
+assert (run ["sh" rb pf1 pfo]).ok else "pulp_feed build"
+assert (run ["tools/.build/pulp_feed"]).ok else "pulp_feed"
+
 # -- Orbit 12 README metrics from .husk + libra preflight --
 let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
@@ -585,4 +596,4 @@ assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 let gww = "languages/rishi/bin/grain-ww"
 assert (run [gww "market-run"]).ok else "market-run 7/7"
 
-say "GREEN: witness_all -- 48 hubs & 122 proofs on metal!"
+say "GREEN: witness_all -- 50 hubs & 135 proofs on metal!"

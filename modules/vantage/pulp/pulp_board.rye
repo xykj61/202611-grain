@@ -1,0 +1,273 @@
+//! modules/vantage/pulp/pulp_board.rye -- Living Board!
+//!
+//! Stamp: `20261128.125854` -- Board data model for the Pulp
+//! Vantage room. A board holds cards in named columns.
+//! Cards carry text, a visual canvas hash, and a feed
+//! position. Board state is projected into Tablecloth
+//! relational rows; card visuals are Blaze content-
+//! addressed blobs.
+//!
+//!   rye build modules/vantage/pulp/pulp_board.rye \
+//!     -femit-bin=tools/.build/pulp_board
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.125854";
+
+pub const max_boards: u32 = 16;
+pub const max_columns: u32 = 8;
+pub const max_cards: u32 = 64;
+pub const max_title: u32 = 48;
+pub const max_body: u32 = 256;
+const nl: u8 = 10;
+
+pub const BoardError = error{
+    BoardsFull,
+    ColumnsFull,
+    CardsFull,
+    EmptyTitleRefused,
+    EmptyColumnRefused,
+    CardNotFound,
+    ColumnNotFound,
+};
+
+pub const CardId = u32;
+pub const BoardId = u32;
+
+pub const Column = struct {
+    name: [max_title]u8,
+    name_len: u8,
+
+    pub fn name_slice(
+        self: *const Column,
+    ) []const u8 {
+        return self.name[0..self.name_len];
+    }
+};
+
+pub const Card = struct {
+    title: [max_title]u8,
+    title_len: u8,
+    body: [max_body]u8,
+    body_len: u16,
+    column_idx: u8,
+    visual_sha3: [32]u8,
+    has_visual: bool,
+    feed_seq: u32,
+    active: bool,
+
+    pub fn title_slice(
+        self: *const Card,
+    ) []const u8 {
+        return self.title[0..self.title_len];
+    }
+
+    pub fn body_slice(
+        self: *const Card,
+    ) []const u8 {
+        return self.body[0..self.body_len];
+    }
+};
+
+pub const Board = struct {
+    name: [max_title]u8,
+    name_len: u8,
+    columns: [max_columns]Column,
+    column_count: u8,
+    cards: [max_cards]Card,
+    card_count: u32,
+    feed_seq: u32,
+    active: bool,
+
+    pub fn init() Board {
+        const b = std.mem.zeroes(Board);
+        // invariant: a fresh board has zero cards and zero columns
+        assert(b.card_count == 0 and b.column_count == 0);
+        return b;
+    }
+
+    pub fn name_slice(
+        self: *const Board,
+    ) []const u8 {
+        return self.name[0..self.name_len];
+    }
+
+    pub fn add_column(
+        self: *Board,
+        col_name: []const u8,
+    ) BoardError!u8 {
+        if (col_name.len == 0)
+            return error.EmptyColumnRefused;
+        if (self.column_count >= max_columns)
+            return error.ColumnsFull;
+        const idx = self.column_count;
+        var col = std.mem.zeroes(Column);
+        const n = @min(col_name.len, max_title);
+        @memcpy(col.name[0..n], col_name[0..n]);
+        col.name_len = @intCast(n);
+        self.columns[idx] = col;
+        self.column_count += 1;
+        // invariant: column count bounded by max_columns
+        assert(self.column_count <= max_columns);
+        return idx;
+    }
+
+    pub fn add_card(
+        self: *Board,
+        title: []const u8,
+        column_idx: u8,
+    ) BoardError!CardId {
+        if (title.len == 0)
+            return error.EmptyTitleRefused;
+        if (column_idx >= self.column_count)
+            return error.ColumnNotFound;
+        if (self.card_count >= max_cards)
+            return error.CardsFull;
+        const id = self.card_count;
+        var card = std.mem.zeroes(Card);
+        const n = @min(title.len, max_title);
+        @memcpy(card.title[0..n], title[0..n]);
+        card.title_len = @intCast(n);
+        card.column_idx = column_idx;
+        card.active = true;
+        self.feed_seq += 1;
+        card.feed_seq = self.feed_seq;
+        self.cards[id] = card;
+        self.card_count += 1;
+        // invariant: card count bounded by max_cards
+        assert(self.card_count <= max_cards);
+        return id;
+    }
+
+    pub fn move_card(
+        self: *Board,
+        card_id: CardId,
+        new_column: u8,
+    ) BoardError!void {
+        if (card_id >= self.card_count)
+            return error.CardNotFound;
+        if (new_column >= self.column_count)
+            return error.ColumnNotFound;
+        self.cards[card_id].column_idx = new_column;
+        self.feed_seq += 1;
+        self.cards[card_id].feed_seq = self.feed_seq;
+        // invariant: moved card references a valid column
+        assert(
+            self.cards[card_id].column_idx <
+                self.column_count,
+        );
+    }
+
+    pub fn attach_visual(
+        self: *Board,
+        card_id: CardId,
+        blob: []const u8,
+    ) BoardError!void {
+        if (card_id >= self.card_count)
+            return error.CardNotFound;
+        Sha3_256.hash(
+            blob,
+            &self.cards[card_id].visual_sha3,
+            .{},
+        );
+        self.cards[card_id].has_visual = true;
+        self.feed_seq += 1;
+        self.cards[card_id].feed_seq = self.feed_seq;
+        // invariant: visual hash is content-addressed
+        assert(self.cards[card_id].has_visual);
+    }
+
+    pub fn cards_in_column(
+        self: *const Board,
+        col_idx: u8,
+        out: []CardId,
+    ) u32 {
+        var count: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.card_count) : (i += 1) {
+            if (!self.cards[i].active) continue;
+            if (self.cards[i].column_idx != col_idx)
+                continue;
+            if (count >= out.len) break;
+            out[count] = i;
+            count += 1;
+        }
+        return count;
+    }
+};
+
+fn run_selftest() !u8 {
+    var board = Board.init();
+
+    const n = @min("Grain Launch".len, max_title);
+    @memcpy(board.name[0..n], "Grain Launch"[0..n]);
+    board.name_len = @intCast(n);
+    board.active = true;
+
+    const seed = try board.add_column("Seed");
+    const growing = try board.add_column("Growing");
+    const ripe = try board.add_column("Ripe");
+
+    if (board.column_count != 3)
+        return error.ColumnCountWrong;
+
+    const c0 = try board.add_card(
+        "Design Pulp board layout",
+        seed,
+    );
+    const c1 = try board.add_card(
+        "Implement feed data model",
+        seed,
+    );
+    _ = try board.add_card(
+        "Write Earpiece voice capture",
+        growing,
+    );
+
+    if (board.card_count != 3)
+        return error.CardCountWrong;
+
+    try board.move_card(c0, ripe);
+    if (board.cards[c0].column_idx != ripe)
+        return error.MoveCardBroken;
+
+    try board.attach_visual(
+        c1,
+        "sketch of feed timeline layout",
+    );
+    if (!board.cards[c1].has_visual)
+        return error.VisualAttachBroken;
+
+    if (board.add_card("", seed)) |_| {
+        return error.EmptyTitleAccepted;
+    } else |err| {
+        if (err != error.EmptyTitleRefused) return err;
+    }
+
+    if (board.move_card(99, seed)) |_| {
+        return error.BadCardMoveAccepted;
+    } else |err| {
+        if (err != error.CardNotFound) return err;
+    }
+
+    var col_buf: [max_cards]CardId = undefined;
+    const seed_count = board.cards_in_column(
+        seed,
+        &col_buf,
+    );
+    if (seed_count != 1) return error.ColumnFilterWrong;
+
+    print(
+        "GREEN: pulp_board -- Living Board " ++
+            "data model with TAME bounds.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

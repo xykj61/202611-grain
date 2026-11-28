@@ -50,6 +50,8 @@ vantage market-deck modules/vantage/vantage_market_deck.rye
 vantage spawn-invite modules/vantage/vantage_spawn_invite.rye
 vantage constellation-view modules/vantage/vantage_constellation_view.rye
 vantage market-header modules/vantage/include/vantage_market.h
+vantage pulp-board modules/vantage/pulp/pulp_board.rye
+vantage pulp-feed modules/vantage/pulp/pulp_feed.rye
 
 # --- Libraries ---
 library invite-link-compose libraries/invite-link-compose/invite_link_compose.rye
