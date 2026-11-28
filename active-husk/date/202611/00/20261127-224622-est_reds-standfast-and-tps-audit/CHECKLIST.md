@@ -59,9 +59,55 @@ where the practice drifted from the gratitude.
 - [x] **[Virgo]** Standing equipment: verify which elder-tree
       witness scripts survived the tools/ reorg and which need
       re-pointing
-- [ ] **[Libra]** Final standfast proof: REDS ledger current, Air
+- [x] **[Libra]** Final standfast proof: REDS ledger current, Air
       clean, commit convention seated, standing equipment reading
       GREEN or accounted for
+
+---
+
+## Libra Standfast Proof (`20261128`)
+
+**REDS ledger:** 9 overtaken rows folded to
+`yonder/reds-folds/REDS-overtaken-by-202611-grain-reorg.md`. 5
+still-open rows re-booked with current-tree state. Pin size
+reduced from 65,268 to 47,840 bytes (freed 18K against 65,536
+bound). 9 needing restatement remain for a future movement.
+
+**Air compliance:** ITINERARY reads zero ascending serial numbers
+in living prose. Commit-subject convention seated in Air rule
+card and CLAUDE.md: sign name alone, no counters.
+
+**Commit convention:** Documented in
+`.claude/rules/air-stamp-and-naming.md` section 2 and
+`CLAUDE.md` section 2. Examples: `Aries`, `Siya` -- not
+`Aries 1/15`, not `Orbit 23`.
+
+**Standing equipment:**
+- `languages/rishi/bin/rishi`: EXISTS, runs
+- `languages/rishi/bin/grain-ww`: EXISTS, runs
+- `tools/fixtures/r/rye_build.sh`: EXISTS
+- `tools/hooks/commit-msg`: EXISTS (3 walls: %, @, mechanism)
+- `tools/witness_all.rish`: EXISTS, runs to `one_clock
+  verify-brix` then fails: `.brix` stamp `20261115.042000`
+  is stale. **Standing red -- accounted for.**
+- `tools/fixtures/w/witness_reach_scan.sh`: EXISTS, reads
+  `2214 total / 0 reached / 2214 unreached`. Registry
+  disconnected. **Standing red -- accounted for.**
+- Fixture fleet: 1,112 `.sh` + 248 `.rish` scripts survive
+
+**TPS/Tiger Style alignment:** Written in
+`tps-tiger-style-alignment.md`. Three drifts named (andon
+unpulled, cold pass stopped, witness reach outrun). Three
+carries confirmed (jidoka alive, poka-yoke alive, zero-debt
+ledger alive).
+
+**Two standing reds found by running the equipment:**
+1. Stale `.brix` stamp (gate for `one_clock verify-brix`)
+2. Witness reach at zero (roster registry disconnected)
+
+Both are accounted for. Neither is new -- both predate this
+audit. Neither blocks the standfast closure; both want their
+own REDS rows when the ledger has headroom.
 
 ---
 
