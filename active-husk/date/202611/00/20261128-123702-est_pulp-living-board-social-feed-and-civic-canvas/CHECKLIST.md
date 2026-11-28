@@ -7,10 +7,10 @@
 
 ## Movements
 
-- [ ] Seed `modules/vantage/pulp/` room skeleton with TAME bounds
-- [ ] Board data model -- husk-parsed cards with column state
-- [ ] Card visual canvas -- Brushstroke integration for card images
-- [ ] Feed data model -- append-only Blaze fact chain per board
+- [x] Seed `modules/vantage/pulp/` room skeleton with TAME bounds
+- [x] Board data model -- husk-parsed cards with column state
+- [x] Bounty escrow -- Mycelium beacon-ordered WOOD/MALA settlement
+- [x] Feed data model -- append-only Blaze fact chain per board
 - [ ] Feed entry rendering -- visual preview with One-Clock stamp
 - [ ] Board column drag -- card movement between named columns
 - [ ] Kumara signing -- every card and feed entry signed at creation

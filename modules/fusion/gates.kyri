@@ -276,3 +276,4 @@ ascii_7bit context/KYRI.md
 ascii_7bit active-development/date/20261119/20261119-183931-est_sagittarius-vantage-harness-console-and-radiant-sweep.md
 max_cols 80 modules/vantage/pulp/pulp_board.rye
 max_cols 80 modules/vantage/pulp/pulp_feed.rye
+max_cols 80 modules/vantage/pulp/pulp_bounty.rye

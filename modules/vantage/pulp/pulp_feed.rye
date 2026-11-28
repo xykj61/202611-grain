@@ -14,7 +14,7 @@ const assert = std.debug.assert;
 const print = std.debug.print;
 const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
 
-pub const version = "20261128.125854";
+pub const version = "20261128.131236";
 
 pub const max_feed_entries: u32 = 256;
 pub const max_entry_body: u32 = 128;
@@ -35,6 +35,10 @@ pub const EntryKind = enum(u8) {
     voice_note,
     witness_result,
     hearth_grant,
+    bounty_posted,
+    bounty_claimed,
+    bounty_settled,
+    bounty_cancelled,
 };
 
 pub const FeedEntry = struct {

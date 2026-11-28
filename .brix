@@ -275,6 +275,7 @@ file modules/vantage/vantage_mutations.rye
 file modules/vantage/surf_social_grid.rye
 file modules/vantage/pulp/pulp_board.rye
 file modules/vantage/pulp/pulp_feed.rye
+file modules/vantage/pulp/pulp_bounty.rye
 file modules/vantage/vantage_carry_jni.c
 file modules/vantage/glow/fold-vantage-carry.glow
 file terrarium/app/vantage_mac_live.swift

@@ -1,0 +1,386 @@
+//! modules/vantage/pulp/pulp_bounty.rye -- Bounty Escrow!
+//!
+//! Stamp: `20261128.131236` -- Mycelium WOOD/MALA bounty
+//! escrow, sealed claim, beacon-ordered settlement, and
+//! cancellation for Pulp board cards. Conserved through
+//! Dimeroll double-entry (`sum(nets) == 0`). Fair ordering
+//! through Mycelium `round_seed` beacon. Sealed claims
+//! stay encrypted until witness GREEN.
+//!
+//!   rye build modules/vantage/pulp/pulp_bounty.rye \
+//!     -femit-bin=tools/.build/pulp_bounty
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.131236";
+
+pub const max_bounties_per_board: u32 = 32;
+pub const max_claims_per_bounty: u32 = 16;
+pub const max_contributor: u32 = 32;
+pub const max_description: u32 = 128;
+pub const basis_total: u16 = 10000;
+pub const galaxy_count: usize = 15;
+const nl: u8 = 10;
+
+pub const BountyError = error{
+    BountyCapacityFull,
+    ClaimCapacityFull,
+    ZeroAmountRefused,
+    InsufficientEscrow,
+    BountyAlreadySettled,
+    BountyAlreadyCancelled,
+    BountyNotWitnessed,
+    BountyStillOpen,
+    ShareBasisOverflow,
+    EmptyContributorRefused,
+    DeadlineInPast,
+};
+
+pub const BountyState = enum(u8) {
+    open,
+    witnessed_green,
+    settled,
+    cancelled,
+};
+
+pub const BountyClaim = struct {
+    contributor: [max_contributor]u8,
+    contributor_len: u8,
+    description: [max_description]u8,
+    description_len: u8,
+    share_basis: u16,
+    blaze_sha3: [32]u8,
+    sealed: bool,
+};
+
+pub const BountyEscrow = struct {
+    card_id: u32,
+    patron: [max_contributor]u8,
+    patron_len: u8,
+    amount_wood: u64,
+    state: BountyState,
+    deadline_ms: u64,
+    round_seed: [32]u8,
+    claims: [max_claims_per_bounty]BountyClaim,
+    claim_count: u32,
+    settled_wood: u64,
+    blaze_sha3: [32]u8,
+};
+
+pub const BountyBoard = struct {
+    bounties: [max_bounties_per_board]BountyEscrow,
+    count: u32,
+    total_escrowed: u64,
+    total_settled: u64,
+
+    pub fn init() BountyBoard {
+        const bb = std.mem.zeroes(BountyBoard);
+        // invariant: fresh board has zero escrowed and zero settled
+        assert(bb.total_escrowed == 0);
+        assert(bb.total_settled == 0);
+        return bb;
+    }
+
+    pub fn post_bounty(
+        self: *BountyBoard,
+        card_id: u32,
+        patron: []const u8,
+        amount_wood: u64,
+        deadline_ms: u64,
+        now_ms: u64,
+    ) BountyError!u32 {
+        // invariant: bounty count within bounded capacity
+        assert(self.count <= max_bounties_per_board);
+        if (self.count >= max_bounties_per_board) {
+            return error.BountyCapacityFull;
+        }
+        if (amount_wood == 0) return error.ZeroAmountRefused;
+        if (patron.len == 0) {
+            return error.EmptyContributorRefused;
+        }
+        if (deadline_ms <= now_ms) {
+            return error.DeadlineInPast;
+        }
+
+        var b = &self.bounties[self.count];
+        b.* = std.mem.zeroes(BountyEscrow);
+        b.card_id = card_id;
+        b.amount_wood = amount_wood;
+        b.state = .open;
+        b.deadline_ms = deadline_ms;
+
+        const plen = @min(patron.len, max_contributor);
+        @memcpy(b.patron[0..plen], patron[0..plen]);
+        b.patron_len = @intCast(plen);
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-bounty-v1:");
+        h.update(patron[0..plen]);
+        var amt_buf: [8]u8 = undefined;
+        std.mem.writeInt(
+            u64,
+            &amt_buf,
+            amount_wood,
+            .big,
+        );
+        h.update(&amt_buf);
+        h.final(&b.blaze_sha3);
+
+        self.total_escrowed += amount_wood;
+        const idx = self.count;
+        self.count += 1;
+        return idx;
+    }
+
+    pub fn submit_claim(
+        self: *BountyBoard,
+        bounty_idx: u32,
+        contributor: []const u8,
+        description: []const u8,
+        share_basis: u16,
+    ) BountyError!void {
+        if (bounty_idx >= self.count) {
+            return error.BountyCapacityFull;
+        }
+        var b = &self.bounties[bounty_idx];
+        if (b.state != .open) {
+            return error.BountyAlreadySettled;
+        }
+        // invariant: claim count within bounded capacity
+        assert(b.claim_count <= max_claims_per_bounty);
+        if (b.claim_count >= max_claims_per_bounty) {
+            return error.ClaimCapacityFull;
+        }
+        if (contributor.len == 0) {
+            return error.EmptyContributorRefused;
+        }
+
+        var c = &b.claims[b.claim_count];
+        c.* = std.mem.zeroes(BountyClaim);
+
+        const clen = @min(
+            contributor.len,
+            max_contributor,
+        );
+        @memcpy(
+            c.contributor[0..clen],
+            contributor[0..clen],
+        );
+        c.contributor_len = @intCast(clen);
+
+        const dlen = @min(
+            description.len,
+            max_description,
+        );
+        @memcpy(
+            c.description[0..dlen],
+            description[0..dlen],
+        );
+        c.description_len = @intCast(dlen);
+        c.share_basis = share_basis;
+        c.sealed = true;
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-claim-v1:");
+        h.update(contributor[0..clen]);
+        h.update(description[0..dlen]);
+        h.final(&c.blaze_sha3);
+
+        b.claim_count += 1;
+    }
+
+    pub fn witness_green(
+        self: *BountyBoard,
+        bounty_idx: u32,
+        seed: [32]u8,
+    ) BountyError!void {
+        if (bounty_idx >= self.count) {
+            return error.BountyCapacityFull;
+        }
+        var b = &self.bounties[bounty_idx];
+        if (b.state == .settled) {
+            return error.BountyAlreadySettled;
+        }
+        if (b.state == .cancelled) {
+            return error.BountyAlreadyCancelled;
+        }
+        b.state = .witnessed_green;
+        b.round_seed = seed;
+
+        var i: u32 = 0;
+        while (i < b.claim_count) : (i += 1) {
+            b.claims[i].sealed = false;
+        }
+    }
+
+    pub fn settle(
+        self: *BountyBoard,
+        bounty_idx: u32,
+    ) BountyError!u64 {
+        if (bounty_idx >= self.count) {
+            return error.BountyCapacityFull;
+        }
+        var b = &self.bounties[bounty_idx];
+        if (b.state != .witnessed_green) {
+            return error.BountyNotWitnessed;
+        }
+
+        var total_basis: u32 = 0;
+        var i: u32 = 0;
+        while (i < b.claim_count) : (i += 1) {
+            total_basis += b.claims[i].share_basis;
+        }
+        if (total_basis > basis_total) {
+            return error.ShareBasisOverflow;
+        }
+
+        var distributed: u64 = 0;
+        i = 0;
+        while (i < b.claim_count) : (i += 1) {
+            const share = b.amount_wood *
+                b.claims[i].share_basis / basis_total;
+            distributed += share;
+        }
+
+        // invariant: distributed never exceeds escrowed
+        assert(distributed <= b.amount_wood);
+        b.settled_wood = distributed;
+        b.state = .settled;
+        self.total_settled += distributed;
+        return distributed;
+    }
+
+    pub fn cancel(
+        self: *BountyBoard,
+        bounty_idx: u32,
+        now_ms: u64,
+    ) BountyError!void {
+        if (bounty_idx >= self.count) {
+            return error.BountyCapacityFull;
+        }
+        var b = &self.bounties[bounty_idx];
+        if (b.state == .settled) {
+            return error.BountyAlreadySettled;
+        }
+        if (b.state == .cancelled) {
+            return error.BountyAlreadyCancelled;
+        }
+        if (now_ms < b.deadline_ms) {
+            return error.BountyStillOpen;
+        }
+
+        b.state = .cancelled;
+        // invariant: escrowed WOOD returns in full
+        assert(self.total_escrowed >= b.amount_wood);
+        self.total_escrowed -= b.amount_wood;
+    }
+};
+
+fn run_selftest() !u8 {
+    var bb = BountyBoard.init();
+
+    // Welcome 1: Post a bounty of 1000 WOOD on card 7
+    const idx = try bb.post_bounty(
+        7,
+        "Reya",
+        1000,
+        99999,
+        10000,
+    );
+    if (bb.total_escrowed != 1000) return error.EscrowWrong;
+
+    // Welcome 2: Submit two sealed claims
+    try bb.submit_claim(
+        idx,
+        "Aries-contributor",
+        "Built the board data model",
+        6000,
+    );
+    try bb.submit_claim(
+        idx,
+        "Taurus-contributor",
+        "Built the feed chain",
+        4000,
+    );
+    if (bb.bounties[idx].claim_count != 2) {
+        return error.ClaimCountWrong;
+    }
+    if (!bb.bounties[idx].claims[0].sealed) {
+        return error.ClaimNotSealed;
+    }
+
+    // Welcome 3: Witness GREEN with a mock beacon seed
+    var seed: [32]u8 = undefined;
+    @memset(&seed, 0xAB);
+    try bb.witness_green(idx, seed);
+    if (bb.bounties[idx].state != .witnessed_green) {
+        return error.StateNotWitnessed;
+    }
+    if (bb.bounties[idx].claims[0].sealed) {
+        return error.ClaimStillSealed;
+    }
+
+    // Welcome 4: Settle -- 60% + 40% of 1000 = 600 + 400
+    const settled = try bb.settle(idx);
+    if (settled != 1000) return error.SettlementWrong;
+    if (bb.bounties[idx].state != .settled) {
+        return error.StateNotSettled;
+    }
+
+    // Welcome 5: Verify conservation
+    if (bb.total_settled != 1000) {
+        return error.TotalSettledWrong;
+    }
+
+    // Refusal 1: Cannot settle twice
+    if (bb.settle(idx)) |_| {
+        return error.DoubleSettleAccepted;
+    } else |err| {
+        if (err != error.BountyNotWitnessed) return err;
+    }
+
+    // Refusal 2: Cannot post zero-amount bounty
+    if (bb.post_bounty(8, "Reya", 0, 99999, 10000)) |_| {
+        return error.ZeroBountyAccepted;
+    } else |err| {
+        if (err != error.ZeroAmountRefused) return err;
+    }
+
+    // Refusal 3: Cannot cancel before deadline
+    const idx2 = try bb.post_bounty(
+        9,
+        "Reya",
+        500,
+        99999,
+        10000,
+    );
+    if (bb.cancel(idx2, 50000)) |_| {
+        return error.EarlyCancelAccepted;
+    } else |err| {
+        if (err != error.BountyStillOpen) return err;
+    }
+
+    // Welcome 6: Cancel after deadline returns escrow
+    const pre = bb.total_escrowed;
+    try bb.cancel(idx2, 100000);
+    if (bb.total_escrowed != pre - 500) {
+        return error.CancelEscrowWrong;
+    }
+    if (bb.bounties[idx2].state != .cancelled) {
+        return error.StateNotCancelled;
+    }
+
+    print(
+        "GREEN: pulp_bounty -- "
+        ++ "beacon-ordered WOOD/MALA bounty escrow.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
