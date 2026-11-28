@@ -54,7 +54,7 @@ where the practice drifted from the gratitude.
 - [x] **[Cancer]** Establish commit-subject convention: sign name
       only (no counter), no orbit number -- document in a living
       rule or convention note
-- [ ] **[Leo]** Re-read TPS and Tiger Style gratitude against
+- [x] **[Leo]** Re-read TPS and Tiger Style gratitude against
       current practice -- name the drifts and what to carry forward
 - [ ] **[Virgo]** Standing equipment: verify which elder-tree
       witness scripts survived the tools/ reorg and which need
