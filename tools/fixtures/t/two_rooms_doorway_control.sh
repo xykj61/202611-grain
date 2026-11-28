@@ -87,7 +87,7 @@ honest() {
   page "$d/manual/20260901-010106_f.md" 'Living -- mixed'
   page "$d/foundations/20260901-010107_g.md" 'Living -- vision'
   page "$d/context/specs/20260901-010108_h.md" 'Living -- checkable'
-  page "$d/active-designing/date/20260901/20260901-010104_d.md" 'Living -- research for understanding'
+  page "$d/active-designing/date/202609/20260901-010104_d.md" 'Living -- research for understanding'
 }
 
 # 1. The honest tree -- every page names its room. Free, reading zero, all four rooms reached.
@@ -146,7 +146,7 @@ echo "$out" | grep -q 'verdict=ok' \
 
 # 6. A folded page naming no room -- counted. The three the fold hid, in miniature.
 d=$(build folded_fail); honest "$d"
-page "$d/active-designing/date/20260820/20260820-131713_landed.md" 'LANDED -- fold C'
+page "$d/active-designing/date/202608/20260820-131713_landed.md" 'LANDED -- fold C'
 commit_all "$d"
 out=$(scan_at "$d" 0)
 echo "$out" | grep -q 'doorway fails=1 ' && echo "folded_fail_counted=yes" || echo "folded_fail_counted=no"
@@ -154,7 +154,7 @@ echo "$out" | grep -q 'doorway fails=1 ' && echo "folded_fail_counted=yes" || ec
 # 7. yonder and a README stay outside the reach, even carrying a failing Status.
 d=$(build excluded); honest "$d"
 page "$d/active-designing/yonder/20260902-040404_deferred.md" 'Living'
-page "$d/active-designing/date/20260901/README.md" 'Living'
+page "$d/active-designing/date/202609/README.md" 'Living'
 commit_all "$d"
 out=$(scan_at "$d" 0)
 echo "$out" | grep -q 'verdict=ok' && echo "yonder_excluded=yes" || echo "yonder_excluded=no"
@@ -170,7 +170,7 @@ echo "$out" | grep -q 'doorway pages=8 ' && echo "readme_excluded=yes" || echo "
 # 8. THE ELDER DEFECT, planted. A roster narrowed to the flat room must refuse rather than
 #    report a smaller clean tree -- the folded floor is what tells those two apart.
 d=$(build flat_only); honest "$d"
-page "$d/active-designing/date/20260820/20260820-131713_landed.md" 'LANDED -- fold C'
+page "$d/active-designing/date/202608/20260820-131713_landed.md" 'LANDED -- fold C'
 commit_all "$d"
 cat > "$d/tools/fixtures/t/two_rooms_doorway_roster.sh" <<'ELDER'
 #!/bin/sh
@@ -252,7 +252,7 @@ echo "$out" | grep -q 'verdict=ok' && echo "geode_missing_verdict_refused=no" ||
 d=$(build sibling_prefix)
 page "$d/external-research/20260901-010101_a.md" 'Living -- checkable'
 page "$d/active-designing/20260901-010102_b.md" 'Living -- vision'
-page "$d/active-designing/date/20260901/20260901-010104_d.md" 'Living -- mixed'
+page "$d/active-designing/date/202609/20260901-010104_d.md" 'Living -- mixed'
 page "$d/docs-geode/20260901-010105_e.md" 'Living -- checkable'
 commit_all "$d"
 out=$(scan_at "$d" 0)

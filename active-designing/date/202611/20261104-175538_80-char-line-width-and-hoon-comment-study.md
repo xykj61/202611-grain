@@ -184,4 +184,4 @@ The submodule pointer advances from `0e26780` to `80d14c5` (one file added: `LIC
 - `gratitude/TIGER_STYLE.md` -- TigerBeetle's 100-column standard (TAME's ancestor)
 - `glow/tokens.rye` -- Glow's `::` comment tokenizer (already built)
 - `tools/l/line_length_census_witness.rish` -- the existing census (measured rather than gated)
-- `active-designing/date/20261104/20261104-172718_grain-os-fork-decisions-response.md` -- the twelve fork decisions
+- `active-designing/date/202611/20261104-172718_grain-os-fork-decisions-response.md` -- the twelve fork decisions

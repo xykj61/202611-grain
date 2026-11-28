@@ -6,7 +6,7 @@
 //! unity on all three reconstructs the input byte-for-byte even if a band saturated, and the wide-domain sum clamps ONCE.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-162200_fill-ales42-resonance-tone-stack.md
+//! Design read: active-designing/date/202608/20260814-162200_fill-ales42-resonance-tone-stack.md
 //! Stands on: resonance/shelf.rye (resonance-audio) -- the two-band scale-and-clamp it widens to three; resonance/tone.rye (resonance-audio) -- the
 //! one-pole low-pass/high-pass split it calls twice; resonance/timeline.rye (resonance-audio) -- the Clip and the one true saturation.
 //!

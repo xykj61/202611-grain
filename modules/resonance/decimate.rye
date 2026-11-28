@@ -18,7 +18,7 @@
 //! whole multiple of `hold`); a partial run holds its anchor across however many samples remain, exactly as a full run would.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-213107_fill-ales83-resonance-sample-rate-decimator.md
+//! Design read: active-designing/date/202608/20260814-213107_fill-ales83-resonance-sample-rate-decimator.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max, max_clip. It carries NO pre-gain and NO grid -- like the bit-crush it is a pure
 //! resolution map, here on the TIME axis; a keeper who wants a boosted or clipped decimation runs resonance/drive.rye (resonance-audio) or resonance/crush.rye (resonance-audio)
 //! then decimate over the same span, all in-place span maps that compose.

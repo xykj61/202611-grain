@@ -1,6 +1,6 @@
 #!/bin/sh
 # tools/fixtures/a/aurora_energy_crossover_calc.sh -- the first witness Proposal 2 of
-# active-designing/date/20260918/20260918-054803_two-first-principles-proposals-caravan-lattice-hop-aurora-energy-crossover.md
+# active-designing/date/202609/20260918-054803_two-first-principles-proposals-caravan-lattice-hop-aurora-energy-crossover.md
 # named and left unbuilt: a calculator for the crossover traffic volume where Aurora's torus wrap
 # earns back its static link cost.
 #
@@ -44,7 +44,7 @@ while [ $# -gt 0 ]; do
 done
 
 echo "scan=aurora_energy_crossover"
-echo "proposal=active-designing/date/20260918/20260918-054803_two-first-principles-proposals-caravan-lattice-hop-aurora-energy-crossover.md"
+echo "proposal=active-designing/date/202609/20260918-054803_two-first-principles-proposals-caravan-lattice-hop-aurora-energy-crossover.md"
 echo "max_grids=$MAX_GRIDS"
 echo "e=$E"
 echo "s=$S"

@@ -5,7 +5,7 @@
 //! (0-16383) for pitch bend. Every value names its
 //! own width per the MIDI 1.0 specification.
 //!
-//! Design: active-designing/date/20261111/
+//! Design: active-designing/date/202611/
 //!   20261111-170815_kirtan-generation-midi-dial-
 //!   architecture.md
 //! Stands on: nothing -- pure parsing.

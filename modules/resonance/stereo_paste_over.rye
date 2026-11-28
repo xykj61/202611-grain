@@ -16,7 +16,7 @@
 //! payloads the identity on both, mismatched payloads BadRange, a paste past the samples BadRange.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-021504_fill-ales121-resonance-stereo-paste-over.md
+//! Design read: active-designing/date/202608/20260815-021504_fill-ales121-resonance-stereo-paste-over.md
 //! Stands on: resonance/paste_over.rye (resonance-audio) -- the mono overwrite paste run once per channel; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance
 //! invariant; resonance/stereo_replace.rye (resonance-audio) -- the insert-mode stereo paste imported by the selftest to prove the insert-contrast law; resonance/timeline.rye (resonance-audio) -- the Clip, its
 //! max_clip bound, and the EditError reused whole; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to read the result.

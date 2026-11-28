@@ -146,7 +146,7 @@ leg "$(read_key regions_nested)" 1 second_mention_counted_nested
 # ------------------------------------------------------ the shelves are read past
 new_pen
 mkdir -p active-designing/date/20260101
-plain_page shelf 'The falsifier is a plot failing two seasons running.' active-designing/date/20260101/20260101-010101_shelf.md
+plain_page shelf 'The falsifier is a plot failing two seasons running.' active-designing/date/202601/20260101-010101_shelf.md
 plain_page live  'The falsifier is a plot failing two seasons running.' active-designing/live.md
 seal
 leg "$(read_key living_pages)"      1 shelf_outside_the_corpus

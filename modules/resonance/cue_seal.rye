@@ -6,7 +6,7 @@
 //! reveals that the seal is not specific to a rack: it is a law for any travels-as-text record.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-153033_fill-ales37-resonance-cue-seal.md
+//! Design read: active-designing/date/202608/20260814-153033_fill-ales37-resonance-cue-seal.md
 //! Stands on: resonance/cue_sheet.rye (resonance-audio) -- render_sheet / parse_sheet reused WHOLE as the sealed body, so the seal adds only the
 //! digest layer and no new grammar; resonance/markers.rye (resonance-audio) -- the Markers track sealed and rebuilt. Mirrors resonance/rack_seal.rye
 //! (resonance-audio) and the Sha256 verify-before-trust of resonance/wire.rye (resonance-audio) -- an integrity check the reader recomputes itself, not a

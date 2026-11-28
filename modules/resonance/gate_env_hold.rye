@@ -9,7 +9,7 @@
 //! (it is resonance-audio's held env_step); this rung is exactly their composition over public APIs, adding only the hold knob.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-180706_fill-ales57-resonance-attack-hold-release-gate.md
+//! Design read: active-designing/date/202608/20260814-180706_fill-ales57-resonance-attack-hold-release-gate.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, max_clip, the range law shape; resonance/gate.rye (resonance-audio) --
 //! the silenced floor this drives over time, re-proven beside it; resonance/hold_env.rye (resonance-audio) -- the HELD time base, its env_step_hold
 //! advancing the same follower one sample at a time with the hold pinning the peak; resonance/gate_env.rye (resonance-audio) -- the un-held

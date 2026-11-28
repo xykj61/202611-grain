@@ -15,7 +15,7 @@
 //! sample is the honest weighted average. The early bank and the late preset are the SAME named room, so one word chooses both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-113645_fill-ales206-resonance-reverb-early-late.md
+//! Design read: active-designing/date/202608/20260815-113645_fill-ales206-resonance-reverb-early-late.md
 //! Stands on: resonance/multitap_time.rye (resonance-audio) -- the timed multi-tap voicing the early reflections, run over a copy of the dry, its
 //! MultitapTimeError forwarded whole; resonance/reverb_preset.rye (resonance-audio) -- the named-room late wash, run over the span unchanged, its
 //! ReverbPresetError forwarded whole; resonance/taps.rye (resonance-audio) -- the max_taps bound each early bank stays within; resonance/clock.rye (resonance-audio) -- the

@@ -17,7 +17,7 @@ my records is nearest this query?*
 
 These files carry the vector search capability that folded in from `mandate/` on
 `20261111`. The design essay at
-`active-designing/date/20261111/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md`
+`active-designing/date/202611/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md`
 records the decision and its evidence.
 
 - **Cosine similarity, via unit vectors.** Nearness is the angle between two

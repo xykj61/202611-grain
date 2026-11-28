@@ -5,7 +5,7 @@
 **Voice:** Kyri
 **Style:** Gauge at Door, Radiant warmth
 **Status:** Living (`Room: checkable` -- Orbits 1-5 of [`../../active-tablecloth/date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/README.md`](../../active-tablecloth/date/202611/00/20261115-053000_native-grain-bloom-comlink-pkg-and-harness/README.md))
-**Lineage:** [`../../active-designing/date/20260825/20260825-173153_reprove-only-what-moved.md`](../../active-designing/date/20260825/20260825-173153_reprove-only-what-moved.md)
+**Lineage:** [`../../active-designing/date/202608/20260825-173153_reprove-only-what-moved.md`](../../active-designing/date/202608/20260825-173153_reprove-only-what-moved.md)
 
 ---
 

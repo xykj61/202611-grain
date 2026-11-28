@@ -201,14 +201,14 @@ sub_exclude foundations/20260702-202612_a-conversation-with-serena.md
 sub_exclude foundations/20260729-231416_the-application-that-received-no-answer.md
 
 # -- Active-designing & tools personal/fund exclusions --
-sub_exclude active-designing/date/20260825/20260825-231201_a-letter-to-hale-county.md
-sub_exclude active-designing/date/20260912/20260912-142909_the-linengrow-receipt-cloth-design-system.md
+sub_exclude active-designing/date/202608/20260825-231201_a-letter-to-hale-county.md
+sub_exclude active-designing/date/202609/20260912-142909_the-linengrow-receipt-cloth-design-system.md
 sub_exclude external-research/date/20260825/20260825-235138_djinn-public-repositories-read-against-grain.md
-sub_exclude active-designing/date/20260810/20260810-055147_plan-3x39-kumara-passports-divider-grammar.md
-sub_exclude active-designing/date/20260810/20260810-055147_plan-name-consolidation-debride.md
-sub_exclude active-designing/date/20260630/20260630-001812_the-stack-and-the-surface.md
-sub_exclude active-designing/date/20260810/20260810-055147_plan-scribes-dashboard-and-the-bat-fleet.md
-sub_exclude active-designing/date/20260727/20260727-142516_the-constellation-and-the-twelve-funds.md
+sub_exclude active-designing/date/202608/20260810-055147_plan-3x39-kumara-passports-divider-grammar.md
+sub_exclude active-designing/date/202608/20260810-055147_plan-name-consolidation-debride.md
+sub_exclude active-designing/date/202606/20260630-001812_the-stack-and-the-surface.md
+sub_exclude active-designing/date/202608/20260810-055147_plan-scribes-dashboard-and-the-bat-fleet.md
+sub_exclude active-designing/date/202607/20260727-142516_the-constellation-and-the-twelve-funds.md
 sub_exclude tools/gen/chapter/sunn11_xykj61_onboarding_witness.rish
 sub_exclude tools/fixtures/g/gen_bozo_fund_prep.sh
 sub_exclude tools/fixtures/g/gen_gren_fund_prep.sh

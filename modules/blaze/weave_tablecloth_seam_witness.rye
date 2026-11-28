@@ -5,7 +5,7 @@
 //!
 //! The question is the chart's own: does `Weave.current()`'s output already
 //! carry a stable content address, and does the catalogue already compute it
-//! the same way? [`../active-designing/date/20260921/20260921-071008_the-weave-meets-tablecloth-by-content.md`](../active-designing/date/20260921/20260921-071008_the-weave-meets-tablecloth-by-content.md)
+//! the same way? [`../active-designing/date/202609/20260921-071008_the-weave-meets-tablecloth-by-content.md`](../active-designing/date/202609/20260921-071008_the-weave-meets-tablecloth-by-content.md)
 //! names the falsifier: render a stored weave, hash the document, and compare
 //! against the catalogue's resin for the same bytes.
 //!

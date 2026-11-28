@@ -16,7 +16,7 @@
 //! source has no reverb width to turn.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-122004_fill-ales212-resonance-reverb-width.md
+//! Design read: active-designing/date/202608/20260815-122004_fill-ales212-resonance-reverb-width.md
 //! Stands on: resonance/stereo_reverb_preset.rye (resonance-audio) -- the named-room stereo wet, run over the master unchanged, its StereoReverbPresetError
 //! forwarded whole; resonance/stereo_width.rye (resonance-audio) -- the width control, encode/scale-the-side/decode, run over the wet result; resonance/pan.rye
 //! (resonance-audio) -- the StereoClip and its balance invariant; resonance/clock.rye (resonance-audio) -- the validated sample clock the preset speaks its span against.

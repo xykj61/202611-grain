@@ -1,7 +1,7 @@
 //! blaze/src/weave_tablecloth.rye -- the seam, wired: current() to a leaf, in one motion.
 //!
 //! The chart named the gap plainly:
-//! [`../../active-designing/date/20260921/20260921-071008_the-weave-meets-tablecloth-by-content.md`](../../active-designing/date/20260921/20260921-071008_the-weave-meets-tablecloth-by-content.md)
+//! [`../../active-designing/date/202609/20260921-071008_the-weave-meets-tablecloth-by-content.md`](../../active-designing/date/202609/20260921-071008_the-weave-meets-tablecloth-by-content.md)
 //! asks whether `Weave.current()`'s output already carries a stable content
 //! address, and whether anything in the tree already computes it the same
 //! way. The seam witness beside this file,

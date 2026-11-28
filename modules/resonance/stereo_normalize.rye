@@ -21,7 +21,7 @@
 //! and a zero target or a target past sample_max each refuse BadTarget, both channels untouched.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-025919_fill-ales129-resonance-stereo-normalize.md
+//! Design read: active-designing/date/202608/20260815-025919_fill-ales129-resonance-stereo-normalize.md
 //! Stands on: resonance/normalize.rye (resonance-audio) -- the mono peak normalizer, its NormalizeError reused by name; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance
 //! invariant; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, its `measure_stereo` reads both channels read-only and `peak` reads the loudest of each; resonance/timeline.rye (resonance-audio) -- the Clip and the
 //! saturating `gain` that scales it.

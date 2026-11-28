@@ -6,7 +6,7 @@
 //! and refuse to parse a record whose digest does not match its body.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-151050_fill-ales34-resonance-rack-seal.md
+//! Design read: active-designing/date/202608/20260814-151050_fill-ales34-resonance-rack-seal.md
 //! Stands on: resonance/rack_sheet.rye (resonance-audio) -- render_rack / parse_rack reused WHOLE as the sealed body, so the seal adds only the
 //! digest layer and no new grammar; resonance/rack.rye (resonance-audio) -- the Rack sealed and rebuilt. Mirrors the Sha256 verify-before-trust of
 //! resonance/wire.rye (resonance-audio) -- an integrity check the reader recomputes itself, not a signature.

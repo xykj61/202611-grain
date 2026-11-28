@@ -17,7 +17,7 @@
 //! refuses BadRange before any write.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-010618_fill-ales110-resonance-silence-span.md
+//! Design read: active-designing/date/202608/20260815-010618_fill-ales110-resonance-silence-span.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, the EditError reused whole, and the cut imported by the selftest to prove the length trio against
 //! resonance-audio's insert_silence; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to prove that overwriting with silence never raises the peak.
 //!

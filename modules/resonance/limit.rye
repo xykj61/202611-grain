@@ -6,7 +6,7 @@
 //! threshold a gate, a soft knee a gentler limiter. Brickwall first, because every richer shape rests on it.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-170815_fill-ales49-resonance-peak-limiter.md
+//! Design read: active-designing/date/202608/20260814-170815_fill-ales49-resonance-peak-limiter.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, and the range law shape; the whole EQ family
 //! (resonance-audio-48) which this rests beside without disturbing.
 //!

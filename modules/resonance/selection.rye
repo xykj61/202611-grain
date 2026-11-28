@@ -5,7 +5,7 @@
 //! so left and right never drift out of alignment.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales23-resonance-selection.md
+//! Design read: active-designing/date/202608/20260814-fill-ales23-resonance-selection.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- cut and gain, the two proven in-place edits, applied to each channel; resonance/pan.rye
 //! (resonance-audio) -- the StereoClip whose two channels share one length (left.len == right.len), the invariant lockstep rests on;
 //! resonance/markers.rye (resonance-audio) -- region_between, so a selection is grabbed between two named marks; resonance/loop.rye (resonance-audio) -- the

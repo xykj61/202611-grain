@@ -2,7 +2,7 @@
 //! sweep of a 64 MB buffer, and print the reading beside the line-fill count the sweep should cause.
 //!
 //! WHY. The stencil paper's hardware falsifier needs a line-fill counter, and the first one tried
-//! (docs at active-designing/date/20261009/20261009-222800_the-generic-miss-counter-reads-a-fraction.md)
+//! (docs at active-designing/date/202610/20261009-222800_the-generic-miss-counter-reads-a-fraction.md)
 //! read about 8 percent of the expected fills. Before a stencil run trusts `cache-misses` as a fill
 //! proxy, this program measures the proxy's own gap on a workload whose line count is known exactly.
 //!

@@ -5,7 +5,7 @@
 //! BETWEEN two markers. This rung is that named, sorted track.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales20-resonance-markers.md
+//! Design read: active-designing/date/202608/20260814-fill-ales20-resonance-markers.md
 //! Stands on: resonance/scrub.rye (resonance-audio) -- the scrub's move_to reused whole for snap (a marker snap is a move to a named position);
 //! resonance/loop.rye (resonance-audio) -- loop.make reused whole for the region between two markers; resonance/pan.rye (resonance-audio) -- the StereoClip
 //! whose two channels share one length; resonance/timeline.rye (resonance-audio) -- the Clip the master is built from.

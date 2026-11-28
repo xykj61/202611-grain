@@ -22,7 +22,7 @@
 //! is therefore the identical-channel one -- a centred master staying identical through the timed reverb -- the sense a mix cares about.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-095002_fill-ales189-resonance-stereo-reverb-in-real-time.md
+//! Design read: active-designing/date/202608/20260815-095002_fill-ales189-resonance-stereo-reverb-in-real-time.md
 //! Stands on: resonance/stereo_reverb.rye (resonance-audio) -- the linked stereo reverb this speaks in real time, delegated unchanged, its
 //! StereoReverbError forwarded; resonance/reverb_time.rye (resonance-audio) -- the mono timed twin this mirrors, its CombSpecMs / AllpassSpecMs reused;
 //! resonance/reverb.rye (resonance-audio) -- the ReverbError the reverb half of this face's error set and the max_stages bound; resonance/clock.rye (resonance-audio) --

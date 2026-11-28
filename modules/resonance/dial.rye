@@ -5,7 +5,7 @@
 //! hardware knob at position 64 sets the control to
 //! 64 with no conversion.
 //!
-//! Design: active-designing/date/20261111/
+//! Design: active-designing/date/202611/
 //!   20261111-170815_kirtan-generation-midi-dial-
 //!   architecture.md
 //! Stands on: resonance/midi.rye (CC message parsing).

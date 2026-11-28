@@ -30,8 +30,8 @@
 # Output convention: context/specs/20260729-215600_scan-seam-convention.md -- the scan carries the
 # verdict; a caller checks status before trusting the lines.
 #
-# Law: active-designing/date/20260814/20260814-fill-constel-naming-law.md (seated, vowel-free)
-#      active-designing/date/20260813/20260813-022222_constel-test-network-naming-law.md (elder, digit)
+# Law: active-designing/date/202608/20260814-fill-constel-naming-law.md (seated, vowel-free)
+#      active-designing/date/202608/20260813-022222_constel-test-network-naming-law.md (elder, digit)
 # Module: constel/name.rye -- the predicate this scan mirrors.
 set -eu
 

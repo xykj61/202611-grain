@@ -5,7 +5,7 @@
 //! wraps at instead of stopping.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales14-resonance-transport-loop.md
+//! Design read: active-designing/date/202608/20260814-fill-ales14-resonance-transport-loop.md
 //! Stands on: resonance/transport.rye (resonance-audio) -- the play head this rung extends (a loop OFF delegates to it whole); resonance/clock.rye
 //! (resonance-audio) -- mark_ms sets the region in real time; resonance/timeline.rye (resonance-audio) -- the Clip the master is.
 //!

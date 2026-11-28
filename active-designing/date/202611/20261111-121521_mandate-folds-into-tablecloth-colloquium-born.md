@@ -63,7 +63,7 @@ name the outcome you actually want, name what the reward measures, and keep the 
 **What Colloquium inherits from Mandate:** nothing. It is born fresh, the way the Comlink tendency
 prefers -- a module earns a new name by being re-grown beside its elder, born-named. The
 governance aspirations that the double-seat expansion essay
-(`active-designing/date/20260816/20260816-205859_double-seat-expansion-eight-seasons.md`) once
+(`active-designing/date/202608/20260816-205859_double-seat-expansion-eight-seasons.md`) once
 envisioned for a Mandate expansion -- litigation, legislation proposals, federal contracts -- find
 their home here instead, under a name that fits.
 

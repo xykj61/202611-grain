@@ -6,7 +6,7 @@
 //! it only widens the render to the second channel, exactly as the reverb, width, and pan families widened their axes whole.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-132120_fill-ales218-resonance-stereo-render.md
+//! Design read: active-designing/date/202608/20260815-132120_fill-ales218-resonance-stereo-render.md
 //! Stands on: resonance/render.rye (resonance-audio) -- the Step chain and its per-Clip check/apply, reused per channel; resonance/pan.rye
 //! (resonance-audio) -- the StereoClip (left/right Clips, the equal-length invariant); resonance/stereo_wav.rye (resonance-audio) -- the interleaved
 //! stereo RIFF/WAVE container the two rendered channels encode into.

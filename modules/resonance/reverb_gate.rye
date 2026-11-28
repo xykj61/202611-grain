@@ -15,7 +15,7 @@
 //! raised up front so a bad setting leaves the clip DRY rather than half-reverbed. The up-front check is the atomicity crux.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-105453_fill-ales200-resonance-reverb-gate.md
+//! Design read: active-designing/date/202608/20260815-105453_fill-ales200-resonance-reverb-gate.md
 //! Stands on: resonance/reverb_preset.rye (resonance-audio) -- the named-room wet, run over the span unchanged, its ReverbPresetError forwarded whole;
 //! resonance/gate.rye (resonance-audio) -- the downward gate and its guards, the gating applied to the wet span (its BadThreshold / BadRatio forwarded, its
 //! BadRange the reverb's BadRange); resonance/clock.rye (resonance-audio) -- the sample clock, its samples_for converting the span (the SAME conversion

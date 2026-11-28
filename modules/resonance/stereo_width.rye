@@ -20,7 +20,7 @@
 //! decode cannot fault -- the op refuses whole up front or completes whole.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-121345_fill-ales211-resonance-stereo-width.md
+//! Design read: active-designing/date/202608/20260815-121345_fill-ales211-resonance-stereo-width.md
 //! Stands on: resonance/mid_side.rye (resonance-audio) -- the reversible mid/side change of basis, encode and decode, spent whole; resonance/timeline.rye (resonance-audio) --
 //! the Clip and its proven `gain` (the side scaled by a fraction, saturated once); resonance/pan.rye (resonance-audio) -- the StereoClip and its balance invariant.
 //!

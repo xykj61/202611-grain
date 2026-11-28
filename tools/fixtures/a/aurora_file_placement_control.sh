@@ -57,7 +57,7 @@ leg scan_exits_zero 0 "$status"
 leg verdict_read read "$(key "$OUT" verdict)"
 leg names_its_row 7 "$(key "$OUT" row)"
 leg names_the_page_it_answers \
-  active-designing/date/20260916/20260916-095958_the-two-ways-a-proxy-drifts.md "$(key "$OUT" answers)"
+  active-designing/date/202609/20260916-095958_the-two-ways-a-proxy-drifts.md "$(key "$OUT" answers)"
 
 # ---- the bounds are named ----------------------------------------------------------------------
 for b in max_files max_edges max_grids max_samples cap_slack_pct; do

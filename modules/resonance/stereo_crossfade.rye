@@ -16,7 +16,7 @@
 //! DEGENERATE LAW: any refusal (an overlap-length mismatch, a too-short overlap) leaves the output untouched and no channel half-written; a loud overlap saturates on both channels, never wraps.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-031427_fill-ales131-resonance-stereo-crossfade.md
+//! Design read: active-designing/date/202608/20260815-031427_fill-ales131-resonance-stereo-crossfade.md
 //! Stands on: resonance/crossfade.rye (resonance-audio) -- the mono equal-power crossfade run once per channel, itself reusing resonance-audio's `split` and resonance-audio's one true saturate; resonance/pan.rye (resonance-audio) -- the StereoClip
 //! (two mono Clips, left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, and the EditError reused whole.
 //!

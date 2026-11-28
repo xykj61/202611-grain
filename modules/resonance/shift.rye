@@ -16,7 +16,7 @@
 //! silence, and the empty clip is its own shift.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-005300_fill-ales108-resonance-shift.md
+//! Design read: active-designing/date/202608/20260815-005300_fill-ales108-resonance-shift.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples; resonance/rotate.rye (resonance-audio) -- the cyclic shift, imported by the selftest to prove the
 //! wrap-vs-drop contrast; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to prove that dropping samples never raises the peak.
 //!

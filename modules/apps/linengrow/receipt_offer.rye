@@ -5,7 +5,7 @@
 //! own readable view, naming product, recipient, purpose, the simulated offered
 //! value, the value basis, the promised return, issue and expiration times, and
 //! whether the offer still stands or has expired. Case 2 of the receipt contract
-//! (`active-designing/date/20260912/20260912-201126_the-receipt-you-can-read-contract.md`)
+//! (`active-designing/date/202609/20260912-201126_the-receipt-you-can-read-contract.md`)
 //! is this projection, read whole: raw product bytes stay absent from every field.
 //!
 //! This module imports no other room. Zig's own module boundary refuses an `@import`

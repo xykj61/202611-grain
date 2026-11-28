@@ -14,7 +14,7 @@
 //! every order-blind metric is invariant; witnessed through resonance-audio, the peak magnitude before and after a rotate is identical, no value ever changing, only its seat.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-003935_fill-ales106-resonance-rotate.md
+//! Design read: active-designing/date/202608/20260815-003935_fill-ales106-resonance-rotate.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to prove a
 //! permutation moves no loudness. The three-reversal rotate reuses the same swap primitive resonance-audio's reverse is built from, so it stands on proven ground.
 //!

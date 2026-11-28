@@ -6,7 +6,7 @@
 //! resonance-audio two-channel meter.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales18-resonance-stereo-loop-meter.md
+//! Design read: active-designing/date/202608/20260814-fill-ales18-resonance-stereo-loop-meter.md
 //! Stands on: resonance/stereo_meter.rye (resonance-audio) -- the StereoMeter and feed/peak/rms reused whole (one true meter per channel, no
 //! new arithmetic); resonance/stereo_loop.rye (resonance-audio) -- the wrapping stereo read the meter is fed, in lockstep off the one head;
 //! resonance/loop.rye (resonance-audio) -- the validated, armed region and enter; resonance/pan.rye (resonance-audio) -- the StereoClip whose two channels

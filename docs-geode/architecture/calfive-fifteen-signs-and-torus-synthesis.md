@@ -5,7 +5,7 @@
 **Voice:** Kyri
 **Style:** Teacher, Radiant, & Twilight at Door
 **Status:** Living (`Room: mixed` -- the multiples-of-5 schedule math, Myofascia rollup, and September 2026 Torus falsifier measurements are **checkable**; the 15-sign poetic & contemplative resonances are **vision**, stated plainly at the door)
-**Lineage:** [`../../context/SPELLBOOK.md`](../../context/SPELLBOOK.md) - [`../../study/cubist-bhakti-astrology/README.md`](../../study/cubist-bhakti-astrology/README.md) - [`../../assets/press/20260910-054448_anywhere-the-vortex-finds-us.md`](../../assets/press/20260910-054448_anywhere-the-vortex-finds-us.md) - [`../../active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md`](../../active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md) - [`../../gratitude/grain-lineage/README.md`](../../gratitude/grain-lineage/README.md)
+**Lineage:** [`../../context/SPELLBOOK.md`](../../context/SPELLBOOK.md) - [`../../study/cubist-bhakti-astrology/README.md`](../../study/cubist-bhakti-astrology/README.md) - [`../../assets/press/20260910-054448_anywhere-the-vortex-finds-us.md`](../../assets/press/20260910-054448_anywhere-the-vortex-finds-us.md) - [`../../active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md`](../../active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md) - [`../../gratitude/grain-lineage/README.md`](../../gratitude/grain-lineage/README.md)
 
 ---
 
@@ -65,7 +65,7 @@ Drawing from our Jyotish studies ([`../../study/cubist-bhakti-astrology/`](../..
 
 In September 2026, two companion threads stood in this tree:
 1. **[`Anywhere the Vortex Finds Us`](../../assets/press/20260910-054448_anywhere-the-vortex-finds-us.md)** (*Vision & Poetic Geometry*): Looked at incompressible fluid equations (where pressure across a bounded room responds as one connected field) alongside Edward Frenkel's metaphor of one coffee cup casting two different shadows -- a geometric image of ***achintya-bhedabheda*** (simultaneous oneness and difference: clean systems craft and loving *bhakti* as two faces of one purposeful life, and lunar/earthly technology valid only when its circulation feeds the poor and heals Earth's gardens).
-2. **[`The Bounded Torus -- Twelve Moonshots`](../../active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md)** & **[`gratitude/grain-lineage/`](../../gratitude/grain-lineage/README.md)** (*Empirical Checkable Falsifiers*): Tested twelve bold geometric hypotheses against real Rye witnesses on metal -- and **honestly recorded which ones held and which ones our own falsifiers refuted!**
+2. **[`The Bounded Torus -- Twelve Moonshots`](../../active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md)** & **[`gratitude/grain-lineage/`](../../gratitude/grain-lineage/README.md)** (*Empirical Checkable Falsifiers*): Tested twelve bold geometric hypotheses against real Rye witnesses on metal -- and **honestly recorded which ones held and which ones our own falsifiers refuted!**
    - **What Held on Metal:**
      - **Wrap-around ring buffers with lap tags (`wrap_ring.rye`):** Bounded rings that tag every slot with its lap counter prevent stale reads by construction (`earpiece_core.rye` & `mikrophone`),
      - **Residue-free cyclic witnesses (`cyclic_witness`):** Every test must return the working tree to its exact starting state,

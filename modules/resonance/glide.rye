@@ -18,7 +18,7 @@
 //! once (resonance-audio's one true saturation, reused).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-194031_fill-ales70-resonance-gliding-interpolated-delay.md
+//! Design read: active-designing/date/202608/20260814-194031_fill-ales70-resonance-gliding-interpolated-delay.md
 //! Stands on: resonance/taps.rye (resonance-audio) -- the multi-tap whose fixed integer taps this generalizes to a moving fractional one, and whose
 //! snapshot-before-write idiom this reuses; resonance/timeline.rye (resonance-audio) -- the Clip, sample_max, max_clip, and the one true saturate.
 //!

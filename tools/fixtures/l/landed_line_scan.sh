@@ -24,7 +24,7 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$pages" ]; then
-  pages="active-designing/date/20261003/20261003-135506_the-fascia-face.md active-designing/date/20261003/20261003-135506_where-a-finished-page-lives.md active-designing/date/20261003/20261003-112527_the-receipt-crawl.md"
+  pages="active-designing/date/202610/20261003-135506_the-fascia-face.md active-designing/date/202610/20261003-135506_where-a-finished-page-lives.md active-designing/date/202610/20261003-112527_the-receipt-crawl.md"
 fi
 
 page_n=0

@@ -1,6 +1,6 @@
 #!/bin/sh
 # tools/fixtures/t/torus_place_scan.sh -- does the SECOND AXIS of a torus fold buy anything for
-# PLACEMENT? The one question row 5 of active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md
+# PLACEMENT? The one question row 5 of active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md
 # has left, and the one its elder names as the claim it does not touch.
 #
 # WHERE THIS PICKS UP. tools/fixtures/t/torus_fold_scan.sh read row 5's own falsifier and killed
@@ -44,7 +44,7 @@
 #   every cell rather than argued: 2g+1, 5, 4g+1, and C-ceil(C/5)+1 are what the arithmetic gives,
 #   and a reading that disagrees with those closed forms is the finding rather than a rounding
 #   error. `evenspread` is the fourth rule named in
-#   active-designing/date/20260918/20260918-043308_evenly-spaced-offsets-close-opening-one.md: minimizing the
+#   active-designing/date/202609/20260918-043308_evenly-spaced-offsets-close-opening-one.md: minimizing the
 #   largest gap between five points on a ring of C cells beats every fixed-offset rule above it,
 #   and an even split reaches the pigeonhole bound C-ceil(C/5)+1 exactly.
 #

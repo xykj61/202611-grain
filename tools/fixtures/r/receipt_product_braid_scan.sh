@@ -58,7 +58,7 @@
 set -eu
 
 ROOT="${ROOT:-.}"
-CONTRACT="${CONTRACT:-active-designing/date/20260912/20260912-201126_the-receipt-you-can-read-contract.md}"
+CONTRACT="${CONTRACT:-active-designing/date/202609/20260912-201126_the-receipt-you-can-read-contract.md}"
 
 LIST=no
 for arg in "$@"; do

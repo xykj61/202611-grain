@@ -23,7 +23,7 @@
 //! round-trip is always exact (l + r = 2l is even).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-120505_fill-ales210-resonance-mid-side.md
+//! Design read: active-designing/date/202608/20260815-120505_fill-ales210-resonance-mid-side.md
 //! Stands on: resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant, the ground both ops preserve;
 //! resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples, and `saturate`, the one true clamp reused so the rail lives in one place.
 //!

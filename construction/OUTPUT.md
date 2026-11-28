@@ -5,7 +5,7 @@ Four fields: **kind** - **path** - **git nib** - **note**.
 
 Kinds: `witness` `module` `predicate` `docs-page` `tool` `room` `context` `ww-push`
 
-Design: `active-designing/date/20261018/20261018-224923_output-vs-activity-open-question.md`
+Design: `active-designing/date/202610/20261018-224923_output-vs-activity-open-question.md`
 Opened: `20261018.225249`
 
 ---

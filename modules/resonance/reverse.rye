@@ -14,7 +14,7 @@
 //! empty clip, a single-sample clip, and a palindrome are each their own reverse -- the degenerate cases land on themselves, no special-casing.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-002711_fill-ales104-resonance-reverse.md
+//! Design read: active-designing/date/202608/20260815-002711_fill-ales104-resonance-reverse.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to prove a
 //! permutation moves no loudness.
 //!

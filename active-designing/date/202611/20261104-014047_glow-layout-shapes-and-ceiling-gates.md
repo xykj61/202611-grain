@@ -5,7 +5,7 @@
 **Stamp:** `20261104.014047`
 **Style:** Gauge at Field
 **Witness:** `tools/g/glow_layout_witness.rish` -- GREEN on metal
-**Kin:** `active-designing/date/20261104/20261104-004038_glow-value-model-record.md` (Orbit 9, the value model this orbit composes)
+**Kin:** `active-designing/date/202611/20261104-004038_glow-value-model-record.md` (Orbit 9, the value model this orbit composes)
 
 ## What this orbit proves
 

@@ -6,7 +6,7 @@
 //! sheet's stems INTO the session they are already working, without losing what the live rack already holds.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-151927_fill-ales35-resonance-rack-merge.md
+//! Design read: active-designing/date/202608/20260814-151927_fill-ales35-resonance-rack-merge.md
 //! Stands on: resonance/rack.rye (resonance-audio) -- the Rack and its disjoint named Slots, grafted whole; resonance/rack_seal.rye (resonance-audio) --
 //! verify_and_parse reused WHOLE as the integrity gate before a sealed import; resonance/rack_sheet.rye (resonance-audio) -- the sheet grammar the
 //! seal wraps. The merge adds naming-collision and ceiling bounds atop resonance-audio's proven disjoint slots, and no new edit.

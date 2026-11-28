@@ -18,7 +18,7 @@
 //! rather than wrapping. fb = 0 (a zero numerator) is the IDENTITY -- the dry signal untouched, the echo turned fully off.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-191111_fill-ales66-resonance-feedback-delay.md
+//! Design read: active-designing/date/202608/20260814-191111_fill-ales66-resonance-feedback-delay.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_max, max_clip, and the one true saturate this reuses; resonance/mix.rye
 //! (resonance-audio) -- the same saturate reused for a constructive sum, the summing lesson.
 //!

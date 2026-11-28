@@ -19,7 +19,7 @@
 //! first pass's precheck are the atomicity crux.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-115209_fill-ales208-resonance-reverb-freeze.md
+//! Design read: active-designing/date/202608/20260815-115209_fill-ales208-resonance-reverb-freeze.md
 //! Stands on: resonance/reverb_preset.rye (resonance-audio) -- the named-room wet, run over the span unchanged and composed with itself, its ReverbPresetError
 //! forwarded whole; resonance/clock.rye (resonance-audio) -- the sample clock the freeze is spoken against; resonance/timeline.rye (resonance-audio) -- the Clip, its max_clip
 //! bounding the span and its saturate the rail each preset pass already rides.

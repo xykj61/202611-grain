@@ -7,7 +7,7 @@
 //! time base can later drive the whole family, and every envelope move still goes through the one resonance-audio proved.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-175827_fill-ales56-resonance-hold-stage.md
+//! Design read: active-designing/date/202608/20260814-175827_fill-ales56-resonance-hold-stage.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, max_clip, the range law shape; resonance/envelope.rye
 //! (resonance-audio) -- the proven follower, its env_step making every envelope move here so the hold cannot drift from the time base it holds.
 //!

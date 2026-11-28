@@ -23,7 +23,7 @@
 //! after; a bad period, a bad depth, a bad carrier, and an out-of-range span each refuse by name with BOTH channels byte for byte untouched and still balanced; count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-083200_fill-ales177-resonance-stereo-ring-mod.md
+//! Design read: active-designing/date/202608/20260815-083200_fill-ales177-resonance-stereo-ring-mod.md
 //! Stands on: resonance/ring_mod.rye (resonance-audio) -- the mono ring modulator run once per channel, its RingModError reused whole and its `precheck` reused for the up-front atomic validation; resonance/tremolo.rye (resonance-audio) -- the non-negative
 //! carrier equality target, carried into stereo at resonance-audio; resonance/glide.rye (resonance-audio) -- glide_scale, the fixed-point unit (256 = unity); resonance/pan.rye (resonance-audio) -- the StereoClip and its balance invariant; resonance/timeline.rye (resonance-audio) --
 //! the Clip and the one true saturate that clamps the lone asymmetric corner.

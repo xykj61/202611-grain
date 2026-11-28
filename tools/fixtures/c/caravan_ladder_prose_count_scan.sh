@@ -164,7 +164,7 @@ $(grep -n '^say ' "$meter" | while IFS= read -r line; do
     # A dated path's own `date/YYYYMMDD/` day shelf is part of the same name and comes off too
     # (REDS 20261001.085500): the 20260918 room fold repointed this meter's own plant from a flat
     # `active-designing/20260822-101058_...` citation to the folded
-    # `active-designing/date/20260822/20260822-101058_...` one, and the bare directory digit run
+    # `active-designing/date/202608/20260822-101058_...` one, and the bare directory digit run
     # survived every strip, so a path-repoint turned a passing plant into a false red.
     printf '%s\n' "${line#*:}" | tr -d ',' |
         sed 's/%[0-9][0-9]*/ /g; s#date/[0-9]\{8\}/#date/ #g; s/[0-9]\{8\}-[0-9]\{6\}[_.]/ /g; s/[0-9]\{8\}\.[0-9]\{6\}/ /g' |

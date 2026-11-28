@@ -20,6 +20,6 @@ obs Gemini's half-wrong correction (wutpam/wutbar) demonstrates the structural a
 
 file [counsel/date/20261114/20261114-222433_cross-bench-reply-gemini-4-carbon-glow-runes.md](../../counsel/date/20261114/20261114-222433_cross-bench-reply-gemini-4-carbon-glow-runes.md) counsel reply -- four corrections accepted, five proposals assessed as horizon
 file [external-research/date/20261114/20261114-214130_hoon-rune-families-and-glow-coverage.md](../../external-research/date/20261114/20261114-214130_hoon-rune-families-and-glow-coverage.md) six corrections applied to the external-research piece
-file [active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md](../../active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md) four corrections applied -- line count, dotket, mic/Sail, fastar/storage triad
+file [active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md](../../active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md) four corrections applied -- line count, dotket, mic/Sail, fastar/storage triad
 
 recommend check-in (Claude) -- Keaton picks direction: send the corrections and counsel reply, or back to the ITINERARY

@@ -50,7 +50,7 @@ cat > "$pen/construction/ITINERARY.md" <<'EOF'
 - The four borrowed ceilings await one reason each.
 EOF
 
-cat > "$pen/active-designing/date/20260101/20260101-000000_dated-parked.md" <<'EOF'
+cat > "$pen/active-designing/date/202601/20260101-000000_dated-parked.md" <<'EOF'
 # testimony, not an open question
 This page once waited for Keaton's word, and the word landed the day this was written.
 EOF

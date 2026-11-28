@@ -15,7 +15,7 @@
 //! DEGENERATE / GENERALIZATION LAW: empty payloads with count 0 the identity on both channels, and per channel it inherits resonance-audio's three faces (cut - splice - paste_over).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-014739_fill-ales116-resonance-stereo-replace.md
+//! Design read: active-designing/date/202608/20260815-014739_fill-ales116-resonance-stereo-replace.md
 //! Stands on: resonance/replace.rye (resonance-audio) -- the mono general span-edit run once per channel; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance
 //! invariant; resonance/timeline.rye (resonance-audio) -- the Clip and the EditError reused whole; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to read the result.
 //!

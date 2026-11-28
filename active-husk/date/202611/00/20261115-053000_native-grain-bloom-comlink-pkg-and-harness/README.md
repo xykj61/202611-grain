@@ -5,7 +5,7 @@
 **Voice:** Kyri
 **Style:** Gauge at Field, Radiant warmth
 **Status:** Proposed -- Awaiting Keaton's Confirmation (`Room: vision` -- pauses [`../20261114-224402_glow-mill-and-ring-rearchitecture/README.md`](../20261114-224402_glow-mill-and-ring-rearchitecture/README.md) cleanly at Orbit 1, `Myofascia: 56.520`)
-**Prior Design Lineage:** [`../../../../active-designing/date/20260825/20260825-173153_reprove-only-what-moved.md`](../../../../active-designing/date/20260825/20260825-173153_reprove-only-what-moved.md) (Fusion Moves 1-3 + `.ryekey`) - [`../../../../external-research/date/20261115/20261115-052500_scion-mononoke-omnidiff-pkg-managers-and-ask-hn-synthesis.md`](../../../../external-research/date/20261115/20261115-052500_scion-mononoke-omnidiff-pkg-managers-and-ask-hn-synthesis.md)
+**Prior Design Lineage:** [`../../../../active-designing/date/202608/20260825-173153_reprove-only-what-moved.md`](../../../../active-designing/date/202608/20260825-173153_reprove-only-what-moved.md) (Fusion Moves 1-3 + `.ryekey`) - [`../../../../external-research/date/20261115/20261115-052500_scion-mononoke-omnidiff-pkg-managers-and-ask-hn-synthesis.md`](../../../../external-research/date/20261115/20261115-052500_scion-mononoke-omnidiff-pkg-managers-and-ask-hn-synthesis.md)
 
 ---
 

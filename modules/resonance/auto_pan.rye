@@ -20,7 +20,7 @@
 //! than an in-place edit.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-202856_fill-ales76-resonance-auto-pan-lfo-stereo-field.md
+//! Design read: active-designing/date/202608/20260814-202856_fill-ales76-resonance-auto-pan-lfo-stereo-field.md
 //! Stands on: resonance/pan.rye (resonance-audio) -- the linear pan this sweeps in time and the StereoClip it renders into; resonance/chorus.rye (resonance-audio) --
 //! the triangle-LFO driver `triangle_delay_at`, now the pan position; resonance/glide.rye (resonance-audio) -- `glide_scale`, the field unit (256 = hard
 //! right); resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max, the one true saturate.

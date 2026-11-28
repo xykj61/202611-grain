@@ -16,7 +16,7 @@
 //! zero target sample) it writes zero over zero, byte-for-byte with resonance-audio.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-190149_fill-ales65-resonance-keyed-gate.md
+//! Design read: active-designing/date/202608/20260814-190149_fill-ales65-resonance-keyed-gate.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, max_clip, the range law shape; resonance/gate.rye (resonance-audio) --
 //! the silenced floor this drives, re-proven beside it; resonance/hold_env.rye (resonance-audio) -- the HELD time base, its env_step_hold advancing
 //! the KEY's follower; resonance/gate_env_hold.rye (resonance-audio) -- the attack/hold/release gate this keys, equalled byte-for-byte by a self-key.

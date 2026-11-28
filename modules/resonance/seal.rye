@@ -5,7 +5,7 @@
 //! parser consumed the verified body. This rung lifts the whole frame into one primitive both wrappers call, so neither can drift.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-153840_fill-ales38-resonance-seal.md
+//! Design read: active-designing/date/202608/20260814-153840_fill-ales38-resonance-seal.md
 //! Stands on: resonance/rack_seal.rye (resonance-audio) and resonance/cue_seal.rye (resonance-audio) -- the two seals whose shared law this module owns; mirrors
 //! the Sha256 verify-before-trust of resonance/wire.rye (resonance-audio). A pure primitive over std.crypto only -- no audio imports.
 //!

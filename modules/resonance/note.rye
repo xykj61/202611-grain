@@ -7,7 +7,7 @@
 //! for a given degree of a scale at a given octave
 //! offset, bounded and checked.
 //!
-//! Design: active-designing/date/20261111/
+//! Design: active-designing/date/202611/
 //!   20261111-170815_kirtan-generation-midi-dial-
 //!   architecture.md
 //! Stands on: nothing -- foundational module.

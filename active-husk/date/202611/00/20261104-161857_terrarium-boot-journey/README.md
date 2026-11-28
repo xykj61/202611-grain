@@ -184,7 +184,7 @@ stage.
 - [Single-stranded foundation](../../../../../foundations/20260823-204456_single-stranded.md)
 - [Fascia health model](../../../../../context/specs/20261103-201746_fascia-health-model.md)
 - [ITINERARY](../../../../../construction/ITINERARY.md)
-- [Resonance DAW proposal (sister RFC)](../../../../../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md)
+- [Resonance DAW proposal (sister RFC)](../../../../../active-designing/date/202611/20261103-003744_resonance-daw-expansion-proposal.md)
 
 ## Incense captain assignment
 

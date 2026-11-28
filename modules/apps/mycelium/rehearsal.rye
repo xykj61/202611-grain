@@ -12,15 +12,15 @@
 //!
 //! The pen layer is crash-only on purpose: a missing proposal marks a sleeping ship, and two of
 //! three ships still read a pen. The Byzantine roll stays where value moves, as
-//! active-designing/date/20260825/20260825-133156_three-real-mox-and-the-outer-loop.md argues.
+//! active-designing/date/202608/20260825-133156_three-real-mox-and-the-outer-loop.md argues.
 //!
 //! The module composes the constel, cord, and testament public APIs and leaves each one as it
 //! stands. Demo seeds and fixture stamps are the whole of it. Real keys, funds, networks, and
 //! custody stay outside the module. The wire crossing of the same rule lives one room over, in
 //! comlink/rehearsal_wire.rye, on localhost by design.
 //!
-//! Scope: active-designing/date/20260825/20260825-210819_the-round-that-pulls-twice.md (the rota this runs)
-//!        active-designing/date/20260825/20260825-205011_the-pen-the-gossip-and-the-derived-spine.md
+//! Scope: active-designing/date/202608/20260825-210819_the-round-that-pulls-twice.md (the rota this runs)
+//!        active-designing/date/202608/20260825-205011_the-pen-the-gossip-and-the-derived-spine.md
 //!
 //!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye run mycelium/rehearsal.rye
 

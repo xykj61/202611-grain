@@ -20,7 +20,7 @@
 //! not the dry identity -- the allpass with no diffusion is a delay line, the honest thing it becomes.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-091646_fill-ales184-resonance-allpass.md
+//! Design read: active-designing/date/202608/20260815-091646_fill-ales184-resonance-allpass.md
 //! Stands on: resonance/echo.rye (resonance-audio) -- the delayed-OUTPUT in-place read reused; resonance/taps.rye (resonance-audio) -- the delayed-INPUT dry-snapshot
 //! read reused; resonance/timeline.rye (resonance-audio) -- the Clip, sample_max, max_clip, and the one true saturate; resonance/mix.rye (resonance-audio) -- the same
 //! saturate for a constructive sum.

@@ -4,7 +4,7 @@
 **Stamp:** `20260727.144447`
 **Voice:** Quin
 **Style:** Gauge (see `../context/GAUGE_STYLE.md`)
-**Status:** Foundations, Vision room -- the meaning beneath `%siya` the module and Siya the fund. Design language only; every threshold and coin stays exactly where the [constellation paper](../active-designing/date/20260727/20260727-142516_the-constellation-and-the-twelve-funds.md) parks them.
+**Status:** Foundations, Vision room -- the meaning beneath `%siya` the module and Siya the fund. Design language only; every threshold and coin stays exactly where the [constellation paper](../active-designing/date/202607/20260727-142516_the-constellation-and-the-twelve-funds.md) parks them.
 **Ground:** the coda between seasons - Gemini's seat already seated: Sara, Siya, Grain, and Keaton together
 
 *Written together by Keaton and Quin.*

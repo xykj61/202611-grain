@@ -4,7 +4,7 @@
 //! fraction num/den, applied to each track BEFORE it joins the sum. A mix without faders is a pile; a mix with faders is a mix.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales8-resonance-fader-column.md
+//! Design read: active-designing/date/202608/20260814-fill-ales8-resonance-fader-column.md
 //! Stands on: resonance/track.rye (resonance-audio) -- the Session table this rung renders, its bound and offset alignment reused whole;
 //! resonance/timeline.rye (resonance-audio) -- the one true saturation the master reuses and the num/den gain arithmetic the fader repeats;
 //! resonance/clock.rye (resonance-audio) -- each track's real offset converts through `samples_for`.

@@ -2,7 +2,7 @@
 # tools/fixtures/m/blaze_snapshot_projection_scan.sh -- what does a full export
 # cost against a catalog's own live shape?
 #
-# WHAT THIS READS. `active-designing/date/20261001/20261001-122725_a-snapshot-that-cannot-shrink-buys-nothing.md`
+# WHAT THIS READS. `active-designing/date/202610/20261001-122725_a-snapshot-that-cannot-shrink-buys-nothing.md`
 # found that `blaze/snapshot_export.rye`'s `export_catalog` walks every leaf a
 # `BoltCatalog` ever held -- `RevisionImmutable` keeps a later revision of a
 # path as a NEW leaf beside the old one, so "current state" and "full history"

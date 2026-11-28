@@ -59,14 +59,14 @@ for the watched inputs. That changes the roster runner's contract, so it waits o
 
 ### RESONANCE -- The Working Studio (Equinox 1, active from `20261103.010404`)
 
-**Calfive schedule:** [`../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md`](../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md)
-**Proposal:** [`../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md`](../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md)
+**Calfive schedule:** [`../active-designing/date/202611/20261103-005021_resonance-daw-calfive-schedule.md`](../active-designing/date/202611/20261103-005021_resonance-daw-calfive-schedule.md)
+**Proposal:** [`../active-designing/date/202611/20261103-003744_resonance-daw-expansion-proposal.md`](../active-designing/date/202611/20261103-003744_resonance-daw-expansion-proposal.md)
 **Project board:** [`../active-husk/date/202611/00/20261103-005948_resonance-working-studio/CHECKLIST.md`](../active-husk/date/202611/00/20261103-005948_resonance-working-studio/CHECKLIST.md)
 
 **Quest 1.1 CLOSED (`20261104`).** Record engine GREEN, WAV encode/decode round-trip GREEN. SLC met at the CLI boundary: a person can run Resonance, record a voice, and export a WAV -- proven on metal.
 
 **Quest 1.2 -- Brushstroke surface and multi-track.** Window orbit landed: NSApplication + waveform + AUHAL recording + CoreAudio playback in one standalone selftest. GREEN on metal. Next: multi-track Weave.
-**Glow language dependency CLEARED (`20261111`).** All 15 orbits landed, all deliverables verified on disk (tutorials, cookbook, stdlib reference). **Keaton's explicit pause (`20261108`) lifted (`20261111`)** -- Resonance resumes. Calfive round 1 (Aries, cardinal fire, talent -- "Commence!") when it does. Design: [`../active-designing/date/20261104/20261104-131232_glow-calfive-alignment-and-round-plan.md`](../active-designing/date/20261104/20261104-131232_glow-calfive-alignment-and-round-plan.md).
+**Glow language dependency CLEARED (`20261111`).** All 15 orbits landed, all deliverables verified on disk (tutorials, cookbook, stdlib reference). **Keaton's explicit pause (`20261108`) lifted (`20261111`)** -- Resonance resumes. Calfive round 1 (Aries, cardinal fire, talent -- "Commence!") when it does. Design: [`../active-designing/date/202611/20261104-131232_glow-calfive-alignment-and-round-plan.md`](../active-designing/date/202611/20261104-131232_glow-calfive-alignment-and-round-plan.md).
 
 **Grows from:** 240 Resonance modules (241 witnesses), resonance-audio wire shape, macos-native macOS native surface, Skate Swift shell.
 **Waymarks:** resonance-audio (`season-c-resonance-creative-suite-audio-wire-shape`) -- macos-native (`macos-native-surface-rye-backend`).
@@ -113,7 +113,7 @@ The product cards carry the complete ladders:
 
 - [`LINENGROW_ITINERARY.md`](LINENGROW_ITINERARY.md) -- from readable receipt to portable data-value bundle and lawful return.
 - [`DIMEROLL_ITINERARY.md`](DIMEROLL_ITINERARY.md) -- from recognized receipt to trustworthy portable books and distinct entities.
-- [`the Linengrow Receipt Cloth Design System`](../active-designing/date/20260912/20260912-142909_the-linengrow-receipt-cloth-design-system.md) -- Linengrow meaning, Brushstroke description, Skate behavior.
+- [`the Linengrow Receipt Cloth Design System`](../active-designing/date/202609/20260912-142909_the-linengrow-receipt-cloth-design-system.md) -- Linengrow meaning, Brushstroke description, Skate behavior.
 
 
 **Landed accounts shelved** `20260915.180554` -- the per-ship completed accounts moved whole to [`archive/date/20260915/20260915-180554_itinerary-landed-accounts.md`](archive/date/20260915/20260915-180554_itinerary-landed-accounts.md); [`archive/README.md`](archive/README.md) is the way in.
@@ -163,7 +163,7 @@ Brushstroke declares each component's grid, role, state, tokens, and motion prof
 
 **PAUSED (`20261108`).** All 15 movements COMPLETE across 3 phases -- integration witness GREEN on metal. **Recording red:** UI shows 0 samples recorded; bridge selftest records in loopback (synthetic samples) yet the UI path needs macOS mic permission and a real AUHAL input callback. Bounded fix for when Resonance resumes. Project board: [`../active-husk/date/202611/00/20261107-224400_resonance-macos-native-rebuild/CHECKLIST.md`](../active-husk/date/202611/00/20261107-224400_resonance-macos-native-rebuild/CHECKLIST.md). Paused on Keaton's word `20261108`.
 
-**NEW CHAPTER (`20261111`).** Mandate folds into Tablecloth; Colloquium born fresh. Design: [`../active-designing/date/20261111/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md`](../active-designing/date/20261111/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md). Sequence: (1) DONE -- fold Mandate's vector search into Tablecloth as a capability, (2) DONE -- birth Colloquium as civic-legislative module with automobile-patent nullification bill in Civic Style, (3) DONE -- research treap/persistent vectors for Tablecloth internals ([`../active-designing/date/20261111/20261111-143331_treap-persistent-vector-tablecloth-internals.md`](../active-designing/date/20261111/20261111-143331_treap-persistent-vector-tablecloth-internals.md)). **Awaiting Keaton's read** of the Colloquium automobile-patent bill and the treap research essay.
+**NEW CHAPTER (`20261111`).** Mandate folds into Tablecloth; Colloquium born fresh. Design: [`../active-designing/date/202611/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md`](../active-designing/date/202611/20261111-121521_mandate-folds-into-tablecloth-colloquium-born.md). Sequence: (1) DONE -- fold Mandate's vector search into Tablecloth as a capability, (2) DONE -- birth Colloquium as civic-legislative module with automobile-patent nullification bill in Civic Style, (3) DONE -- research treap/persistent vectors for Tablecloth internals ([`../active-designing/date/202611/20261111-143331_treap-persistent-vector-tablecloth-internals.md`](../active-designing/date/202611/20261111-143331_treap-persistent-vector-tablecloth-internals.md)). **Awaiting Keaton's read** of the Colloquium automobile-patent bill and the treap research essay.
 
 **COMPLETE: Blaze SLC -- Comlink Realidream content network.** Project board: [`../active-husk/date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md`](../active-husk/date/202611/00/20261107-090000_blaze-slc-comlink-realidream/CHECKLIST.md).
 
@@ -222,7 +222,7 @@ At check-in, count completed named wholes, dual-product acceptance cases green, 
   defect, which is why none has closed itself yet. The three `%338` doors stand exactly as named:
   raise the bound again, split OPEN by who holds the row, or sanction the single-row shelf birth.
 - **The wire ceiling is repaired** (`20261001`, REDS %756): shrink door, `max_path` 57, three hits
-  fit; the grow door needed a larger datagram. [The ruling and erratum](../active-designing/date/20261001/20261001-124643_the-fusion-build-ruling.md).
+  fit; the grow door needed a larger datagram. [The ruling and erratum](../active-designing/date/202610/20261001-124643_the-fusion-build-ruling.md).
 - **The card's own room** -- it stood at 40,953 bytes against the 40,960 it declares, so any account
   breaches the bound. Should an account live on its shelf from birth, the card holding a line a ship?
 - **The numbered-list re-grade** -- holding `1. ` and `2) ` lines out of the prose readings costs two

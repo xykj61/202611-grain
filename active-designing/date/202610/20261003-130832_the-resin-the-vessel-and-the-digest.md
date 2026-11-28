@@ -36,7 +36,7 @@ The resin is what you checked. The digest is how you checked. [`../../../context
 
 ## The name you ask by
 
-People find a file by four parts: who holds it, which work, which moment, which path. The seated grammar is `peer / bolt / revision / path`. Kumara is the key in your hands, the peer. A bolt is one coherent work. A revision is one moment of it. A path is one file inside that moment. The design is [`../../../active-designing/date/20260706/20260706-023912_the-referential-namespace.md`](../../../active-designing/date/20260706/20260706-023912_the-referential-namespace.md).
+People find a file by four parts: who holds it, which work, which moment, which path. The seated grammar is `peer / bolt / revision / path`. Kumara is the key in your hands, the peer. A bolt is one coherent work. A revision is one moment of it. A path is one file inside that moment. The design is [`../../../active-designing/date/202607/20260706-023912_the-referential-namespace.md`](../../../active-designing/date/202607/20260706-023912_the-referential-namespace.md).
 
 Recall is the promise on a read. The same name gives the same bytes, or an honest answer that they are not here yet. The digest sits under that promise as the check. It does not take the place of the four parts. A reader can point at a season by a person and a path. The digest tells a later reader the bytes are still the bytes.
 

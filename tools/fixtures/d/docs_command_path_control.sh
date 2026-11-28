@@ -150,7 +150,7 @@ git add -A >/dev/null; git commit -qm plant2
 # --- FREE 7: the same fault on dated testimony, counted and never gated -------------------
 rm -f docs-geode/edu/yonder/pleac/ch01/page.md docs-geode/edu/yonder/pleac/ch01/page2.md
 mkdir -p active-designing/date/20260101
-cat > active-designing/date/20260101/20260101-010101_elder.md <<'EOF'
+cat > active-designing/date/202601/20260101-010101_elder.md <<'EOF'
 # Elder
 
 ```sh

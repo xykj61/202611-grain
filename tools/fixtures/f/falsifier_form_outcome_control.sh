@@ -187,7 +187,7 @@ leg shelved_page_read_past      1 "$(key "$o" pages_found)"
 # a page folded to its day shelf is NOT read past -- a ranked page's own errata
 # accrue over days, so it is expected to fold to date/ while still gradeable
 mkdir -p "$d/active-designing/date/20260102"
-cp "$d/active-designing/20260101-000000_a.md" "$d/active-designing/date/20260102/20260102-000000_d.md"
+cp "$d/active-designing/20260101-000000_a.md" "$d/active-designing/date/202601/20260102-000000_d.md"
 pencommit "$d"
 o=$(run "$d")
 leg dated_page_counted          2 "$(key "$o" pages_found)"

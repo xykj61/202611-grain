@@ -6,7 +6,7 @@
 //! clip is placed at a real moment.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales5-resonance-sample-clock.md
+//! Design read: active-designing/date/202608/20260814-fill-ales5-resonance-sample-clock.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip it edits, the bound it converts to, and the one true saturation it
 //! reuses; resonance/fade.rye (resonance-audio) -- the fade `fade_ms` names in milliseconds; resonance/mix.rye (resonance-audio) -- the sample-for-sample
 //! sum `place_at` carries to a real offset.

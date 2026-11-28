@@ -13,7 +13,7 @@
 //! all-zero clip and the empty clip are each their own invert (-0 = 0), landing on themselves with no special-casing.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-003415_fill-ales105-resonance-invert.md
+//! Design read: active-designing/date/202608/20260815-003415_fill-ales105-resonance-invert.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples, and `saturate`, the one true clamp reused here so the rail lives in one place; resonance/meter.rye
 //! (resonance-audio) -- the peak/RMS meter, used only by the witness to prove a sign flip off the rail moves no loudness.
 //!

@@ -4,7 +4,7 @@
 //! bounded byte frame carrying the manifest and the .wav side by side, opened verify-before-trust.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-134607_fill-ales222-resonance-render-bundle.md
+//! Design read: active-designing/date/202608/20260815-134607_fill-ales222-resonance-render-bundle.md
 //! Stands on: resonance/render_manifest.rye (resonance-audio) -- open_manifest and verify_wav, the whole verify-before-trust the bundle
 //! inherits; resonance/wav.rye (resonance-audio) -- the .wav bytes the bundle carries. No new hash, no new grammar -- only a frame.
 //!

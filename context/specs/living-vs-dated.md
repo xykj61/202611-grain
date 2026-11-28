@@ -80,7 +80,7 @@ Plain spoken names (`README.md`, `ROADMAP.md`, `ready-to-ask-claude.md`, `seam-s
 | Path | Role |
 |------|------|
 | `active-designing/seam-season-hammock.md` | Living twin -- edit here (Tier 3) |
-| `active-designing/date/20260712/20260712-052806_seam-season-hammock.md` | Dated original -- amendable until replaced; freeze pointer still blessed |
+| `active-designing/date/202607/20260712-052806_seam-season-hammock.md` | Dated original -- amendable until replaced; freeze pointer still blessed |
 
 ---
 

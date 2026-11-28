@@ -15,7 +15,7 @@
 //! classified short, so every frame carries the same weight and the segments tile the span exactly. Stated plainly so the refusal is deliberate.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-231217_fill-ales95-resonance-voice-activity-segmenter.md
+//! Design read: active-designing/date/202608/20260814-231217_fill-ales95-resonance-voice-activity-segmenter.md
 //! Stands on: resonance/voiced.rye (resonance-audio) -- the per-frame classifier, reused by name so the segmenter can never classify differently than the reader it sequences;
 //! resonance/timeline.rye (resonance-audio) -- the Clip, max_clip; resonance/schmitt.rye (resonance-audio) -- the band-and-span precheck; resonance/meter.rye (resonance-audio) -- the floor's peak ceiling.
 //!

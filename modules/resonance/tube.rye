@@ -19,7 +19,7 @@
 //! input, so the in-place read-then-write at one index touches nothing another step needs.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-212318_fill-ales82-resonance-tube-drive.md
+//! Design read: active-designing/date/202608/20260814-212318_fill-ales82-resonance-tube-drive.md
 //! Stands on: resonance/drive.rye (resonance-audio) -- the pre-gain, the gain faults, and the ceiling law, reused with one ceiling per sign; resonance/fader.rye
 //! (resonance-audio) -- the num/den gain in i64; resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max, the one true saturate.
 //!

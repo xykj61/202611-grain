@@ -22,7 +22,7 @@
 //! with feedback, and it wants a carried-state design and a stability bound of its own (the resonance-audio shape) -- a later, named rung.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-222356_fill-ales90-resonance-dc-offset-remover.md
+//! Design read: active-designing/date/202608/20260814-222356_fill-ales90-resonance-dc-offset-remover.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max, and the one true saturate; resonance/rectify.rye (resonance-audio) -- the full-wave rectifier whose
 //! introduced DC offset this rung undoes (the composition proof).
 //!

@@ -10,7 +10,7 @@
 //!   rye build blaze/resin_batch.rye -femit-bin=blaze/bin/resin-batch
 //!   blaze/bin/resin-batch selftest
 //!
-//! Scope: active-designing/date/20260706/20260706-023912_the-referential-namespace.md
+//! Scope: active-designing/date/202607/20260706-023912_the-referential-namespace.md
 
 const std = @import("std");
 const assert = std.debug.assert;

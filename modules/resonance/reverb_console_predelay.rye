@@ -15,7 +15,7 @@
 //! and the pre-delayed wet.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-103104_fill-ales196-resonance-console-predelay.md
+//! Design read: active-designing/date/202608/20260815-103104_fill-ales196-resonance-console-predelay.md
 //! Stands on: resonance/reverb_predelay.rye (resonance-audio) -- the wet-domain pre-delay whose ReverbPredelayError (ReverbPresetError || BadPredelay) this
 //! forwards whole, and whose full-wet edge this equals; resonance/reverb_mix.rye (resonance-audio) -- the linear wet/dry blend this reuses per sample, and whose
 //! no-gap edge this equals; resonance/reverb_preset.rye (resonance-audio) -- the named-room wet, run over the span unchanged; resonance/clock.rye (resonance-audio) -- the

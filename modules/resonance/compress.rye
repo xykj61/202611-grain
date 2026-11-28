@@ -6,7 +6,7 @@
 //! limiter -- a very high ratio divides the excess to nothing, seating an above-threshold sample at the threshold.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-171338_fill-ales50-resonance-compressor.md
+//! Design read: active-designing/date/202608/20260814-171338_fill-ales50-resonance-compressor.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, the range law shape; resonance/limit.rye (resonance-audio) -- the
 //! brickwall this softens, re-proven beside it.
 //!

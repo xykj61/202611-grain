@@ -16,8 +16,8 @@ into the work.
 
 ## Links
 
-- **Calfive schedule:** [`../../../../../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md`](../../../../../active-designing/date/20261103/20261103-005021_resonance-daw-calfive-schedule.md)
-- **RFC proposal:** [`../../../../../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md`](../../../../../active-designing/date/20261103/20261103-003744_resonance-daw-expansion-proposal.md)
+- **Calfive schedule:** [`../../../../../active-designing/date/202611/20261103-005021_resonance-daw-calfive-schedule.md`](../../../../../active-designing/date/202611/20261103-005021_resonance-daw-calfive-schedule.md)
+- **RFC proposal:** [`../../../../../active-designing/date/202611/20261103-003744_resonance-daw-expansion-proposal.md`](../../../../../active-designing/date/202611/20261103-003744_resonance-daw-expansion-proposal.md)
 - **ITINERARY:** [`../../../../../construction/ITINERARY.md`](../../../../../construction/ITINERARY.md)
 - **Checklist:** [`CHECKLIST.md`](CHECKLIST.md)
 - **Progress log:** [`PROGRESS.md`](PROGRESS.md)

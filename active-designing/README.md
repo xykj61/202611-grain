@@ -12,11 +12,11 @@
 > `20260827`; three weeks more than doubled it, which is the thing a census in prose cannot do for
 > itself. **Run the scan rather than trusting this line.** So the walking index is a way in
 > rather than a census: it carries the thirty-nine a reader most often wants, and the rest are
-> found by name. Every one of the 94 folds to `date/YYYYMMDD/` on the same rule, and a stale
+> found by name. Every one of the 94 folds to `date/YYYYMM/` on the same rule, and a stale
 > reference to any of them is **resolved** rather than hunted --
 > `rishi/bin/rishi run tools/d/dated_path_resolve.rish <reference>`.
 
-**Layout (`20261017`):** every dated design now sits in `date/YYYYMMDD/`, and each one that did not already carry it has a `**Stamp:**` line in its header, so a reader or Skate can sort by the writing itself rather than by the filename. Forty-four flat designs from `20260814`, `20260918`, and `20260921` moved under that rule, and every living citer was repointed in the same pass. The flat count above predates the move, so read the scan rather than the number.
+**Layout (`20261128`):** every dated design now sits in `date/YYYYMM/` (monthly), and each one that did not already carry it has a `**Stamp:**` line in its header, so a reader or Skate can sort by the writing itself rather than by the filename. Molted from daily `date/YYYYMMDD/` to monthly `date/YYYYMM/` on `20261128` -- 56 daily folders compressed to 6 monthly folders, 316 files, 1768 living references repointed. The flat count above predates the move, so read the scan rather than the number.
 
 **Current product contract:** [`20260912-201126_the-receipt-you-can-read-contract.md`](date/20260912/20260912-201126_the-receipt-you-can-read-contract.md) fixes one synthetic receipt, its four public types, module residences, eight acceptance cases, and the falsifier that keeps Linengrow and Dimeroll distinct.
 
@@ -73,7 +73,7 @@ Ideas flow one way across the boundary: a concept learned in external research, 
 
 ## One clock, one order
 
-Dated briefs carry `YYYYMMDD-HHMMSS_short-sprig.md` filenames; this README is the living foundation and reverse-chron index. Full naming law: [`../context/specs/20260627-102012_one-clock-naming-law.md`](../context/specs/20260627-102012_one-clock-naming-law.md).
+Dated briefs carry `YYYYMMDD-HHMMSS_short-sprig.md` filenames inside `date/YYYYMM/` monthly folders; this README is the living foundation and reverse-chron index. Full naming law: [`../context/specs/20260627-102012_one-clock-naming-law.md`](../context/specs/20260627-102012_one-clock-naming-law.md).
 
 ## The room at the door
 

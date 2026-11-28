@@ -1,6 +1,6 @@
 #!/bin/sh
 # tools/fixtures/l/ladder_order_scan.sh -- CAN THE ERRATA STATE AN ORDER? The twelve rows of
-# active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md were ranked once, on the day
+# active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md were ranked once, on the day
 # they were written, by what a lane could start on this pier. Ten of the twelve now carry an
 # erratum reporting a landed measurement, and several of those errata recommend a re-rank or a
 # re-aim in their own words. The ranking table still reads as first written -- correctly, since
@@ -58,7 +58,7 @@
 # dated testimony and its words do not move, so a reading changes only when an erratum lands.
 set -u
 
-PAGE="${LADDER_PAGE:-active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md}"
+PAGE="${LADDER_PAGE:-active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md}"
 # The instrument reading needs three more populations, each overridable so the control can
 # plant one and know the right answer by construction.
 TREE="${LADDER_TREE:-.}"

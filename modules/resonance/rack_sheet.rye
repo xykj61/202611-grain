@@ -7,7 +7,7 @@
 //! to persist real PCM.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-150213_fill-ales33-resonance-rack-sheet.md
+//! Design read: active-designing/date/202608/20260814-150213_fill-ales33-resonance-rack-sheet.md
 //! Stands on: resonance/rack.rye (resonance-audio) -- copy_to reused WHOLE so every rack bound (BadName / Duplicate / RackFull) is enforced at the
 //! one place, and name_of / the slot boards read for render; resonance/selection.rye (resonance-audio) -- make grabs the whole rebuilt span, its
 //! empty-span refusal the reason a rack slot always holds >=1 sample; resonance/timeline.rye (resonance-audio) -- splice builds the temp master a

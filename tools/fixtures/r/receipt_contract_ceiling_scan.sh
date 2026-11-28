@@ -65,7 +65,7 @@
 
 set -eu
 
-CONTRACT="${CONTRACT:-active-designing/date/20260912/20260912-201126_the-receipt-you-can-read-contract.md}"
+CONTRACT="${CONTRACT:-active-designing/date/202609/20260912-201126_the-receipt-you-can-read-contract.md}"
 BOUNDS="${BOUNDS:-blaze/src/tally_receipt_offer_bounds.rye}"
 ADMISSION="${ADMISSION:-blaze/src/receipt_offer.rye}"
 REFUSAL="${REFUSAL:-blaze/src/tally_receipt_refusal.rye}"

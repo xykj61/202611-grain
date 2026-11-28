@@ -6,7 +6,7 @@
 //! `theirs`, every track reconciled into one verdict -- resolved, dropped, or a named conflict.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-150324_fill-ales235-resonance-album-merge.md
+//! Design read: active-designing/date/202608/20260815-150324_fill-ales235-resonance-album-merge.md
 //! Stands on: resonance/album_find.rye (resonance-audio) -- the find / digest_of resolve this composes on, the same resolve album_diff uses;
 //! resonance/album_manifest.rye (resonance-audio) -- the three opened AlbumManifest values this reconciles. It mirrors library_merge (resonance-audio) one
 //! level down (album->track, catalog->record), unchanged in shape, and stands BESIDE album_diff (resonance-audio): both are second-order

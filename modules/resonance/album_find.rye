@@ -6,7 +6,7 @@
 //! This rung seats that resolve, so an album is an index a keeper reaches into, not only a scroll they read down.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-144122_fill-ales231-resonance-album-find.md
+//! Design read: active-designing/date/202608/20260815-144122_fill-ales231-resonance-album-find.md
 //! Stands on: resonance/album_manifest.rye (resonance-audio) -- the opened AlbumManifest (its ordered (name, digest) entries) this reads. The find /
 //! name_of resolve idiom is the exact shape of resonance/library_find.rye (resonance-audio), lifted from a catalog of records to a record of
 //! tracks, unchanged. No new frame, no new hash -- a read over fields the seal already proved whole.

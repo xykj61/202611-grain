@@ -10,7 +10,7 @@ path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
 
 ---
 
-Blaze is where names live. A name is **peer / bolt / revision / path**, and **recall** of a name returns the same bytes for all time -- referential transparency held as a law, verified by digest on every read. Content is a **resin** at a SHA3-256 address; history accretes and never rewrites; a **Tile** marks each leaf's layout. The full why rests in the namespace brief at [`../active-designing/date/20260706/20260706-023912_the-referential-namespace.md`](../active-designing/date/20260706/20260706-023912_the-referential-namespace.md); the normative surface rests in the reference spec at [`../context/specs/20260707-011412_blaze-referential-namespace-reference.md`](../context/specs/20260707-011412_blaze-referential-namespace-reference.md).
+Blaze is where names live. A name is **peer / bolt / revision / path**, and **recall** of a name returns the same bytes for all time -- referential transparency held as a law, verified by digest on every read. Content is a **resin** at a SHA3-256 address; history accretes and never rewrites; a **Tile** marks each leaf's layout. The full why rests in the namespace brief at [`../active-designing/date/202607/20260706-023912_the-referential-namespace.md`](../active-designing/date/202607/20260706-023912_the-referential-namespace.md); the normative surface rests in the reference spec at [`../context/specs/20260707-011412_blaze-referential-namespace-reference.md`](../context/specs/20260707-011412_blaze-referential-namespace-reference.md).
 
 The module grew as one foundation and a family of compositions. `recall_lap1.rye` holds the catalog and its laws; every file after it **imports that foundation and confines its edits to its own layer** -- a pattern that held across the entire arc, parity 159 through 185.
 
@@ -90,7 +90,7 @@ the day a toolchain moves past it, and every `grep` reading it agrees (REDS %449
 Every Rye witness lives beside the module it proves, under `src/`, because Zig holds an import
 inside the root file's own directory -- a test one room away would have to copy the module, and a
 copy proves the copy. The charter is
-[`../active-designing/date/20260905/20260905-153729_blaze-was-named-for-the-weave.md`](../active-designing/date/20260905/20260905-153729_blaze-was-named-for-the-weave.md).
+[`../active-designing/date/202609/20260905-153729_blaze-was-named-for-the-weave.md`](../active-designing/date/202609/20260905-153729_blaze-was-named-for-the-weave.md).
 
 ## Building
 

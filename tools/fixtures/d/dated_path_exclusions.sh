@@ -323,7 +323,7 @@ DP_EXCLUDE_PATHS="docs-geode/demos/README.md"
 #   AND ONE NAME NO FILE EVER WORE. `20260816-205859_double-seat-expansion-eight-chapters.md` was
 #   invented by the chapter molt of 20260826, which swept `season` to `chapter` through a path
 #   literal whose dated basename correctly kept the elder word. Its forwarding address is
-#   `active-designing/date/20260816/20260816-205859_double-seat-expansion-eight-seasons.md`, which
+#   `active-designing/date/202608/20260816-205859_double-seat-expansion-eight-seasons.md`, which
 #   stands and always did. The rows and logs that book REDS %268 must quote the broken form to
 #   explain it, and a row naming a lost reference is itself one -- the cost of saying so, paid once
 #   and visible, exactly as REDS %245, %246 and %253 already record. Listed rather than paid for by
@@ -490,7 +490,7 @@ dp_fixture_basenames() {
 # definition of a broken reference, so for one day the test could not tell a plant from a wound.
 # The chapter molt of 20260826 rewrote a path literal whose dated basename correctly kept the elder
 # word, leaving `tools/l/launch-claude-chapter.rish` -- the script that starts every unattended lap
-# -- naming `active-designing/date/20260816/20260816-205859_double-seat-expansion-eight-chapters.md`
+# -- naming `active-designing/date/202608/20260816-205859_double-seat-expansion-eight-chapters.md`
 # where the file on disk is `..._eight-seasons.md`. The launcher is a `.rish`, so the wound was
 # discovered here, emitted as a fixture, and subtracted from the corpus. Worse, the subtraction is
 # BY BASENAME and reaches every file: the identical break in

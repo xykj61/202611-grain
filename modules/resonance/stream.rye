@@ -6,7 +6,7 @@
 //! samples into one gapless sequence.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales1-resonance-audio-stream.md
+//! Design read: active-designing/date/202608/20260814-fill-ales1-resonance-audio-stream.md
 //! Stands on: resonance/wire.rye (resonance-audio) -- the frame the stream delimits and the audio border it keeps. Byte-stream idiom proven
 //! at constel/channel.rye (constels-naming).
 //!

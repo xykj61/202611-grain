@@ -11,7 +11,7 @@
 //! Composes the public API of constel, chorus, muster, and voucher, and leaves each file as it stood.
 //! Demo ship and keeper seeds carry demo keys, demo funds, and a local network, and they stand for real value at zero.
 //!
-//! Scope: active-designing/date/20260813/20260813-132009_mycelium-constel-named-dev-net-exploration.md
+//! Scope: active-designing/date/202608/20260813-132009_mycelium-constel-named-dev-net-exploration.md
 //!
 //!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye run mycelium/constel_depart.rye
 

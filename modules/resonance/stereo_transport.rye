@@ -5,7 +5,7 @@
 //! the read side genuinely stereo.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales15-resonance-stereo-transport.md
+//! Design read: active-designing/date/202608/20260814-fill-ales15-resonance-stereo-transport.md
 //! Stands on: resonance/transport.rye (resonance-audio) -- the single-position Transport head reused whole (a stereo master needs no second
 //! cursor); resonance/pan.rye (resonance-audio) -- the StereoClip whose two channels share one length; resonance/clock.rye (resonance-audio) -- seek and
 //! elapsed speak real time; resonance/timeline.rye (resonance-audio) -- the Clip each channel is.

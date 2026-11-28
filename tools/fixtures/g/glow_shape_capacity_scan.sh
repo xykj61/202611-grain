@@ -2,12 +2,12 @@
 # tools/fixtures/g/glow_shape_capacity_scan.sh -- CAN GLOW WRITE THE PRODUCT'S OWN TYPES? Glow's
 # multi-field `$:` shape holds at most `max_fields` faces, declared in glow/rune_shape.rye. That
 # number was frozen at nine on `20260720` by a seated capacity ruling
-# (active-designing/date/20260720/20260720-231857_closed-field-capacity-freeze-and-framework-next.md),
+# (active-designing/date/202607/20260720-231857_closed-field-capacity-freeze-and-framework-next.md),
 # on a reason that was true when it was written: the ladder had walked pair, triple, quad, penta,
 # hexa, hepta, octa, nona. The ninth face completed that ladder's teaching.
 #
 # The later receipt contract Keaton accepted on `20260913`
-# (active-designing/date/20260912/20260912-201126_the-receipt-you-can-read-contract.md) declares four public
+# (active-designing/date/202609/20260912-201126_the-receipt-you-can-read-contract.md) declares four public
 # types, and this seat's own ladder rung reads *express the receipt facts in the smallest Glow
 # form already owned*. The approved ceiling of fifteen now holds the widest type.
 #
@@ -37,7 +37,7 @@
 set -u
 
 GLOW_SHAPE="${SHAPE_CAPACITY_GLOW:-glow/rune_shape.rye}"
-CONTRACT="${SHAPE_CAPACITY_CONTRACT:-active-designing/date/20260912/20260912-201126_the-receipt-you-can-read-contract.md}"
+CONTRACT="${SHAPE_CAPACITY_CONTRACT:-active-designing/date/202609/20260912-201126_the-receipt-you-can-read-contract.md}"
 MODE="${1:-}"
 
 if [ ! -f "$GLOW_SHAPE" ]; then

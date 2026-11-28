@@ -12,7 +12,7 @@
 //! volume.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-185604_fill-ales64-resonance-de-esser.md
+//! Design read: active-designing/date/202608/20260814-185604_fill-ales64-resonance-de-esser.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, samples(), splice, the range law shape; resonance/band.rye (resonance-audio) -- the Bandpass
 //! that isolates the sibilant band, its run the two proven one-pole stages in cascade; resonance/sidechain.rye (resonance-audio) -- the keyed
 //! compressor this drives, its compress_key_follow reading the band-passed copy as the detector while the gain lands on the target.

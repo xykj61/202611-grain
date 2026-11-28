@@ -20,7 +20,7 @@
 //! remove writes values only), a refusal leaves BOTH channels byte for byte untouched and still balanced, count = 0 and the empty span the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-060518_fill-ales155-resonance-stereo-dc-remove.md
+//! Design read: active-designing/date/202608/20260815-060518_fill-ales155-resonance-stereo-dc-remove.md
 //! Stands on: resonance/dc_remove.rye (resonance-audio) -- the mono block-mean DC remover run once per channel, its `dc_remove` and `DcError` reused whole; resonance/stereo_rectify.rye (resonance-audio) -- the EVEN map whose per-channel DC
 //! offset this rung undoes (the composition proof) and whose image-COLLAPSE this rung's image-PRESERVE answers; resonance/rectify.rye (resonance-audio) -- the mono rectifier underneath resonance-audio; resonance/pan.rye (resonance-audio) -- the
 //! StereoClip (two mono Clips, left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, sample_min/max, and the one true saturate reused through resonance-audio.

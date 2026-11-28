@@ -18,7 +18,7 @@
 //! peak magnitude (re-measured through resonance-audio) is unchanged; an empty pair and a single-sample pair are each their own rotation for any shift.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-024103_fill-ales126-resonance-stereo-rotate.md
+//! Design read: active-designing/date/202608/20260815-024103_fill-ales126-resonance-stereo-rotate.md
 //! Stands on: resonance/rotate.rye (resonance-audio) -- the mono cyclic left-shift run once per channel; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant;
 //! resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used by the witness to prove a permutation moves no loudness in either channel.
 //!

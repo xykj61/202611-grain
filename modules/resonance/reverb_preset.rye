@@ -17,7 +17,7 @@
 //!   PLATE -- a plate: four dense mid combs (7..13 ms), three allpasses -- a bright, dense, metallic wash.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-095435_fill-ales190-resonance-named-room-reverb-presets.md
+//! Design read: active-designing/date/202608/20260815-095435_fill-ales190-resonance-named-room-reverb-presets.md
 //! Stands on: resonance/reverb_time.rye (resonance-audio) -- the timed reverb this delegates to unchanged, its CombSpecMs / AllpassSpecMs the preset
 //! banks' element types and its ReverbTimeError forwarded whole; resonance/clock.rye (resonance-audio) -- the sample clock the preset is spoken against;
 //! resonance/reverb.rye (resonance-audio) -- the max_stages bound each preset bank stays within; resonance/timeline.rye (resonance-audio) -- the Clip.

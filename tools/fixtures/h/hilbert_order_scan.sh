@@ -1,10 +1,10 @@
 #!/bin/sh
 # tools/fixtures/h/hilbert_order_scan.sh -- DOES HILBERT ORDER BEAT ROW-MAJOR FOR ID-ADJACENT
 # TRAFFIC? Closes the arithmetic half of
-# active-designing/date/20261001/20261001-125213_hilbert-order-beats-row-major-for-id-adjacent-traffic.md
+# active-designing/date/202610/20261001-125213_hilbert-order-beats-row-major-for-id-adjacent-traffic.md
 # into the checkable room, as that essay's own "What Bakery could build" section names.
 #
-# THE QUESTION. Row 7 of active-designing/date/20260910/20260910-060204_the-bounded-torus-moonshots.md
+# THE QUESTION. Row 7 of active-designing/date/202609/20260910-060204_the-bounded-torus-moonshots.md
 # fixes a topology (mesh or torus) and leaves open HOW module IDs should land on grid nodes. This
 # scan keeps the topology question outside its own scope -- aurora_placement_scan.sh grades that --
 # and compares two ASSIGNMENT ORDERS under both topologies: row-major (`node(i) = (i mod k, i div
@@ -38,7 +38,7 @@ MAX_GRIDS=8          # grids graded per run; each costs O(k^2) pair readings
 GRIDS="2 4 8"        # powers of two, matching the essay's own table
 
 echo "scan=hilbert_order"
-echo "page=active-designing/date/20261001/20261001-125213_hilbert-order-beats-row-major-for-id-adjacent-traffic.md"
+echo "page=active-designing/date/202610/20261001-125213_hilbert-order-beats-row-major-for-id-adjacent-traffic.md"
 echo "max_grids=$MAX_GRIDS"
 
 echo "$GRIDS" | tr ' ' '\n' | awk -v maxg="$MAX_GRIDS" '

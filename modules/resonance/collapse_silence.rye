@@ -14,7 +14,7 @@
 //! longest silent run leaves the clip unchanged (the identity cap keeps every pause whole); monotone in max_silence -- a larger cap keeps a clip at least as long.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-235506_fill-ales100-resonance-silence-collapser.md
+//! Design read: active-designing/date/202608/20260814-235506_fill-ales100-resonance-silence-collapser.md
 //! Stands on: resonance/trim_silence.rye (resonance-audio) -- the silence stripper, the zero-cap twin; resonance/segment.rye (resonance-audio) -- the voice-activity segmenter, reused by name;
 //! resonance/timeline.rye (resonance-audio) -- the Clip and cut; resonance/voiced.rye (resonance-audio) -- the .silent verdict.
 //!

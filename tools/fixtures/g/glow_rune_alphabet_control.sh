@@ -62,10 +62,10 @@ for rel in \
   glow/tokens.rye \
   context/TAME_GUIDANCE.md \
   active-designing/docs/glow/runes.md \
-  active-designing/date/20260719/20260719-220814_glow-rune-pronunciation-closed-table.md \
-  active-designing/date/20260720/20260720-033852_glow-bartis-g1-row.md \
-  active-designing/date/20260720/20260720-151119_glow-barket-g1-row.md \
-  active-designing/date/20260822/20260822-221639_glow-barlus-g1-row.md
+  active-designing/date/202607/20260719-220814_glow-rune-pronunciation-closed-table.md \
+  active-designing/date/202607/20260720-033852_glow-bartis-g1-row.md \
+  active-designing/date/202607/20260720-151119_glow-barket-g1-row.md \
+  active-designing/date/202608/20260822-221639_glow-barlus-g1-row.md
 do
   [ -f "$root/$rel" ] || { echo "refused: the working tree holds no $rel" >&2; exit 2; }
   cat "$root/$rel" > "$pen/$rel"
@@ -145,7 +145,7 @@ doc_case() {
   check "$label lifted reads OK" yes "$back_ok"
 }
 
-table=active-designing/date/20260719/20260719-220814_glow-rune-pronunciation-closed-table.md
+table=active-designing/date/202607/20260719-220814_glow-rune-pronunciation-closed-table.md
 tame=context/TAME_GUIDANCE.md
 
 # A `g` flag on every one, because each of these words stands on many lines of its page and a

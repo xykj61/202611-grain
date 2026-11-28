@@ -6,7 +6,7 @@
 //! channel, exactly as stereo_render widened the raw chain.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-133213_fill-ales220-resonance-stereo-preset.md
+//! Design read: active-designing/date/202608/20260815-133213_fill-ales220-resonance-stereo-preset.md
 //! Stands on: resonance/preset.rye (resonance-audio) -- from_name and build, reused verbatim; resonance/stereo_render.rye (resonance-audio) -- the balanced
 //! render over both channels; resonance/pan.rye (resonance-audio) -- the StereoClip and its equal-length invariant.
 //!

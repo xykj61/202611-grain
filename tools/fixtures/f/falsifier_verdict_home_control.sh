@@ -145,7 +145,7 @@ leg "$(read_key unanswered)"   0 shelved_child_never_gated
 new_pen
 mkdir -p active-designing/date/20260911
 elder_page active-designing/20260910-060204_pen-elder.md none -
-child_page active-designing/date/20260911/20260911-195059_pen-child.md Reads 4 20260910-060204_pen-elder.md
+child_page active-designing/date/202609/20260911-195059_pen-child.md Reads 4 20260910-060204_pen-elder.md
 seal
 leg "$(read_key declarations)" 1 dated_child_counted
 
@@ -357,7 +357,7 @@ leg "$(read_key rowless_unanswered)" 0 rowless_shelved_never_counted
 new_pen
 mkdir -p active-designing/date/20260911
 rowless_elder active-designing/20260910-060204_pen-elder.md none -
-rowless_child active-designing/date/20260911/20260911-195059_pen-child.md Grades 20260910-060204_pen-elder.md
+rowless_child active-designing/date/202609/20260911-195059_pen-child.md Grades 20260910-060204_pen-elder.md
 seal
 leg "$(read_key rowless_gradings)" 1 rowless_dated_child_counted
 

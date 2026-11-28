@@ -18,7 +18,7 @@
 //! sample_min holds its peak magnitude (re-measured through resonance-audio); every even-indexed sample is a fixed point per channel, and an all-zero pair and an empty pair are each their own flip.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-025105_fill-ales128-resonance-stereo-nyquist.md
+//! Design read: active-designing/date/202608/20260815-025105_fill-ales128-resonance-stereo-nyquist.md
 //! Stands on: resonance/nyquist.rye (resonance-audio) -- the mono parity sign flip run once per channel, itself reusing resonance-audio's one true `saturate`; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips,
 //! left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used by the witness to prove a parity
 //! sign-flip off the rail moves no loudness in either channel.

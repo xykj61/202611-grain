@@ -5,7 +5,7 @@
 //! falls, in samples. Builds on clock.rye's time
 //! base for sample rate validation.
 //!
-//! Design: active-designing/date/20261111/
+//! Design: active-designing/date/202611/
 //!   20261111-170815_kirtan-generation-midi-dial-
 //!   architecture.md
 //! Stands on: resonance/clock.rye (sample rate validation).

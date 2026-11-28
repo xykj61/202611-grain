@@ -5,7 +5,7 @@
 //! again, into any master, while every other slot keeps its own held audio untouched.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-144031_fill-ales30-resonance-rack.md
+//! Design read: active-designing/date/202608/20260814-144031_fill-ales30-resonance-rack.md
 //! Stands on: resonance/clipboard.rye (resonance-audio) -- the single held span (copy_to / cut_to / paste), one per slot, reused WHOLE over its
 //! public API; resonance/selection.rye (resonance-audio) -- the validated Selection a slot is filled from; resonance/pan.rye (resonance-audio) -- the StereoClip.
 //!

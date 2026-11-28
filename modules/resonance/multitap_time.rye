@@ -12,7 +12,7 @@
 //! nothing.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-193359_fill-ales69-resonance-multi-tap-delay-in-real-time.md
+//! Design read: active-designing/date/202608/20260814-193359_fill-ales69-resonance-multi-tap-delay-in-real-time.md
 //! Stands on: resonance/taps.rye (resonance-audio) -- the multi-tap delay this speaks in real time, delegated unchanged; resonance/clock.rye (resonance-audio) -- the
 //! sample clock, its samples_for converting ms to a bounded sample count and its echo_ms/fade_ms the payoff pattern this follows.
 //!

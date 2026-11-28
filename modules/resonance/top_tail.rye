@@ -16,7 +16,7 @@
 //! every sample the full trimmer keeps PLUS the internal silences between them, so the two lengths are equal exactly when the clip carries no interior silence.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-234106_fill-ales98-resonance-top-tail-trimmer.md
+//! Design read: active-designing/date/202608/20260814-234106_fill-ales98-resonance-top-tail-trimmer.md
 //! Stands on: resonance/segment.rye (resonance-audio) -- the voice-activity segmenter, reused by name so it keeps exactly the span the segmenter's outer non-silent runs name;
 //! resonance/trim_silence.rye (resonance-audio) -- the full silence stripper, the length-bracket twin; resonance/split_silence.rye (resonance-audio) -- the auto-splitter, the outer-boundary twin;
 //! resonance/timeline.rye (resonance-audio) -- the Clip and cut; resonance/voiced.rye (resonance-audio) -- the .silent verdict.

@@ -23,7 +23,7 @@
 //! identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-042021_fill-ales141-resonance-stereo-center-clip.md
+//! Design read: active-designing/date/202608/20260815-042021_fill-ales141-resonance-stereo-center-clip.md
 //! Stands on: resonance/center_clip.rye (resonance-audio) -- the mono center clipper run once per channel, y = if |x| ≤ t then 0 else x with no rail edge; resonance/stereo_crush.rye (resonance-audio) -- the not-odd sibling whose
 //! antisymmetry-break this rung mirrors by HOLDING it; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples,
 //! sample_min/max.

@@ -14,7 +14,7 @@
 //! channel is the honest weighted average of its own early and its own late, so the image the preset held is held through the blend as well.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-114348_fill-ales207-resonance-stereo-reverb-early-late.md
+//! Design read: active-designing/date/202608/20260815-114348_fill-ales207-resonance-stereo-reverb-early-late.md
 //! Stands on: resonance/reverb_early_late.rye (resonance-audio) -- the mono early/late balance this mirrors per ear, its published early banks reused whole;
 //! resonance/multitap_time.rye (resonance-audio) -- the timed multi-tap voicing the early reflections, run per channel on the copy, its MultitapTimeError
 //! forwarded whole; resonance/stereo_reverb_preset.rye (resonance-audio) -- the named-room stereo wet, run over the master unchanged, its StereoReverbPresetError

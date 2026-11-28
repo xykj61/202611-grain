@@ -5,7 +5,7 @@
 //! `format resonance-album-v1` body listing the track count and, per track, its name and the Sha256 of its whole bundle bytes.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-140211_fill-ales224-resonance-album-manifest.md
+//! Design read: active-designing/date/202608/20260815-140211_fill-ales224-resonance-album-manifest.md
 //! Stands on: resonance/seal.rye (resonance-audio) -- begin/finish/open, the verify-before-trust frame reused WHOLE; resonance/render_album.rye
 //! (resonance-audio) -- the TrackIn (name - bundle bytes) this manifest names, and its max_tracks / max_track_name bounds; std.crypto Sha256
 //! for each track's bundle digest, the same hash the seal and the render manifest already carry. No new hash, no new frame.

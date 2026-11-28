@@ -4,7 +4,7 @@
 //! Software only -- a byte container, no real file, no DAC, no acoustic or electrical fact asserted.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-130649_fill-ales216-resonance-stereo-wav.md
+//! Design read: active-designing/date/202608/20260815-130649_fill-ales216-resonance-stereo-wav.md
 //! Stands on: resonance/wav.rye (resonance-audio) -- the same canonical header and two-gate verify-before-trust decode, differing only
 //! where stereo differs (channels 2, block align 4, byte rate rate*4) and adding one widened border: the data chunk must be a
 //! whole number of two-sample FRAMES, so neither channel ever receives a lone unpaired sample.

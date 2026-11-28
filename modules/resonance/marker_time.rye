@@ -4,7 +4,7 @@
 //! resonance-audio clock); this rung gives markers the same twin, so a keeper drops a named place in seconds and reads it back in seconds.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales21-resonance-marker-time.md
+//! Design read: active-designing/date/202608/20260814-fill-ales21-resonance-marker-time.md
 //! Stands on: resonance/markers.rye (resonance-audio) -- the sorted, unique named track and its add reused whole (the sample-index face stays
 //! pure; this rung only adds a time face over it); resonance/clock.rye (resonance-audio) -- samples_for and ms_for, the one proven seconds <->
 //! samples conversion, exactly as loop.mark_ms uses it; resonance/pan.rye (resonance-audio) -- the StereoClip whose two channels share a length.

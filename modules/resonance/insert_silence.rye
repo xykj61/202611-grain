@@ -17,7 +17,7 @@
 //! pure-silence clip, at > len refuses BadRange, and a count past the buffer refuses ClipFull.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-010035_fill-ales109-resonance-insert-silence.md
+//! Design read: active-designing/date/202608/20260815-010035_fill-ales109-resonance-insert-silence.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, the EditError reused whole, and the cut imported by the selftest to prove the exact-inverse law;
 //! resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to prove that opening a silent gap never changes the peak.
 //!

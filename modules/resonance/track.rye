@@ -5,7 +5,7 @@
 //! once per track.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales6-resonance-track-table.md
+//! Design read: active-designing/date/202608/20260814-fill-ales6-resonance-track-table.md
 //! Stands on: resonance/clock.rye (resonance-audio) -- each track's real offset converts through `samples_for`; resonance/timeline.rye (resonance-audio) --
 //! the Clip a track holds and the one true saturation the master reuses; resonance/mix.rye (resonance-audio) -- the two-track sum this rung
 //! generalizes to N.

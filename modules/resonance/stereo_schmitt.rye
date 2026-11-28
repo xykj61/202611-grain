@@ -29,7 +29,7 @@
 //! flip); any refusal (BadThreshold, BadRange) leaves BOTH channels byte for byte untouched, both rails untouched, and the pair balanced; count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-044135_fill-ales144-resonance-stereo-schmitt.md
+//! Design read: active-designing/date/202608/20260815-044135_fill-ales144-resonance-stereo-schmitt.md
 //! Stands on: resonance/schmitt.rye (resonance-audio) -- the mono Schmitt trigger run once per channel, its from-silence `schmitt`, its carried `SchmittTrigger`, its `precheck` band-and-span law, and its SchmittError, all reused
 //! whole; resonance/stereo_infinite_clip.rye (resonance-audio) -- the memoryless comparator whose odd antisymmetry this state-carrying member honestly parts from; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right)
 //! and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, sample_min/max.

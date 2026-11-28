@@ -21,7 +21,7 @@
 //! THE ATOMICITY / DEGENERATE LAW: any refusal (BadHold, BadRange) leaves BOTH channels byte for byte untouched and still balanced; hold = 1 the identity on both, count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-035333_fill-ales137-resonance-stereo-decimate.md
+//! Design read: active-designing/date/202608/20260815-035333_fill-ales137-resonance-stereo-decimate.md
 //! Stands on: resonance/decimate.rye (resonance-audio) -- the mono zero-order hold run once per channel; resonance/stereo_crush.rye (resonance-audio) -- the resolution-axis twin whose image-breaking this rung reverses; resonance/pan.rye
 //! (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, sample_min/max, max_clip.
 //!

@@ -6,7 +6,7 @@
 [`../docs-geode/tutorials/the-first-hour.md`](../docs-geode/tutorials/the-first-hour.md) - the whole
 path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
 **Voice:** Kyri
-**Kin:** molt-supersedes elder Urbit **Jael**; design brief `../active-designing/date/20260810/20260810-055147_plan-vault-keeper-of-secrets.md`
+**Kin:** molt-supersedes elder Urbit **Jael**; design brief `../active-designing/date/202608/20260810-055147_plan-vault-keeper-of-secrets.md`
 
 Kumara names *who* a key is. **Vault** names *how* a person keeps the secret behind it alive -- through fire, hurricane, tsunami, a decade, and a forgetting mind. It is the keeper of secrets, on our own ground.
 

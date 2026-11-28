@@ -22,7 +22,7 @@
 //! channels byte for byte untouched and still balanced; count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-083932_fill-ales179-resonance-stereo-chorus.md
+//! Design read: active-designing/date/202608/20260815-083932_fill-ales179-resonance-stereo-chorus.md
 //! Stands on: resonance/chorus.rye (resonance-audio) -- the mono chorus run once per channel, its ChorusError reused whole and its `precheck` (newly factored out) reused for the up-front atomic validation; resonance/vibrato.rye (resonance-audio) -- the wet-only
 //! child, carried into stereo at resonance-audio, the vibrato-family equality target; resonance/glide.rye (resonance-audio) -- glide_scale, the fixed-point unit (256 = unity); resonance/pan.rye (resonance-audio) -- the StereoClip and its balance invariant; resonance/stereo_vibrato.rye
 //! (resonance-audio) -- the stereo wet-only voice this parent adds under the dry; resonance/timeline.rye (resonance-audio) -- the Clip and the one true saturate.

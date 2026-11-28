@@ -17,7 +17,7 @@
 //! leaves an already-coalesced input unchanged, so min_run = 0 is exactly the identity.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-000323_fill-ales101-resonance-run-length-smoother.md
+//! Design read: active-designing/date/202608/20260815-000323_fill-ales101-resonance-run-length-smoother.md
 //! Stands on: resonance/segment.rye (resonance-audio) -- the voice-activity segmenter, whose Segments this reads and rewrites; resonance/voiced.rye (resonance-audio) -- the Verdict the runs carry.
 //!
 //! HONEST SCOPE -- software only, purely LOCAL, and READ-ONLY over the LABELS. A bounded in-process rewrite of one Segments on one bench, siloed to resonance/, touching no

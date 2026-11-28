@@ -17,7 +17,7 @@
 //! the rectifier's whole point, exactly as with full-wave.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-214355_fill-ales85-resonance-half-wave-rectifier.md
+//! Design read: active-designing/date/202608/20260814-214355_fill-ales85-resonance-half-wave-rectifier.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max. It carries NO gain, NO ceiling, and NO threshold -- the threshold is fixed at zero,
 //! and max(x, 0) has no parameter that could be illegal; a keeper who wants a boosted or negatively-clamped half-wave composes this with resonance-audio's drive
 //! over the same span, both in-place span maps that compose.

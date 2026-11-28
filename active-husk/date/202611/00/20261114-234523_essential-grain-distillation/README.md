@@ -91,7 +91,7 @@ Every root directory on disk today (`94` tracked + `.gemini` + untracked `vendor
 
 ### Bucket 5 -- Shed Closed Pre-Reroot & Pointer-Stub Rooms (14 rooms -> `0`, preserved in `20260618-grain`)
 
-- **Closed historical rooms:** `counsel/` (852 -- after lifting today's `20261114` cross-bench reply into `active-designing/date/20261114/`), `expanding-prompts/` (680 -- keeping `20261114` reroot prompt in `docs-geode/` or `fleet/`), `waymarks/` (284 -- retired `20261103`), `recursion-prompts/` (90), `arbor/` (9 -- marked Class M fossil), `.cursor-archive/` (2), `upstream/` (2).
+- **Closed historical rooms:** `counsel/` (852 -- after lifting today's `20261114` cross-bench reply into `active-designing/date/202611/`), `expanding-prompts/` (680 -- keeping `20261114` reroot prompt in `docs-geode/` or `fleet/`), `waymarks/` (284 -- retired `20261103`), `recursion-prompts/` (90), `arbor/` (9 -- marked Class M fossil), `.cursor-archive/` (2), `upstream/` (2).
 - **1-file pointer / mirror stubs:** `mandate/` (1), `dexter/` (1), `mitra/` (1), `biochemistry/` (1), `flare-voices/` (1), `spellbook/` (2 -- canonical homes already live in `tablecloth/`, `brushstroke/`, `context/CHEMICAL_FORMULAS.md`, `context/KYRI.md`, and `context/SPELLBOOK.md`).
 - **Local-only untracked toolchain:** `vendor/` stays gitignored per `.gitignore`.
 

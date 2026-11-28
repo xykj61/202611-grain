@@ -4,7 +4,7 @@
 # reached by a live import) and INERT (one or both copies unreached).
 #
 # This is the buildable next step named by
-# active-designing/date/20260918/20260918-072000_the-duplicate-content-census-overstates-its-own-case.md
+# active-designing/date/202609/20260918-072000_the-duplicate-content-census-overstates-its-own-case.md
 # step 3-4: a basename grep over-collects (color.rye alone matches 73 files
 # across unrelated rooms), so liveness is decided by resolving each import
 # string against the IMPORTING FILE'S OWN DIRECTORY, the rule Zig itself

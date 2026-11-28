@@ -5,7 +5,7 @@
 //! is resonance-audio-resonance-audio, and PLAY is this.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales7-resonance-transport.md
+//! Design read: active-designing/date/202608/20260814-fill-ales7-resonance-transport.md
 //! Stands on: resonance/track.rye (resonance-audio) -- the master a transport reads; resonance/clock.rye (resonance-audio) -- seek and elapsed speak real
 //! time through the clock; resonance/timeline.rye (resonance-audio) -- the Clip the master is.
 //!

@@ -18,7 +18,7 @@
 //! definition, stated plainly so the carried and from-silence forms cannot drift.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-225557_fill-ales93-resonance-zero-crossing-counter.md
+//! Design read: active-designing/date/202608/20260814-225557_fill-ales93-resonance-zero-crossing-counter.md
 //! Stands on: resonance/schmitt.rye (resonance-audio) -- the hysteresis comparator whose flips this counts, composed over its public schmitt_step and its public precheck (so
 //! the band-and-span law and the named errors are the trigger's own, not a second copy); resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max; the read-only
 //! analysis shape is meter's (resonance/meter.rye) -- a struct that accumulates, accessors that report.

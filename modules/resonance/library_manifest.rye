@@ -5,7 +5,7 @@
 //! its name and the Sha256 of its whole `album_manifest` bytes (the album's own content address, resonance-audio).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-141539_fill-ales226-resonance-library-manifest.md
+//! Design read: active-designing/date/202608/20260815-141539_fill-ales226-resonance-library-manifest.md
 //! Stands on: resonance/seal.rye (resonance-audio) -- begin/finish/open, the verify-before-trust frame reused WHOLE; resonance/album_manifest.rye
 //! (resonance-audio) -- the album content-address this names, and its max_track_name bound reused for album names; std.crypto Sha256 for
 //! each album's manifest digest, the same hash the seal and every manifest already carry. No new hash, no new frame.

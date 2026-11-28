@@ -5,7 +5,7 @@
 //! center each side carries 0.707 (-3 dB), and a track keeps its apparent loudness wherever it sits in the field.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales11-resonance-equal-power.md
+//! Design read: active-designing/date/202608/20260814-fill-ales11-resonance-equal-power.md
 //! Stands on: resonance/pan.rye (resonance-audio) -- the second channel (StereoClip) and the fold bound (max_pan_den) are reused whole, the
 //! linear rung untouched; resonance/fader.rye (resonance-audio) -- a panned track is TWO faded contributions, so each channel is `fader.render`
 //! run once with an equal-power-folded effective fader; resonance/track.rye (resonance-audio) -- the Session the pans align with.

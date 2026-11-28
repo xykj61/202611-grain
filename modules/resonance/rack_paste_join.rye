@@ -5,7 +5,7 @@
 //! chorus) into the middle of a mix by name without a click at either boundary.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-145422_fill-ales32-resonance-rack-paste-join.md
+//! Design read: active-designing/date/202608/20260814-145422_fill-ales32-resonance-rack-paste-join.md
 //! Stands on: resonance/rack.rye (resonance-audio) -- the named slots and `find`, so a name resolves to exactly one slot; resonance/paste_join.rye
 //! (resonance-audio) -- the joined paste (resonance-audio's stereo two-sided insert-join over a held span), applied whole to the resolved slot's board;
 //! resonance/pan.rye (resonance-audio) -- the StereoClip.

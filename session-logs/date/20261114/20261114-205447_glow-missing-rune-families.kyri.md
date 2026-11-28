@@ -16,13 +16,13 @@ think The / fas family is the key insight. Ford was Urbit's build system express
 think So Glow does not need a full / family. It needs /+ for library composition (already GREEN), and the rest of Ford's vocabulary is served by reaching for the module that owns each concern rather than hiding modules behind runes.
 think The dot family dissolves into Grain's own abstractions -- Glow's metal is RISC-V rather than Nock, so runes for Nock operators would teach the wrong abstraction.
 think Two practical gaps surface: string interpolation (mic family) and debug print (sig family). Both would serve a Glow SLC.
-think Wrote the expanded design essay at active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md, reprinted from the beginning with all twelve families mapped.
+think Wrote the expanded design essay at active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md, reprinted from the beginning with all twelve families mapped.
 
 obs The fas/Ford insight is the cleanest demonstration of the Urbit Reframe in the language layer: thank the ancestor for the idea that a build system can be a language, then carry it forward as named modules a newcomer grasps rather than runes that require knowing Ford.
 obs The four missing families separate into two classes: dissolved (dot and half of zap -- Nock-specific, structurally unnecessary on RISC-V) and genuinely wanted (mic interpolation and sig debug). The zap family splits across both.
 obs This essay and the earlier one (20261114.200951) together form a complete first-principles account of Glow: the earlier covers architecture and rooms, this one covers the full rune vocabulary and the module-boundary insight.
 
-[active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md](../../active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md) design essay -- all twelve Hoon families mapped against Glow and Grain modules
+[active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md](../../active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md) design essay -- all twelve Hoon families mapped against Glow and Grain modules
 [active-designing/docs/glow/runes.md](../../active-designing/docs/glow/runes.md) the Glow Rune Reference, source of truth for implemented runes
 [context/LEXICON.md](../../context/LEXICON.md) Brix and Flare definitions read for the Ford mapping
 

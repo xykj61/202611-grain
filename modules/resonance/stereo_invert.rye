@@ -17,7 +17,7 @@
 //! point of negation, so an all-zero pair and an empty pair are each their own invert.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-024705_fill-ales127-resonance-stereo-invert.md
+//! Design read: active-designing/date/202608/20260815-024705_fill-ales127-resonance-stereo-invert.md
 //! Stands on: resonance/invert.rye (resonance-audio) -- the mono sign flip run once per channel, itself reusing resonance-audio's one true `saturate`; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips,
 //! left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used by the witness to prove a sign flip
 //! off the rail moves no loudness in either channel.

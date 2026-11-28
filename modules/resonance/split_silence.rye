@@ -15,7 +15,7 @@
 //! returns exactly the trimmer's clip. This binds resonance-audio to resonance-audio the way resonance-audio is bound to resonance-audio.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-232954_fill-ales97-resonance-silence-splitter.md
+//! Design read: active-designing/date/202608/20260814-232954_fill-ales97-resonance-silence-splitter.md
 //! Stands on: resonance/segment.rye (resonance-audio) -- the voice-activity segmenter, reused by name so the splitter keeps exactly the runs the segmenter named; resonance/
 //! trim_silence.rye (resonance-audio) -- the silence stripper, the join-law twin; resonance/timeline.rye (resonance-audio) -- the Clip and splice; resonance/voiced.rye (resonance-audio) -- the .silent
 //! verdict.

@@ -12,7 +12,7 @@
 //! held trio whole, the mirror of the un-held trio (resonance-audio-55) over one proven held follower.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-182307_fill-ales59-resonance-attack-hold-release-limiter.md
+//! Design read: active-designing/date/202608/20260814-182307_fill-ales59-resonance-attack-hold-release-limiter.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, max_clip, the range law shape; resonance/limit.rye (resonance-audio) --
 //! the hard ceiling this drives over time, re-proven beside it; resonance/hold_env.rye (resonance-audio) -- the HELD time base, its env_step_hold
 //! advancing the same follower one sample at a time with the hold pinning the peak; resonance/limit_env.rye (resonance-audio) -- the un-held

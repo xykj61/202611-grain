@@ -22,7 +22,7 @@
 //! refuse by name with BOTH channels and all four states byte for byte untouched and still balanced; count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-075923_fill-ales172-resonance-stereo-band.md
+//! Design read: active-designing/date/202608/20260815-075923_fill-ales172-resonance-stereo-band.md
 //! Stands on: resonance/band.rye (resonance-audio) -- the mono two-stage band-pass Bandpass run once per channel, its ToneError reused whole and its cascade shared; resonance/tone.rye (resonance-audio, resonance-audio) -- the high-pass and low-pass stages and the
 //! `precheck` sharing one coefficient-and-span validation; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples.
 //!

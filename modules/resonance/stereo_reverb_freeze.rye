@@ -15,7 +15,7 @@
 //! master cannot fault -- the loop refuses whole up front or completes whole. The up-front check and the first pass's precheck are the atomicity crux.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-115900_fill-ales209-resonance-stereo-reverb-freeze.md
+//! Design read: active-designing/date/202608/20260815-115900_fill-ales209-resonance-stereo-reverb-freeze.md
 //! Stands on: resonance/stereo_reverb_preset.rye (resonance-audio) -- the named-room stereo wet, run over the master unchanged and composed with itself, its
 //! StereoReverbPresetError forwarded whole; resonance/reverb_freeze.rye (resonance-audio) -- the mono freeze this carries across, the same iterated
 //! reverberation and the same max_passes bound; resonance/pan.rye -- the StereoClip; resonance/clock.rye (resonance-audio) -- the sample clock the freeze is spoken

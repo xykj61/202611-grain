@@ -22,7 +22,7 @@
 //! each of the four refusals leaving both channels untouched and balanced, count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-070944_fill-ales164-resonance-stereo-expand-env.md
+//! Design read: active-designing/date/202608/20260815-070944_fill-ales164-resonance-stereo-expand-env.md
 //! Stands on: resonance/stereo_envelope.rye (resonance-audio) -- the LINKED envelope, its stereo_env_step advancing the one shared detector toward the linked peak, reused whole; resonance/stereo_expand.rye (resonance-audio) -- the LINKED widening this
 //! drives over time, its instantaneous form the unit-coefficient limit re-proven beside it; resonance/expand_env.rye (resonance-audio) -- the mono attack/release expander, its ExpandEnvError reused whole and its output the left-always-peak
 //! comparison; resonance/expand.rye (resonance-audio) -- the deepened floor exp = max(0, threshold - deficit-num/den); resonance/pan.rye (resonance-audio) -- the StereoClip; resonance/timeline.rye (resonance-audio) -- the Clip, sample_max.

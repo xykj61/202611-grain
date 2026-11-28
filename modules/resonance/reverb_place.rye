@@ -19,7 +19,7 @@
 //! never amplifies.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-125233_fill-ales214-resonance-reverb-place.md
+//! Design read: active-designing/date/202608/20260815-125233_fill-ales214-resonance-reverb-place.md
 //! Stands on: resonance/stereo_reverb_preset.rye (resonance-audio) -- the named-room stereo wet, run over the master unchanged, its StereoReverbPresetError
 //! forwarded whole; resonance/stereo_width.rye (resonance-audio) -- the width control (encode/scale-the-side/decode), run over the wet, its BadWidth reused; resonance/
 //! power.rye (resonance-audio) -- the equal-power split `split(pos, den)` = [isqrt(den-(den-pos)), isqrt(den-pos)], reused verbatim; resonance/timeline.rye (resonance-audio)

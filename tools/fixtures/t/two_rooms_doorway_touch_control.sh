@@ -90,7 +90,7 @@ PAGE
 
 named=external-research/20260830-101010_a-page-that-names-its-room.md
 unnamed=external-research/20260830-101011_a-page-that-names-no-room.md
-folded=active-designing/date/20260830/20260830-101012_a-folded-page.md
+folded=active-designing/date/202608/20260830-101012_a-folded-page.md
 elder=external-research/20260601-101013_a-page-from-before-the-seating.md
 door=external-research/README.md
 yonder=external-research/yonder/20260830-101014_a-deferred-page.md

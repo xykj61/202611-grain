@@ -12,7 +12,7 @@
 //! byte-for-byte, so the sidechain GENERALIZES the proven in-line compressor rather than replacing it.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-184728_fill-ales63-resonance-sidechain-compressor.md
+//! Design read: active-designing/date/202608/20260814-184728_fill-ales63-resonance-sidechain-compressor.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/sample_max, max_clip, the range law shape; resonance/compress.rye
 //! (resonance-audio) -- the softened ceiling this drives, re-proven beside it; resonance/hold_env.rye (resonance-audio) -- the HELD time base, its
 //! env_step_hold advancing the KEY's follower one sample at a time with the hold pinning the peak; resonance/compress_env_hold.rye

@@ -23,7 +23,7 @@
 //! is the comparator).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-043212_fill-ales143-resonance-stereo-infinite-clip.md
+//! Design read: active-designing/date/202608/20260815-043212_fill-ales143-resonance-stereo-infinite-clip.md
 //! Stands on: resonance/infinite_clip.rye (resonance-audio) -- the mono infinite clipper run once per channel, y = if |x| ≤ t then 0 else sign(x)-sample_max with no rail edge; resonance/stereo_center_clip.rye (resonance-audio) -- the hard
 //! sibling whose dead zone this shares (the same samples silenced, the survivors pinned to the rail instead of passed); resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant;
 //! resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, sample_min/max.

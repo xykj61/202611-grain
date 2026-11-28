@@ -23,12 +23,12 @@
   **SLC gate:** Every surviving link from living rooms into `active-designing/` and `external-research/` resolves at `0` broken refs; `1,360` unreferenced pre-`202611` scratch/cold files shed cleanly.
 
 - [x] **Orbit 3 -- Prune pre-`20261114` testimony, `construction/archive/`, and retired history shelves** (landed `20261114.235900`)
-  Lifted `20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md` into `active-designing/date/20261114/` and `20261114-125422_chapter-incense-reroot-continuation.md` into `fleet/`, then removed pre-`20261114` `session-logs/` (`14,012` files), `construction/archive/` + `construction/yonder/` + summer scratch (`1,551` files), and closed/retired rooms `counsel/`, `waymarks/`, `expanding-prompts/`, `recursion-prompts/`, `arbor/`, `.cursor-archive/`, and `upstream/` (all preserved at checkpoint `c09f5b8a` / `d98bbaac` and `xykj61/20260618-grain`).
+  Lifted `20261114-221821_re-glow-hoon-runes-study-claude-opus-4-6.md` into `active-designing/date/202611/` and `20261114-125422_chapter-incense-reroot-continuation.md` into `fleet/`, then removed pre-`20261114` `session-logs/` (`14,012` files), `construction/archive/` + `construction/yonder/` + summer scratch (`1,551` files), and closed/retired rooms `counsel/`, `waymarks/`, `expanding-prompts/`, `recursion-prompts/`, `arbor/`, `.cursor-archive/`, and `upstream/` (all preserved at checkpoint `c09f5b8a` / `d98bbaac` and `xykj61/20260618-grain`).
   **SLC gate:** `session-logs/README.md` holds `20261114` open shelf cleanly; `construction/` holds only its living operator pins and active specs.
 
 - [x] **Orbit 4 -- Retire 1-file pointer and mirror-stub rooms** (landed `20261114.235900`)
   Retired redirect/mirror stub rooms `mandate/`, `dexter/`, `mitra/`, `biochemistry/`, `flare-voices/`, and `spellbook/` along with `context/document-mirrors.brix` (resolving the `flare-voices/KYRI.md` mirror link defect at the root), and synced `README.md` and `MAP.md`. **Quest 1 total delta:** tracked files dropped from **`27,880` to `9,031` (`-18,849` files)** and root directories from **`96` to `83` (`-13` net after `.gemini/`)**.
-  **SLC gate:** `README.md`, `MAP.md`, `external-research/README.md`, `session-logs/README.md`, and `active-designing/date/20261114/` report `100%` resolved links (`truth_counted=100`).
+  **SLC gate:** `README.md`, `MAP.md`, `external-research/README.md`, `session-logs/README.md`, and `active-designing/date/202611/` report `100%` resolved links (`truth_counted=100`).
 
 ---
 

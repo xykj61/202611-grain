@@ -1,7 +1,7 @@
 //! mycelium/testament.rye -- a named constellation's verdict travels as an offline certificate (r1).
 //!
 //! Chapter D (Kresfa & Mycelium) - Mycelium consensus - Testament - rung r1 -- the crux.
-//! Design read: active-designing/date/20260813/20260813-135126_mycelium-testament-named-quorum-certificate-exploration.md
+//! Design read: active-designing/date/202608/20260813-135126_mycelium-testament-named-quorum-certificate-exploration.md
 //!
 //! The Constel journey gave the dev-net a name, a roster, and quorum on a real fact. That quorum
 //! stayed live for the one process holding it. A TESTAMENT carries the belief onward: a portable
@@ -22,7 +22,7 @@
 //! + voucher public API alone, leaving every one of the four unedited. Demo ship and keeper seeds
 //! carry the whole of it: play value, held offline, apart from any real key, fund, or network.
 //!
-//! Scope: active-designing/date/20260813/20260813-135126_mycelium-testament-named-quorum-certificate-exploration.md
+//! Scope: active-designing/date/202608/20260813-135126_mycelium-testament-named-quorum-certificate-exploration.md
 //!
 //!   env RYE_ZIG=vendor/zig-toolchain/zig rye/bin/rye run mycelium/testament.rye
 

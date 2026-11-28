@@ -16,7 +16,7 @@
 //! audio, an overflow -- leaves the clip EXACTLY as it was. The real clip is never written until both seams are proven legal.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-fill-ales28-resonance-two-sided-insert-join.md
+//! Design read: active-designing/date/202608/20260814-fill-ales28-resonance-two-sided-insert-join.md
 //! Stands on: resonance/join.rye (resonance-audio) -- the one-sided crossfade `join` run once per seam, reused whole over its public API, so
 //! both seams inherit the proven equal-power law rather than re-deriving it; resonance/timeline.rye (resonance-audio) -- the `Clip` it edits and
 //! `max_clip` as the one shared bound.

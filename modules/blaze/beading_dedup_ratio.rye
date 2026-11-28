@@ -8,7 +8,7 @@
 //! synthetic multi-revision edit sequence -- named edit kind, position, size, and count
 //! -- through both bead() and bead_content_defined(), and reads the fraction of bytes
 //! each chunker actually re-deposits versus recognizes, per
-//! active-designing/date/20261001/20261001-151253_the-dedup-ratio-nobody-has-measured.md.
+//! active-designing/date/202610/20261001-151253_the-dedup-ratio-nobody-has-measured.md.
 //!
 //! Scope: stays inside beading.rye as a library. No change to the module it measures.
 //!

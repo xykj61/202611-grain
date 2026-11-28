@@ -9,7 +9,7 @@
 //! endpoints is genuinely time-varying and its block boundaries carry no re-transient (resonance-audio's whole reason for existing).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-163647_fill-ales44-resonance-filter-sweep.md
+//! Design read: active-designing/date/202608/20260814-163647_fill-ales44-resonance-filter-sweep.md
 //! Stands on: resonance/tone_carry.rye (resonance-audio) and resonance/tone.rye (resonance-audio) -- the carried-state low-pass reached through
 //! low_pass_carry, its state threaded across every block; resonance/timeline.rye (resonance-audio) -- the Clip it filters.
 //!

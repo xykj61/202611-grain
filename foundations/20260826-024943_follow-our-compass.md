@@ -76,7 +76,7 @@ If the card disagrees with a seated brief, **the brief and green witnesses win**
 
 - **Logic before carriage** -- sync in-process before wire; escrow logic before escrow wire.
 - **Witness before narrative** -- parity green on metal before "landed" in prose.
-- **One lap, one witness bolt** -- see [`../active-designing/date/20260706/20260706-185112_the-witness-bolt.md`](../active-designing/date/20260706/20260706-185112_the-witness-bolt.md).
+- **One lap, one witness bolt** -- see [`../active-designing/date/202607/20260706-185112_the-witness-bolt.md`](../active-designing/date/202607/20260706-185112_the-witness-bolt.md).
 - **Check in before module seams** -- graduation rule, Rishi/value model, new domain: collaboration rhythm says pause for Claude when no written policy answers.
 
 ## Vocabulary hygiene

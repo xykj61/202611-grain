@@ -17,7 +17,7 @@
 //! reflection is not) and den == 0 refuse.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-192743_fill-ales68-resonance-multi-tap-delay.md
+//! Design read: active-designing/date/202608/20260814-192743_fill-ales68-resonance-multi-tap-delay.md
 //! Stands on: resonance/echo.rye (resonance-audio) -- the feedback delay this contrasts; resonance/graft.rye (resonance-audio) -- the dry-span snapshot-before-write
 //! idiom this reuses; resonance/timeline.rye (resonance-audio) -- the Clip, sample_max, max_clip, and the one true saturate reused for the summed taps.
 //!

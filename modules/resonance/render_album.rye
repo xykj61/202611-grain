@@ -5,7 +5,7 @@
 //! opened verify-before-trust.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-135313_fill-ales223-resonance-render-album.md
+//! Design read: active-designing/date/202608/20260815-135313_fill-ales223-resonance-render-album.md
 //! Stands on: resonance/render_bundle.rye (resonance-audio) -- pack/unpack and the whole verify-before-trust the album inherits per track;
 //! through it, resonance/render_manifest.rye (resonance-audio) -- the seal each bundle carries. No new hash, no new grammar -- only a catalog
 //! frame over frames.

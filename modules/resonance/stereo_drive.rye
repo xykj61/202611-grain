@@ -20,7 +20,7 @@
 //! identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-032122_fill-ales132-resonance-stereo-drive.md
+//! Design read: active-designing/date/202608/20260815-032122_fill-ales132-resonance-stereo-drive.md
 //! Stands on: resonance/drive.rye (resonance-audio) -- the mono hard-clip drive run once per channel, itself resonance-audio's i64 gain into resonance-audio's ceiling law; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips,
 //! left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, sample_min/max.
 //!

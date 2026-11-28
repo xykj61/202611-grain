@@ -14,7 +14,7 @@
 //! right blip by the right) rather than one shared list -- the same per-channel independence the stereo segmenter proved for the runs this smooths.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-055925_fill-ales153-resonance-stereo-smooth-runs.md
+//! Design read: active-designing/date/202608/20260815-055925_fill-ales153-resonance-stereo-smooth-runs.md
 //! Stands on: resonance/smooth_runs.rye (resonance-audio) -- the mono run-length smoother, run once per channel, its `smooth_runs` and `SmoothError` reused whole; resonance/stereo_segment.rye
 //! (resonance-audio) -- the stereo voice-activity segmenter, whose `StereoSegments{left, right}` this reads and rewrites (the two channels' runs kept apart); resonance/segment.rye
 //! (resonance-audio) -- the mono `Segments` and `max_segments`; resonance/voiced.rye (resonance-audio) -- the Verdict the runs carry.

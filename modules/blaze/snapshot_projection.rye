@@ -23,7 +23,7 @@
 //!   rye build blaze/snapshot_projection.rye -femit-bin=blaze/bin/snapshot-projection
 //!   blaze/bin/snapshot-projection selftest.
 //!
-//! Scope: active-designing/date/20261001/20261001-122725_a-snapshot-that-cannot-shrink-buys-nothing.md
+//! Scope: active-designing/date/202610/20261001-122725_a-snapshot-that-cannot-shrink-buys-nothing.md
 
 const std = @import("std");
 const assert = std.debug.assert;

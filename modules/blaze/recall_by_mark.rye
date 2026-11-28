@@ -9,7 +9,7 @@
 //!   rye build blaze/recall_by_mark.rye -femit-bin=blaze/bin/recall-by-mark
 //!   blaze/bin/recall-by-mark selftest
 //!
-//! Scope: [`active-designing/date/20260706/20260706-023912_the-referential-namespace.md`](../active-designing/date/20260706/20260706-023912_the-referential-namespace.md)
+//! Scope: [`active-designing/date/202607/20260706-023912_the-referential-namespace.md`](../active-designing/date/202607/20260706-023912_the-referential-namespace.md)
 
 const std = @import("std");
 const assert = std.debug.assert;

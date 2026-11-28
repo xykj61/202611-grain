@@ -125,7 +125,7 @@ chmod +x tools/cu/cursor-jail.sh tools/l/launch-zed.sh
 
 ### `LANE_KVM` (A-narrow - counsel `20260712.090512`)
 
-`LANE_KVM=false` by default. When true, our gate (`tools/l/lane_kvm.sh`) authorizes **`/dev/kvm` only** -- no D-Bus, no systemd host units, no session buses. Teacher **ai-jail stays unmodified** (no `--kvm` flag -- confirmed through release **v1.12.0**). Daily editor sessions keep the lane off; proven-seat one-shots use `tools/r/run_with_lane_kvm.sh` on a host that already has `/dev/kvm`. Refuse witness: `rishi/bin/rishi run tools/l/lane_kvm_refuse.rish`. On-path: `tools/p/proven_seat_g0_complete_jailed.rish`. Retirement of the D-Bus escape: `active-designing/date/20260712/20260712-113900_lane-kvm-retire-dbus-escape.md`. Pond customs graduate the same fact at supersede.
+`LANE_KVM=false` by default. When true, our gate (`tools/l/lane_kvm.sh`) authorizes **`/dev/kvm` only** -- no D-Bus, no systemd host units, no session buses. Teacher **ai-jail stays unmodified** (no `--kvm` flag -- confirmed through release **v1.12.0**). Daily editor sessions keep the lane off; proven-seat one-shots use `tools/r/run_with_lane_kvm.sh` on a host that already has `/dev/kvm`. Refuse witness: `rishi/bin/rishi run tools/l/lane_kvm_refuse.rish`. On-path: `tools/p/proven_seat_g0_complete_jailed.rish`. Retirement of the D-Bus escape: `active-designing/date/202607/20260712-113900_lane-kvm-retire-dbus-escape.md`. Pond customs graduate the same fact at supersede.
 
 ### `ENCLOSURE` (retreat flag - Claude `20260712.212412` - master-seal `213600`)
 

@@ -8,7 +8,7 @@
 //! seamless. The one correctness is that `Bandpass.run` equals `tone.high_pass` then `tone.low_pass` over a copy, byte-for-byte.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-165106_fill-ales46-resonance-band-pass.md
+//! Design read: active-designing/date/202608/20260814-165106_fill-ales46-resonance-band-pass.md
 //! Stands on: resonance/tone.rye (resonance-audio, resonance-audio) -- high_pass_carry and low_pass_carry, each a pure function of (state, x), threaded
 //! here across the whole span; resonance/timeline.rye (resonance-audio) -- the Clip it filters.
 //!

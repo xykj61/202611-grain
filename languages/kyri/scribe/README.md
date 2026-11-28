@@ -6,7 +6,7 @@
 [`../docs-geode/tutorials/the-first-hour.md`](../docs-geode/tutorials/the-first-hour.md) - the whole
 path from nothing to a signed, sandboxed home is [`../SOURCE.md`](../SOURCE.md)
 **Voice:** Kyri (Kyri, coming)
-**Kin:** counsel [`../active-designing/date/20260810/20260810-035305_scribe-shape-and-the-structure-mapping.md`](../active-designing/date/20260810/20260810-035305_scribe-shape-and-the-structure-mapping.md)
+**Kin:** counsel [`../active-designing/date/202608/20260810-035305_scribe-shape-and-the-structure-mapping.md`](../active-designing/date/202608/20260810-035305_scribe-shape-and-the-structure-mapping.md)
 
 Scribe is where the flagship voice keeps its records -- session logs, batons, and inventory -- and every one of them is a **Kyri** document. This first lap is the foundation the rest of Scribe stands on: a **zero-copy Kyri reader**.
 

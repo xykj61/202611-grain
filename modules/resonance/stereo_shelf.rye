@@ -19,7 +19,7 @@
 //! out-of-range span each refuse by name with BOTH channels byte for byte untouched and still balanced; count = 0 the identity on both.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-075512_fill-ales171-resonance-stereo-shelf.md
+//! Design read: active-designing/date/202608/20260815-075512_fill-ales171-resonance-stereo-shelf.md
 //! Stands on: resonance/shelf.rye (resonance-audio) -- the mono two-band shelf run once per channel, its ShelfError reused whole; resonance/tone.rye (resonance-audio) -- the low-pass/high-pass split the shelf scales, its coefficient law shared; resonance/pan.rye
 //! (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip and the one true saturate the shelf's sum reuses.
 //!

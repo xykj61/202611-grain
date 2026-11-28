@@ -16,7 +16,7 @@
 //! even-indexed sample is a fixed point (the operation acts only on odd seats, partitioning the clip by parity), and the all-zero and empty clips are each their own flip.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-004633_fill-ales107-resonance-nyquist.md
+//! Design read: active-designing/date/202608/20260815-004633_fill-ales107-resonance-nyquist.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip and its buf/len/samples, and `saturate`, the one true clamp reused here so the rail lives in one place; resonance/meter.rye
 //! (resonance-audio) -- the peak/RMS meter, used only by the witness to prove a parity sign-flip off the rail moves no loudness.
 //!

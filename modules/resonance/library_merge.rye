@@ -6,7 +6,7 @@
 //! album reconciled into one verdict -- resolved, dropped, or a named conflict.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-145638_fill-ales234-resonance-library-merge.md
+//! Design read: active-designing/date/202608/20260815-145638_fill-ales234-resonance-library-merge.md
 //! Stands on: resonance/library_find.rye (resonance-audio) -- the find / digest_of resolve this composes on, the same resolve library_diff uses;
 //! resonance/library_manifest.rye (resonance-audio) -- the three opened LibraryManifest values this reconciles. It stands BESIDE library_diff
 //! (resonance-audio): both are second-order primitives over one find, and a merge is two diffs reconciled against one base. No new hash, no

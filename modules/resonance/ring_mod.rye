@@ -18,7 +18,7 @@
 //! Every output depends only on its own input sample, so the ring modulator writes IN PLACE WITH NO SNAPSHOT (the tremolo's thinnest discipline).
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-201937_fill-ales75-resonance-ring-modulator-bipolar-carrier.md
+//! Design read: active-designing/date/202608/20260814-201937_fill-ales75-resonance-ring-modulator-bipolar-carrier.md
 //! Stands on: resonance/tremolo.rye (resonance-audio) -- the amplitude write this generalizes by removing the floor; resonance/chorus.rye (resonance-audio) -- the
 //! triangle-LFO driver `triangle_delay_at`, now the carrier; resonance/glide.rye (resonance-audio) -- `glide_scale`, the fixed-point unit (256 = unity);
 //! resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max, the one true saturate.

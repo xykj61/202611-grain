@@ -19,7 +19,7 @@
 //! filter whose coefficient must move forward (num ≥ 1); a DC blocker at R = 0 is a real, useful filter, so its coefficient law is its own.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-223442_fill-ales91-resonance-dc-blocker.md
+//! Design read: active-designing/date/202608/20260814-223442_fill-ales91-resonance-dc-blocker.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, sample_min/max, and the one true saturate; the carried-state idiom is resonance-audio's (resonance/tone_carry.rye) --
 //! a tiny value the keeper holds beside a clip, the from-silence form the state = 0 case of one carried implementation so the two can never drift.
 //!

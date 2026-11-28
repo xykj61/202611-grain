@@ -15,7 +15,7 @@
 //! samples BadRange, a result past the buffer ClipFull, each before any write.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-014021_fill-ales115-resonance-replace.md
+//! Design read: active-designing/date/202608/20260815-014021_fill-ales115-resonance-replace.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip, its buf/len/samples, the cut and splice this rung composes, and the EditError reused whole; resonance/paste_over.rye (resonance-audio) --
 //! the length-preserving overwrite this rung generalizes (src.len == count), imported by the selftest to prove one corner of the generalization law; resonance/meter.rye (resonance-audio) -- the
 //! peak/RMS meter, used only by the witness to read the result.

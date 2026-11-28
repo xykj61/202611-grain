@@ -20,6 +20,6 @@ obs The external-research piece carries full attribution to docs.urbit.org and n
 obs This is the third piece on the same subject today -- the SLC exploration (181500), the design essay (205447), and now the external research. Each serves a different reader: the exploration surveys what exists, the design essay reasons from first principles, and the research piece studies the ancestor's vocabulary with attribution.
 
 [external-research/date/20261114/20261114-214130_hoon-rune-families-and-glow-coverage.md](../../external-research/date/20261114/20261114-214130_hoon-rune-families-and-glow-coverage.md) external research -- all twelve Hoon families mapped against Glow with Ford/fas insight
-[active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md](../../active-designing/date/20261114/20261114-205447_glow-first-principles-with-missing-families.md) the companion design essay
+[active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md](../../active-designing/date/202611/20261114-205447_glow-first-principles-with-missing-families.md) the companion design essay
 
 recommend check-in (Claude) -- Keaton picks direction: send, a Glow SLC proving the pipeline, the practical gaps (string interpolation and debug runes), or back to the ITINERARY

@@ -12,7 +12,7 @@
 //! for byte, on BOTH channels. No new arithmetic on the audio path, no new fault -- the constant bank, then the proven timed stereo reverb.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-100148_fill-ales191-resonance-stereo-named-room-reverb-presets.md
+//! Design read: active-designing/date/202608/20260815-100148_fill-ales191-resonance-stereo-named-room-reverb-presets.md
 //! Stands on: resonance/reverb_preset.rye (resonance-audio) -- the named rooms (Room, bank_for, and the three published banks) reused whole, the single
 //! source of truth for a room's tuning; resonance/stereo_reverb_time.rye (resonance-audio) -- the timed stereo reverb this delegates to unchanged, its
 //! StereoReverbTimeError forwarded whole; resonance/pan.rye (resonance-audio) -- the StereoClip; resonance/clock.rye (resonance-audio) -- the sample clock; resonance/reverb.rye

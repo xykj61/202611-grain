@@ -22,7 +22,7 @@
 //! ends leaves the master unchanged; monotone in pad; both channels leaving equal length.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-054529_fill-ales151-resonance-stereo-pad-tail.md
+//! Design read: active-designing/date/202608/20260815-054529_fill-ales151-resonance-stereo-pad-tail.md
 //! Stands on: resonance/stereo_top_tail.rye (resonance-audio) -- the flush stereo top-and-tail, the pad-zero twin, its StereoTopTailError reused whole; resonance/stereo_segment.rye
 //! (resonance-audio) -- the stereo segmenter, run once over one shared frame grid, its segment_stereo, its StereoSegments; resonance/segment.rye (resonance-audio) -- the mono segmenter and
 //! max_segments, through resonance-audio; resonance/pan.rye (resonance-audio) -- the StereoClip and its balance invariant; resonance/timeline.rye (resonance-audio) -- the Clip and its cut; resonance/voiced.rye

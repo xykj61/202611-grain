@@ -17,7 +17,7 @@
 //! still balanced; count 0 the identity on both, at = len appending silence at the tail, a bad insertion point BadRange, a grow past the buffer ClipFull.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-022429_fill-ales123-resonance-stereo-insert-silence.md
+//! Design read: active-designing/date/202608/20260815-022429_fill-ales123-resonance-stereo-insert-silence.md
 //! Stands on: resonance/insert_silence.rye (resonance-audio) -- the mono gap-opening gesture run once per channel; resonance/pan.rye (resonance-audio) -- the StereoClip (two mono Clips, left/right) and its balance
 //! invariant; resonance/stereo_cut.rye (resonance-audio) -- the stereo span-remove imported by the selftest to prove the inverse law; resonance/timeline.rye (resonance-audio) -- the Clip, its max_clip bound, and the
 //! EditError reused whole; resonance/meter.rye (resonance-audio) -- the peak/RMS meter, used only by the witness to read the result.

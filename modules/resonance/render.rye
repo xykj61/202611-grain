@@ -5,7 +5,7 @@
 //! program plays. Bytes -> edited samples -> a real .wav. This is where the suite becomes a pipeline.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260815/20260815-131432_fill-ales217-resonance-render.md
+//! Design read: active-designing/date/202608/20260815-131432_fill-ales217-resonance-render.md
 //! Stands on: resonance/timeline.rye (resonance-audio) -- the Clip and `gain`; resonance/fade.rye (resonance-audio-family) -- the linear `fade`; resonance/
 //! invert.rye (resonance-audio) -- the whole-clip phase `invert`; resonance/wav.rye (resonance-audio) -- the canonical mono RIFF/WAVE container the
 //! rendered samples encode into. Every effect is reused verbatim, never re-derived; render adds only the composition and one new

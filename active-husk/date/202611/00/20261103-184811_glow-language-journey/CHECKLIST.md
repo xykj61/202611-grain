@@ -48,7 +48,7 @@ commit messages; glow-language 348 numbers / 1,711 files; pixel-glass 5, glow-pu
   descriptive strings replace four-letter draws. Deep debride scope expands to include
   bare waymark names. Molt-breach preps rule page and registry onto shred-prep first.
   Synergize the tree shed with the deep debride.
-  **Essay:** `active-designing/date/20261103/20261103-195243_waymark-retirement-and-warm-names.md`
+  **Essay:** `active-designing/date/202611/20261103-195243_waymark-retirement-and-warm-names.md`
 
 ### Quest 1.2 -- The Deep Debride
 
@@ -118,7 +118,7 @@ and the Terrarium/Aurora/Caravan pattern of growing from working simples.
   system grows.
   **SLC gate:** `tools/g/glow_multi_arm_witness.rish` runs GREEN -- 2 libraries, 6
   consumers, all arms resolve through parse-lower-emit-compile-run.
-  **Essay:** `active-designing/date/20261103/20261103-235700_glow-multi-arm-library-cores.md`
+  **Essay:** `active-designing/date/202611/20261103-235700_glow-multi-arm-library-cores.md`
 
 - [x] **Orbit 8 -- Number and arithmetic operations**
   Reframed from u64/conversion/named-errors (unreachable with current pipeline) to:
@@ -130,7 +130,7 @@ and the Terrarium/Aurora/Caravan pattern of growing from working simples.
   u64, named errors, and conversion deferred to a later orbit where the pipeline widens.
   **SLC gate:** `tools/g/glow_number_witness.rish` runs GREEN -- 1 library, 3 consumers,
   all number arms resolve through parse-lower-emit-compile-run.
-  **Essay:** `active-designing/date/20261104/20261104-002432_glow-number-arithmetic-arms.md`
+  **Essay:** `active-designing/date/202611/20261104-002432_glow-number-arithmetic-arms.md`
 
 - [x] **Orbit 9 -- Record and the value model**
   Reframed from `glow/stdlib/record.glow` (unreachable: `/+` compose-lib handles `|%`
@@ -140,7 +140,7 @@ and the Terrarium/Aurora/Caravan pattern of growing from working simples.
   compose). 12-program witness ties new and existing programs together.
   **SLC gate:** `tools/g/glow_value_model_witness.rish` runs GREEN -- 12 programs,
   5 types, 5 operations proven through parse-lower-emit-compile-run.
-  **Essay:** `active-designing/date/20261104/20261104-004038_glow-value-model-record.md`
+  **Essay:** `active-designing/date/202611/20261104-004038_glow-value-model-record.md`
 
 ### Quest 2.2 -- Glow Meets the Surface
 
@@ -159,7 +159,7 @@ surface at `loca/`.
   Prior value model witness still GREEN -- no regression.
   **SLC gate:** `tools/g/glow_layout_witness.rish` runs GREEN -- 3 shapes, 5 ceiling
   gates proven both sides, value model holds.
-  **Essay:** `active-designing/date/20261104/20261104-014047_glow-layout-shapes-and-ceiling-gates.md`
+  **Essay:** `active-designing/date/202611/20261104-014047_glow-layout-shapes-and-ceiling-gates.md`
 
 - [x] **Orbit 11 -- Interactive Glow REPL in Brushstroke**
   *Calfive round 11 (Aquarius, fixed air, fun) -- "One clear type, studied."*

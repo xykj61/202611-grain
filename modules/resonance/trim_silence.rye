@@ -14,7 +14,7 @@
 //! never drift from resonance-audio and resonance-audio from the two readers it fuses. The tower of readers now ACTS on the clip while staying provably its predecessor read a new way.
 //!
 //! Chapter: the Six-Chapter double-seat, Chapter C thread (Resonance - the creative suite) - waymark resonance-audio - rung resonance-audio.
-//! Design read: active-designing/date/20260814/20260814-232010_fill-ales96-resonance-silence-stripper.md
+//! Design read: active-designing/date/202608/20260814-232010_fill-ales96-resonance-silence-stripper.md
 //! Stands on: resonance/segment.rye (resonance-audio) -- the voice-activity segmenter, reused by name so the trimmer removes exactly the runs the segmenter named; resonance/
 //! timeline.rye (resonance-audio) -- the Clip and cut; resonance/voiced.rye (resonance-audio) -- the .silent verdict; resonance/schmitt.rye (resonance-audio) -- the band-and-span precheck through resonance-audio.
 //!
