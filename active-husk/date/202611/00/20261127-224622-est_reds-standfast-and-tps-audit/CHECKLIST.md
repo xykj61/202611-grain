@@ -42,7 +42,7 @@ where the practice drifted from the gratitude.
 
 ## Journey (Movements)
 
-- [ ] **[Aries]** Read every open REDS row (%414 through %842)
+- [x] **[Aries]** Read every open REDS row (%414 through %842)
       against the current tree -- classify each as still-open,
       overtaken, or needs-restatement
 - [ ] **[Taurus]** Close or re-book each row with current-tree
