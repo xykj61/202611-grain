@@ -1,0 +1,191 @@
+//! modules/vantage/pulp/pulp_kumara_sign.rye -- Kumara Sign!
+//!
+//! Stamp: `20261128.131236` -- Ed25519 signing bridge for
+//! Pulp cards, feed entries, bounty claims, and career
+//! events. Every mutable Pulp action produces a 64-byte
+//! Kumara signature over its SHA3-256 content hash,
+//! binding the action to the contributor's identity.
+//!
+//!   rye build modules/vantage/pulp/pulp_kumara_sign.rye \
+//!     -femit-bin=tools/.build/pulp_kumara_sign
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+const Ed25519 = std.crypto.sign.Ed25519;
+
+pub const version = "20261128.131236";
+
+pub const seed_len: usize = 32;
+pub const sig_len: usize = 64;
+pub const max_action_body: u32 = 256;
+const nl: u8 = 10;
+
+pub const SignError = error{
+    EmptyBodyRefused,
+    VerifyFailed,
+    KeyMismatch,
+};
+
+pub const ActionKind = enum(u8) {
+    card_create,
+    card_move,
+    card_comment,
+    bounty_post,
+    bounty_claim,
+    bounty_settle,
+    referral_give,
+    referral_receive,
+    voice_note,
+    visual_attach,
+};
+
+pub const SignedAction = struct {
+    kind: ActionKind,
+    body_sha3: [32]u8,
+    signature: [sig_len]u8,
+    pubkey: [32]u8,
+    timestamp_ms: u64,
+    verified: bool,
+};
+
+pub fn sign_action(
+    kind: ActionKind,
+    body: []const u8,
+    seed: *const [seed_len]u8,
+    now_ms: u64,
+) SignError!SignedAction {
+    if (body.len == 0) return error.EmptyBodyRefused;
+
+    const kp = Ed25519.KeyPair.generateDeterministic(
+        seed.*,
+    ) catch return error.KeyMismatch;
+
+    var content_hash: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("blaze-pulp-action-v1:");
+    var kind_byte = [1]u8{@intFromEnum(kind)};
+    h.update(&kind_byte);
+    h.update(body);
+    h.final(&content_hash);
+
+    const sig = kp.sign(
+        &content_hash,
+        null,
+    ) catch return error.KeyMismatch;
+
+    var sa = SignedAction{
+        .kind = kind,
+        .body_sha3 = content_hash,
+        .signature = sig.toBytes(),
+        .pubkey = kp.public_key.bytes,
+        .timestamp_ms = now_ms,
+        .verified = false,
+    };
+
+    // invariant: sign then verify round-trip
+    const pk = Ed25519.PublicKey.fromBytes(
+        sa.pubkey,
+    ) catch return error.KeyMismatch;
+    const verify_sig = Ed25519.Signature.fromBytes(
+        sa.signature,
+    );
+    verify_sig.verify(
+        &content_hash,
+        pk,
+    ) catch return error.VerifyFailed;
+    sa.verified = true;
+
+    // invariant: action is verified after sign
+    assert(sa.verified);
+    return sa;
+}
+
+pub fn verify_action(
+    sa: *const SignedAction,
+) SignError!void {
+    const pk = Ed25519.PublicKey.fromBytes(
+        sa.pubkey,
+    ) catch return error.KeyMismatch;
+    const sig = Ed25519.Signature.fromBytes(
+        sa.signature,
+    );
+    sig.verify(
+        &sa.body_sha3,
+        pk,
+    ) catch return error.VerifyFailed;
+}
+
+fn run_selftest() !u8 {
+    var seed: [seed_len]u8 = undefined;
+    @memset(&seed, 0x42);
+
+    // Welcome 1: Sign a card_create action
+    const sa = try sign_action(
+        .card_create,
+        "Design the board layout",
+        &seed,
+        1000,
+    );
+    if (!sa.verified) return error.NotVerified;
+
+    // Welcome 2: Independently verify the signed action
+    try verify_action(&sa);
+
+    // Welcome 3: Sign a bounty_post action
+    const bp = try sign_action(
+        .bounty_post,
+        "500 WOOD on card 7",
+        &seed,
+        2000,
+    );
+    if (!bp.verified) return error.BountyNotVerified;
+
+    // Welcome 4: Sign a referral_give action
+    const ref = try sign_action(
+        .referral_give,
+        "Reya vouches for Taurus skill",
+        &seed,
+        3000,
+    );
+    if (!ref.verified) return error.ReferralNotVerified;
+
+    // Welcome 5: Different body produces different hash
+    const sa2 = try sign_action(
+        .card_create,
+        "Build the feed model",
+        &seed,
+        4000,
+    );
+    if (std.mem.eql(u8, &sa.body_sha3, &sa2.body_sha3)) {
+        return error.HashCollision;
+    }
+
+    // Refusal 1: Empty body refused
+    if (sign_action(.card_create, "", &seed, 5000)) |_| {
+        return error.EmptyBodyAccepted;
+    } else |err| {
+        if (err != error.EmptyBodyRefused) return err;
+    }
+
+    // Refusal 2: Tampered signature fails verify
+    var tampered = sa;
+    tampered.signature[0] ^= 0xFF;
+    if (verify_action(&tampered)) |_| {
+        return error.TamperedSigAccepted;
+    } else |err| {
+        if (err != error.VerifyFailed) return err;
+    }
+
+    print(
+        "GREEN: pulp_kumara_sign -- "
+        ++ "Ed25519 action signing bridge.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

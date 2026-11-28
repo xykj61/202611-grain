@@ -1,0 +1,848 @@
+//! modules/vantage/pulp/pulp_career.rye -- Career & Reputation!
+//!
+//! Stamp: `20261128.131236` -- Career profile, reputation
+//! metrics, referral graph, and dashboard projection for
+//! Pulp contributors. Each profile is keyed by a Kumara
+//! Ed25519 public key and affiliated with one of the 15
+//! Calfive galaxies. Reputation is derived (never minted):
+//! bounties completed, WOOD earned, cards finished,
+//! referrals received, and witness GREEN participation.
+//! Referral chains are bounded at depth 3. Dashboard
+//! metrics are projected into Tablecloth relational rows
+//! via SHA3-256 snapshot. Rota compass maps each galaxy
+//! to its Calfive sign for auditable alignment.
+//!
+//!   rye build modules/vantage/pulp/pulp_career.rye \
+//!     -femit-bin=tools/.build/pulp_career
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.131236";
+
+pub const max_profiles: u32 = 128;
+pub const max_referrals: u32 = 256;
+pub const max_career_events: u32 = 512;
+pub const max_display_name: u32 = 32;
+pub const max_domain: u32 = 24;
+pub const max_domains: u32 = 16;
+pub const max_referral_depth: u32 = 3;
+pub const galaxy_count: u32 = 15;
+pub const max_top: u32 = 8;
+const nl: u8 = 10;
+
+pub const CareerError = error{
+    ProfileCapacityFull,
+    ReferralCapacityFull,
+    EventCapacityFull,
+    EmptyNameRefused,
+    EmptyDomainRefused,
+    SelfReferralRefused,
+    DuplicateReferralRefused,
+    ProfileNotFound,
+    InvalidGalaxyRefused,
+    DepthExceeded,
+};
+
+pub const Galaxy = enum(u8) {
+    aries,
+    taurus,
+    gemini,
+    cancer,
+    leo,
+    virgo,
+    libra,
+    scorpio,
+    sagittarius,
+    capricorn,
+    aquarius,
+    pisces,
+    ophiuchus,
+    cetus,
+    siya,
+};
+
+pub const EventKind = enum(u8) {
+    bounty_completed,
+    bounty_posted,
+    card_finished,
+    referral_given,
+    referral_received,
+    witness_green,
+    wood_earned,
+    wood_escrowed,
+};
+
+pub const ReputationScore = struct {
+    bounties_completed: u32,
+    bounties_posted: u32,
+    wood_earned: u64,
+    wood_escrowed: u64,
+    cards_finished: u32,
+    referrals_given: u32,
+    referrals_received: u32,
+    witness_greens: u32,
+};
+
+pub const CareerProfile = struct {
+    pubkey: [32]u8,
+    display_name: [max_display_name]u8,
+    display_name_len: u8,
+    galaxy: Galaxy,
+    joined_ms: u64,
+    reputation: ReputationScore,
+    active: bool,
+
+    pub fn name_slice(
+        self: *const CareerProfile,
+    ) []const u8 {
+        return self.display_name[0..self.display_name_len];
+    }
+
+    pub fn total_wood_flow(self: *const CareerProfile) u64 {
+        return self.reputation.wood_earned +
+            self.reputation.wood_escrowed;
+    }
+};
+
+pub const Referral = struct {
+    from_pubkey: [32]u8,
+    to_pubkey: [32]u8,
+    domain: [max_domain]u8,
+    domain_len: u8,
+    timestamp_ms: u64,
+    blaze_sha3: [32]u8,
+};
+
+pub const CareerEvent = struct {
+    pubkey: [32]u8,
+    kind: EventKind,
+    amount: u64,
+    timestamp_ms: u64,
+    blaze_sha3: [32]u8,
+};
+
+pub const DashboardMetrics = struct {
+    total_profiles: u32,
+    total_referrals: u32,
+    total_events: u32,
+    total_wood_earned: u64,
+    total_wood_escrowed: u64,
+    total_bounties: u32,
+    total_cards_finished: u32,
+    galaxy_profile_counts: [galaxy_count]u32,
+    snapshot_sha3: [32]u8,
+};
+
+pub const CareerBoard = struct {
+    profiles: [max_profiles]CareerProfile,
+    profile_count: u32,
+    referrals: [max_referrals]Referral,
+    referral_count: u32,
+    events: [max_career_events]CareerEvent,
+    event_count: u32,
+
+    pub fn init() CareerBoard {
+        const cb = std.mem.zeroes(CareerBoard);
+        // invariant: fresh board empty
+        assert(cb.profile_count == 0);
+        assert(cb.referral_count == 0);
+        return cb;
+    }
+
+    fn find_profile(
+        self: *const CareerBoard,
+        pubkey: *const [32]u8,
+    ) ?u32 {
+        var i: u32 = 0;
+        while (i < self.profile_count) : (i += 1) {
+            if (self.profiles[i].active and
+                std.mem.eql(
+                    u8,
+                    &self.profiles[i].pubkey,
+                    pubkey,
+                ))
+            {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    pub fn register_profile(
+        self: *CareerBoard,
+        pubkey: *const [32]u8,
+        name: []const u8,
+        galaxy: Galaxy,
+        now_ms: u64,
+    ) CareerError!u32 {
+        if (name.len == 0) return error.EmptyNameRefused;
+        if (@intFromEnum(galaxy) >= galaxy_count) {
+            return error.InvalidGalaxyRefused;
+        }
+        if (self.profile_count >= max_profiles) {
+            return error.ProfileCapacityFull;
+        }
+        if (self.find_profile(pubkey)) |existing| {
+            return existing;
+        }
+
+        const idx = self.profile_count;
+        var p = std.mem.zeroes(CareerProfile);
+        p.pubkey = pubkey.*;
+        const n = @min(name.len, max_display_name);
+        @memcpy(
+            p.display_name[0..n],
+            name[0..n],
+        );
+        p.display_name_len = @intCast(n);
+        p.galaxy = galaxy;
+        p.joined_ms = now_ms;
+        p.active = true;
+        self.profiles[idx] = p;
+        self.profile_count += 1;
+        // invariant: bounded
+        assert(self.profile_count <= max_profiles);
+        return idx;
+    }
+
+    fn log_event(
+        self: *CareerBoard,
+        pubkey: *const [32]u8,
+        kind: EventKind,
+        amount: u64,
+        now_ms: u64,
+    ) CareerError!void {
+        if (self.event_count >= max_career_events) {
+            return error.EventCapacityFull;
+        }
+        var e = std.mem.zeroes(CareerEvent);
+        e.pubkey = pubkey.*;
+        e.kind = kind;
+        e.amount = amount;
+        e.timestamp_ms = now_ms;
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-career-v1:");
+        h.update(pubkey);
+        var kb = [1]u8{@intFromEnum(kind)};
+        h.update(&kb);
+        var ab: [8]u8 = undefined;
+        std.mem.writeInt(u64, &ab, amount, .little);
+        h.update(&ab);
+        var tb: [8]u8 = undefined;
+        std.mem.writeInt(u64, &tb, now_ms, .little);
+        h.update(&tb);
+        h.final(&e.blaze_sha3);
+
+        self.events[self.event_count] = e;
+        self.event_count += 1;
+    }
+
+    pub fn record_bounty_completed(
+        self: *CareerBoard,
+        pubkey: *const [32]u8,
+        wood_earned: u64,
+        now_ms: u64,
+    ) CareerError!void {
+        const pidx = self.find_profile(pubkey) orelse
+            return error.ProfileNotFound;
+        self.profiles[pidx].reputation
+            .bounties_completed += 1;
+        self.profiles[pidx].reputation
+            .wood_earned += wood_earned;
+        try self.log_event(
+            pubkey,
+            .bounty_completed,
+            wood_earned,
+            now_ms,
+        );
+    }
+
+    pub fn record_bounty_posted(
+        self: *CareerBoard,
+        pubkey: *const [32]u8,
+        wood_escrowed: u64,
+        now_ms: u64,
+    ) CareerError!void {
+        const pidx = self.find_profile(pubkey) orelse
+            return error.ProfileNotFound;
+        self.profiles[pidx].reputation
+            .bounties_posted += 1;
+        self.profiles[pidx].reputation
+            .wood_escrowed += wood_escrowed;
+        try self.log_event(
+            pubkey,
+            .bounty_posted,
+            wood_escrowed,
+            now_ms,
+        );
+    }
+
+    pub fn record_card_finished(
+        self: *CareerBoard,
+        pubkey: *const [32]u8,
+        now_ms: u64,
+    ) CareerError!void {
+        const pidx = self.find_profile(pubkey) orelse
+            return error.ProfileNotFound;
+        self.profiles[pidx].reputation
+            .cards_finished += 1;
+        try self.log_event(
+            pubkey,
+            .card_finished,
+            1,
+            now_ms,
+        );
+    }
+
+    pub fn record_witness_green(
+        self: *CareerBoard,
+        pubkey: *const [32]u8,
+        now_ms: u64,
+    ) CareerError!void {
+        const pidx = self.find_profile(pubkey) orelse
+            return error.ProfileNotFound;
+        self.profiles[pidx].reputation
+            .witness_greens += 1;
+        try self.log_event(
+            pubkey,
+            .witness_green,
+            1,
+            now_ms,
+        );
+    }
+
+    pub fn add_referral(
+        self: *CareerBoard,
+        from: *const [32]u8,
+        to: *const [32]u8,
+        domain: []const u8,
+        now_ms: u64,
+    ) CareerError!void {
+        if (domain.len == 0) {
+            return error.EmptyDomainRefused;
+        }
+        if (std.mem.eql(u8, from, to)) {
+            return error.SelfReferralRefused;
+        }
+        if (self.find_profile(from) == null) {
+            return error.ProfileNotFound;
+        }
+        if (self.find_profile(to) == null) {
+            return error.ProfileNotFound;
+        }
+        if (self.referral_count >= max_referrals) {
+            return error.ReferralCapacityFull;
+        }
+
+        var i: u32 = 0;
+        while (i < self.referral_count) : (i += 1) {
+            const r = &self.referrals[i];
+            if (std.mem.eql(u8, &r.from_pubkey, from) and
+                std.mem.eql(u8, &r.to_pubkey, to))
+            {
+                const dn = @min(domain.len, max_domain);
+                if (std.mem.eql(
+                    u8,
+                    r.domain[0..r.domain_len],
+                    domain[0..dn],
+                )) {
+                    return error.DuplicateReferralRefused;
+                }
+            }
+        }
+
+        const ridx = self.referral_count;
+        var ref = std.mem.zeroes(Referral);
+        ref.from_pubkey = from.*;
+        ref.to_pubkey = to.*;
+        const dn = @min(domain.len, max_domain);
+        @memcpy(ref.domain[0..dn], domain[0..dn]);
+        ref.domain_len = @intCast(dn);
+        ref.timestamp_ms = now_ms;
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-referral-v1:");
+        h.update(from);
+        h.update(to);
+        h.update(domain[0..dn]);
+        h.final(&ref.blaze_sha3);
+
+        self.referrals[ridx] = ref;
+        self.referral_count += 1;
+
+        const fidx = self.find_profile(from).?;
+        self.profiles[fidx].reputation
+            .referrals_given += 1;
+        const tidx = self.find_profile(to).?;
+        self.profiles[tidx].reputation
+            .referrals_received += 1;
+
+        try self.log_event(
+            from,
+            .referral_given,
+            1,
+            now_ms,
+        );
+        try self.log_event(
+            to,
+            .referral_received,
+            1,
+            now_ms,
+        );
+    }
+
+    pub fn referral_chain_depth(
+        self: *const CareerBoard,
+        from: *const [32]u8,
+        to: *const [32]u8,
+    ) u32 {
+        if (std.mem.eql(u8, from, to)) return 0;
+
+        var queue_from: [max_referral_depth][32]u8 =
+            undefined;
+        var depths: [max_referral_depth]u32 = undefined;
+        var qlen: u32 = 0;
+
+        var i: u32 = 0;
+        while (i < self.referral_count) : (i += 1) {
+            if (!std.mem.eql(
+                u8,
+                &self.referrals[i].from_pubkey,
+                from,
+            )) continue;
+            if (std.mem.eql(
+                u8,
+                &self.referrals[i].to_pubkey,
+                to,
+            )) return 1;
+            if (qlen < max_referral_depth) {
+                queue_from[qlen] =
+                    self.referrals[i].to_pubkey;
+                depths[qlen] = 1;
+                qlen += 1;
+            }
+        }
+
+        var qi: u32 = 0;
+        while (qi < qlen) : (qi += 1) {
+            if (depths[qi] >= max_referral_depth) continue;
+            var j: u32 = 0;
+            while (j < self.referral_count) : (j += 1) {
+                if (!std.mem.eql(
+                    u8,
+                    &self.referrals[j].from_pubkey,
+                    &queue_from[qi],
+                )) continue;
+                if (std.mem.eql(
+                    u8,
+                    &self.referrals[j].to_pubkey,
+                    to,
+                )) return depths[qi] + 1;
+            }
+        }
+        return 0;
+    }
+
+    pub fn referrals_for(
+        self: *const CareerBoard,
+        pubkey: *const [32]u8,
+        out_from: []u32,
+        out_to: []u32,
+    ) struct { given: u32, received: u32 } {
+        var given: u32 = 0;
+        var received: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.referral_count) : (i += 1) {
+            if (std.mem.eql(
+                u8,
+                &self.referrals[i].from_pubkey,
+                pubkey,
+            )) {
+                if (given < out_from.len) {
+                    out_from[given] = i;
+                    given += 1;
+                }
+            }
+            if (std.mem.eql(
+                u8,
+                &self.referrals[i].to_pubkey,
+                pubkey,
+            )) {
+                if (received < out_to.len) {
+                    out_to[received] = i;
+                    received += 1;
+                }
+            }
+        }
+        return .{ .given = given, .received = received };
+    }
+
+    pub fn compute_dashboard(
+        self: *const CareerBoard,
+    ) DashboardMetrics {
+        var dm = std.mem.zeroes(DashboardMetrics);
+        dm.total_profiles = self.profile_count;
+        dm.total_referrals = self.referral_count;
+        dm.total_events = self.event_count;
+
+        var i: u32 = 0;
+        while (i < self.profile_count) : (i += 1) {
+            const p = &self.profiles[i];
+            if (!p.active) continue;
+            dm.total_wood_earned +=
+                p.reputation.wood_earned;
+            dm.total_wood_escrowed +=
+                p.reputation.wood_escrowed;
+            dm.total_bounties +=
+                p.reputation.bounties_completed +
+                p.reputation.bounties_posted;
+            dm.total_cards_finished +=
+                p.reputation.cards_finished;
+            const gi = @intFromEnum(p.galaxy);
+            if (gi < galaxy_count) {
+                dm.galaxy_profile_counts[gi] += 1;
+            }
+        }
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-dashboard-v1:");
+        var buf: [4]u8 = undefined;
+        std.mem.writeInt(
+            u32,
+            &buf,
+            dm.total_profiles,
+            .little,
+        );
+        h.update(&buf);
+        var wb: [8]u8 = undefined;
+        std.mem.writeInt(
+            u64,
+            &wb,
+            dm.total_wood_earned,
+            .little,
+        );
+        h.update(&wb);
+        std.mem.writeInt(
+            u64,
+            &wb,
+            dm.total_wood_escrowed,
+            .little,
+        );
+        h.update(&wb);
+        h.final(&dm.snapshot_sha3);
+
+        // invariant: dashboard snapshot non-zero
+        assert(
+            dm.snapshot_sha3[0] != 0 or
+                dm.snapshot_sha3[1] != 0 or
+                dm.snapshot_sha3[2] != 0 or
+                dm.snapshot_sha3[3] != 0 or
+                dm.total_profiles == 0,
+        );
+        return dm;
+    }
+
+    pub fn top_by_wood_earned(
+        self: *const CareerBoard,
+        out: []u32,
+    ) u32 {
+        var indices: [max_profiles]u32 = undefined;
+        var count: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.profile_count) : (i += 1) {
+            if (self.profiles[i].active) {
+                indices[count] = i;
+                count += 1;
+            }
+        }
+        const limit = @min(count, @min(
+            @as(u32, @intCast(out.len)),
+            max_top,
+        ));
+        var s: u32 = 0;
+        while (s < limit) : (s += 1) {
+            var best = s;
+            var j = s + 1;
+            while (j < count) : (j += 1) {
+                if (self.profiles[indices[j]].reputation
+                    .wood_earned >
+                    self.profiles[indices[best]]
+                    .reputation.wood_earned)
+                {
+                    best = j;
+                }
+            }
+            const tmp = indices[s];
+            indices[s] = indices[best];
+            indices[best] = tmp;
+            out[s] = indices[s];
+        }
+        return limit;
+    }
+
+    pub fn top_by_referrals_received(
+        self: *const CareerBoard,
+        out: []u32,
+    ) u32 {
+        var indices: [max_profiles]u32 = undefined;
+        var count: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.profile_count) : (i += 1) {
+            if (self.profiles[i].active) {
+                indices[count] = i;
+                count += 1;
+            }
+        }
+        const limit = @min(count, @min(
+            @as(u32, @intCast(out.len)),
+            max_top,
+        ));
+        var s: u32 = 0;
+        while (s < limit) : (s += 1) {
+            var best = s;
+            var j = s + 1;
+            while (j < count) : (j += 1) {
+                if (self.profiles[indices[j]].reputation
+                    .referrals_received >
+                    self.profiles[indices[best]]
+                    .reputation.referrals_received)
+                {
+                    best = j;
+                }
+            }
+            const tmp = indices[s];
+            indices[s] = indices[best];
+            indices[best] = tmp;
+            out[s] = indices[s];
+        }
+        return limit;
+    }
+
+    pub fn galaxy_name(g: Galaxy) []const u8 {
+        return switch (g) {
+            .aries => "Aries",
+            .taurus => "Taurus",
+            .gemini => "Gemini",
+            .cancer => "Cancer",
+            .leo => "Leo",
+            .virgo => "Virgo",
+            .libra => "Libra",
+            .scorpio => "Scorpio",
+            .sagittarius => "Sagittarius",
+            .capricorn => "Capricorn",
+            .aquarius => "Aquarius",
+            .pisces => "Pisces",
+            .ophiuchus => "Ophiuchus",
+            .cetus => "Cetus",
+            .siya => "Siya",
+        };
+    }
+};
+
+fn run_selftest() !u8 {
+    var cb = CareerBoard.init();
+
+    var seed_a: [32]u8 = undefined;
+    @memset(&seed_a, 0x42);
+    var seed_b: [32]u8 = undefined;
+    @memset(&seed_b, 0x43);
+    var seed_c: [32]u8 = undefined;
+    @memset(&seed_c, 0x44);
+
+    // Welcome 1: Register career profiles
+    const a = try cb.register_profile(
+        &seed_a,
+        "~sunflower",
+        .aries,
+        1000,
+    );
+    const b = try cb.register_profile(
+        &seed_b,
+        "~rosemary",
+        .taurus,
+        2000,
+    );
+    const c = try cb.register_profile(
+        &seed_c,
+        "~siya",
+        .siya,
+        3000,
+    );
+    if (cb.profile_count != 3) {
+        return error.ProfileCountWrong;
+    }
+
+    // Welcome 2: Record bounty completions with WOOD
+    try cb.record_bounty_completed(&seed_a, 500, 4000);
+    try cb.record_bounty_completed(&seed_a, 300, 5000);
+    try cb.record_bounty_posted(&seed_b, 1000, 6000);
+    if (cb.profiles[a].reputation.wood_earned != 800) {
+        return error.WoodEarnedWrong;
+    }
+    if (cb.profiles[b].reputation.wood_escrowed != 1000) {
+        return error.WoodEscrowedWrong;
+    }
+
+    // Welcome 3: Record cards finished and witness GREEN
+    try cb.record_card_finished(&seed_a, 7000);
+    try cb.record_card_finished(&seed_a, 8000);
+    try cb.record_witness_green(&seed_c, 9000);
+    if (cb.profiles[a].reputation.cards_finished != 2) {
+        return error.CardsFinishedWrong;
+    }
+    if (cb.profiles[c].reputation.witness_greens != 1) {
+        return error.WitnessGreensWrong;
+    }
+
+    // Welcome 4: Add referrals and check chain depth
+    try cb.add_referral(
+        &seed_a,
+        &seed_b,
+        "board-design",
+        10000,
+    );
+    try cb.add_referral(
+        &seed_b,
+        &seed_c,
+        "witness-craft",
+        11000,
+    );
+    if (cb.referral_count != 2) {
+        return error.ReferralCountWrong;
+    }
+    if (cb.profiles[a].reputation.referrals_given != 1) {
+        return error.ReferralsGivenWrong;
+    }
+    if (cb.profiles[b].reputation
+        .referrals_received != 1)
+    {
+        return error.ReferralsReceivedWrong;
+    }
+
+    const depth_ab = cb.referral_chain_depth(
+        &seed_a,
+        &seed_b,
+    );
+    if (depth_ab != 1) return error.DepthABWrong;
+    const depth_ac = cb.referral_chain_depth(
+        &seed_a,
+        &seed_c,
+    );
+    if (depth_ac != 2) return error.DepthACWrong;
+
+    // Welcome 5: Dashboard metrics projection
+    const dm = cb.compute_dashboard();
+    if (dm.total_profiles != 3) {
+        return error.DashboardProfilesWrong;
+    }
+    if (dm.total_wood_earned != 800) {
+        return error.DashboardWoodWrong;
+    }
+    if (dm.total_wood_escrowed != 1000) {
+        return error.DashboardEscrowWrong;
+    }
+    if (dm.galaxy_profile_counts[0] != 1) {
+        return error.DashboardGalaxyWrong;
+    }
+
+    // Welcome 6: Top contributors leaderboard
+    var top_buf: [max_top]u32 = undefined;
+    const top_count = cb.top_by_wood_earned(&top_buf);
+    if (top_count < 2) return error.TopCountLow;
+    if (top_buf[0] != a) return error.TopWoodLeaderWrong;
+
+    var ref_top: [max_top]u32 = undefined;
+    const ref_count = cb.top_by_referrals_received(
+        &ref_top,
+    );
+    if (ref_count < 2) return error.RefTopCountLow;
+
+    // Welcome 7: Referrals-for query
+    var from_buf: [16]u32 = undefined;
+    var to_buf: [16]u32 = undefined;
+    const ref_q = cb.referrals_for(
+        &seed_b,
+        &from_buf,
+        &to_buf,
+    );
+    if (ref_q.given != 1) {
+        return error.RefQueryGivenWrong;
+    }
+    if (ref_q.received != 1) {
+        return error.RefQueryReceivedWrong;
+    }
+
+    // Welcome 8: Galaxy name via Rota compass
+    const gn = CareerBoard.galaxy_name(.siya);
+    if (!std.mem.eql(u8, gn, "Siya")) {
+        return error.GalaxyNameWrong;
+    }
+
+    // Refusal 1: Empty name refused
+    var seed_d: [32]u8 = undefined;
+    @memset(&seed_d, 0x45);
+    if (cb.register_profile(
+        &seed_d,
+        "",
+        .leo,
+        12000,
+    )) |_| {
+        return error.EmptyNameAccepted;
+    } else |err| {
+        if (err != error.EmptyNameRefused) return err;
+    }
+
+    // Refusal 2: Self-referral refused
+    if (cb.add_referral(
+        &seed_a,
+        &seed_a,
+        "self",
+        13000,
+    )) |_| {
+        return error.SelfReferralAccepted;
+    } else |err| {
+        if (err != error.SelfReferralRefused) return err;
+    }
+
+    // Refusal 3: Duplicate referral same domain refused
+    if (cb.add_referral(
+        &seed_a,
+        &seed_b,
+        "board-design",
+        14000,
+    )) |_| {
+        return error.DuplicateReferralAccepted;
+    } else |err| {
+        if (err != error.DuplicateReferralRefused) {
+            return err;
+        }
+    }
+
+    // Refusal 4: Profile not found for recording
+    var seed_x: [32]u8 = undefined;
+    @memset(&seed_x, 0xFF);
+    if (cb.record_bounty_completed(
+        &seed_x,
+        100,
+        15000,
+    )) |_| {
+        return error.UnknownProfileAccepted;
+    } else |err| {
+        if (err != error.ProfileNotFound) return err;
+    }
+
+    print(
+        "GREEN: pulp_career -- Career profile, "
+        ++ "reputation, referrals, and dashboard.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

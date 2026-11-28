@@ -607,6 +607,16 @@ let pdo = "-femit-bin=tools/.build/pulp_column_drag"
 assert (run ["sh" rb pd1 pdo]).ok else "pulp_column_drag build"
 assert (run ["tools/.build/pulp_column_drag"]).ok else "pulp_drag"
 
+let pks = "modules/vantage/pulp/pulp_kumara_sign.rye"
+let pkso = "-femit-bin=tools/.build/pulp_kumara_sign"
+assert (run ["sh" rb pks pkso]).ok else "pulp_kumara_sign build"
+assert (run ["tools/.build/pulp_kumara_sign"]).ok else "pulp_sign"
+
+let pcr = "modules/vantage/pulp/pulp_career.rye"
+let pcro = "-femit-bin=tools/.build/pulp_career"
+assert (run ["sh" rb pcr pcro]).ok else "pulp_career build"
+assert (run ["tools/.build/pulp_career"]).ok else "pulp_career"
+
 # -- Orbit 12 README metrics from .husk + libra preflight --
 let rm_patch = "tools/readme_metrics_patch.rish"
 assert (run [rishi "run" rm_patch]).ok else "readme_metrics_patch"
@@ -616,4 +626,4 @@ assert (run ["tools/.build/libra_preflight"]).ok else "libra_preflight"
 let gww = "languages/rishi/bin/grain-ww"
 assert (run [gww "market-run"]).ok else "market-run 7/7"
 
-say "GREEN: witness_all -- 54 hubs & 166 proofs on metal!"
+say "GREEN: witness_all -- 56 hubs & 185 proofs on metal!"

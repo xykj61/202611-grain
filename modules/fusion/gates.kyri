@@ -280,3 +280,5 @@ max_cols 80 modules/vantage/pulp/pulp_bounty.rye
 max_cols 80 modules/vantage/pulp/pulp_board_tablecloth_bridge.rye
 max_cols 80 modules/vantage/pulp/pulp_card_canvas.rye
 max_cols 80 modules/vantage/pulp/pulp_column_drag.rye
+max_cols 80 modules/vantage/pulp/pulp_kumara_sign.rye
+max_cols 80 modules/vantage/pulp/pulp_career.rye
