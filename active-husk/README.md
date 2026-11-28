@@ -1,7 +1,7 @@
 # Active Husk -- Living Prepend-to-Front Movement Stacks
 
 **Language:** EN
-**Stamp:** `20261128.041929` (EST)
+**Stamp:** `20261128.123702` (EST)
 **Voice:** Kyri / Reya
 **Style:** Gauge + Radiant (`0.0%` prose negation, verified by
 `grain-ww radiant-check`)
@@ -25,7 +25,8 @@ local `CLOCK_CONFIG.kyri`). Totals are measured live via `grain-ww movement`.
 
 | Husk Project | Scope | Status |
 |---|---|---|
-| **[`20261127-224622-est_reds-standfast-and-tps-audit/`](date/202611/00/20261127-224622-est_reds-standfast-and-tps-audit/CHECKLIST.md)** | REDS Standfast -- read 17 open reds against the living tree, TPS alignment audit, Air serial-number sweep, standing equipment witness check | **Complete** |
+| **[`20261128-123702-est_pulp-living-board-social-feed-and-civic-canvas/`](date/202611/00/20261128-123702-est_pulp-living-board-social-feed-and-civic-canvas/CHECKLIST.md)** | Pulp Vantage room -- Living Board (husk-parsed visual cards), Social Feed (append-only Blaze chain), Civic Canvas (Dimeroll HearthGrant patronage) on Station and Carry (Android) | **Active** |
+| [`20261127-224622-est_reds-standfast-and-tps-audit/`](date/202611/00/20261127-224622-est_reds-standfast-and-tps-audit/CHECKLIST.md) | REDS Standfast -- read 17 open reds against the living tree, TPS alignment audit, Air serial-number sweep, standing equipment witness check | **Complete** |
 | [`20261121-123651-est_dimeroll-market-vantage-station/`](date/202611/00/20261121-123651-est_dimeroll-market-vantage-station/CHECKLIST.md) | Dimeroll Market + Linengrow Interface -- galaxy/star/planet buy-sell-trade-spawn-invite on Vantage Station macOS (Brushstroke/Skate/Realidream) with Gmail MCP gift links | **Complete** |
 | [`20261119-171652-est_quest1-husk-breach-and-journey1-spine/`](date/202611/00/20261119-171652-est_quest1-husk-breach-and-journey1-spine/CHECKLIST.md) | `Vantage` Live Studio, `Husk` Breach, & Explicit-Bound Calfive Spine (`[15 75 375 1875 9375]`) | **Active (`57.071`)** |
 | [`20261119-115928-est_american-bipartisan-civic-planning/`](date/202611/00/20261119-115928-est_american-bipartisan-civic-planning/README.md) | General Writing & American Intra-National Bipartisan Civic/Ecological Planning | **Synced (`Room: vision`)** |
