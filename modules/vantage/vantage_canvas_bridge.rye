@@ -1,0 +1,209 @@
+//! modules/vantage/vantage_canvas_bridge.rye -- Vantage Live Canvas!
+//!
+//! Stamp: `20261119.150122` -- Orbit 5, `Movement 2/15 : Taurus` (*Venus
+//! student-teacher & Vantage single-UI surface*), powering
+//! `grain-ww vantage-canvas` (Proof #49)!
+//! Exposes deterministic C-ABI / FFI hooks from `Vantage` Desktop & `Carry`
+//! RLCD surfaces onto our `Brushstroke / Skate` **Canopy Watershed Canvas**
+//! and **Twilight Almanac** frames, preserving Glasswall write-only discipline
+//! and zero heap churn across macOS Swift (`terrarium/app/`) and Daylight DC-1
+//! Kotlin/JNI (`terrarium/carry-tablet/`).
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261119.150122";
+pub const max_tiles: u32 = 128;
+const nl: u8 = 10;
+
+pub const CanvasSurface = enum(u8) {
+    canopy_watershed = 0,
+    twilight_almanac = 1,
+};
+
+pub const BridgeError = error{
+    ViewportTooSmall,
+    SignOutOfRange,
+    CanopyOutOfRange,
+    HumusOutOfRange,
+};
+
+pub const VantageCanvasFrame = struct {
+    surface: CanvasSurface,
+    width_px: u16,
+    height_px: u16,
+    tile_count: u32,
+    metric_a: u32, // infiltration permille OR sign 1..15
+    metric_b: u32, // rain draw Pa OR tensegrity score
+    glasswall_sha3: [32]u8,
+};
+
+pub fn render_vantage_canopy(
+    width_px: u16,
+    height_px: u16,
+    canopy_layers: u32,
+    humus_permille: u32,
+) BridgeError!VantageCanvasFrame {
+    // invariant: validate RLCD viewport floor and civic-ecology bounds.
+    if (width_px < 160 or height_px < 80) return error.ViewportTooSmall;
+    if (canopy_layers > 4) return error.CanopyOutOfRange;
+    if (humus_permille > 1000) return error.HumusOutOfRange;
+
+    const raw_inf: u32 = 100 + canopy_layers * 140 +
+        (humus_permille * 220) / 1000;
+    const inf: u32 = @min(raw_inf, 950);
+    const draw_pa: u32 = canopy_layers * canopy_layers * 45 +
+        (humus_permille / 20);
+    const tiles: u32 = 8 + canopy_layers;
+
+    var digest: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("vantage-canopy-canvas-v1:");
+    var b4: [4]u8 = undefined;
+    std.mem.writeInt(u32, &b4, tiles, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, inf, .little);
+    h.update(&b4);
+    std.mem.writeInt(u32, &b4, draw_pa, .little);
+    h.update(&b4);
+    h.final(&digest);
+
+    // invariant: tile count stays strictly inside max_tiles & inf <= 950.
+    assert(tiles <= max_tiles and inf <= 950);
+    return .{
+        .surface = .canopy_watershed,
+        .width_px = width_px,
+        .height_px = height_px,
+        .tile_count = tiles,
+        .metric_a = inf,
+        .metric_b = draw_pa,
+        .glasswall_sha3 = digest,
+    };
+}
+
+pub fn render_vantage_twilight(
+    width_px: u16,
+    height_px: u16,
+    sign_1_to_15: u8,
+) BridgeError!VantageCanvasFrame {
+    // invariant: enforce 1..15 Calfive sign wheel and legible viewport floor.
+    if (width_px < 120 or height_px < 60) return error.ViewportTooSmall;
+    if (sign_1_to_15 < 1 or sign_1_to_15 > 15) return error.SignOutOfRange;
+
+    const stories: u32 = if (sign_1_to_15 >= 8) 4 else 3;
+    const dew: u32 = 45 + @as(u32, sign_1_to_15) * 3;
+    const tensegrity: u32 = stories * 25 + dew;
+    const tiles: u32 = 4 + stories;
+
+    var digest: [32]u8 = undefined;
+    var h = Sha3_256.init(.{});
+    h.update("vantage-twilight-almanac-v1:");
+    h.update(&[_]u8{ sign_1_to_15, @intCast(stories) });
+    var b4: [4]u8 = undefined;
+    std.mem.writeInt(u32, &b4, tensegrity, .little);
+    h.update(&b4);
+    h.final(&digest);
+
+    // invariant: twilight frame stays bounded and carries positive score.
+    assert(tiles <= max_tiles and tensegrity > 0);
+    return .{
+        .surface = .twilight_almanac,
+        .width_px = width_px,
+        .height_px = height_px,
+        .tile_count = tiles,
+        .metric_a = sign_1_to_15,
+        .metric_b = tensegrity,
+        .glasswall_sha3 = digest,
+    };
+}
+
+// Deterministic C-ABI FFI surface for Vantage Swift (macOS) & Kotlin (DC-1)
+var active_surface: CanvasSurface = .canopy_watershed;
+
+export fn vantage_canvas_select_ffi(surface_id: u8) u8 {
+    active_surface = if (surface_id == 1)
+        .twilight_almanac
+    else
+        .canopy_watershed;
+    return @intFromEnum(active_surface);
+}
+
+export fn vantage_canvas_canopy_inf_ffi(
+    width_px: u16,
+    height_px: u16,
+    layers: u32,
+    humus: u32,
+) u32 {
+    const f = render_vantage_canopy(width_px, height_px, layers, humus) catch {
+        return 0;
+    };
+    return f.metric_a;
+}
+
+export fn vantage_canvas_twilight_score_ffi(
+    width_px: u16,
+    height_px: u16,
+    sign_1_to_15: u8,
+) u32 {
+    const f = render_vantage_twilight(width_px, height_px, sign_1_to_15) catch {
+        return 0;
+    };
+    return f.metric_b;
+}
+
+fn run_selftest() !u8 {
+    // 1. Welcome: Canopy Watershed Canvas via Vantage bridge (1600x1200 DC-1)
+    const c1 = try render_vantage_canopy(1600, 1200, 4, 800);
+    const c2 = try render_vantage_canopy(1600, 1200, 4, 800);
+    if (!std.mem.eql(u8, &c1.glasswall_sha3, &c2.glasswall_sha3)) {
+        return error.CanopyDigestDrift;
+    }
+    if (c1.tile_count != 12 or c1.metric_a != 836 or c1.metric_b != 760) {
+        return error.CanopyMetricsWrong;
+    }
+    if (vantage_canvas_canopy_inf_ffi(1600, 1200, 4, 800) != 836) {
+        return error.CanopyFfiWrong;
+    }
+
+    // 2. Welcome: Twilight Almanac via Vantage bridge (15-Siya & 2-Taurus)
+    const t1 = try render_vantage_twilight(1600, 1200, 15);
+    if (t1.metric_a != 15 or t1.metric_b != 190 or t1.tile_count != 8) {
+        return error.TwilightMetricsWrong;
+    }
+    if (vantage_canvas_select_ffi(1) != 1) return error.SurfaceSwitchWrong;
+    if (vantage_canvas_twilight_score_ffi(1600, 1200, 15) != 190) {
+        return error.TwilightFfiWrong;
+    }
+
+    // 3. Refusals: tiny viewport, canopy > 4, sign 0/16 rejected cleanly
+    if (render_vantage_canopy(64, 48, 4, 800)) |_| {
+        return error.SmallViewportAccepted;
+    } else |err| {
+        if (err != error.ViewportTooSmall) return err;
+    }
+    if (render_vantage_canopy(1600, 1200, 7, 800)) |_| {
+        return error.BadCanopyAccepted;
+    } else |err| {
+        if (err != error.CanopyOutOfRange) return err;
+    }
+    if (render_vantage_twilight(1600, 1200, 0)) |_| {
+        return error.ZeroSignAccepted;
+    } else |err| {
+        if (err != error.SignOutOfRange) return err;
+    }
+    if (vantage_canvas_twilight_score_ffi(1600, 1200, 99) != 0) {
+        return error.BadSignFfiAccepted;
+    }
+
+    print(
+        "GREEN: vantage_canvas_bridge -- Canopy ({d} inf) & Twilight FFI.{c}",
+        .{ c1.metric_a, nl },
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

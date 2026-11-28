@@ -30,7 +30,7 @@ max_cols 80 languages/glow/mill/mill_emit.rye
 max_cols 80 languages/glow/driver/glow_self_host.rye
 max_cols 80 languages/glow/compiler/glow.brix
 max_cols 80 modules/resonance/session.brix
-max_cols 80 modules/comlink/vantage/carry.rye
+max_cols 80 modules/vantage/carry.rye
 max_cols 80 modules/comlink/parcel/parcel_core.rye
 max_cols 80 modules/resonance/earpiece/earpiece_core.rye
 max_cols 80 modules/brushstroke/touch/touch_core.rye
@@ -39,8 +39,8 @@ max_cols 80 libraries/shastra/tiruppavai/tiruppavai_dawn.rye
 max_cols 80 libraries/shastra/rasamrita/rasamrita_waves.rye
 max_cols 80 libraries/shastra/sikshastakam/sikshastakam_eight.rye
 max_cols 80 libraries/shastra/champu/gopala_champu_weave.rye
-max_cols 80 modules/comlink/vantage/vantage_app.rye
-max_cols 80 modules/comlink/vantage/surf_social_grid.rye
+max_cols 80 modules/vantage/vantage_app.rye
+max_cols 80 modules/vantage/surf_social_grid.rye
 max_cols 80 modules/pond/testnet/galaxy_testnet.rye
 max_cols 80 modules/brushstroke/skate/realidream_compose.rye
 max_cols 80 blazepod/rv64_pill.rye
@@ -74,9 +74,9 @@ max_cols 80 modules/fusion/sow_native_gates.rye
 max_cols 80 modules/resonance/studio_wav_bounce.rye
 max_cols 80 languages/glow/driver/glow_compile_cli.rye
 max_cols 80 modules/resonance/dsp_engine.rye
-max_cols 80 modules/comlink/vantage/resonance_dsp.rye
-max_cols 80 modules/comlink/vantage/resonance_station.rye
-max_cols 80 modules/comlink/vantage/vantage_mutations.rye
+max_cols 80 modules/vantage/resonance_dsp.rye
+max_cols 80 modules/vantage/resonance_station.rye
+max_cols 80 modules/vantage/vantage_mutations.rye
 ascii_7bit docs-geode/tutorials/resonance-station-daw.md
 max_cols 80 modules/sundial/calfive_wheel.rye
 ascii_7bit GEMINI.md
@@ -97,7 +97,7 @@ max_cols 80 modules/pond/puddle/puddle_udp_live.rye
 max_cols 80 modules/flare/husk/husk_object_recall.rye
 max_cols 80 modules/tablecloth/sql_workspace.rye
 max_cols 80 modules/comlink/council_mycelium_weave.rye
-max_cols 80 modules/comlink/vantage/vantage_council_puddle.rye
+max_cols 80 modules/vantage/vantage_council_puddle.rye
 max_cols 80 modules/pond/puddle/puddle_scp_cli.rye
 max_cols 80 modules/pond/testnet/council_405_testnet.rye
 max_cols 80 modules/tablecloth/gleaner_intake.rye
@@ -111,7 +111,7 @@ max_cols 80 libraries/risala/twilight_wheel.rye
 max_cols 80 modules/fusion/twilight_residue_audit.rye
 ascii_7bit context/TWILIGHT_STYLE.md
 ascii_7bit libraries/risala/lessons/twilight-fifteen-signs-prema-bhakti-and-risala.md
-max_cols 80 modules/comlink/vantage/vantage_twilight_reader.rye
+max_cols 80 modules/vantage/vantage_twilight_reader.rye
 max_cols 80 modules/vantage_tablecloth_bridge.rye
 max_cols 80 modules/sundial/siya_orbit_harvest.rye
 ascii_7bit modules/sundial/siya_orbit_harvest.rye
@@ -171,8 +171,8 @@ ascii_7bit active-development/date/20261119/20261119-140021-est_siya-orbit4-harv
 max_cols 80 languages/glow/mill/ring0_dual_silicon.rye
 max_cols 80 languages/glow/compiler/ring0_silicon.glow
 ascii_7bit active-development/date/20261119/20261119-144935-est_orbit5-aries-ring0-dual-silicon-emission.md
-max_cols 80 modules/comlink/vantage/vantage_canvas_bridge.rye
-max_cols 80 modules/comlink/vantage/glow/fold-vantage-canvas.glow
+max_cols 80 modules/vantage/vantage_canvas_bridge.rye
+max_cols 80 modules/vantage/glow/fold-vantage-canvas.glow
 ascii_7bit languages/glow/README.md
 ascii_7bit active-development/date/20261119/20261119-150122-est_orbit5-taurus-vantage-canvas-glow-readme-and-gpg-guidance.md
 max_cols 80 modules/market/wood_weave_bridge.rye
@@ -226,12 +226,12 @@ ascii_7bit active-development/date/20261119/20261119-173141-est_orbit5-sky14-hol
 max_cols 80 modules/sundial/quest_harvest_seal.rye
 max_cols 80 modules/sundial/glow/fold-quest-seal.glow
 ascii_7bit active-development/date/20261119/20261119-173935-est_orbit5-siya-quest1-75-harvest-seal.md
-max_cols 80 modules/comlink/vantage/vantage_studio_deck.rye
-max_cols 80 modules/comlink/vantage/glow/fold-studio-deck.glow
+max_cols 80 modules/vantage/vantage_studio_deck.rye
+max_cols 80 modules/vantage/glow/fold-studio-deck.glow
 ascii_7bit active-development/date/20261119/20261119-174519-est_quest2-orbit6-aries-vantage-studio-deck-and-50-glow.md
 max_cols 80 modules/fusion/stamp_no_serial_ratchet.rye
-max_cols 80 modules/comlink/vantage/vantage_husk_editor.rye
-max_cols 80 modules/comlink/vantage/glow/fold-husk-editor.glow
+max_cols 80 modules/vantage/vantage_husk_editor.rye
+max_cols 80 modules/vantage/glow/fold-husk-editor.glow
 ascii_7bit active-development/date/20261119/20261119-175014-est_taurus-stamp-no-serial-ratchet-and-vantage-husk-editor.md
 max_cols 80 modules/harness/grain_cached_harness.rye
 max_cols 80 modules/harness/glow/fold-harness-cache.glow
@@ -257,7 +257,7 @@ ascii_7bit ORGANIZING.md
 ascii_7bit CODE_OF_CONDUCT.md
 ascii_7bit active-development/date/20261119/20261119-182424-est_virgo-terrarium-consolidation-audit-and-radiant-sweep.md
 max_cols 80 terrarium/vantage_station_consolidation_menu.rye
-max_cols 80 modules/comlink/vantage/glow/fold-station-menu.glow
+max_cols 80 modules/vantage/glow/fold-station-menu.glow
 ascii_7bit context/OPEN_QUESTIONS.md
 ascii_7bit context/THREATS.md
 ascii_7bit context/README.md

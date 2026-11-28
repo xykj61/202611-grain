@@ -1,5 +1,5 @@
 // terrarium/app/vantage_mac_live.swift -- Native macOS AppKit shell over
-// `modules/comlink/vantage/vantage_app.rye` (`include/vantage_app.h`).
+// `modules/vantage/vantage_app.rye` (`include/vantage_app.h`).
 //
 // Zero application state, room manifests, or gesture math live in Swift:
 //   - `--selftest`: proves Swift <-> Rye `VantageApp` FFI headlessly on metal!

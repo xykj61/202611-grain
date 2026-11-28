@@ -14,7 +14,7 @@
 
 **Checkpoint `20261119.175014-est` -- Taurus (`Myofascia 57.071`): Plain-Name Rename of 4 Serial Filenames & Hard No-Serial Ratchet.**
 - **Walk-back nib:** `e2b9546d` (`xy/gemini-4-neon` immediately prior to renaming `orbit5_virgo_efficiency.rye`, `orbit5_libra_scales.rye`, `quest1_harvest_seal.rye`, and `fold-quest1-seal.glow` onto plain descriptive names).
-- **Tightened & Ratcheted:** Tightened `.gemini/rules/air-stamp-and-naming.md` and `GEMINI.md`, seated `modules/fusion/stamp_no_serial_ratchet.rye` (`grain-ww stamp-ratchet`) plus full-tree `find` enforcement inside `tools/sundial/calfive_and_stamp_name_witness.rish`, and shipped `modules/comlink/vantage/vantage_husk_editor.rye` (`grain-ww husk-editor`) + `fold-husk-editor.glow`.
+- **Tightened & Ratcheted:** Tightened `.gemini/rules/air-stamp-and-naming.md` and `GEMINI.md`, seated `modules/fusion/stamp_no_serial_ratchet.rye` (`grain-ww stamp-ratchet`) plus full-tree `find` enforcement inside `tools/sundial/calfive_and_stamp_name_witness.rish`, and shipped `modules/vantage/vantage_husk_editor.rye` (`grain-ww husk-editor`) + `fold-husk-editor.glow`.
 
 **Checkpoint `20261119.171652-est` -- Orbit 5 `13-sky` (`Myofascia 57.067`, Milestone Proof `#60`): `pulp -> husk` & `active-pulp -> active-husk` Molt-Breach-Deep-Debride.**
 - **Walk-back nib:** `42a9cff1` (`xy/gemini-4-neon` immediately prior to `git mv active-pulp active-husk`, `git mv tools/pulp tools/husk`, and `git mv modules/flare/pulp modules/flare/husk`).

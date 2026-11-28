@@ -137,17 +137,17 @@ file modules/comlink/constel_aquarius_federation.rye
 file modules/comlink/glow/gate-council-405.glow
 file modules/comlink/glow/gate-constel-gossip.glow
 file modules/comlink/glow/gate-aquarius-405.glow
-file modules/comlink/vantage/vantage_council_puddle.rye
-file modules/comlink/vantage/vantage_twilight_reader.rye
+file modules/vantage/vantage_council_puddle.rye
+file modules/vantage/vantage_twilight_reader.rye
 file modules/vantage_tablecloth_bridge.rye
-file modules/comlink/vantage/glow/fold-twilight-turn.glow
-file modules/comlink/vantage/glow/fold-vantage-snapshot.glow
-file modules/comlink/vantage/vantage_canvas_bridge.rye
-file modules/comlink/vantage/glow/fold-vantage-canvas.glow
-file modules/comlink/vantage/vantage_studio_deck.rye
-file modules/comlink/vantage/glow/fold-studio-deck.glow
-file modules/comlink/vantage/vantage_husk_editor.rye
-file modules/comlink/vantage/glow/fold-husk-editor.glow
+file modules/vantage/glow/fold-twilight-turn.glow
+file modules/vantage/glow/fold-vantage-snapshot.glow
+file modules/vantage/vantage_canvas_bridge.rye
+file modules/vantage/glow/fold-vantage-canvas.glow
+file modules/vantage/vantage_studio_deck.rye
+file modules/vantage/glow/fold-studio-deck.glow
+file modules/vantage/vantage_husk_editor.rye
+file modules/vantage/glow/fold-husk-editor.glow
 file modules/brushstroke/skate/canopy_watershed_canvas.rye
 file modules/brushstroke/glow/fold-canopy-canvas.glow
 file modules/brushstroke/skate/twilight_almanac_art.rye
@@ -242,7 +242,7 @@ file modules/fusion/stamp_no_serial_ratchet.rye
 file terrarium/terrarium_consolidation_audit.rye
 file modules/fusion/glow/gate-terrarium-audit.glow
 file terrarium/vantage_station_consolidation_menu.rye
-file modules/comlink/vantage/glow/fold-station-menu.glow
+file modules/vantage/glow/fold-station-menu.glow
 file nixos/README.md
 
 # Gate witness runner
@@ -267,14 +267,14 @@ file context/SPELLBOOK.md
 # Identity, topology, Comlink Parcel, Pond CLI, Touch, and Earpiece
 file modules/kumara/kumara.rye
 file modules/comlink/topology.rye
-file modules/comlink/vantage/carry.rye
-file modules/comlink/vantage/vantage_app.rye
-file modules/comlink/vantage/resonance_dsp.rye
-file modules/comlink/vantage/resonance_station.rye
-file modules/comlink/vantage/vantage_mutations.rye
-file modules/comlink/vantage/surf_social_grid.rye
-file modules/comlink/vantage/vantage_carry_jni.c
-file modules/comlink/vantage/glow/fold-vantage-carry.glow
+file modules/vantage/carry.rye
+file modules/vantage/vantage_app.rye
+file modules/vantage/resonance_dsp.rye
+file modules/vantage/resonance_station.rye
+file modules/vantage/vantage_mutations.rye
+file modules/vantage/surf_social_grid.rye
+file modules/vantage/vantage_carry_jni.c
+file modules/vantage/glow/fold-vantage-carry.glow
 file terrarium/app/vantage_mac_live.swift
 file tools/vantage/build_dc1_apk.rish
 file modules/resonance/dsp_engine.rye

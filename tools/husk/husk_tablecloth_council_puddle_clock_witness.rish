@@ -66,7 +66,7 @@ assert b_cmw.ok else "council_mycelium_weave.rye build failed"
 let r_cmw = run ["tools/.build/council_mycelium_weave"]
 assert r_cmw.ok else "council_mycelium_weave selftest failed"
 
-let b_vcp = run ["sh" rb "modules/comlink/vantage/vantage_council_puddle.rye" "-femit-bin=tools/.build/vantage_council_puddle"]
+let b_vcp = run ["sh" rb "modules/vantage/vantage_council_puddle.rye" "-femit-bin=tools/.build/vantage_council_puddle"]
 assert b_vcp.ok else "vantage_council_puddle.rye build failed"
 let r_vcp = run ["tools/.build/vantage_council_puddle"]
 assert r_vcp.ok else "vantage_council_puddle selftest failed"

@@ -48,12 +48,12 @@ fn run_doctor(io: std.Io) !u8 {
     _ = try cwd.statFile(io, "languages/rye/bin/rye", .{});
     _ = try cwd.statFile(io, "languages/rishi/bin/rishi", .{});
     _ = try cwd.statFile(io, ".brix", .{});
-    _ = try cwd.statFile(io, "modules/comlink/vantage/vantage_app.rye", .{});
+    _ = try cwd.statFile(io, "modules/vantage/vantage_app.rye", .{});
 
     print("grain-ww doctor ({s}):{c}", .{ grain_ww_version, nl });
     print("  [GREEN] Rye compiler      : languages/rye/bin/rye{c}", .{nl});
     print("  [GREEN] Rishi steward     : languages/rishi/bin/rishi{c}", .{nl});
-    print("  [GREEN] Vantage core      : modules/comlink/vantage/{c}", .{nl});
+    print("  [GREEN] Vantage core      : modules/vantage/{c}", .{nl});
     print("  [GREEN] Active Husk room  : active-husk/{c}", .{nl});
     print("  [GREEN] Myofascia reading : {s} / 100.000{c}", .{
         myofascia_reading,
@@ -835,7 +835,7 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/carry_admission_gate",
-            "modules/comlink/vantage/carry_admission_gate.rye",
+            "modules/vantage/carry_admission_gate.rye",
             args[2..],
         );
     }
@@ -844,7 +844,7 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/carry_publish_gate",
-            "modules/comlink/vantage/carry_publish_gate.rye",
+            "modules/vantage/carry_publish_gate.rye",
             args[2..],
         );
     }
@@ -853,7 +853,7 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/carry_device_setup",
-            "modules/comlink/vantage/carry_device_setup.rye",
+            "modules/vantage/carry_device_setup.rye",
             args[2..],
         );
     }
@@ -862,7 +862,7 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/carry_audience_session",
-            "modules/comlink/vantage/carry_audience_session.rye",
+            "modules/vantage/carry_audience_session.rye",
             args[2..],
         );
     }
@@ -871,7 +871,7 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/carry_hearth_mold",
-            "modules/comlink/vantage/carry_hearth_mold.rye",
+            "modules/vantage/carry_hearth_mold.rye",
             args[2..],
         );
     }
@@ -880,7 +880,7 @@ pub fn main(init: std.process.Init) !u8 {
             a,
             io,
             "tools/.build/carry_manifest_emit",
-            "modules/comlink/vantage/carry_manifest_emit.rye",
+            "modules/vantage/carry_manifest_emit.rye",
             args[2..],
         );
     }

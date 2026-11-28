@@ -257,7 +257,7 @@ Pulp is an application, and Pulp is also a directory.
 `terrarium/pulp/` holds the platform glass for Pulp on
 Station and Carry, following the same thin-host pattern
 as every other Vantage surface: the logic lives inside
-`modules/comlink/vantage/`, the host holds zero duplicated
+`modules/vantage/`, the host holds zero duplicated
 app logic, and the display pipe is a dumb-glass I/O channel
 to Vantage's single brain.
 

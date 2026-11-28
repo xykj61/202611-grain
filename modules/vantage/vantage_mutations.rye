@@ -1,0 +1,188 @@
+//! modules/vantage/vantage_mutations.rye -- Interactive Write/Save!
+//!
+//! Stamp: `20261115.143500` -- Live, conserved, content-addressed mutations
+//! owned 100% inside `modules/vantage/`:
+//!   1. `Dimeroll` Double-Entry Post (`sum(balances) == 0`!),
+//!   2. `Scribe / Linengrow` Champu Seal (32-byte `Blaze` SHA3-256 nib),
+//!   3. `Civic / Blaze` `405`-Seat Council Ballot & `Pond Puddle` Roam Step
+//!      (`243/405 = 60.0%` operational & `324/405 = 80.0%` constitutional!),
+//!   4. `Surf` Calm Chronological Post Append!
+
+const std = @import("std");
+const builtin = @import("builtin");
+const assert = std.debug.assert;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261115.143500";
+pub const max_accounts: u32 = 8;
+pub const max_entries: u32 = 32;
+pub const max_notes: u32 = 16;
+const nl: u8 = 10;
+
+pub const MutError = error{
+    ZeroAmountRefused,
+    SameAccountRefused,
+    BadAccountId,
+    LedgerJournalFull,
+    EmptyDraftRefused,
+    FeedFull,
+};
+
+pub const LedgerEntry = struct {
+    debit_acct: u32,
+    credit_acct: u32,
+    amount_mala: u64,
+    memo: [24]u8,
+    memo_len: u8,
+};
+
+pub const VantageWriteStore = struct {
+    balances: [max_accounts]i64,
+    entries: [max_entries]LedgerEntry,
+    entry_count: u32,
+    scribe_revisions: u32,
+    twilight_sign: u32,
+    council_yes_votes: u32,
+    puddle_roam_seq: u64,
+    last_blaze_nib: [32]u8,
+    surf_notes: [max_notes][48]u8,
+    surf_lens: [max_notes]u8,
+    surf_count: u32,
+
+    pub fn init() VantageWriteStore {
+        var st = std.mem.zeroes(VantageWriteStore);
+        st.twilight_sign = 13; // Cardinal Aether (`sky`)!
+        st.council_yes_votes = 243; // 60.0% operational quorum ready!
+        st.puddle_roam_seq = 1;
+        st.append_surf("Dawn harvest: 30kg biocyclic oats milled") catch {};
+        assert(st.sum_balances() == 0);
+        return st;
+    }
+
+    pub fn sum_balances(self: *const VantageWriteStore) i64 {
+        var s: i64 = 0;
+        for (self.balances) |b| s += b;
+        return s;
+    }
+
+    pub fn post_dimeroll(
+        self: *VantageWriteStore,
+        debit_acct: u32,
+        credit_acct: u32,
+        amount_mala: u64,
+        memo: []const u8,
+    ) MutError!void {
+        if (amount_mala == 0) return error.ZeroAmountRefused;
+        if (debit_acct == credit_acct) return error.SameAccountRefused;
+        if (debit_acct >= max_accounts or credit_acct >= max_accounts) {
+            return error.BadAccountId;
+        }
+        if (self.entry_count >= max_entries) return error.LedgerJournalFull;
+
+        const amt_i: i64 = @intCast(amount_mala);
+        self.balances[debit_acct] += amt_i;
+        self.balances[credit_acct] -= amt_i;
+
+        var e = std.mem.zeroes(LedgerEntry);
+        e.debit_acct = debit_acct;
+        e.credit_acct = credit_acct;
+        e.amount_mala = amount_mala;
+        const n = @min(memo.len, 24);
+        @memcpy(e.memo[0..n], memo[0..n]);
+        e.memo_len = @intCast(n);
+        self.entries[self.entry_count] = e;
+        self.entry_count += 1;
+
+        assert(self.sum_balances() == 0 and self.entry_count <= max_entries);
+    }
+
+    pub fn seal_scribe_draft(
+        self: *VantageWriteStore,
+        draft: []const u8,
+    ) MutError![32]u8 {
+        if (draft.len == 0) return error.EmptyDraftRefused;
+        var h = Sha3_256.init(.{});
+        h.update("blaze-scribe-champu-v1:");
+        h.update(draft);
+        h.final(&self.last_blaze_nib);
+        self.scribe_revisions += 1;
+        assert(self.scribe_revisions >= 1);
+        return self.last_blaze_nib;
+    }
+
+    /// Steps the multicultural Shastra & Risala Twilight card `1..15 -> 1`!
+    pub fn step_twilight_sign(self: *VantageWriteStore) void {
+        self.twilight_sign = if (self.twilight_sign >= 15)
+            1
+        else
+            self.twilight_sign + 1;
+        assert(self.twilight_sign >= 1 and self.twilight_sign <= 15);
+    }
+
+    /// Advances Council affirmative coalition by +81 (capped at 405) & steps
+    /// the live Pond Puddle roaming UDP epoch!
+    pub fn step_civic_council_and_puddle(self: *VantageWriteStore) void {
+        self.council_yes_votes = @min(self.council_yes_votes + 81, 405);
+        self.puddle_roam_seq += 1;
+        var h = Sha3_256.init(.{});
+        h.update("blaze-civic-405:");
+        var b4: [4]u8 = undefined;
+        std.mem.writeInt(u32, &b4, self.council_yes_votes, .little);
+        h.update(&b4);
+        h.final(&self.last_blaze_nib);
+        // invariant: Council votes never exceed 405 seats.
+        assert(self.council_yes_votes <= 405 and self.puddle_roam_seq >= 2);
+    }
+
+    pub fn append_surf(
+        self: *VantageWriteStore,
+        note: []const u8,
+    ) MutError!void {
+        if (note.len == 0) return error.EmptyDraftRefused;
+        if (self.surf_count >= max_notes) return error.FeedFull;
+        const idx = self.surf_count;
+        const n = @min(note.len, 48);
+        @memcpy(self.surf_notes[idx][0..n], note[0..n]);
+        self.surf_lens[idx] = @intCast(n);
+        self.surf_count += 1;
+        assert(self.surf_count <= max_notes);
+    }
+};
+
+fn run_selftest() !u8 {
+    var ws = VantageWriteStore.init();
+    try ws.post_dimeroll(0, 1, 250, "Oat harvest box");
+    if (ws.sum_balances() != 0 or ws.entry_count != 1) {
+        return error.DimerollPostBroken;
+    }
+    if (ws.post_dimeroll(2, 2, 100, "self")) |_| {
+        return error.SelfTransferAccepted;
+    } else |err| {
+        if (err != error.SameAccountRefused) return err;
+    }
+
+    const nib = try ws.seal_scribe_draft("[gadya] Light [padya] |= x=@ud x");
+    if (ws.scribe_revisions != 1 or (nib[0] == 0 and nib[1] == 0)) {
+        return error.BadScribeSeal;
+    }
+
+    ws.step_civic_council_and_puddle();
+    if (ws.council_yes_votes != 324 or ws.puddle_roam_seq != 2) {
+        return error.CivicStepBroken;
+    }
+
+    try ws.append_surf("Second calm update from ~siya");
+    if (ws.surf_count != 2) return error.SurfAppendBroken;
+
+    if (builtin.os.tag != .freestanding) {
+        std.debug.print(
+            "GREEN: vantage_mutations -- Dimeroll, Scribe, Civic, & Surf.{c}",
+            .{nl},
+        );
+    }
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

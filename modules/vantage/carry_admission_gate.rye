@@ -1,0 +1,197 @@
+//! modules/vantage/carry_admission_gate.rye -- Aether!
+//!
+//! Stamp: `20261119.220000` -- Cardinal Sky: first TAME Carry
+//! module reimplemented from the archived Linengrow waymark
+//! study (`construction/linengrow-waymark-study.md`).
+//!
+//! Pattern: gate-before-surface. No Vantage Carry surface
+//! paints until the admission gate checks every declared
+//! capability against the Caravan custody table. This is
+//! the single entry point for Carry Tablet and Carry Mobile
+//! postures -- Terrarium Kotlin JNI calls this, never UI.
+//!
+//! Elder: `tube1_admission.rye` (yonder/linengrow-waymarks/)
+//! Fixes: plain name, >= 2 invariants, WOOD not murr,
+//!        no semver, bounded manifest, paired refusal.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.220000";
+
+pub const max_declared_caps: u32 = 16;
+pub const max_resource_name_len: u32 = 64;
+pub const max_manifest_entries: u32 = 32;
+
+pub const CapRight = enum(u8) {
+    read = 1,
+    write = 2,
+    execute = 4,
+    admin = 8,
+};
+
+pub const DeclaredCap = struct {
+    resource: [max_resource_name_len]u8,
+    resource_len: u32,
+    rights: u8,
+    granted: bool,
+};
+
+pub const AdmissionManifest = struct {
+    caps: [max_declared_caps]DeclaredCap,
+    count: u32,
+    app_stamp: [15]u8,
+    admitted: bool,
+
+    pub fn init(stamp: [15]u8) AdmissionManifest {
+        // invariant: stamp is chronological YYYYMMDD.HHMMSS
+        assert(stamp[8] == '.');
+        // invariant: count starts at zero
+        return .{
+            .caps = undefined,
+            .count = 0,
+            .app_stamp = stamp,
+            .admitted = false,
+        };
+    }
+
+    pub fn declare(
+        self: *AdmissionManifest,
+        resource: []const u8,
+        rights: u8,
+    ) !void {
+        // invariant: resource name fits bounded buffer
+        assert(resource.len <= max_resource_name_len);
+        // invariant: manifest stays within capacity
+        if (self.count >= max_declared_caps) {
+            return error.ManifestFull;
+        }
+        var cap: DeclaredCap = .{
+            .resource = @splat(0),
+            .resource_len = @intCast(resource.len),
+            .rights = rights,
+            .granted = false,
+        };
+        @memcpy(cap.resource[0..resource.len], resource);
+        self.caps[self.count] = cap;
+        self.count += 1;
+    }
+
+    pub fn check_all(
+        self: *AdmissionManifest,
+        custody_check: *const fn (
+            []const u8,
+            u8,
+        ) bool,
+    ) bool {
+        // invariant: at least one cap declared before check
+        assert(self.count > 0);
+        var all_ok = true;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            const cap = &self.caps[i];
+            const name = cap.resource[0..cap.resource_len];
+            cap.granted = custody_check(name, cap.rights);
+            if (!cap.granted) all_ok = false;
+        }
+        self.admitted = all_ok;
+        // invariant: admitted only if every cap granted
+        assert(self.admitted == all_ok);
+        return all_ok;
+    }
+
+    pub fn granted_count(self: *const AdmissionManifest) u32 {
+        // invariant: count is bounded
+        assert(self.count <= max_declared_caps);
+        var g: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (self.caps[i].granted) g += 1;
+        }
+        return g;
+    }
+};
+
+fn mock_custody_allow(_: []const u8, _: u8) bool {
+    return true;
+}
+
+fn mock_custody_deny_audio(
+    name: []const u8,
+    _: u8,
+) bool {
+    if (name.len >= 5) {
+        if (std.mem.eql(u8, name[0..5], "audio")) {
+            return false;
+        }
+    }
+    return true;
+}
+
+fn run_selftest() !u8 {
+    const stamp = "20261119.220000".*;
+    const nl: u8 = 10;
+
+    // Welcome: all caps granted
+    {
+        var m = AdmissionManifest.init(stamp);
+        try m.declare("storage", @intFromEnum(CapRight.read));
+        try m.declare("network", @intFromEnum(CapRight.read));
+        const ok = m.check_all(&mock_custody_allow);
+        // invariant: all granted means admitted
+        assert(ok);
+        assert(m.admitted);
+        assert(m.granted_count() == 2);
+    }
+
+    // Welcome: single cap
+    {
+        var m = AdmissionManifest.init(stamp);
+        try m.declare("compute", @intFromEnum(CapRight.execute));
+        const ok = m.check_all(&mock_custody_allow);
+        assert(ok);
+        assert(m.granted_count() == 1);
+    }
+
+    // Refusal: audio denied by custody
+    {
+        var m = AdmissionManifest.init(stamp);
+        try m.declare("storage", @intFromEnum(CapRight.read));
+        try m.declare("audio", @intFromEnum(CapRight.read));
+        const ok = m.check_all(&mock_custody_deny_audio);
+        // invariant: one denial means not admitted
+        assert(!ok);
+        assert(!m.admitted);
+        assert(m.granted_count() == 1);
+    }
+
+    // Refusal: manifest overflow
+    {
+        var m = AdmissionManifest.init(stamp);
+        var i: u32 = 0;
+        while (i < max_declared_caps) : (i += 1) {
+            try m.declare("cap", @intFromEnum(CapRight.read));
+        }
+        const overflow = m.declare(
+            "one_too_many",
+            @intFromEnum(CapRight.read),
+        );
+        // invariant: overflow is refused
+        assert(overflow == error.ManifestFull);
+    }
+
+    // Refusal: resource name too long (assert-fatal in
+    // production; overflow path tested above instead)
+
+    print("GREEN: carry_admission_gate -- " ++
+        "gate-before-surface, 2 welcome + 2 refusal, " ++
+        "bounded manifest ({d} caps max).{c}", .{
+        max_declared_caps, nl,
+    });
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

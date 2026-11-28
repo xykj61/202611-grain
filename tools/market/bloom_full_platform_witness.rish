@@ -16,12 +16,12 @@ let r_gt = run ["tools/.build/galaxy_testnet"]
 assert r_gt.ok else "galaxy_testnet selftest failed"
 
 # 3. M28: Vantage Surf 40x8 FrameGrid (native macOS + WASM)
-let b_sg = run ["sh" rb "modules/comlink/vantage/surf_social_grid.rye" "-femit-bin=tools/.build/surf_social_grid"]
+let b_sg = run ["sh" rb "modules/vantage/surf_social_grid.rye" "-femit-bin=tools/.build/surf_social_grid"]
 assert b_sg.ok else "surf_social_grid.rye build failed"
 let r_sg = run ["tools/.build/surf_social_grid"]
 assert r_sg.ok else "surf_social_grid selftest failed"
 
-let sg_wasm = run [rye "build" "modules/comlink/vantage/surf_social_grid.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/surf_social_grid.wasm"]
+let sg_wasm = run [rye "build" "modules/vantage/surf_social_grid.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/surf_social_grid.wasm"]
 assert sg_wasm.ok else "surf_social_grid wasm32 cross-compile failed"
 
 say "GREEN: bloom_full_platform_witness -- Guides, 14-galaxy Pond testnet, & Vantage Surf FrameGrid proven."

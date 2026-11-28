@@ -1,6 +1,6 @@
 # tools/c/build_dc1_apk.rish -- One-command Daylight Computer DC-1 APK builder!
 #
-# Cross-compiles `modules/comlink/vantage/vantage_app.rye` + `carry.rye` to
+# Cross-compiles `modules/vantage/vantage_app.rye` + `carry.rye` to
 # `arm64-v8a` (`aarch64-linux-musl`), audits `AndroidManifest.xml` under Civic
 # `Glasswall` rules (zero `INTERNET` / `RECORD_AUDIO`), stages the complete NDK
 # bundle in `tools/.build/dc1-apk-stage/`, and invokes Gradle / `adb` if
@@ -16,14 +16,14 @@ let gw = run ["sh" "-c" "! grep -E 'android.permission.INTERNET|android.permissi
 assert gw.ok else "AndroidManifest.xml failed Glasswall zero-spyware check!"
 
 # 2. Cross-compile VantageCarry & VantageApp static ARM64 libraries for DC-1
-let b_carry = run [rye "build-lib" "modules/comlink/vantage/carry.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_carry_dc1.a"]
+let b_carry = run [rye "build-lib" "modules/vantage/carry.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_carry_dc1.a"]
 assert b_carry.ok else "libvantage_carry_dc1.a cross-compile failed"
 
-let b_app = run [rye "build-lib" "modules/comlink/vantage/vantage_app.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_app_dc1.a"]
+let b_app = run [rye "build-lib" "modules/vantage/vantage_app.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_app_dc1.a"]
 assert b_app.ok else "libvantage_app_dc1.a cross-compile failed"
 
 # 3. Stage JNI C bridge, headers, Kotlin thin shell, and Gradle/CMake manifests
-let cp = run ["sh" "-c" "cp modules/comlink/vantage/vantage_carry_jni.c modules/comlink/vantage/include/vantage_carry.h modules/comlink/vantage/include/vantage_app.h terrarium/carry-tablet/AndroidManifest.xml terrarium/carry-tablet/CMakeLists.txt terrarium/carry-tablet/build.gradle.kts terrarium/carry-tablet/*.kt tools/.build/libvantage_carry_dc1.a tools/.build/libvantage_app_dc1.a tools/.build/dc1-apk-stage/"]
+let cp = run ["sh" "-c" "cp modules/vantage/vantage_carry_jni.c modules/vantage/include/vantage_carry.h modules/vantage/include/vantage_app.h terrarium/carry-tablet/AndroidManifest.xml terrarium/carry-tablet/CMakeLists.txt terrarium/carry-tablet/build.gradle.kts terrarium/carry-tablet/*.kt tools/.build/libvantage_carry_dc1.a tools/.build/libvantage_app_dc1.a tools/.build/dc1-apk-stage/"]
 assert cp.ok else "staging Daylight DC-1 NDK bundle failed"
 
 say "GREEN: build_dc1_apk -- Daylight DC-1 arm64-v8a Vantage bundle staged in tools/.build/dc1-apk-stage/ (ready for Android NDK / adb install)."

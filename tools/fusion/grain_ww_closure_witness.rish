@@ -44,9 +44,9 @@ let c3 = run ["test" "-f" "modules/comlink/mycelium_cache_weave.rye"]
 assert c3.ok else "mycelium_cache_weave.rye missing"
 
 # Vantage
-let v1 = run ["test" "-f" "modules/comlink/vantage/vantage_app.rye"]
+let v1 = run ["test" "-f" "modules/vantage/vantage_app.rye"]
 assert v1.ok else "vantage_app.rye missing"
-let v2 = run ["test" "-f" "modules/comlink/vantage/vantage_studio_deck.rye"]
+let v2 = run ["test" "-f" "modules/vantage/vantage_studio_deck.rye"]
 assert v2.ok else "vantage_studio_deck.rye missing"
 
 # Closure manifest itself

@@ -19,7 +19,7 @@ real surface to:
 ## Design -- Vantage Station macOS (Swift Terrarium + Rye Core)
 
 **Surface:** `Vantage Station` posture on macOS via `terrarium/app/`
-Swift shell. All UI logic lives in `modules/comlink/vantage/`.
+Swift shell. All UI logic lives in `modules/vantage/`.
 
 **Dimeroll Market:** `modules/market/` -- `sum(nets) == 0` ledger for
 WOOD token transactions on galaxy/star/planet transfers. Extends

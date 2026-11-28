@@ -112,7 +112,7 @@ fn check_living_gemini_breach(a: std.mem.Allocator, io: std.Io) !void {
     const paths = [_][]const u8{
         "modules/sundial/calfive_wheel.rye",
         "libraries/risala/twilight_wheel.rye",
-        "modules/comlink/vantage/vantage_twilight_reader.rye",
+        "modules/vantage/vantage_twilight_reader.rye",
         "modules/brushstroke/skate/twilight_almanac_art.rye",
     };
     for (paths) |p| {

@@ -1,0 +1,192 @@
+//! modules/vantage/resonance_station.rye -- Desktop DAW in Vantage!
+//!
+//! Wave A (`20261115.115500`): Implements Keaton's architectural rule:
+//!   - In **Vantage Station** (`posture == 0`, desktop `>= 960dp`), Resonance
+//!     renders a full **Three-Zone Desktop Studio DAW**:
+//!       1. Horizontal 16-bar Multi-Track Timeline & Clip Grid,
+//!       2. Channel-Strip Stereo Mixer Console (`[S][M] Gain Pan L/R Peak`),
+//!       3. Per-Track 4-Slot Insert FX Chain, Mastering Presets, & Plugin Face!
+//!   - In **Carry Tablet / Carry Mobile** (`posture == 1 or 2`), Resonance
+//!     renders the streamlined sunlight-legible **Field Stem Companion** over
+//!     the exact same session!
+
+const std = @import("std");
+const builtin = @import("builtin");
+const assert = std.debug.assert;
+const dsp = @import("resonance_dsp.rye");
+
+pub const version = "20261115.115500";
+const nl: u8 = 10;
+
+pub var global_studio: dsp.StudioSession = dsp.StudioSession.init_default();
+var initialized: bool = false;
+
+pub fn ensure_ready() void {
+    if (!initialized) {
+        global_studio = dsp.StudioSession.init_default();
+        global_studio.recall_mastering_preset(0) catch {};
+        var wav: [dsp.stereo_wav_bytes]u8 = undefined;
+        global_studio.bounce_stereo_wav(&wav);
+        initialized = true;
+    }
+}
+
+/// Posture-adaptive Resonance renderer owned 100% by Vantage!
+pub fn render_resonance_for_posture(posture_id: u32, out: []u8) usize {
+    ensure_ready();
+    var pos: usize = 0;
+
+    if (posture_id == 0) {
+        // == VANTAGE STATION DESKTOP DAW (3-ZONE STUDIO WORKSTATION) ==
+        const h1 = std.fmt.bufPrint(
+            out[pos..],
+            "  === RESONANCE STATION DESKTOP DAW (48kHz | {s}) ==={c}" ++
+                "  [ZONE 1: TIMELINE] Bar Playhead: {d} | Bars 1..16:{c}",
+            .{
+                global_studio.preset_name[0..global_studio.preset_len],
+                nl,
+                global_studio.playhead_bar + 1,
+                nl,
+            },
+        ) catch return pos;
+        pos += h1.len;
+
+        var i: u32 = 0;
+        while (i < global_studio.track_count) : (i += 1) {
+            const tr = global_studio.tracks[i];
+            const row = std.fmt.bufPrint(
+                out[pos..],
+                "    T{d} {s:<18} | Bar {d}..{d} ({d}Hz){c}",
+                .{
+                    i + 1,
+                    tr.label(),
+                    tr.clip.start_bar,
+                    tr.clip.start_bar + tr.clip.len_bars - 1,
+                    tr.clip.freq_hz,
+                    nl,
+                },
+            ) catch break;
+            pos += row.len;
+        }
+
+        const h2 = std.fmt.bufPrint(
+            out[pos..],
+            "  [ZONE 2: DESKTOP STEREO MIXER CONSOLE]{c}",
+            .{nl},
+        ) catch return pos;
+        pos += h2.len;
+
+        i = 0;
+        while (i < global_studio.track_count) : (i += 1) {
+            const tr = global_studio.tracks[i];
+            const sm = std.fmt.bufPrint(
+                out[pos..],
+                "    Strip {d} [{s}][{s}] Gain:{d} Pan:{d} L:{d} R:{d}{c}",
+                .{
+                    i + 1,
+                    if (tr.soloed) "S" else "-",
+                    if (tr.muted) "M" else "-",
+                    tr.gain_permille,
+                    tr.pan_pct,
+                    tr.peak_l,
+                    tr.peak_r,
+                    nl,
+                },
+            ) catch break;
+            pos += sm.len;
+        }
+
+        const h3 = std.fmt.bufPrint(
+            out[pos..],
+            "  [ZONE 3: TRACK 1 INSERT FX RACK ({s} Face)]{c}    ",
+            .{ if (global_studio.expert_face) "Expert" else "Simple", nl },
+        ) catch return pos;
+        pos += h3.len;
+
+        for (global_studio.tracks[0].inserts) |slot| {
+            if (slot.kind == .empty) continue;
+            pos += global_studio.render_plugin_face(slot, out[pos..]);
+            if (pos + 4 <= out.len) {
+                @memcpy(out[pos .. pos + 4], " -> ");
+                pos += 4;
+            }
+        }
+        const tail = std.fmt.bufPrint(
+            out[pos..],
+            "[Stereo Out]{c}",
+            .{nl},
+        ) catch return pos;
+        pos += tail.len;
+    } else {
+        // == CARRY TABLET / MOBILE FIELD STEM SKETCHPAD ==
+        const hc = std.fmt.bufPrint(
+            out[pos..],
+            "  [Resonance Carry Field Sketchpad -- {d} Stems Synced]{c}",
+            .{ global_studio.track_count, nl },
+        ) catch return pos;
+        pos += hc.len;
+
+        var i: u32 = 0;
+        while (i < global_studio.track_count) : (i += 1) {
+            const tr = global_studio.tracks[i];
+            const row = std.fmt.bufPrint(
+                out[pos..],
+                "    Stem {d}: {s} ({d}Hz){c}",
+                .{ i + 1, tr.label(), tr.clip.freq_hz, nl },
+            ) catch break;
+            pos += row.len;
+        }
+    }
+    // invariant: rendered Resonance view fits strictly inside caller buffer.
+    assert(pos <= out.len);
+    return pos;
+}
+
+pub export fn resonance_station_toggle_expert_ffi() void {
+    ensure_ready();
+    global_studio.expert_face = !global_studio.expert_face;
+}
+
+pub export fn resonance_station_toggle_solo0_ffi() void {
+    ensure_ready();
+    global_studio.tracks[0].soloed = !global_studio.tracks[0].soloed;
+    var wav: [dsp.stereo_wav_bytes]u8 = undefined;
+    global_studio.bounce_stereo_wav(&wav);
+}
+
+fn run_selftest() !u8 {
+    var buf_desk: [2048]u8 = undefined;
+    const nd = render_resonance_for_posture(0, &buf_desk);
+    if (std.mem.indexOf(
+        u8,
+        buf_desk[0..nd],
+        "RESONANCE STATION DESKTOP DAW",
+    ) == null) {
+        return error.MissingStationDawHeader;
+    }
+    if (std.mem.indexOf(u8, buf_desk[0..nd], "[TiltEQ") == null) {
+        return error.MissingInsertFace;
+    }
+
+    var buf_carry: [1024]u8 = undefined;
+    const nc = render_resonance_for_posture(1, &buf_carry);
+    if (std.mem.indexOf(
+        u8,
+        buf_carry[0..nc],
+        "Resonance Carry Field Sketchpad",
+    ) == null) {
+        return error.MissingCarrySketchpad;
+    }
+
+    if (builtin.os.tag != .freestanding) {
+        std.debug.print(
+            "GREEN: resonance_station -- Station DAW vs Carry proven.{c}",
+            .{nl},
+        );
+    }
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

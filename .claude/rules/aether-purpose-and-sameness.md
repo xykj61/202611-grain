@@ -14,7 +14,7 @@ hidden macros, reflection, or private dialects:
   explicit strings, integers, booleans, lists, and records.
 - **One pure fold:** Application, studio, and ledger state evolve as pure folds
   over content-addressed `Blaze` facts (`sum(nets) == 0` in `Dimeroll`).
-- **One UI & Studio brain (`modules/comlink/vantage/`):** `Carry` (`Carry
+- **One UI & Studio brain (`modules/vantage/`):** `Carry` (`Carry
   Tablet`, `Carry Mobile`) and `Station` desktop surfaces are implemented
   strictly inside `Vantage`. Platform hosts (`terrarium/app/` Swift,
   `terrarium/carry-tablet/` Kotlin JNI, and WASM) are dumb-glass I/O pipes.

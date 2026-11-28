@@ -2,7 +2,7 @@
 # 30-Song Tiruppavai + Rasamrita, Realidream, & RV64GC Blazepod!
 #
 # Proves on real metal:
-#   1. `modules/comlink/vantage/carry.rye` cross-compiles cleanly from ONE
+#   1. `modules/vantage/carry.rye` cross-compiles cleanly from ONE
 #      source file to:
 #        - macOS native host,
 #        - Browser WebAssembly (`wasm32-freestanding`),
@@ -19,11 +19,11 @@ let mk = run ["mkdir" "-p" "tools/.build" "libraries/shastra/tiruppavai/bin" "li
 assert mk.ok else "mkdir failed"
 
 # 1. Cross-compile `vantage/carry.rye` across WASM, Android aarch64, & RV64GC!
-let vc_wasm = run [rye "build" "modules/comlink/vantage/carry.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/vantage_carry.wasm"]
+let vc_wasm = run [rye "build" "modules/vantage/carry.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/vantage_carry.wasm"]
 assert vc_wasm.ok else "vantage/carry wasm32 cross-compile failed"
-let vc_dc1 = run [rye "build-lib" "modules/comlink/vantage/carry.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_carry_dc1.a"]
+let vc_dc1 = run [rye "build-lib" "modules/vantage/carry.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_carry_dc1.a"]
 assert vc_dc1.ok else "vantage/carry Android DC-1 aarch64 cross-compile failed"
-let vc_rv64 = run [rye "build-lib" "modules/comlink/vantage/carry.rye" "-target" "riscv64-freestanding" "-femit-bin=tools/.build/libvantage_carry_rv64.a"]
+let vc_rv64 = run [rye "build-lib" "modules/vantage/carry.rye" "-target" "riscv64-freestanding" "-femit-bin=tools/.build/libvantage_carry_rv64.a"]
 assert vc_rv64.ok else "vantage/carry RV64GC cross-compile failed"
 
 # 2. All 30 Andal Tiruppavai songs + Year-2 Rupa Goswami Rasamrita

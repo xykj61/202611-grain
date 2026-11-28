@@ -8,7 +8,7 @@
 ## 1. One Brain (`Vantage`), Many Honest Surfaces
 
 In Grain, **100% of application logic** lives once inside
-`modules/comlink/vantage/` (`carry.rye`, `vantage_app.rye`, `bloom.rye`,
+`modules/vantage/` (`carry.rye`, `vantage_app.rye`, `bloom.rye`,
 `dimeroll.rye`, and `surf_social_grid.rye`). Every visual shell is a thin
 "dumb glass" pipe forwarding pointer/keyboard events into `Vantage` and drawing
 the returned frame:

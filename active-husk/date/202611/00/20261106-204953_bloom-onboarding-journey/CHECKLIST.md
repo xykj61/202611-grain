@@ -54,6 +54,6 @@
 
 - [x] **M26** -- Mycelium consensus round with MUR/MALA witness quorum (`galaxy_testnet.rye`)
 - [x] **M27** -- Dimeroll query across the Pond network (`galaxy_testnet.rye`, `sum(nets) == 0`)
-- [x] **M28** -- Surf Social feed rendering in Skate 40x8 frame grid (`modules/comlink/vantage/surf_social_grid.rye`)
+- [x] **M28** -- Surf Social feed rendering in Skate 40x8 frame grid (`modules/vantage/surf_social_grid.rye`)
 - [x] **M29** -- docs-geode tutorials for all GUI interfaces (`docs-geode/tutorials/vantage-and-carry-interfaces.md`)
 - [x] **M30** -- Act II integration witness: full platform proven (`tools/b/bloom_act2_full_platform_witness.rish` GREEN `20261115.105000`)

@@ -1,7 +1,7 @@
 # tools/g/glow_mill_pipeline_witness.rish -- Vantage Carry + 6-Pass Glow Mill
 #
 # Proves on real metal (`Myofascia: 56.575`):
-#   1. `modules/comlink/vantage/carry.rye` + `CarryTabletMain.kt` (verifies
+#   1. `modules/vantage/carry.rye` + `CarryTabletMain.kt` (verifies
 #      Kotlin shell holds ZERO posture/tab state; Vantage owns 100% of Carry!),
 #   2. `glow_fmt.rye` (col-57 `::` idempotent formatter & 80-col gate),
 #   3. `intrinsic_bridge.rye` (checked u64 & FIPS-202 `~% %sha3-256` vector),
@@ -16,7 +16,7 @@ let mk = run ["mkdir" "-p" "tools/.build"]
 assert mk.ok else "mkdir tools/.build failed"
 
 # 1. Vantage Carry core + thin Kotlin JNI shell check
-let b_vc = run ["sh" rb "modules/comlink/vantage/carry.rye" "-femit-bin=tools/.build/vantage_carry"]
+let b_vc = run ["sh" rb "modules/vantage/carry.rye" "-femit-bin=tools/.build/vantage_carry"]
 assert b_vc.ok else "vantage/carry.rye build failed"
 let r_vc = run ["tools/.build/vantage_carry"]
 assert r_vc.ok else "vantage/carry selftest failed"

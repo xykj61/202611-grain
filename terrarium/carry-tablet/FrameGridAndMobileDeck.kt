@@ -1,5 +1,5 @@
 // terrarium/carry-tablet/FrameGridAndMobileDeck.kt -- Thin RLCD canvas blitter
-// driven 100% by `VantageCarryBridge` (`modules/comlink/vantage/carry.rye`).
+// driven 100% by `VantageCarryBridge` (`modules/vantage/carry.rye`).
 // Zero posture or tab state lives in Kotlin!
 
 package com.grainww.vantage.carry

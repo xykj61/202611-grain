@@ -32,7 +32,7 @@ assert r_rl.ok else "grain-ww round-load failed"
 assert (r_rl.err contains "Calfive Round Load") else "round-load output missing header"
 
 # 3. Zero living `lotus_*` files in resonance/, vantage/include/, terrarium/, or active-husk/
-let no_lotus = run ["sh" "-c" "! ls -d modules/resonance/*lotus* modules/comlink/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* active-husk/date/202611/00/*lotus* 2>/dev/null"]
+let no_lotus = run ["sh" "-c" "! ls -d modules/resonance/*lotus* modules/vantage/include/*lotus* terrarium/*lotus* terrarium/src/*lotus* active-husk/date/202611/00/*lotus* 2>/dev/null"]
 assert no_lotus.ok else "leftover lotus_* path found in resonance, vantage, terrarium, or active-husk!"
 
 # 4. Zero ascending numbers in guide filenames or compiler/citizen .glow headers

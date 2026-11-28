@@ -2,7 +2,7 @@
 // Daylight Computer DC-1 (60Hz monochrome LivePaper RLCD).
 //
 // All room state (`Bloom`, `Dimeroll`, `Resonance`, `Scribe`, `Blaze`, `Surf`),
-// posture selection, and palm/gesture math live in `modules/comlink/vantage/`!
+// posture selection, and palm/gesture math live in `modules/vantage/`!
 
 package com.grainww.vantage.carry
 

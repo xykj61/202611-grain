@@ -63,7 +63,7 @@ The mixer, the timeline, integration.
   NSTableView inside the Audio tab below the status panel with two columns (Name width 200, Gain width 60), NSScrollView wrapper (height 120, dark amber theme), "+ Track" and "- Track" buttons. Data model: `audioTracks: [(name: String, gain: Float)]` initialized with one default track. TableViewDelegate dispatches via `=== audioTrackTable` identity check. Minimum-one-track enforcement on remove, selection management on add/remove. Terrarium build GREEN.
   **SLC gate:** multiple tracks visible and selectable -- **PROVEN**.
 
-- [x] **Movement 12 -- Mixer panel** (`modules/comlink/vantage/resonance_station.rye` Zone 2 + `dsp_engine.rye`)
+- [x] **Movement 12 -- Mixer panel** (`modules/vantage/resonance_station.rye` Zone 2 + `dsp_engine.rye`)
   Channel strip per track: gain fader, pan knob, solo/mute. Stereo mix bus.
   **SLC gate:** adjust a fader and hear the mix change in real time.
 

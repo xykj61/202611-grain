@@ -12,7 +12,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 const print = std.debug.print;
 const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
-const muts = @import("comlink/vantage/vantage_mutations.rye");
+const muts = @import("vantage/vantage_mutations.rye");
 const rtable = @import("tablecloth/relational_table.rye");
 
 pub const version = "20261115.165500";

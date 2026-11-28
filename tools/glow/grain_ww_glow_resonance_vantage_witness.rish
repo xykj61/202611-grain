@@ -24,7 +24,7 @@ let r_doc = run ["languages/rishi/bin/grain-ww" "doctor"]
 assert r_doc.ok else "grain-ww doctor failed"
 
 # 1. Swift <-> Rye VantageApp macOS live app + Carry APK stage
-let b_vlib = run [rye "build-lib" "modules/comlink/vantage/vantage_app.rye" "-dynamic" "-femit-bin=tools/.build/libvantage_app_mac.dylib"]
+let b_vlib = run [rye "build-lib" "modules/vantage/vantage_app.rye" "-dynamic" "-femit-bin=tools/.build/libvantage_app_mac.dylib"]
 assert b_vlib.ok else "libvantage_app_mac.dylib build failed"
 let b_swift = run ["swiftc" "terrarium/app/vantage_mac_live.swift" "tools/.build/libvantage_app_mac.dylib" "-Xlinker" "-rpath" "-Xlinker" "@executable_path" "-framework" "AppKit" "-o" "tools/.build/vantage_mac_live"]
 assert b_swift.ok else "swiftc vantage_mac_live failed"

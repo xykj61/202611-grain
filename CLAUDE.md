@@ -10,7 +10,7 @@
 
 Compress the system by making parts publicly similar -- **one value model**
 (Brix/Kyri/wire), **one pure fold** over signed facts (`Blaze`), **one UI**
-(`modules/comlink/vantage/`), and **one plain vocabulary** -- never through
+(`modules/vantage/`), and **one plain vocabulary** -- never through
 hidden macros, private dialects, or duplicated platform logic.
 
 - **Scoped subdirectory guides** (loaded automatically when entering them):
@@ -68,7 +68,7 @@ hidden macros, private dialects, or duplicated platform logic.
   identifier syntax forbids hyphens).
 - **Vantage Owns All UI & Studio State:** `Carry` (`Carry Tablet`, `Carry
   Mobile`) and `Station` desktop surfaces are implemented strictly inside
-  `modules/comlink/vantage/`. `Resonance` delivers its full 3-Zone Desktop DAW
+  `modules/vantage/`. `Resonance` delivers its full 3-Zone Desktop DAW
   in `Vantage Station` posture and a Field Stem Sketchpad in `Carry`. Use
   **`Resonance`** (never the retired DAW name `Lotus`).
 - **Civic Glasswall:** Write-only RLCD framebuffers, hardware-switched +

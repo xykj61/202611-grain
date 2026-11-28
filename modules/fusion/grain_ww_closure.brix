@@ -30,26 +30,26 @@ harness zeroize modules/harness/scorpio_session_zeroize.rye
 harness constituency modules/harness/constituency_verification.rye
 
 # --- Vantage Station (All UI) ---
-vantage app modules/comlink/vantage/vantage_app.rye
-vantage deck modules/comlink/vantage/vantage_studio_deck.rye
-vantage canvas modules/comlink/vantage/vantage_canvas_bridge.rye
-vantage husk-editor modules/comlink/vantage/vantage_husk_editor.rye
-vantage mutations modules/comlink/vantage/vantage_mutations.rye
-vantage council modules/comlink/vantage/vantage_council_puddle.rye
-vantage twilight modules/comlink/vantage/vantage_twilight_reader.rye
-vantage carry modules/comlink/vantage/carry.rye
-vantage carry-admission modules/comlink/vantage/carry_admission_gate.rye
-vantage carry-hearth modules/comlink/vantage/carry_hearth_mold.rye
-vantage carry-pointer modules/comlink/vantage/carry_hearth_pointer.rye
-vantage carry-pub-gate modules/comlink/vantage/carry_publish_gate.rye
-vantage carry-pipeline modules/comlink/vantage/carry_publish_pipeline.rye
-vantage carry-manifest modules/comlink/vantage/carry_manifest_emit.rye
-vantage carry-audience modules/comlink/vantage/carry_audience_session.rye
-vantage carry-device modules/comlink/vantage/carry_device_setup.rye
-vantage market-deck modules/comlink/vantage/vantage_market_deck.rye
-vantage spawn-invite modules/comlink/vantage/vantage_spawn_invite.rye
-vantage constellation-view modules/comlink/vantage/vantage_constellation_view.rye
-vantage market-header modules/comlink/vantage/include/vantage_market.h
+vantage app modules/vantage/vantage_app.rye
+vantage deck modules/vantage/vantage_studio_deck.rye
+vantage canvas modules/vantage/vantage_canvas_bridge.rye
+vantage husk-editor modules/vantage/vantage_husk_editor.rye
+vantage mutations modules/vantage/vantage_mutations.rye
+vantage council modules/vantage/vantage_council_puddle.rye
+vantage twilight modules/vantage/vantage_twilight_reader.rye
+vantage carry modules/vantage/carry.rye
+vantage carry-admission modules/vantage/carry_admission_gate.rye
+vantage carry-hearth modules/vantage/carry_hearth_mold.rye
+vantage carry-pointer modules/vantage/carry_hearth_pointer.rye
+vantage carry-pub-gate modules/vantage/carry_publish_gate.rye
+vantage carry-pipeline modules/vantage/carry_publish_pipeline.rye
+vantage carry-manifest modules/vantage/carry_manifest_emit.rye
+vantage carry-audience modules/vantage/carry_audience_session.rye
+vantage carry-device modules/vantage/carry_device_setup.rye
+vantage market-deck modules/vantage/vantage_market_deck.rye
+vantage spawn-invite modules/vantage/vantage_spawn_invite.rye
+vantage constellation-view modules/vantage/vantage_constellation_view.rye
+vantage market-header modules/vantage/include/vantage_market.h
 
 # --- Libraries ---
 library invite-link-compose libraries/invite-link-compose/invite_link_compose.rye
@@ -85,8 +85,8 @@ skate console modules/brushstroke/skate/vantage_harness_console.rye
 skate triptych modules/brushstroke/skate/studio_triptych_canvas.rye
 
 # --- Resonance ---
-resonance station modules/comlink/vantage/resonance_station.rye
-resonance dsp modules/comlink/vantage/resonance_dsp.rye
+resonance station modules/vantage/resonance_station.rye
+resonance dsp modules/vantage/resonance_dsp.rye
 
 # --- Storage ---
 tablecloth sql modules/tablecloth/sql_workspace.rye
@@ -124,9 +124,9 @@ glow_desk gate-session-zeroize modules/harness/glow/
 glow_desk gate-constituency modules/harness/glow/
 glow_desk gate-boot-matrix blazepod/glow/
 glow_desk fold-mycelium-cache modules/comlink/glow/
-glow_desk gate-carry-admission modules/comlink/vantage/glow/
-glow_desk gate-carry-publish modules/comlink/vantage/glow/
-glow_desk fold-carry-hearth modules/comlink/vantage/glow/
+glow_desk gate-carry-admission modules/vantage/glow/
+glow_desk gate-carry-publish modules/vantage/glow/
+glow_desk fold-carry-hearth modules/vantage/glow/
 
 # --- Civic Glasswall Invariants ---
 glasswall display write-only-rlcd

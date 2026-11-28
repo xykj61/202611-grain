@@ -7,7 +7,7 @@
 
 ## 1. One Session, Posture-Adaptive Depth
 
-Inside `modules/comlink/vantage/resonance_station.rye` +
+Inside `modules/vantage/resonance_station.rye` +
 `modules/resonance/dsp_engine.rye`, **Vantage** adapts Resonance automatically
 to your device's posture while sharing one `.brix` session:
 

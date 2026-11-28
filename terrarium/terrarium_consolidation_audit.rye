@@ -33,7 +33,7 @@ const required_pillars = [_][]const u8{
     "terrarium/carry-tablet/AndroidManifest.xml",
     "terrarium/faa-atc/pilot_sector_horizon.rye",
     "terrarium/civil-engineering/structural_colloquium.rye",
-    "modules/comlink/vantage/vantage_studio_deck.rye",
+    "modules/vantage/vantage_studio_deck.rye",
     "modules/harness/grain_cached_harness.rye",
     "modules/harness/pond_api_airlock.rye",
 };

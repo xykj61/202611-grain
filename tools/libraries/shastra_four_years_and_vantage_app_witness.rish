@@ -7,7 +7,7 @@
 #        - Year 3: `sikshastakam_eight` (Chaitanya Mahaprabhu 8 verses),
 #        - Year 4: `gopala_champu_weave` (Jiva Goswami Gadya+Padya weaver),
 #      plus `grainos sikshastakam 3` & `grainos champu`!
-#   2. Unified `modules/comlink/vantage/vantage_app.rye` uniting `carry.rye` +
+#   2. Unified `modules/vantage/vantage_app.rye` uniting `carry.rye` +
 #      `bloom.rye` + `Dimeroll` + `Resonance` inside Vantage AND cross-compiling
 #      cleanly to WASM (`vantage_app.wasm`) & Android DC-1 (`libvantage_app_dc1.a`)!
 #   3. Civic `Glasswall` audit on `terrarium/carry-tablet/AndroidManifest.xml`
@@ -38,14 +38,14 @@ let r_gc = run ["languages/rishi/bin/grain-ww" "champu"]
 assert r_gc.ok else "grain-ww champu failed"
 
 # 2. Unified `vantage_app.rye` host selftest + WASM + Android DC-1 arm64
-let b_va = run ["sh" rb "modules/comlink/vantage/vantage_app.rye" "-femit-bin=tools/.build/vantage_app"]
+let b_va = run ["sh" rb "modules/vantage/vantage_app.rye" "-femit-bin=tools/.build/vantage_app"]
 assert b_va.ok else "vantage_app build failed"
 let r_va = run ["tools/.build/vantage_app"]
 assert r_va.ok else "vantage_app selftest failed"
 
-let va_wasm = run [rye "build" "modules/comlink/vantage/vantage_app.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/vantage_app.wasm"]
+let va_wasm = run [rye "build" "modules/vantage/vantage_app.rye" "-target" "wasm32-wasi" "-rdynamic" "-femit-bin=tools/.build/vantage_app.wasm"]
 assert va_wasm.ok else "vantage_app wasm32 cross-compile failed"
-let va_dc1 = run [rye "build-lib" "modules/comlink/vantage/vantage_app.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_app_dc1.a"]
+let va_dc1 = run [rye "build-lib" "modules/vantage/vantage_app.rye" "-target" "aarch64-linux-musl" "-femit-bin=tools/.build/libvantage_app_dc1.a"]
 assert va_dc1.ok else "vantage_app Android DC-1 arm64 cross-compile failed"
 
 # 3. Glasswall AndroidManifest audit: zero INTERNET / RECORD_AUDIO permissions

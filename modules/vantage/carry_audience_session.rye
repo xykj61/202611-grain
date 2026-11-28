@@ -1,0 +1,307 @@
+//! modules/vantage/carry_audience_session.rye -- Aether!
+//!
+//! Stamp: `20261119.205744` -- Virgo 6/15 Orbit 9: Vantage
+//! Carry audience session. Manages multi-signer broadcast
+//! and chat sessions on a Carry device.
+//!
+//! An audience session is a bounded group of Ed25519 signers
+//! sharing a live Blaze fact stream. Each participant signs
+//! their contributions. The session enforces:
+//! - Bounded participant count (max 16 signers)
+//! - Admission gate check before join
+//! - Ed25519 signature on every message
+//! - Bounded message payload (max 4096 bytes)
+//! - Chronological stamp ordering
+//!
+//! Elders: `seva_jabs2_audience.rye`, `seva_jabs2_chat.rye`,
+//!         `seva_jabs2_broadcast.rye`
+//!         (yonder/linengrow-waymarks/)
+//! Fixes: 3 files -> 1, plain name, bounded signers,
+//!        stamp ordering enforced, >= 2 invariants.
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+
+pub const version = "20261119.205744";
+
+pub const max_signers: u32 = 16;
+pub const max_payload_bytes: u32 = 4096;
+pub const max_display_name_len: u32 = 32;
+pub const ed25519_pubkey_len: u32 = 32;
+pub const ed25519_sig_len: u32 = 64;
+pub const stamp_len: u32 = 15;
+
+pub const SessionRole = enum(u8) {
+    host = 1,
+    speaker = 2,
+    listener = 3,
+};
+
+pub const Signer = struct {
+    pubkey: [ed25519_pubkey_len]u8,
+    display_name: [max_display_name_len]u8,
+    display_name_len: u32,
+    role: SessionRole,
+    joined_stamp: [stamp_len]u8,
+    active: bool,
+};
+
+pub const SignedMessage = struct {
+    signer_idx: u32,
+    payload_len: u32,
+    payload: [max_payload_bytes]u8,
+    stamp: [stamp_len]u8,
+    signature: [ed25519_sig_len]u8,
+};
+
+pub const SessionRefusal = enum(u8) {
+    none = 0,
+    session_full = 1,
+    duplicate_pubkey = 2,
+    signer_not_found = 3,
+    payload_empty = 4,
+    payload_too_large = 5,
+    stamp_not_advancing = 6,
+    listener_cannot_send = 7,
+};
+
+pub const AudienceSession = struct {
+    signers: [max_signers]Signer,
+    count: u32,
+    session_stamp: [stamp_len]u8,
+    last_message_stamp: [stamp_len]u8,
+    message_count: u64,
+
+    pub fn init(stamp: [stamp_len]u8) AudienceSession {
+        // invariant: stamp is chronological
+        assert(stamp[8] == '.');
+        return .{
+            .signers = undefined,
+            .count = 0,
+            .session_stamp = stamp,
+            .last_message_stamp = stamp,
+            .message_count = 0,
+        };
+    }
+
+    pub fn join(
+        self: *AudienceSession,
+        pubkey: [ed25519_pubkey_len]u8,
+        name: []const u8,
+        role: SessionRole,
+        stamp: [stamp_len]u8,
+    ) SessionRefusal {
+        // invariant: name bounded
+        assert(name.len <= max_display_name_len);
+        if (self.count >= max_signers) return .session_full;
+
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (std.mem.eql(
+                u8,
+                &self.signers[i].pubkey,
+                &pubkey,
+            )) return .duplicate_pubkey;
+        }
+
+        var signer = Signer{
+            .pubkey = pubkey,
+            .display_name = @splat(0),
+            .display_name_len = @intCast(name.len),
+            .role = role,
+            .joined_stamp = stamp,
+            .active = true,
+        };
+        @memcpy(
+            signer.display_name[0..name.len],
+            name,
+        );
+        // invariant: count stays bounded
+        assert(self.count < max_signers);
+        self.signers[self.count] = signer;
+        self.count += 1;
+        return .none;
+    }
+
+    pub fn leave(
+        self: *AudienceSession,
+        pubkey: [ed25519_pubkey_len]u8,
+    ) SessionRefusal {
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (std.mem.eql(
+                u8,
+                &self.signers[i].pubkey,
+                &pubkey,
+            )) {
+                self.signers[i].active = false;
+                return .none;
+            }
+        }
+        return .signer_not_found;
+    }
+
+    pub fn accept_message(
+        self: *AudienceSession,
+        signer_idx: u32,
+        payload_len: u32,
+        stamp: [stamp_len]u8,
+    ) SessionRefusal {
+        // invariant: signer index bounded
+        assert(signer_idx < max_signers);
+        if (signer_idx >= self.count) {
+            return .signer_not_found;
+        }
+        if (!self.signers[signer_idx].active) {
+            return .signer_not_found;
+        }
+        if (self.signers[signer_idx].role == .listener) {
+            return .listener_cannot_send;
+        }
+        if (payload_len == 0) return .payload_empty;
+        if (payload_len > max_payload_bytes) {
+            return .payload_too_large;
+        }
+
+        // invariant: stamps must advance
+        const cmp = std.mem.order(
+            u8,
+            &stamp,
+            &self.last_message_stamp,
+        );
+        if (cmp == .lt) return .stamp_not_advancing;
+
+        self.last_message_stamp = stamp;
+        self.message_count += 1;
+        return .none;
+    }
+
+    pub fn active_count(self: *const AudienceSession) u32 {
+        var n: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (self.signers[i].active) n += 1;
+        }
+        return n;
+    }
+};
+
+fn make_key(seed: u8) [ed25519_pubkey_len]u8 {
+    return @splat(seed);
+}
+
+fn run_selftest() !u8 {
+    const stamp = "20261119.205744".*;
+    const stamp2 = "20261119.205745".*;
+    const stamp3 = "20261119.205746".*;
+    const nl: u8 = 10;
+
+    // Welcome: host + speaker join and exchange messages
+    {
+        var sess = AudienceSession.init(stamp);
+        const r1 = sess.join(
+            make_key(0x01), "Keaton", .host, stamp,
+        );
+        assert(r1 == .none);
+        const r2 = sess.join(
+            make_key(0x02), "Guest", .speaker, stamp,
+        );
+        assert(r2 == .none);
+        assert(sess.count == 2);
+        assert(sess.active_count() == 2);
+
+        const m1 = sess.accept_message(0, 100, stamp2);
+        // invariant: host can send
+        assert(m1 == .none);
+        const m2 = sess.accept_message(1, 200, stamp3);
+        assert(m2 == .none);
+        assert(sess.message_count == 2);
+    }
+
+    // Welcome: signer leaves, active count decrements
+    {
+        var sess = AudienceSession.init(stamp);
+        _ = sess.join(
+            make_key(0x01), "Host", .host, stamp,
+        );
+        _ = sess.join(
+            make_key(0x02), "Peer", .speaker, stamp,
+        );
+        assert(sess.active_count() == 2);
+        const lr = sess.leave(make_key(0x02));
+        assert(lr == .none);
+        assert(sess.active_count() == 1);
+    }
+
+    // Refusal: session full
+    {
+        var sess = AudienceSession.init(stamp);
+        var k: u8 = 0;
+        while (k < max_signers) : (k += 1) {
+            const r = sess.join(
+                make_key(k + 1), "P", .speaker, stamp,
+            );
+            assert(r == .none);
+        }
+        const overflow = sess.join(
+            make_key(0xff), "X", .speaker, stamp,
+        );
+        assert(overflow == .session_full);
+    }
+
+    // Refusal: duplicate pubkey
+    {
+        var sess = AudienceSession.init(stamp);
+        _ = sess.join(
+            make_key(0x01), "A", .host, stamp,
+        );
+        const dup = sess.join(
+            make_key(0x01), "B", .speaker, stamp,
+        );
+        assert(dup == .duplicate_pubkey);
+    }
+
+    // Refusal: listener cannot send
+    {
+        var sess = AudienceSession.init(stamp);
+        _ = sess.join(
+            make_key(0x01), "Host", .host, stamp,
+        );
+        _ = sess.join(
+            make_key(0x02), "Ear", .listener, stamp,
+        );
+        const r = sess.accept_message(1, 50, stamp2);
+        assert(r == .listener_cannot_send);
+    }
+
+    // Refusal: stamp not advancing
+    {
+        var sess = AudienceSession.init(stamp);
+        _ = sess.join(
+            make_key(0x01), "Host", .host, stamp,
+        );
+        _ = sess.accept_message(0, 50, stamp2);
+        const r = sess.accept_message(0, 50, stamp);
+        assert(r == .stamp_not_advancing);
+    }
+
+    // Refusal: empty payload
+    {
+        var sess = AudienceSession.init(stamp);
+        _ = sess.join(
+            make_key(0x01), "Host", .host, stamp,
+        );
+        const r = sess.accept_message(0, 0, stamp2);
+        assert(r == .payload_empty);
+    }
+
+    print("GREEN: carry_audience_session -- " ++
+        "multi-signer bounded session " ++
+        "(2 welcome, 5 refusal by name).{c}", .{nl});
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}

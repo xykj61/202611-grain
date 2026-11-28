@@ -1,11 +1,11 @@
 // terrarium/carry-tablet/CarryTabletMain.kt -- Thin glass JNI shell over
-// `modules/comlink/vantage/carry.rye` (`include/vantage_carry.h`).
+// `modules/vantage/carry.rye` (`include/vantage_carry.h`).
 //
 // Architectural Law ("Carry Implemented in Terms of Vantage"):
 //   This Kotlin shell for Daylight Computer DC-1 (60Hz monochrome LivePaper
 //   RLCD) contains ZERO application logic, posture thresholds, tab arrays, or
 //   palm/gesture math. Every input event goes straight into `VantageCarryBridge`
-//   (native Rye in `modules/comlink/vantage/carry.rye`), and the shell simply
+//   (native Rye in `modules/vantage/carry.rye`), and the shell simply
 //   blits whatever Vantage emits!
 
 package com.grainww.vantage.carry
