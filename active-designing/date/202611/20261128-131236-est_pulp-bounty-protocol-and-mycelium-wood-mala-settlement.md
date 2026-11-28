@@ -5,11 +5,11 @@
 **Voice:** Reya (Teacher + Radiant)
 **Style:** Gauge at Bench (`0.0%` prose negation)
 **Room:** vision (advancing toward checkable)
-**Silo Technique:** Gratitude to DJINN and the MOX network for
-their fair-ordering beacon design, sealed-until-ordered execution,
-and verifiable batch commitment. Every principle distilled through
-the silo clean room and dressed wholly in Grain's own vocabulary.
-**Siloed from:** `gratitude/djinn-and-mox-network.md` (to be written)
+**Silo Technique:** External inspiration distilled through the
+silo clean room and dressed wholly in Grain's own vocabulary.
+Gratitude for the fair-ordering beacon concept lives at
+`gratitude/djinn-and-mox-network.md` and stays outside this room.
+**Siloed from:** `gratitude/djinn-and-mox-network.md`
 **Runs on:** Comlink Mycelium over Pond, settled in WOOD/MALA
 through Dimeroll, surfaced in Pulp boards on Vantage Station
 and Vantage Carry
@@ -52,12 +52,11 @@ the same epoch, the settlement order is determined by the
 Mycelium round seed -- a value nobody knows before the
 commitment is fixed.
 
-This is inspired by MOX's sealed-until-ordered execution and
-per-commit random beacon. In Grain's vocabulary: each Mycelium
-gossip round carries a `round_seed` derived from the threshold
-of participating council seats. The seed is computed after the
-round's ballot box merges, so no contributor can predict their
-settlement position before their work is committed.
+Each Mycelium gossip round carries a `round_seed` derived
+from the threshold of participating council seats. The seed
+is computed after the round's ballot box merges, so no
+contributor can predict their settlement position before
+their work is committed.
 
 The seed is publicly verifiable through `chain_verify_seed` on
 the Mycelium weave, using the council's group key. Anyone can
@@ -202,22 +201,17 @@ privacy is preserved.
 
 ---
 
-## What We Carry from MOX (Through the Silo)
+## Protocol Invariants
 
-| MOX Pattern | Grain Vocabulary | Where It Lives |
+| Invariant | Mechanism | Where It Lives |
 |---|---|---|
-| Per-commit random beacon | Mycelium `round_seed` from council threshold | `council_mycelium_weave.rye` |
-| Sealed-until-ordered execution | `BountyClaimFact` encrypted to council key | `pulp_bounty.rye` |
+| Fair ordering | Mycelium `round_seed` from council threshold | `council_mycelium_weave.rye` |
+| Sealed until witnessed | `BountyClaimFact` encrypted to council key | `pulp_bounty.rye` |
 | Verifiable ordering | `chain_verify_seed` on Mycelium weave | `council_mycelium_weave.rye` |
-| Batch settlement | Dimeroll multi-transfer with `sum(nets) == 0` | `dimeroll_market.rye` |
-| Uniform-price clearing | Normalized basis-point shares across all claims | `pulp_bounty.rye` |
-| Sponsor-pays fees | HearthGrant patron covers settlement overhead | `wood_token.rye` |
+| Conserved settlement | Dimeroll multi-transfer with `sum(nets) == 0` | `dimeroll_market.rye` |
+| Proportional clearing | Normalized basis-point shares across all claims | `pulp_bounty.rye` |
+| Patron-sponsored | HearthGrant patron covers settlement overhead | `wood_token.rye` |
 | No paid priority | Beacon-determined order, no position market | Protocol invariant |
-
-We do NOT carry: MOX's MUR token (DJINN and Keaton will
-collaborate on MOX validator software separately), MOX's
-WebAssembly contract model (Grain uses Rye + Glow), or MOX's
-gateway architecture (Grain uses Pond + Comlink).
 
 ---
 
@@ -259,7 +253,7 @@ Concrete next steps:
 4. Extend `pulp_feed.rye` with `bounty_posted`, `bounty_claimed`
    (sealed), `bounty_settled`, and `bounty_cancelled` entry
    kinds.
-5. Gratitude entry for DJINN and MOX network.
+5. Gratitude entry (already written, outside silo).
 
 ---
 
