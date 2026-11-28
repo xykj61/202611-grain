@@ -31,10 +31,12 @@ hidden macros, private dialects, or duplicated platform logic.
 1. **Mark by stamp and plain name:** Chronological stamps (`YYYYMMDD.HHMMSS` in
    versions/headers; `YYYYMMDD-HHMMSS_sprig.ext` for dated records) order work;
    plain descriptive names state meaning.
-2. **Zero ascending serial numbers in living names or headers:** Never mint
-   sequence numbers (`01-`, `_100_`, `Orbit 14`, `v2`, `lap3`, `WAYMARK[0-9]+`)
-   into filenames, function names, or standing file headers. Derive totals by
-   measurement (`git rev-list --count HEAD`, `wc -l`).
+2. **Zero ascending serial numbers in living names, headers, or commit
+   subjects:** Never mint sequence numbers (`01-`, `_100_`, `Orbit 14`, `v2`,
+   `Aries 1/15`, `Siya 15/15`) into filenames, function names, standing file
+   headers, or git commit subjects. Commit subjects use the sign name alone
+   (`Aries`, `Siya`). Derive totals by measurement (`git rev-list --count
+   HEAD`, `wc -l`).
 3. **Zero semantic versioning:** Only chronological `YYYYMMDD.HHMMSS` pins
    exist across `.brix`, `.rye`, and `grain-ww` packages (*Evergrow*: updates
    within an epoch name offer more and require less).

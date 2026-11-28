@@ -51,7 +51,7 @@ where the practice drifted from the gratitude.
 - [x] **[Gemini]** Sweep ascending serial numbers from ITINERARY
       Calfive line and RESONANCE section -- replace orbit numbers
       with stamps or semantic names per Air
-- [ ] **[Cancer]** Establish commit-subject convention: sign name
+- [x] **[Cancer]** Establish commit-subject convention: sign name
       only (no counter), no orbit number -- document in a living
       rule or convention note
 - [ ] **[Leo]** Re-read TPS and Tiger Style gratitude against

@@ -19,9 +19,12 @@
   ship breaking API removals without an accrete-never-break molt.
 
 ## 2. Plain Descriptive Names (Zero Ascending Serial Numbers)
-- **Banned in Living Filenames & Headers:** Never name files or sections with
-  ascending counters (`00-`..`12-`, `Orbit 1`, `Movement 1`, `*_100_witness`,
-  `WAYMARK2`, `lulu0`..`lulu5`, `setu0`..`setu6`).
+- **Banned in Living Filenames, Headers, & Commit Subjects:** Never name
+  files, sections, or commit subjects with ascending counters (`00-`..`12-`,
+  `Orbit 1`, `Movement 1`, `*_100_witness`, `WAYMARK2`, `Aries 1/15`,
+  `Siya 15/15`). Commit subjects use the sign name alone (`Aries`, `Siya`)
+  for the Calfive position -- the counter belongs on the husk board, not in
+  git history.
 - **Allowed Numbers:** Genuine chronological dates (`YYYYMMDD-HHMMSS_sprig.md`),
   hardware register/bit widths (`rv64`, `u32`, `sha3_256`, `405` seats), and
   canonical literary chapter counts (*30 songs of Tiruppavai*, *8 verses of
