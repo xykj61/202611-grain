@@ -56,7 +56,7 @@ where the practice drifted from the gratitude.
       rule or convention note
 - [x] **[Leo]** Re-read TPS and Tiger Style gratitude against
       current practice -- name the drifts and what to carry forward
-- [ ] **[Virgo]** Standing equipment: verify which elder-tree
+- [x] **[Virgo]** Standing equipment: verify which elder-tree
       witness scripts survived the tools/ reorg and which need
       re-pointing
 - [ ] **[Libra]** Final standfast proof: REDS ledger current, Air
