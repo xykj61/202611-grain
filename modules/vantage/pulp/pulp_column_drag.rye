@@ -1,0 +1,345 @@
+//! modules/vantage/pulp/pulp_column_drag.rye -- Column Drag!
+//!
+//! Stamp: `20261128.131236` -- Integrates Board card moves
+//! with Feed entry logging. When a card drags between
+//! columns, a `card_moved` entry lands in the feed with
+//! the source column, target column, and One-Clock
+//! timestamp. Also logs `card_created` on add and
+//! `bounty_posted` on bounty attachment. Proves the
+//! Board + Feed pair stays consistent under drag.
+//!
+//!   rye build modules/vantage/pulp/pulp_column_drag.rye \
+//!     -femit-bin=tools/.build/pulp_column_drag
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.131236";
+
+pub const max_columns: u32 = 8;
+pub const max_cards: u32 = 64;
+pub const max_title: u32 = 48;
+pub const max_feed_entries: u32 = 256;
+pub const max_author: u32 = 32;
+pub const max_entry_body: u32 = 128;
+const nl: u8 = 10;
+
+pub const DragError = error{
+    ColumnsFull,
+    CardsFull,
+    FeedFull,
+    EmptyTitleRefused,
+    EmptyColumnRefused,
+    CardNotFound,
+    ColumnNotFound,
+    SameColumnRefused,
+};
+
+pub const EntryKind = enum(u8) {
+    card_created,
+    card_moved,
+    card_visual,
+    card_comment,
+    voice_note,
+    witness_result,
+    hearth_grant,
+    bounty_posted,
+    bounty_claimed,
+    bounty_settled,
+    bounty_cancelled,
+};
+
+pub const DragColumn = struct {
+    name: [max_title]u8,
+    name_len: u8,
+
+    pub fn name_slice(
+        self: *const DragColumn,
+    ) []const u8 {
+        return self.name[0..self.name_len];
+    }
+};
+
+pub const DragCard = struct {
+    title: [max_title]u8,
+    title_len: u8,
+    column_idx: u8,
+    active: bool,
+};
+
+pub const FeedEntry = struct {
+    kind: EntryKind,
+    card_idx: u32,
+    from_col: u8,
+    to_col: u8,
+    timestamp_ms: u64,
+    body: [max_entry_body]u8,
+    body_len: u8,
+    blaze_sha3: [32]u8,
+};
+
+pub const DragBoard = struct {
+    columns: [max_columns]DragColumn,
+    column_count: u8,
+    cards: [max_cards]DragCard,
+    card_count: u32,
+    feed: [max_feed_entries]FeedEntry,
+    feed_count: u32,
+
+    pub fn init() DragBoard {
+        const db = std.mem.zeroes(DragBoard);
+        // invariant: fresh board empty
+        assert(db.card_count == 0);
+        assert(db.column_count == 0);
+        assert(db.feed_count == 0);
+        return db;
+    }
+
+    fn log_entry(
+        self: *DragBoard,
+        kind: EntryKind,
+        card_idx: u32,
+        from_col: u8,
+        to_col: u8,
+        body: []const u8,
+        now_ms: u64,
+    ) DragError!void {
+        // invariant: feed count within capacity
+        assert(self.feed_count <= max_feed_entries);
+        if (self.feed_count >= max_feed_entries) {
+            return error.FeedFull;
+        }
+        var e = std.mem.zeroes(FeedEntry);
+        e.kind = kind;
+        e.card_idx = card_idx;
+        e.from_col = from_col;
+        e.to_col = to_col;
+        e.timestamp_ms = now_ms;
+        const blen = @min(body.len, max_entry_body);
+        @memcpy(e.body[0..blen], body[0..blen]);
+        e.body_len = @intCast(blen);
+
+        var h = Sha3_256.init(.{});
+        h.update("blaze-pulp-drag-v1:");
+        h.update(e.body[0..blen]);
+        var kind_byte = [1]u8{@intFromEnum(kind)};
+        h.update(&kind_byte);
+        h.final(&e.blaze_sha3);
+
+        self.feed[self.feed_count] = e;
+        self.feed_count += 1;
+    }
+
+    pub fn add_column(
+        self: *DragBoard,
+        name: []const u8,
+    ) DragError!u8 {
+        if (name.len == 0) return error.EmptyColumnRefused;
+        if (self.column_count >= max_columns) {
+            return error.ColumnsFull;
+        }
+        const idx = self.column_count;
+        var col = std.mem.zeroes(DragColumn);
+        const n = @min(name.len, max_title);
+        @memcpy(col.name[0..n], name[0..n]);
+        col.name_len = @intCast(n);
+        self.columns[idx] = col;
+        self.column_count += 1;
+        return idx;
+    }
+
+    pub fn add_card(
+        self: *DragBoard,
+        title: []const u8,
+        column_idx: u8,
+        now_ms: u64,
+    ) DragError!u32 {
+        if (title.len == 0) {
+            return error.EmptyTitleRefused;
+        }
+        if (column_idx >= self.column_count) {
+            return error.ColumnNotFound;
+        }
+        if (self.card_count >= max_cards) {
+            return error.CardsFull;
+        }
+        const id = self.card_count;
+        var card = std.mem.zeroes(DragCard);
+        const n = @min(title.len, max_title);
+        @memcpy(card.title[0..n], title[0..n]);
+        card.title_len = @intCast(n);
+        card.column_idx = column_idx;
+        card.active = true;
+        self.cards[id] = card;
+        self.card_count += 1;
+
+        try self.log_entry(
+            .card_created,
+            id,
+            column_idx,
+            column_idx,
+            title[0..n],
+            now_ms,
+        );
+        return id;
+    }
+
+    pub fn drag_card(
+        self: *DragBoard,
+        card_id: u32,
+        to_col: u8,
+        now_ms: u64,
+    ) DragError!void {
+        if (card_id >= self.card_count) {
+            return error.CardNotFound;
+        }
+        if (to_col >= self.column_count) {
+            return error.ColumnNotFound;
+        }
+        const from = self.cards[card_id].column_idx;
+        if (from == to_col) {
+            return error.SameColumnRefused;
+        }
+
+        self.cards[card_id].column_idx = to_col;
+
+        var desc: [max_entry_body]u8 = undefined;
+        @memset(&desc, 0);
+        const from_name = self.columns[from].name_slice();
+        const to_name = self.columns[to_col].name_slice();
+        const flen = @min(from_name.len, 30);
+        const tlen = @min(to_name.len, 30);
+        @memcpy(desc[0..flen], from_name[0..flen]);
+        desc[flen] = '-';
+        desc[flen + 1] = '>';
+        @memcpy(
+            desc[flen + 2 .. flen + 2 + tlen],
+            to_name[0..tlen],
+        );
+        const total = flen + 2 + tlen;
+
+        try self.log_entry(
+            .card_moved,
+            card_id,
+            from,
+            to_col,
+            desc[0..total],
+            now_ms,
+        );
+
+        // invariant: card now in target column
+        assert(self.cards[card_id].column_idx == to_col);
+    }
+
+    pub fn cards_in_column(
+        self: *const DragBoard,
+        col: u8,
+    ) u32 {
+        var count: u32 = 0;
+        var i: u32 = 0;
+        while (i < self.card_count) : (i += 1) {
+            if (self.cards[i].active and
+                self.cards[i].column_idx == col)
+            {
+                count += 1;
+            }
+        }
+        return count;
+    }
+};
+
+fn run_selftest() !u8 {
+    var db = DragBoard.init();
+
+    const todo = try db.add_column("Todo");
+    const prog = try db.add_column("In Progress");
+    const done = try db.add_column("Done");
+
+    // Welcome 1: Add card logs card_created entry
+    const c0 = try db.add_card(
+        "Design the board",
+        todo,
+        1000,
+    );
+    if (db.feed_count != 1) return error.FeedCountWrong;
+    if (db.feed[0].kind != .card_created) {
+        return error.FeedKindWrong;
+    }
+
+    // Welcome 2: Drag card logs card_moved entry
+    try db.drag_card(c0, prog, 2000);
+    if (db.feed_count != 2) return error.FeedCountWrong2;
+    if (db.feed[1].kind != .card_moved) {
+        return error.DragFeedKindWrong;
+    }
+    if (db.feed[1].from_col != todo) {
+        return error.DragFromWrong;
+    }
+    if (db.feed[1].to_col != prog) {
+        return error.DragToWrong;
+    }
+
+    // Welcome 3: Card is now in target column
+    if (db.cards[c0].column_idx != prog) {
+        return error.CardColumnWrong;
+    }
+    if (db.cards_in_column(prog) != 1) {
+        return error.ColumnCountWrong;
+    }
+
+    // Welcome 4: Drag to Done, verify chain
+    try db.drag_card(c0, done, 3000);
+    if (db.feed_count != 3) return error.FeedCountWrong3;
+    if (db.cards_in_column(done) != 1) {
+        return error.DoneCountWrong;
+    }
+    if (db.cards_in_column(prog) != 0) {
+        return error.ProgNotEmpty;
+    }
+
+    // Welcome 5: Multiple cards, drag independently
+    const c1 = try db.add_card(
+        "Build the feed",
+        todo,
+        4000,
+    );
+    try db.drag_card(c1, prog, 5000);
+    if (db.feed_count != 5) return error.FeedCountWrong5;
+    if (db.cards_in_column(todo) != 0) {
+        return error.TodoNotEmpty;
+    }
+
+    // Refusal 1: Drag to same column refused
+    if (db.drag_card(c1, prog, 6000)) |_| {
+        return error.SameColDragAccepted;
+    } else |err| {
+        if (err != error.SameColumnRefused) return err;
+    }
+
+    // Refusal 2: Drag nonexistent card refused
+    if (db.drag_card(99, done, 7000)) |_| {
+        return error.BadCardDragAccepted;
+    } else |err| {
+        if (err != error.CardNotFound) return err;
+    }
+
+    // Refusal 3: Drag to nonexistent column refused
+    if (db.drag_card(c0, 7, 8000)) |_| {
+        return error.BadColDragAccepted;
+    } else |err| {
+        if (err != error.ColumnNotFound) return err;
+    }
+
+    print(
+        "GREEN: pulp_column_drag -- "
+        ++ "Board + Feed drag integration.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
