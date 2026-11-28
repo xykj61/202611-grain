@@ -2,12 +2,12 @@
 # Course descriptor: name, version, multi-provider model and branch defaults,
 # and the bricks (source files) Blaze tracks across languages/ and modules/.
 #
-# Refreshed 20261115.042000: myofascia 56.519 (19 completed orbits),
-# languages/ + modules/ root consolidation, unified docs-geode/, blazepod/,
-# mitra-shed/, and root yonder/.
+# Refreshed 20261128.042055: myofascia 57.078 (250 commits),
+# REDS Standfast audit complete, Air sweep, commit convention seated,
+# TPS/Tiger Style alignment documented, standing equipment surveyed.
 
 name grain
-version 20261122.142259
+version 20261128.042055
 myofascia 57.078
 
 # Upstream git remote and branch-pushing defaults
