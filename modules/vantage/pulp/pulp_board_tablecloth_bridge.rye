@@ -1,0 +1,383 @@
+//! modules/vantage/pulp/pulp_board_tablecloth_bridge.rye
+//!
+//! Stamp: `20261128.131236` -- Projects Pulp Board, Feed,
+//! and Bounty state into Tablecloth relational rows for
+//! persistent querying. Groups: 1=board metrics,
+//! 2=bounty escrow (conserved), 3=feed metrics.
+//!
+//!   rye build \
+//!     modules/vantage/pulp/pulp_board_tablecloth_bridge.rye \
+//!     -femit-bin=tools/.build/pulp_tablecloth_bridge
+
+const std = @import("std");
+const assert = std.debug.assert;
+const print = std.debug.print;
+const Sha3_256 = std.crypto.hash.sha3.Sha3_256;
+
+pub const version = "20261128.131236";
+pub const magic = "PULPTC01";
+pub const snapshot_bytes: usize = 76;
+
+pub const max_boards: u32 = 16;
+pub const max_columns: u32 = 8;
+pub const max_cards: u32 = 64;
+pub const max_bounties: u32 = 32;
+pub const max_feed_entries: u32 = 256;
+pub const max_text_col: u32 = 32;
+pub const max_rows: u32 = 256;
+const nl: u8 = 10;
+
+pub const BridgeError = error{
+    TableFull,
+    DuplicatePrimaryKey,
+    EmptyKeyRefused,
+    BufferTooSmall,
+    BadSnapshotMagic,
+    CorruptSnapshot,
+};
+
+pub const TypedRow = struct {
+    pk_id: u64,
+    group_code: u32,
+    amount_i64: i64,
+    label: [max_text_col]u8,
+    label_len: u8,
+
+    pub fn label_slice(
+        self: *const TypedRow,
+    ) []const u8 {
+        return self.label[0..self.label_len];
+    }
+};
+
+pub const PulpTable = struct {
+    rows: [max_rows]TypedRow,
+    count: u32,
+
+    pub fn init() PulpTable {
+        return std.mem.zeroes(PulpTable);
+    }
+
+    pub fn insert_row(
+        self: *PulpTable,
+        pk_id: u64,
+        group_code: u32,
+        amount_i64: i64,
+        label_text: []const u8,
+    ) BridgeError!void {
+        if (pk_id == 0) return error.EmptyKeyRefused;
+        if (self.count >= max_rows) return error.TableFull;
+
+        var lo: u32 = 0;
+        var hi: u32 = self.count;
+        while (lo < hi) {
+            const mid = lo + (hi - lo) / 2;
+            if (self.rows[mid].pk_id == pk_id) {
+                return error.DuplicatePrimaryKey;
+            }
+            if (self.rows[mid].pk_id < pk_id) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+
+        var idx: u32 = self.count;
+        while (idx > lo) : (idx -= 1) {
+            self.rows[idx] = self.rows[idx - 1];
+        }
+        var r = std.mem.zeroes(TypedRow);
+        r.pk_id = pk_id;
+        r.group_code = group_code;
+        r.amount_i64 = amount_i64;
+        const n = @min(label_text.len, max_text_col);
+        @memcpy(r.label[0..n], label_text[0..n]);
+        r.label_len = @intCast(n);
+        self.rows[lo] = r;
+        self.count += 1;
+
+        // invariant: pk stays sorted after insert
+        assert(self.count <= max_rows);
+        if (lo > 0) {
+            assert(
+                self.rows[lo - 1].pk_id <
+                    self.rows[lo].pk_id,
+            );
+        }
+    }
+
+    pub fn sum_where_group(
+        self: *const PulpTable,
+        group_code: u32,
+    ) i64 {
+        var acc: i64 = 0;
+        var i: u32 = 0;
+        while (i < self.count) : (i += 1) {
+            if (self.rows[i].group_code == group_code) {
+                acc += self.rows[i].amount_i64;
+            }
+        }
+        // invariant: scan touched every row
+        assert(i == self.count);
+        return acc;
+    }
+
+    pub fn get_by_pk(
+        self: *const PulpTable,
+        pk_id: u64,
+    ) ?TypedRow {
+        var lo: u32 = 0;
+        var hi: u32 = self.count;
+        while (lo < hi) {
+            const mid = lo + (hi - lo) / 2;
+            if (self.rows[mid].pk_id == pk_id) {
+                return self.rows[mid];
+            }
+            if (self.rows[mid].pk_id < pk_id) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        return null;
+    }
+};
+
+pub const PulpMetrics = struct {
+    board_count: u32,
+    card_count: u32,
+    column_count: u32,
+    feed_entry_count: u32,
+    bounty_count: u32,
+    total_escrowed: u64,
+    total_settled: u64,
+    total_cancelled: u64,
+};
+
+pub fn project_pulp_to_tablecloth(
+    m: *const PulpMetrics,
+) BridgeError!PulpTable {
+    var tbl = PulpTable.init();
+
+    try tbl.insert_row(
+        1,
+        1,
+        @intCast(m.board_count),
+        "board_count",
+    );
+    try tbl.insert_row(
+        2,
+        1,
+        @intCast(m.card_count),
+        "card_count",
+    );
+    try tbl.insert_row(
+        3,
+        1,
+        @intCast(m.column_count),
+        "column_count",
+    );
+
+    try tbl.insert_row(
+        10,
+        2,
+        @intCast(m.total_escrowed),
+        "bounty_escrowed",
+    );
+    try tbl.insert_row(
+        11,
+        2,
+        -@as(i64, @intCast(m.total_settled)),
+        "bounty_settled",
+    );
+    try tbl.insert_row(
+        12,
+        2,
+        -@as(i64, @intCast(m.total_cancelled)),
+        "bounty_cancelled",
+    );
+    // invariant: escrow group conserves sum(nets) == 0
+    // when all WOOD is either settled or cancelled
+    const escrow_net = tbl.sum_where_group(2);
+    const remaining = @as(
+        i64,
+        @intCast(m.total_escrowed),
+    ) - @as(
+        i64,
+        @intCast(m.total_settled),
+    ) - @as(
+        i64,
+        @intCast(m.total_cancelled),
+    );
+    assert(escrow_net == remaining);
+
+    try tbl.insert_row(
+        20,
+        3,
+        @intCast(m.feed_entry_count),
+        "feed_entries",
+    );
+    try tbl.insert_row(
+        21,
+        3,
+        @intCast(m.bounty_count),
+        "bounty_count",
+    );
+
+    return tbl;
+}
+
+pub fn export_pulp_snapshot(
+    m: *const PulpMetrics,
+    out: []u8,
+) BridgeError![]const u8 {
+    if (out.len < snapshot_bytes) {
+        return error.BufferTooSmall;
+    }
+    @memcpy(out[0..8], magic);
+    std.mem.writeInt(u32, out[8..12], m.board_count, .little);
+    std.mem.writeInt(u32, out[12..16], m.card_count, .little);
+    std.mem.writeInt(u32, out[16..20], m.column_count, .little);
+    std.mem.writeInt(u32, out[20..24], m.feed_entry_count, .little);
+    std.mem.writeInt(u32, out[24..28], m.bounty_count, .little);
+    std.mem.writeInt(u64, out[28..36], m.total_escrowed, .little);
+    std.mem.writeInt(u64, out[36..44], m.total_settled, .little);
+
+    var h = Sha3_256.init(.{});
+    h.update(out[0..44]);
+    var digest: [32]u8 = undefined;
+    h.final(&digest);
+    @memcpy(out[44..76], &digest);
+
+    // invariant: magic written correctly
+    assert(std.mem.eql(u8, out[0..8], magic));
+    return out[0..snapshot_bytes];
+}
+
+pub fn import_pulp_snapshot(
+    snap: []const u8,
+) BridgeError!PulpMetrics {
+    if (snap.len != snapshot_bytes or
+        !std.mem.eql(u8, snap[0..8], magic))
+    {
+        return error.BadSnapshotMagic;
+    }
+    var expected: [32]u8 = undefined;
+    Sha3_256.hash(snap[0..44], &expected, .{});
+    if (!std.mem.eql(u8, snap[44..76], &expected)) {
+        return error.CorruptSnapshot;
+    }
+
+    return PulpMetrics{
+        .board_count = std.mem.readInt(
+            u32,
+            snap[8..12],
+            .little,
+        ),
+        .card_count = std.mem.readInt(
+            u32,
+            snap[12..16],
+            .little,
+        ),
+        .column_count = std.mem.readInt(
+            u32,
+            snap[16..20],
+            .little,
+        ),
+        .feed_entry_count = std.mem.readInt(
+            u32,
+            snap[20..24],
+            .little,
+        ),
+        .bounty_count = std.mem.readInt(
+            u32,
+            snap[24..28],
+            .little,
+        ),
+        .total_escrowed = std.mem.readInt(
+            u64,
+            snap[28..36],
+            .little,
+        ),
+        .total_settled = std.mem.readInt(
+            u64,
+            snap[36..44],
+            .little,
+        ),
+        .total_cancelled = 0,
+    };
+}
+
+fn run_selftest() !u8 {
+    // Welcome 1: Project a live board to Tablecloth
+    const m = PulpMetrics{
+        .board_count = 2,
+        .card_count = 12,
+        .column_count = 6,
+        .feed_entry_count = 48,
+        .bounty_count = 3,
+        .total_escrowed = 5000,
+        .total_settled = 3000,
+        .total_cancelled = 1000,
+    };
+
+    const tbl = try project_pulp_to_tablecloth(&m);
+    if (tbl.count != 8) return error.RowCountWrong;
+
+    // Welcome 2: Board metrics group sums correctly
+    const board_sum = tbl.sum_where_group(1);
+    if (board_sum != 2 + 12 + 6) {
+        return error.BoardMetricsSumWrong;
+    }
+
+    // Welcome 3: Escrow group net = remaining open
+    const escrow_net = tbl.sum_where_group(2);
+    if (escrow_net != 1000) return error.EscrowNetWrong;
+
+    // Welcome 4: Round-trip snapshot
+    var snap: [snapshot_bytes]u8 = undefined;
+    _ = try export_pulp_snapshot(&m, &snap);
+    const restored = try import_pulp_snapshot(&snap);
+    if (restored.board_count != 2 or
+        restored.card_count != 12 or
+        restored.total_escrowed != 5000 or
+        restored.total_settled != 3000)
+    {
+        return error.RoundTripMismatch;
+    }
+
+    // Welcome 5: Get by primary key
+    const row = tbl.get_by_pk(10) orelse {
+        return error.PkLookupFailed;
+    };
+    if (row.amount_i64 != 5000) {
+        return error.EscrowAmountWrong;
+    }
+
+    // Refusal 1: Tampered snapshot rejected
+    snap[75] ^= 0x80;
+    if (import_pulp_snapshot(&snap)) |_| {
+        return error.TamperedSnapshotAccepted;
+    } else |err| {
+        if (err != error.CorruptSnapshot) return err;
+    }
+
+    // Refusal 2: Zero primary key rejected
+    var tbl2 = PulpTable.init();
+    if (tbl2.insert_row(0, 1, 1, "bad")) |_| {
+        return error.ZeroPkAccepted;
+    } else |err| {
+        if (err != error.EmptyKeyRefused) return err;
+    }
+
+    print(
+        "GREEN: pulp_board_tablecloth_bridge -- "
+        ++ "Pulp + Tablecloth projection.{c}",
+        .{nl},
+    );
+    return 0;
+}
+
+pub fn main() !u8 {
+    return run_selftest();
+}
