@@ -45,7 +45,7 @@ where the practice drifted from the gratitude.
 - [x] **[Aries]** Read every open REDS row (%414 through %842)
       against the current tree -- classify each as still-open,
       overtaken, or needs-restatement
-- [ ] **[Taurus]** Close or re-book each row with current-tree
+- [x] **[Taurus]** Close or re-book each row with current-tree
       proof -- run witnesses where scripts exist, measure where
       they do not
 - [ ] **[Gemini]** Sweep ascending serial numbers from ITINERARY
